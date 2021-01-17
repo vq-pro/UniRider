@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.views
+package quebec.virtualite.unirider.services.views
 
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
