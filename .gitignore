@@ -4,6 +4,16 @@
 /.idea/*
 .DS_Store
 /build
+/app/build
 /captures
 .externalNativeBuild
 .cxx
+.name
+checkstyle-idea.xml
+codeStyles/
+compiler.xml
+gradle.xml
+jarRepositories.xml
+misc.xml
+uiDesigner.xml
+vcs.xml
