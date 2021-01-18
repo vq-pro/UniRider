@@ -1,4 +1,4 @@
-@E2e
+@E2E
 Feature: Greetings
 
   Scenario: Complete greeting

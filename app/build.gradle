@@ -46,19 +46,21 @@ android {
     }
 
     productFlavors {
-        app {
-            buildConfigField 'String', 'SCENARIOS', '"@App"'
-
-            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
-            buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
-        }
-
         e2e {
-            buildConfigField 'String', 'SCENARIOS', '"@E2e"'
+            // Calls the backend
+            buildConfigField 'String', 'SCENARIOS', '"@E2E"'
 
             // Equivalent to localhost, which doesn't work with unmocked Retrofit2 request
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2:8080"'
             buildConfigField 'Boolean', 'SERVER_MOCKED', 'false'
+        }
+
+        integration {
+            // Backend is mocked
+            buildConfigField 'String', 'SCENARIOS', '"@Integration"'
+
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
+            buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
         }
 
         wip {

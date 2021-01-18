@@ -1,4 +1,4 @@
-@App
+@Integration
 Feature: Greetings
 
   Scenario: New greeting
