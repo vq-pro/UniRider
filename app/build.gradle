@@ -1,33 +1,85 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 
 android {
+
     compileSdkVersion 30
     buildToolsVersion "30.0.1"
 
     defaultConfig {
         applicationId "quebec.virtualite.unirider"
-        minSdkVersion 16
+        minSdkVersion 18
+        multiDexEnabled true
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        testApplicationId "quebec.virtualite.unirider.test"
+        testInstrumentationRunner "quebec.virtualite.unirider.test.CucumberInstrumentationRunner"
     }
 
     buildTypes {
+        debug {
+            buildConfigField 'Integer', 'SERVER_PORT', '8080'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField 'Integer', 'SERVER_PORT', '8080'
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    flavorDimensions "version"
+
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    productFlavors {
+        app {
+            buildConfigField 'String', 'SCENARIOS', '"@App"'
+
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
+            buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
+        }
+
+        e2e {
+            buildConfigField 'String', 'SCENARIOS', '"@E2e"'
+
+            // Equivalent to localhost, which doesn't work with unmocked Retrofit2 request
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2:8080"'
+            buildConfigField 'Boolean', 'SERVER_MOCKED', 'false'
+        }
+
+        wip {
+            buildConfigField 'String', 'SCENARIOS', '"@WIP"'
+
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
+            buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
+        }
+    }
+
+    sourceSets {
+        androidTest {
+            assets.srcDirs = ['src/androidTest/assets']
+            java.srcDirs = ['src/androidTest/kotlin']
+        }
+        main {
+            java.srcDirs = ['src/main/kotlin']
+        }
+        test {
+            java.srcDirs = ['src/test/kotlin']
+        }
     }
 }
 
@@ -40,8 +92,38 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    // Retrofit
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
+    // Unit Tests
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'org.mockito:mockito-core:3.4.4'
+
+    // Integration Tests
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'com.android.support:support-annotations:28.0.0'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+
+    // Cucumber
+    androidTestImplementation 'info.cukes:cucumber-android:1.2.5@jar'
+    androidTestImplementation 'info.cukes:cucumber-picocontainer:1.2.4'
+
+    // MockWebServer
+    implementation 'com.squareup.okhttp3:okhttp:4.8.1'
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.8.1'
+
+    // Apache HttpCore
+    implementation 'org.apache.httpcomponents:httpcore:4.4.13'
+
+    // Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
 }
