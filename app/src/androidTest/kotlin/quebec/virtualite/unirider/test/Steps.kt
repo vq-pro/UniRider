@@ -73,7 +73,7 @@ class Steps {
     }
 
     /**
-     * [quebec.virtualite.vservices.views.GreetingsFragment.onViewCreated]
+     * [quebec.virtualite.unirider.views.GreetingsFragment.onViewCreated]
      */
     @When("^we enter the name \\\"(.*?)\\\"$")
     fun whenWeEnterAsName(name: String) {

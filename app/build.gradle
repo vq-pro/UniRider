@@ -50,6 +50,8 @@ android {
             // Calls the backend
             buildConfigField 'String', 'SCENARIOS', '"@E2E"'
 
+            buildConfigField 'Boolean', 'BLUETOOTH_MOCKED', 'false'
+
             // Equivalent to localhost, which doesn't work with unmocked Retrofit2 request
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2:8080"'
             buildConfigField 'Boolean', 'SERVER_MOCKED', 'false'
@@ -59,12 +61,16 @@ android {
             // Backend is mocked
             buildConfigField 'String', 'SCENARIOS', '"@Integration"'
 
+            buildConfigField 'Boolean', 'BLUETOOTH_MOCKED', 'true'
+
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
             buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
         }
 
         wip {
             buildConfigField 'String', 'SCENARIOS', '"@WIP"'
+
+            buildConfigField 'Boolean', 'BLUETOOTH_MOCKED', 'true'
 
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
             buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
@@ -94,9 +100,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Retrofit
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'

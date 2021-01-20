@@ -12,6 +12,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import quebec.virtualite.unirider.BuildConfig
 import quebec.virtualite.unirider.R
 
 class MainActivity : AppCompatActivity() {
@@ -21,23 +22,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter = bluetoothManager.adapter
-
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(broadcastReceiver, filter)
-
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
+
+            val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
+            val bluetoothAdapter = bluetoothManager.adapter
+
+            val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+            registerReceiver(broadcastReceiver, filter)
 
             if (bluetoothAdapter.isDiscovering()) {
                 bluetoothAdapter.cancelDiscovery()
             }
 
-            val result = bluetoothAdapter.startDiscovery()
+            bluetoothAdapter.startDiscovery()
+
+            val text = if (BuildConfig.BLUETOOTH_MOCKED) {
+                "Bluetooth is mocked"
+            } else {
+                "Bluetooth is live"
+            }
 
             Snackbar
-                .make(view, "Toto est parti", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+                .make(view, text, Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+                .show()
         }
     }
 

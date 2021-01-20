@@ -18,14 +18,17 @@
 ## Unit
 * Run Configuration
 * Android JUnit
+* Name = Unit Tests
 * Test kind = All in directory
 * Directory: ..\app\src\test\kotlin\quebec\virtualite\unirider
 
 ## Cucumber
 * Run Configuration
 * Android Instrumented Tests
+* Name = Cucumber Tests
 * Test = All in Module
 * Instrumentation class = CucumberInstrumentationRunner
+* Before launch = Unit Tests
 
 ## To choose between E2E (global) and App (smaller operations)
 * Menu Build
