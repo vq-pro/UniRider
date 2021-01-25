@@ -1,4 +1,5 @@
-@Integration
+#@Integration
+# FIXME 2 Cleanup
 Feature: Greetings
 
   Scenario: New greeting

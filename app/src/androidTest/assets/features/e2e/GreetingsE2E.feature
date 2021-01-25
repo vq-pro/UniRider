@@ -1,4 +1,5 @@
-@E2E
+#@E2E
+# FIXME 2 Cleanup
 Feature: Greetings
 
   Scenario: Complete greeting

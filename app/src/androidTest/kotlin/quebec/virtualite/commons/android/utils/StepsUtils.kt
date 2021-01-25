@@ -7,39 +7,31 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.equalTo
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
-object StepsUtils
-{
+object StepsUtils {
     private const val INTERVAL = 100L
     private const val TIMEOUT = 2000L
 
     fun assertThat(
         id: Int,
         assertion: Matcher<View>
-    )
-    {
+    ) {
         var exception: Throwable? = null
         val start = currentTimeMillis()
 
-        do
-        {
-            try
-            {
+        do {
+            try {
                 element(id)?.check(matches(assertion))
                 return
 
-            }
-            catch (e: Throwable)
-            {
-                if (exception == null)
-                {
+            } catch (e: Throwable) {
+                if (exception == null) {
                     exception = e
                 }
                 sleep(INTERVAL)
@@ -47,48 +39,54 @@ object StepsUtils
 
             val elapsed = currentTimeMillis() - start
 
-        }
-        while (elapsed < TIMEOUT)
+        } while (elapsed < TIMEOUT)
 
         throw exception!!
     }
 
-    fun click(id: Int)
-    {
+    fun click(id: Int) {
         element(id)?.perform(click())
     }
 
-    fun enter(id: Int, text: String)
-    {
+    fun enter(id: Int, text: String) {
         val element = element(id)
 
         element?.perform(clearText())
         element?.perform(typeText(text))
     }
 
-    fun hasText(expected: String?): Matcher<View>
+    fun hasMinimumRows(expected: Int): Matcher<View>
     {
+        return hasMinimumChildCount(expected)
+    }
+
+    fun hasRow(expected: String?): Matcher<View> {
+        return withChild(withText(expected))
+    }
+
+    fun hasRows(expected: Int): Matcher<View>
+    {
+        return hasChildCount(expected)
+    }
+
+    fun hasText(expected: String?): Matcher<View> {
         return withText(equalTo(expected))
     }
 
-    fun isEmpty(): Matcher<View>
-    {
+    fun isEmpty(): Matcher<View> {
         return hasText("")
     }
 
-    fun <T : Activity> start(activityTestRule: ActivityTestRule<T>): T?
-    {
+    fun <T : Activity> start(activityTestRule: ActivityTestRule<T>): T? {
         activityTestRule.launchActivity(Intent())
         return activityTestRule.activity
     }
 
-    fun <T : Activity> stop(activityTestRule: ActivityTestRule<T>)
-    {
+    fun <T : Activity> stop(activityTestRule: ActivityTestRule<T>) {
         activityTestRule.finishActivity()
     }
 
-    private fun element(id: Int): ViewInteraction?
-    {
+    private fun element(id: Int): ViewInteraction? {
         return onView(withId(id))
     }
 }

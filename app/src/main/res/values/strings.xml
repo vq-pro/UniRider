@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">UniRider</string>
     <string name="action_settings">Settings</string>
+    <string name="devices_label">Devices</string>
     <string name="greetings_fragment_label">Greetings</string>
+    <string name="scan_button">Scan</string>
+    <string name="scan_fragment_label">Devices</string>
     <string name="title_message">Enter your name</string>
 </resources>
