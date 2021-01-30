@@ -12,6 +12,8 @@ import org.junit.Rule
 import quebec.virtualite.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.commons.android.utils.StepsUtils.click
 import quebec.virtualite.commons.android.utils.StepsUtils.hasMinimumRows
+import quebec.virtualite.commons.android.utils.StepsUtils.hasRow
+import quebec.virtualite.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.commons.android.utils.StepsUtils.start
 import quebec.virtualite.commons.android.utils.StepsUtils.stop
 import quebec.virtualite.unirider.R
@@ -26,9 +28,11 @@ class Steps {
 
     private lateinit var mainActivity: MainActivity
 
+    private val mockedScanner = DeviceScannerMock()
+
     @Before
     fun beforeScenario() {
-        MainActivity.Companion.scanner = DeviceScannerMock()
+        MainActivity.Companion.scanner = mockedScanner
         mainActivity = start(activityTestRule)!!
     }
 
@@ -46,10 +50,15 @@ class Steps {
         assertThat(R.id.devices, not(isEnabled()))
     }
 
-    @Then("I see a list of devices")
-    fun thenSeeListOfDevices() {
+    @Given("these test devices:")
+    fun givenTheseTestDevices(deviceNames: List<String>) {
+        mockedScanner.devices = deviceNames
+    }
+
+    @Then("I see these devices:")
+    fun thenSeeListOfDevices(expectedTestDevices: List<String>) {
         assertThat(R.id.devices, isEnabled())
-        assertThat(R.id.devices, hasMinimumRows(1))
+        assertThat(R.id.devices, hasRows(mockedScanner.devices))
     }
 
     @When("I scan for devices")

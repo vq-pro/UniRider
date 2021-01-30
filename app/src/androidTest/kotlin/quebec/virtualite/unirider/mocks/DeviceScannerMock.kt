@@ -7,10 +7,14 @@ import java.util.function.Consumer
 
 class DeviceScannerMock : DeviceScanner {
 
+    lateinit var devices: List<String>
+
     override fun init(activity: Activity) {
     }
 
     override fun scan(whenDetecting: Consumer<String>) {
-        whenDetecting.accept("toto")
+        for (device in devices) {
+            whenDetecting.accept(device)
+        }
     }
 }

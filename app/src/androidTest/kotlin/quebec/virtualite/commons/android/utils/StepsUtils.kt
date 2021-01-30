@@ -10,11 +10,14 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
+import quebec.virtualite.unirider.R
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
 object StepsUtils {
+
     private const val INTERVAL = 100L
     private const val TIMEOUT = 2000L
 
@@ -55,8 +58,7 @@ object StepsUtils {
         element?.perform(typeText(text))
     }
 
-    fun hasMinimumRows(expected: Int): Matcher<View>
-    {
+    fun hasMinimumRows(expected: Int): Matcher<View> {
         return hasMinimumChildCount(expected)
     }
 
@@ -64,9 +66,14 @@ object StepsUtils {
         return withChild(withText(expected))
     }
 
-    fun hasRows(expected: Int): Matcher<View>
-    {
-        return hasChildCount(expected)
+    fun hasRows(expectedEntries: List<String>): Matcher<View> {
+
+        val asserts = mutableListOf(hasChildCount(expectedEntries.size))
+        for (entry in expectedEntries) {
+            asserts.add(hasRow(entry))
+        }
+
+        return allOf(asserts)
     }
 
     fun hasText(expected: String?): Matcher<View> {
