@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.Device
 import quebec.virtualite.unirider.services.DeviceScanner
@@ -15,7 +16,9 @@ import quebec.virtualite.unirider.services.DeviceScanner
 class ScanFragment : Fragment() {
 
     private val NOT_FOUND = -1
-    private val devicesContents: MutableList<String> = mutableListOf()
+
+    private val deviceNames: MutableList<String> = mutableListOf()
+    private val devicesInfo: MutableMap<String, Device> = mutableMapOf()
 
     private lateinit var scanButton: Button
     private lateinit var devicesListView: ListView
@@ -30,10 +33,23 @@ class ScanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        devicesAdapter = ArrayAdapter(view.context, R.layout.scan_item, devicesContents)
+        devicesAdapter = ArrayAdapter(view.context, R.layout.scan_item, deviceNames)
         devicesListView = view.findViewById(R.id.devices)
         devicesListView.adapter = devicesAdapter
         devicesListView.isEnabled = false
+        devicesListView.setOnItemClickListener { parent, itemView, position, id ->
+
+//            Toast.makeText(view.context, "Clicked item: " + devicesAdapter.getItem(position), Toast.LENGTH_SHORT).show()
+
+            val name: String = devicesAdapter.getItem(position)!!
+            val device: Device = devicesInfo.get(name)!!
+
+            val bundle = Bundle()
+            bundle.putString("name", device.name)
+            bundle.putString("address", device.address)
+
+            findNavController().navigate(R.id.action_ScanFragment_to_DeviceFragment, bundle)
+        }
 
         scanButton = view.findViewById(R.id.scan)
         scanButton.setOnClickListener(onScanButton())
@@ -44,6 +60,7 @@ class ScanFragment : Fragment() {
         if (devicesAdapter.getPosition(device.name) != NOT_FOUND)
             return
 
+        devicesInfo.put(device.name, device)
         devicesAdapter.add(device.name)
         devicesListView.isEnabled = true
     }

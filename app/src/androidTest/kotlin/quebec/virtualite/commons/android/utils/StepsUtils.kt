@@ -3,6 +3,7 @@ package quebec.virtualite.commons.android.utils
 import android.app.Activity
 import android.content.Intent
 import android.view.View
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.*
@@ -10,8 +11,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.*
 import quebec.virtualite.unirider.R
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
@@ -68,7 +68,7 @@ object StepsUtils {
 
     fun hasRows(expectedEntries: List<String>): Matcher<View> {
 
-        val asserts = mutableListOf(hasChildCount(expectedEntries.size))
+        val asserts = mutableListOf(isDisplayed(), isEnabled(), hasChildCount(expectedEntries.size))
         for (entry in expectedEntries) {
             asserts.add(hasRow(entry))
         }
@@ -77,11 +77,19 @@ object StepsUtils {
     }
 
     fun hasText(expected: String?): Matcher<View> {
-        return withText(equalTo(expected))
+        return allOf(
+            isDisplayed(),
+            isEnabled(),
+            withText(equalTo(expected))
+        )
     }
 
     fun isEmpty(): Matcher<View> {
         return hasText("")
+    }
+
+    fun select(id: Int, entry: String) {
+        onData(hasToString(startsWith(entry))).inAdapterView(withId(id)).perform(click())
     }
 
     fun <T : Activity> start(activityTestRule: ActivityTestRule<T>): T? {

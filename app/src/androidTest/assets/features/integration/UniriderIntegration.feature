@@ -3,8 +3,8 @@ Feature: Unirider
 
   Background:
     Given I have these devices:
-      | KingSong 14D  |
-      | Inmotion V10F |
+      | KingSong 14D  | KS:KS:KS:KS:KS:KS:KS |
+      | Inmotion V10F | IM:IM:IM:IM:IM:IM:IM |
     And I start the app
 
   Scenario: Scanning for wheels
@@ -15,3 +15,8 @@ Feature: Unirider
     When I scan for devices
     And I scan again
     Then I see my devices
+
+  Scenario: Selecting a wheel
+    When I scan for devices
+    And I select the "KingSong 14D"
+    Then I see the screen for this wheel

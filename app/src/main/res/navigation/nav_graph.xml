@@ -10,7 +10,20 @@
             android:name="quebec.virtualite.unirider.views.ScanFragment"
             android:label="@string/scan_fragment_label"
             tools:layout="@layout/scan_fragment">
+
+        <action
+            android:id="@+id/action_ScanFragment_to_DeviceFragment"
+            app:destination="@+id/DeviceFragment"
+        />
     </fragment>
+
+    <fragment
+            android:id="@+id/DeviceFragment"
+            android:name="quebec.virtualite.unirider.views.DeviceFragment"
+            android:label="@string/device_fragment_label"
+            tools:layout="@layout/device_fragment">
+    </fragment>
+
 
     <!--    <fragment-->
     <!--            android:id="@+id/GreetingsFragment"-->

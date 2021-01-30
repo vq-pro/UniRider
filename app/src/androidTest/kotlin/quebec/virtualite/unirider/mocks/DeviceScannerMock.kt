@@ -8,16 +8,16 @@ import java.util.function.Consumer
 
 class DeviceScannerMock : DeviceScanner {
 
-    lateinit var deviceNames: List<String>
+    lateinit var devices: List<Device>
 
     override fun init(activity: Activity) {}
 
     override fun scan(whenDetecting: Consumer<Device>) {
-        for (deviceName in deviceNames) {
-            whenDetecting.accept(Device(deviceName, ""))
+        for (device in devices) {
+            whenDetecting.accept(Device(device.name, device.address))
 
             // Mock double detection
-            whenDetecting.accept(Device(deviceName, ""))
+            whenDetecting.accept(Device(device.name, device.address))
         }
     }
 }
