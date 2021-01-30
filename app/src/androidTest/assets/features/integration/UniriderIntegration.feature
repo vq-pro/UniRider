@@ -1,20 +1,17 @@
 @Integration
 Feature: Unirider
 
-  Scenario: Selecting a wheel
-    Given I start the app
-    And these devices:
+  Background:
+    Given I have these devices:
       | KingSong 14D  |
       | Inmotion V10F |
+    And I start the app
+
+  Scenario: Scanning for wheels
     When I scan for devices
-    Then I see these devices:
-      | KingSong 14D  |
-      | Inmotion V10F |
+    Then I see my devices
 
   Scenario: Scanning twice
-    Given I start the app
-    And this device: "KingSong 14D"
     When I scan for devices
     And I scan again
-    Then I see these devices:
-      | KingSong 14D  |
+    Then I see my devices

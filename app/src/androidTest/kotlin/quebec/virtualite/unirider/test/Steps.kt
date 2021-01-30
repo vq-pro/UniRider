@@ -18,6 +18,7 @@ import quebec.virtualite.commons.android.utils.StepsUtils.start
 import quebec.virtualite.commons.android.utils.StepsUtils.stop
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.mocks.DeviceScannerMock
+import quebec.virtualite.unirider.services.DeviceScanner
 import quebec.virtualite.unirider.views.MainActivity
 import java.lang.Thread.sleep
 
@@ -30,17 +31,17 @@ class Steps {
 
     private val mockedScanner = DeviceScannerMock()
 
-    @Before
-    fun beforeScenario() {
-        MainActivity.Companion.scanner = mockedScanner
-        mainActivity = start(activityTestRule)!!
-    }
-
     @After
     fun afterScenario() {
         sleep(2000)
 
         stop(activityTestRule)
+    }
+
+    @Given("I have these devices:")
+    fun givenTheseTestDevices(deviceNames: List<String>) {
+        mockedScanner.deviceNames = deviceNames
+        startWith(mockedScanner)
     }
 
     @Given("I start the app")
@@ -50,20 +51,15 @@ class Steps {
         assertThat(R.id.devices, not(isEnabled()))
     }
 
-    @Given("these devices:")
-    fun givenTheseTestDevices(deviceNames: List<String>) {
-        mockedScanner.deviceNames = deviceNames
-    }
-
     @Given("^this device: \\\"(.*?)\\\"\$")
     fun givenThisDevice(deviceName: String) {
         mockedScanner.deviceNames = listOf(deviceName)
     }
 
-    @Then("I see these devices:")
-    fun thenSeeListOfDevices(expectedTestDevices: List<String>) {
+    @Then("I see my devices")
+    fun thenSeeListOfDevices() {
         assertThat(R.id.devices, isEnabled())
-        assertThat(R.id.devices, hasRows(expectedTestDevices))
+        assertThat(R.id.devices, hasRows(mockedScanner.deviceNames))
     }
 
     @When("I scan again")
@@ -74,5 +70,10 @@ class Steps {
     @When("I scan for devices")
     fun whenScanForDevices() {
         click(R.id.scan)
+    }
+
+    private fun startWith(scanner: DeviceScanner) {
+        MainActivity.Companion.scanner = scanner
+        mainActivity = start(activityTestRule)!!
     }
 }
