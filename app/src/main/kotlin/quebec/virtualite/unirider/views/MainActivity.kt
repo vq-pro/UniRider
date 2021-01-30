@@ -11,7 +11,6 @@ import quebec.virtualite.unirider.services.DeviceScannerImpl
 class MainActivity : AppCompatActivity() {
 
     companion object {
-
         var scanner: DeviceScanner = DeviceScannerImpl()
     }
 

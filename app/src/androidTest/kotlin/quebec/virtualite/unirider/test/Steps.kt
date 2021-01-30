@@ -50,30 +50,29 @@ class Steps {
         assertThat(R.id.devices, not(isEnabled()))
     }
 
-    @Given("these test devices:")
+    @Given("these devices:")
     fun givenTheseTestDevices(deviceNames: List<String>) {
-        mockedScanner.devices = deviceNames
+        mockedScanner.deviceNames = deviceNames
+    }
+
+    @Given("^this device: \\\"(.*?)\\\"\$")
+    fun givenThisDevice(deviceName: String) {
+        mockedScanner.deviceNames = listOf(deviceName)
     }
 
     @Then("I see these devices:")
     fun thenSeeListOfDevices(expectedTestDevices: List<String>) {
         assertThat(R.id.devices, isEnabled())
-        assertThat(R.id.devices, hasRows(mockedScanner.devices))
+        assertThat(R.id.devices, hasRows(expectedTestDevices))
+    }
+
+    @When("I scan again")
+    fun whenIScanAgain() {
+        whenScanForDevices()
     }
 
     @When("I scan for devices")
     fun whenScanForDevices() {
         click(R.id.scan)
     }
-
-//    /**
-//     * [quebec.virtualite.unirider.views.GreetingsFragment.onViewCreated]
-//     */
-//    @When("^we enter the name \\\"(.*?)\\\"$")
-//    fun whenWeEnterAsName(name: String) {
-//        enter(R.id.name, name)
-//        click(R.id.send)
-//
-//        // mockRestServer?.verifyGet("/v2/greetings/$name", token)
-//    }
 }

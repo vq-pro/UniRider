@@ -7,5 +7,5 @@ interface DeviceScanner {
 
     fun init(activity: Activity)
 
-    fun scan(whenDetecting: Consumer<String>)
+    fun scan(whenDetecting: Consumer<Device>)
 }

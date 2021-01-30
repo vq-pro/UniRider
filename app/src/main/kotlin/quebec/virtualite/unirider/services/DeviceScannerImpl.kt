@@ -1,6 +1,7 @@
 package quebec.virtualite.unirider.services
 
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
@@ -13,15 +14,16 @@ import java.util.function.Consumer
 class DeviceScannerImpl : DeviceScanner {
 
     private lateinit var activity: Activity
+    private lateinit var bluetoothAdapter: BluetoothAdapter
 
     override fun init(activity: Activity) {
         this.activity = activity
-    }
-
-    override fun scan(whenDetecting: Consumer<String>) {
 
         val bluetoothManager = activity.getSystemService(AppCompatActivity.BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter = bluetoothManager.adapter
+        bluetoothAdapter = bluetoothManager.adapter
+    }
+
+    override fun scan(whenDetecting: Consumer<Device>) {
 
         val broadcastReceiver = object : BroadcastReceiver() {
 
@@ -35,23 +37,18 @@ class DeviceScannerImpl : DeviceScanner {
                             return
                         }
 
-                        whenDetecting.accept(device.name)
-
-//                        val deviceName = device.name
-//                        val deviceAddress = device.address
-//
-//                        val b = true
+                        whenDetecting.accept(Device(device.name, device.address))
                     }
                 }
             }
         }
 
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        activity.registerReceiver(broadcastReceiver, filter)
-
         if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery()
         }
+
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        activity.registerReceiver(broadcastReceiver, filter)
 
         bluetoothAdapter.startDiscovery()
     }
