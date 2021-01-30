@@ -14,8 +14,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import quebec.virtualite.unirider.BuildConfig
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.services.DeviceScanner
+import quebec.virtualite.unirider.services.DeviceScannerImpl
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        var scanner: DeviceScanner = DeviceScannerImpl()
+
+        fun scanner(): DeviceScanner = scanner
+    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

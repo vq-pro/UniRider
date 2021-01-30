@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.services.DeviceScanner
+import quebec.virtualite.unirider.services.DeviceScannerImpl
 
 class ScanFragment : Fragment() {
 
@@ -18,8 +20,9 @@ class ScanFragment : Fragment() {
     private lateinit var devicesListView: ListView
     private lateinit var devicesAdapter: ArrayAdapter<String>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            : View? {
+    val scanner: DeviceScanner = MainActivity.scanner()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.scan_fragment, container, false)
     }
 
@@ -37,7 +40,7 @@ class ScanFragment : Fragment() {
 
     internal fun onScanButton(): (View) -> Unit {
         return {
-            devicesAdapter.add("toto")
+            scanner.scan { deviceName -> devicesAdapter.add(deviceName) }
             devicesListView.isEnabled = true
         }
     }
