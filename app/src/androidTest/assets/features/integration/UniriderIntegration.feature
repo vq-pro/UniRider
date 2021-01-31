@@ -20,3 +20,4 @@ Feature: Unirider
     When I scan for devices
     And I select the "KingSong 14D"
     Then I see the screen for this wheel
+    And the scanning has stopped

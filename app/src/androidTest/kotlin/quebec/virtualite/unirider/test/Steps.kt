@@ -13,6 +13,7 @@ import quebec.virtualite.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.commons.android.utils.StepsUtils.click
 import quebec.virtualite.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.commons.android.utils.StepsUtils.hasText
+import quebec.virtualite.commons.android.utils.StepsUtils.isTrue
 import quebec.virtualite.commons.android.utils.StepsUtils.select
 import quebec.virtualite.commons.android.utils.StepsUtils.start
 import quebec.virtualite.commons.android.utils.StepsUtils.stop
@@ -55,6 +56,11 @@ class Steps {
         assertThat(R.id.scan, isDisplayed())
         assertThat(R.id.devices, isDisplayed())
         assertThat(R.id.devices, not(isEnabled()))
+    }
+
+    @Then("the scanning has stopped")
+    fun thenScanningHasStopped() {
+        assertThat(mockedScanner.isStopped(), isTrue())
     }
 
     @Then("I see my devices")

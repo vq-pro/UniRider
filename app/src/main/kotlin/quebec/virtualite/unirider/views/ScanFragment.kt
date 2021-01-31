@@ -41,6 +41,8 @@ class ScanFragment : Fragment() {
 
 //            Toast.makeText(view.context, "Clicked item: " + devicesAdapter.getItem(position), Toast.LENGTH_SHORT).show()
 
+            scanner.stop()
+
             val name: String = devicesAdapter.getItem(position)!!
             val device: Device = devicesInfo.get(name)!!
 

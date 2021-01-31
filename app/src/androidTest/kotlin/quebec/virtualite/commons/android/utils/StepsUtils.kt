@@ -21,6 +21,12 @@ object StepsUtils {
     private const val INTERVAL = 100L
     private const val TIMEOUT = 2000L
 
+    fun assertThat(actual: Boolean, expected: Boolean) {
+        if (actual != expected) {
+            throw AssertionError()
+        }
+    }
+
     fun assertThat(
         id: Int,
         assertion: Matcher<View>
@@ -86,6 +92,10 @@ object StepsUtils {
 
     fun isEmpty(): Matcher<View> {
         return hasText("")
+    }
+
+    fun isTrue(): Boolean {
+        return true
     }
 
     fun select(id: Int, entry: String) {

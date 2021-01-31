@@ -23,6 +23,10 @@ class DeviceScannerImpl : DeviceScanner {
         bluetoothAdapter = bluetoothManager.adapter
     }
 
+    override fun isStopped(): Boolean {
+        return !bluetoothAdapter.isDiscovering
+    }
+
     override fun scan(whenDetecting: Consumer<Device>) {
 
         val broadcastReceiver = object : BroadcastReceiver() {
@@ -43,13 +47,17 @@ class DeviceScannerImpl : DeviceScanner {
             }
         }
 
-        if (bluetoothAdapter.isDiscovering()) {
-            bluetoothAdapter.cancelDiscovery()
-        }
+        stop()
 
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         activity.registerReceiver(broadcastReceiver, filter)
 
         bluetoothAdapter.startDiscovery()
+    }
+
+    override fun stop() {
+        if (bluetoothAdapter.isDiscovering()) {
+            bluetoothAdapter.cancelDiscovery()
+        }
     }
 }
