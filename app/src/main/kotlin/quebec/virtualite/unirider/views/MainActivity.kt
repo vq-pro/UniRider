@@ -3,14 +3,16 @@ package quebec.virtualite.unirider.views
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.services.DeviceScanner
-import quebec.virtualite.unirider.services.DeviceScannerImpl
+import quebec.virtualite.unirider.services.*
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
+        var connector: DeviceConnector = DeviceConnectorImpl()
         var scanner: DeviceScanner = DeviceScannerImpl()
     }
 
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        connector.init(this)
         scanner.init(this)
     }
 

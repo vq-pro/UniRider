@@ -30,5 +30,25 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:visibility="visible"
         />
+
+        <TextView
+                android:id="@+id/device_battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="40dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:visibility="visible"
+        />
+
+        <TextView
+                android:id="@+id/device_voltage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="40dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:visibility="visible"
+        />
     </GridLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

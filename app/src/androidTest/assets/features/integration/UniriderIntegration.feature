@@ -1,5 +1,6 @@
+#@Ignore
 @Integration
-Feature: Unirider
+Feature: Bluetooth Connection
 
   Background:
     Given I have these devices:
@@ -16,8 +17,9 @@ Feature: Unirider
     And I scan again
     Then I see my devices
 
-  Scenario: Selecting a wheel
-    When I scan for devices
-    And I select the "KingSong 14D"
-    Then I see the screen for this wheel
-    And the scanning has stopped
+#  Scenario: Selecting a wheel
+#    When I scan for devices
+#    And I select the "KingSong 14D"
+#    Then the scanning has stopped
+#    And I see the screen for this wheel
+#    And I see the type of wheel it is

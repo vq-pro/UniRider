@@ -41,6 +41,13 @@ class Steps {
         stop(activityTestRule)
     }
 
+    @Given("I start the app")
+    fun givenStartApp() {
+        assertThat(R.id.scan, isDisplayed())
+        assertThat(R.id.devices, isDisplayed())
+        assertThat(R.id.devices, not(isEnabled()))
+    }
+
     @Given("I have these devices:")
     fun givenTheseTestDevices(devicesTable: DataTable) {
 
@@ -49,13 +56,6 @@ class Steps {
             .map { row -> Device(row.get(0), row.get(1)) }
 
         startWith(mockedScanner)
-    }
-
-    @Given("I start the app")
-    fun givenStartApp() {
-        assertThat(R.id.scan, isDisplayed())
-        assertThat(R.id.devices, isDisplayed())
-        assertThat(R.id.devices, not(isEnabled()))
     }
 
     @Then("the scanning has stopped")
@@ -72,6 +72,11 @@ class Steps {
     fun thenSeeScreenForThisWheel() {
         assertThat(R.id.device_name, hasText(selectedDevice.name))
         assertThat(R.id.device_address, hasText(selectedDevice.address))
+    }
+
+    @Then("I see the type of wheel it is")
+    fun thenSeeTypeOfWheel() {
+//        assertThat(R.id.device_type, hasText("toto"))
     }
 
     @When("I scan again")
