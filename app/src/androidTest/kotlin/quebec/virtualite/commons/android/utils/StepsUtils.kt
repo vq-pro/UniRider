@@ -12,7 +12,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
-import quebec.virtualite.unirider.R
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
@@ -21,36 +20,43 @@ object StepsUtils {
     private const val INTERVAL = 100L
     private const val TIMEOUT = 2000L
 
+    class SpinnerMatcher(expectedEntries: List<String>) {
+        val entries: List<String>
+
+        init {
+            entries = expectedEntries
+        }
+
+        fun lastIndex(): Int {
+            return entries.size - 1
+        }
+
+        fun check(parentId: Int, row: Int) {
+            click(parentId)
+            onData(anything()).atPosition(row).perform(click())
+            element(parentId)?.check(matches(hasRow(entries[row])))
+        }
+    }
+
+    fun assertThat(id: Int, assertion: Matcher<View>) {
+        poll { element(id)?.check(matches(assertion)) }
+    }
+
     fun assertThat(actual: Boolean, expected: Boolean) {
         if (actual != expected) {
             throw AssertionError()
         }
     }
 
-    fun assertThat(
-        id: Int,
-        assertion: Matcher<View>
-    ) {
-        var exception: Throwable? = null
-        val start = currentTimeMillis()
+    fun assertThat(id: Int, spinnerEntries: SpinnerMatcher) {
+        poll {
+            assertThat(id, isDisplayed())
+            assertThat(id, isEnabled())
 
-        do {
-            try {
-                element(id)?.check(matches(assertion))
-                return
-
-            } catch (e: Throwable) {
-                if (exception == null) {
-                    exception = e
-                }
-                sleep(INTERVAL)
+            for (i in 0..spinnerEntries.lastIndex()) {
+                spinnerEntries.check(id, i)
             }
-
-            val elapsed = currentTimeMillis() - start
-
-        } while (elapsed < TIMEOUT)
-
-        throw exception!!
+        }
     }
 
     fun click(id: Int) {
@@ -82,6 +88,18 @@ object StepsUtils {
         return allOf(asserts)
     }
 
+    fun hasSpinnerText(expected: String): Matcher<View> {
+        return allOf(
+            isDisplayed(),
+            isEnabled(),
+            withSpinnerText(equalTo(expected))
+        )
+    }
+
+    fun hasSpinnerRows(expectedEntries: List<String>): SpinnerMatcher {
+        return SpinnerMatcher(expectedEntries)
+    }
+
     fun hasText(expected: String?): Matcher<View> {
         return allOf(
             isDisplayed(),
@@ -98,8 +116,13 @@ object StepsUtils {
         return true
     }
 
-    fun select(id: Int, entry: String) {
+    fun selectListViewItem(id: Int, entry: String) {
         onData(hasToString(startsWith(entry))).inAdapterView(withId(id)).perform(click())
+    }
+
+    fun selectSpinnerItem(id: Int, entry: String) {
+        click(id)
+        onData(`is`(entry)).perform(click())
     }
 
     fun <T : Activity> start(activityTestRule: ActivityTestRule<T>): T? {
@@ -111,7 +134,31 @@ object StepsUtils {
         activityTestRule.finishActivity()
     }
 
-    private fun element(id: Int): ViewInteraction? {
+    internal fun element(id: Int): ViewInteraction? {
         return onView(withId(id))
+    }
+
+    internal fun poll(callback: () -> Unit) {
+
+        var exception: Throwable? = null
+        val start = currentTimeMillis()
+
+        do {
+            try {
+                callback()
+                return
+
+            } catch (e: Throwable) {
+                if (exception == null) {
+                    exception = e
+                }
+                sleep(INTERVAL)
+            }
+
+            val elapsed = currentTimeMillis() - start
+
+        } while (elapsed < TIMEOUT)
+
+        throw exception!!
     }
 }

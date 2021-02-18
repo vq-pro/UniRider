@@ -1,5 +1,5 @@
-#@Ignore
-@Integration
+#@Integration
+@Ignore
 Feature: Bluetooth Connection
 
   Background:

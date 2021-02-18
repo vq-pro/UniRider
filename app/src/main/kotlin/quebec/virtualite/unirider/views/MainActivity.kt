@@ -11,18 +11,18 @@ import quebec.virtualite.unirider.services.*
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        var connector: DeviceConnector = DeviceConnectorImpl()
-        var scanner: DeviceScanner = DeviceScannerImpl()
-    }
+//    companion object {
+//        var connector: DeviceConnector = DeviceConnectorImpl()
+//        var scanner: DeviceScanner = DeviceScannerImpl()
+//    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        connector.init(this)
-        scanner.init(this)
+//        connector.init(this)
+//        scanner.init(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

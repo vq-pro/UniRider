@@ -3,26 +3,26 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
-            app:startDestination="@id/ScanFragment">
+            app:startDestination="@id/CalculatorFragment">
 
     <fragment
-            android:id="@+id/ScanFragment"
-            android:name="quebec.virtualite.unirider.views.ScanFragment"
-            android:label="@string/scan_fragment_label"
-            tools:layout="@layout/scan_fragment">
+            android:id="@+id/CalculatorFragment"
+            android:name="quebec.virtualite.unirider.views.CalculatorFragment"
+            android:label="@string/calculator_fragment_label"
+            tools:layout="@layout/calculator_fragment">
 
-        <action
-            android:id="@+id/action_ScanFragment_to_DeviceFragment"
-            app:destination="@+id/DeviceFragment"
-        />
+<!--        <action-->
+<!--            android:id="@+id/action_ScanFragment_to_DeviceFragment"-->
+<!--            app:destination="@+id/DeviceFragment"-->
+<!--        />-->
     </fragment>
 
-    <fragment
-            android:id="@+id/DeviceFragment"
-            android:name="quebec.virtualite.unirider.views.DeviceFragment"
-            android:label="@string/device_fragment_label"
-            tools:layout="@layout/device_fragment">
-    </fragment>
+<!--    <fragment-->
+<!--            android:id="@+id/DeviceFragment"-->
+<!--            android:name="quebec.virtualite.unirider.views.DeviceFragment"-->
+<!--            android:label="@string/device_fragment_label"-->
+<!--            tools:layout="@layout/device_fragment">-->
+<!--    </fragment>-->
 
 
     <!--    <fragment-->

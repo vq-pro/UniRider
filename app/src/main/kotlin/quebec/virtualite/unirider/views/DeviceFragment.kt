@@ -22,7 +22,7 @@ class DeviceFragment : Fragment() {
 
     private lateinit var device: Device
 
-    private val connector: DeviceConnector = MainActivity.connector
+//    private val connector: DeviceConnector = MainActivity.connector
     private val viewModel: WheelViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,7 +50,7 @@ class DeviceFragment : Fragment() {
                 textVoltage.text = wheelData.voltage.toString()
             })
 
-        connector.connect(device) { wheelData: WheelData ->
+//        connector.connect(device) { wheelData: WheelData ->
 
 //            viewModel.selectedWheel.value = wheelData
 //            viewModel.selectWheel(wheelData)
@@ -61,6 +61,6 @@ class DeviceFragment : Fragment() {
 //                textBattery.text = wheelData.battery.toString()
 //                textVoltage.text = wheelData.voltage.toString()
 //            })
-        }
+//        }
     }
 }

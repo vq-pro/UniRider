@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.Device
-import quebec.virtualite.unirider.services.DeviceScanner
 
 class ScanFragment : Fragment() {
 
@@ -24,7 +23,7 @@ class ScanFragment : Fragment() {
     private lateinit var devicesListView: ListView
     private lateinit var devicesAdapter: ArrayAdapter<String>
 
-    private var scanner: DeviceScanner = MainActivity.scanner
+//    private var scanner: DeviceScanner = MainActivity.scanner
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.scan_fragment, container, false)
@@ -41,7 +40,7 @@ class ScanFragment : Fragment() {
 
 //            Toast.makeText(view.context, "Clicked item: " + devicesAdapter.getItem(position), Toast.LENGTH_SHORT).show()
 
-            scanner.stop()
+//            scanner.stop()
 
             val name: String = devicesAdapter.getItem(position)!!
             val device: Device = devicesInfo.get(name)!!
@@ -50,7 +49,7 @@ class ScanFragment : Fragment() {
             bundle.putString("name", device.name)
             bundle.putString("address", device.address)
 
-            findNavController().navigate(R.id.action_ScanFragment_to_DeviceFragment, bundle)
+//            findNavController().navigate(R.id.action_ScanFragment_to_DeviceFragment, bundle)
         }
 
         scanButton = view.findViewById(R.id.scan)
@@ -70,7 +69,7 @@ class ScanFragment : Fragment() {
     internal fun onScanButton(): (View) -> Unit {
         return {
             devicesAdapter.clear()
-            scanner.scan { device -> addDevice(device) }
+//            scanner.scan { device -> addDevice(device) }
         }
     }
 }
