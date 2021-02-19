@@ -1,6 +1,7 @@
 package quebec.virtualite.unirider.services
 
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.IsEqual.equalTo
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -26,6 +27,6 @@ class CalculatorServiceTest {
         val battery = calculator.batteryOn(voltage)
 
         // Then
-        assertThat(battery, org.hamcrest.core.Is.`is`(expectedBattery))
+        assertThat(battery, equalTo(expectedBattery))
     }
 }
