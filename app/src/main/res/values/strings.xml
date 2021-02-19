@@ -8,4 +8,5 @@
     <string name="scan_button">Scan</string>
     <string name="scan_fragment_label">Devices</string>
     <string name="title_message">Enter your name</string>
+    <string name="wheel_voltage">voltage</string>
 </resources>
