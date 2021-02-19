@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.*
@@ -20,6 +21,7 @@ import quebec.virtualite.unirider.views.GreetingsFragment
 
 private const val NAME = "Toto"
 
+@Ignore("Not necessary to slow down build for this")
 @RunWith(MockitoJUnitRunner::class)
 class GreetingsFragmentTest {
     @InjectMocks

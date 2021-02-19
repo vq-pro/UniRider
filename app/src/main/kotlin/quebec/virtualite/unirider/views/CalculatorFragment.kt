@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.views
 
 import android.os.Bundle
-import android.text.TextUtils.isEmpty
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +8,13 @@ import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils.addTextChangedListener
 import quebec.virtualite.unirider.utils.WidgetUtils.onItemSelectedListener
 
 class CalculatorFragment : Fragment() {
 
+    private val calculatorService = CalculatorService()
     private val wheelNames: MutableList<String> = mutableListOf()
 
     private lateinit var wheelSelector: Spinner
@@ -57,14 +58,6 @@ class CalculatorFragment : Fragment() {
     }
 
     private fun onUpdateVoltage() = { text: String ->
-        val voltage: String = text
-        if (!isEmpty(voltage)) {
-            val voltageF: Float = voltage.toFloat()
-            val percentage = (voltageF - 79.2f) / (100.8f - 79.2f) * 100f
-
-            if (0f <= percentage && percentage <= 100f) {
-                wheelBattery.text = "%.1f%%".format(percentage)
-            }
-        }
+        wheelBattery.text = calculatorService.batteryOn(text)
     }
 }
