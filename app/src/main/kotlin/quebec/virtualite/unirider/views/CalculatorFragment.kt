@@ -1,6 +1,9 @@
 package quebec.virtualite.unirider.views
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils.isEmpty
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.ConstraintSet.*
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import quebec.virtualite.unirider.R
 
@@ -48,8 +52,6 @@ class CalculatorFragment : Fragment() {
                     else -> {
                         wheelVoltage.isVisible = true
                         wheelBattery.isVisible = true
-
-                        wheelBattery.text = "79.6"
                     }
                 }
             }
@@ -57,8 +59,28 @@ class CalculatorFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        wheelBattery = view.findViewById(R.id.wheel_battery)
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
+        wheelVoltage.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(field: Editable?) {}
+
+            override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+
+                val voltage: String = text.toString()
+                if (!isEmpty(voltage)) {
+                    val voltageF: Float = voltage.toFloat()
+                    val percentage = (voltageF - 79.2f) / (100.8f - 79.2f) * 100f
+
+                    if (0f <= percentage && percentage <= 100f) {
+                        wheelBattery.text = "%.1f%%".format(percentage)
+                    }
+                }
+            }
+        })
+
+        wheelBattery = view.findViewById(R.id.wheel_battery)
     }
 
     internal fun onSelectWheel(): (View) -> Unit {

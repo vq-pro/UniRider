@@ -9,8 +9,12 @@ Feature: Battery Percentage Calculator
       | KingSong 14D   |
 
   @WIP
-  Scenario: Calculating percentage
+  Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I start the app
-    And I choose the "Gotway Nikola"
-    When I enter a voltage of 96.4
-    Then it displays a percentage of 79.6
+    And I choose the "<Wheel>"
+    When I enter a voltage of <Voltage>
+    Then it displays a percentage of <Battery>
+    Examples:
+      | Wheel         | Voltage | Battery |
+      | Gotway Nikola | 96.4    | 79.6%   |
+      | Gotway Nikola | 89.1    | 45.8%   |
