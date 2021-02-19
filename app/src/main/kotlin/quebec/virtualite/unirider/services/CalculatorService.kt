@@ -2,15 +2,17 @@ package quebec.virtualite.unirider.services
 
 import org.apache.http.util.TextUtils.isEmpty
 import java.util.Locale.ENGLISH
+import kotlin.math.roundToInt
 
 class CalculatorService {
 
-    fun batteryOn(text: String): String {
+    fun batteryOn(text: String, highestF: Float, lowestF: Float): String {
 
-        val voltage: String = text
-        if (!isEmpty(voltage)) {
-            val voltageF: Float = voltage.toFloat()
-            val percentage = (voltageF - 79.2f) / (100.8f - 79.2f) * 100f
+        if (!isEmpty(text)) {
+            val voltage = text.replace(".", "").toInt()
+            val highest = (highestF * 10).roundToInt()
+            val lowest = (lowestF * 10).roundToInt()
+            val percentage: Float = (voltage - lowest) * 100f / (highest - lowest)
 
             if (0f <= percentage && percentage <= 100f) {
                 return "%.1f%%"

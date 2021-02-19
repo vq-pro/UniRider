@@ -101,11 +101,7 @@ object StepsUtils {
     }
 
     fun hasText(expected: String?): Matcher<View> {
-        return allOf(
-            isDisplayed(),
-            isEnabled(),
-            withText(equalTo(expected))
-        )
+        return withText(equalTo(expected))
     }
 
     fun isEmpty(): Matcher<View> {

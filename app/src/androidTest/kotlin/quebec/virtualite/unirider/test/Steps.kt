@@ -12,6 +12,7 @@ import quebec.virtualite.commons.android.utils.StepsUtils.enter
 import quebec.virtualite.commons.android.utils.StepsUtils.hasSpinnerRows
 import quebec.virtualite.commons.android.utils.StepsUtils.hasSpinnerText
 import quebec.virtualite.commons.android.utils.StepsUtils.hasText
+import quebec.virtualite.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.commons.android.utils.StepsUtils.selectSpinnerItem
 import quebec.virtualite.commons.android.utils.StepsUtils.start
 import quebec.virtualite.commons.android.utils.StepsUtils.stop
@@ -30,6 +31,12 @@ class Steps {
 //        sleep(5000)
 
         stop(activityTestRule)
+    }
+
+    @Then("it blanks the displays")
+    fun thenBlanksTheDisplays() {
+        assertThat(R.id.wheel_voltage, isEmpty())
+        assertThat(R.id.wheel_battery, isEmpty())
     }
 
     @Then("I can choose from these wheels:")
