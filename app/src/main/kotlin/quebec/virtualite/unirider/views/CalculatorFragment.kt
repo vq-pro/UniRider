@@ -1,26 +1,21 @@
 package quebec.virtualite.unirider.views
 
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextUtils.isEmpty
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.VisibleForTesting
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.constraintlayout.widget.ConstraintSet.*
 import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.utils.WidgetUtils.addTextChangedListener
+import quebec.virtualite.unirider.utils.WidgetUtils.onItemSelectedListener
 
 class CalculatorFragment : Fragment() {
 
     private val wheelNames: MutableList<String> = mutableListOf()
 
-    private lateinit var wheelAdapter: ArrayAdapter<String>
     private lateinit var wheelSelector: Spinner
 
     private lateinit var wheelBattery: TextView
@@ -37,55 +32,39 @@ class CalculatorFragment : Fragment() {
         wheelNames.add("Gotway Nikola")
         wheelNames.add("KingSong 14D")
 
-        wheelAdapter = ArrayAdapter(view.context, R.layout.wheel_item, wheelNames)
         wheelSelector = view.findViewById(R.id.wheel_selector)
-        wheelSelector.adapter = wheelAdapter
+        wheelSelector.adapter = ArrayAdapter(view.context, R.layout.wheel_item, wheelNames)
         wheelSelector.isEnabled = true
-        wheelSelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                when (position) {
-                    0 -> {
-                        wheelVoltage.isVisible = false
-                        wheelBattery.isVisible = false
-                    }
-                    else -> {
-                        wheelVoltage.isVisible = true
-                        wheelBattery.isVisible = true
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
+        wheelSelector.onItemSelectedListener = onItemSelectedListener(onSelectWheel())
 
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
-        wheelVoltage.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(field: Editable?) {}
-
-            override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-
-                val voltage: String = text.toString()
-                if (!isEmpty(voltage)) {
-                    val voltageF: Float = voltage.toFloat()
-                    val percentage = (voltageF - 79.2f) / (100.8f - 79.2f) * 100f
-
-                    if (0f <= percentage && percentage <= 100f) {
-                        wheelBattery.text = "%.1f%%".format(percentage)
-                    }
-                }
-            }
-        })
+        wheelVoltage.addTextChangedListener(addTextChangedListener(onUpdateVoltage()))
 
         wheelBattery = view.findViewById(R.id.wheel_battery)
     }
 
-    internal fun onSelectWheel(): (View) -> Unit {
-        return {
+    private fun onSelectWheel() = { index: Int ->
+        when (index) {
+            0 -> {
+                wheelVoltage.isVisible = false
+                wheelBattery.isVisible = false
+            }
+            else -> {
+                wheelVoltage.isVisible = true
+                wheelBattery.isVisible = true
+            }
+        }
+    }
 
+    private fun onUpdateVoltage() = { text: String ->
+        val voltage: String = text
+        if (!isEmpty(voltage)) {
+            val voltageF: Float = voltage.toFloat()
+            val percentage = (voltageF - 79.2f) / (100.8f - 79.2f) * 100f
+
+            if (0f <= percentage && percentage <= 100f) {
+                wheelBattery.text = "%.1f%%".format(percentage)
+            }
         }
     }
 }
