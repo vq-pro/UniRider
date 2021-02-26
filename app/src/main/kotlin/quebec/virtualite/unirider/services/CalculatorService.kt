@@ -4,9 +4,9 @@ import org.apache.http.util.TextUtils.isEmpty
 import java.util.Locale.ENGLISH
 import kotlin.math.roundToInt
 
-class CalculatorService {
+open class CalculatorService {
 
-    fun batteryOn(text: String, highestF: Float, lowestF: Float): String {
+    open fun batteryOn(text: String, highestF: Float, lowestF: Float): String {
 
         if (!isEmpty(text)) {
 

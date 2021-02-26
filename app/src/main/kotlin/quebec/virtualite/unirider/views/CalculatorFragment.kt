@@ -19,7 +19,6 @@ class CalculatorFragment : Fragment() {
 
     data class Wheel(val name: String, val highest: Float, val lowest: Float)
 
-    private val calculatorService = CalculatorService()
     private val wheels = listOf(
         Wheel("<Select Model>", 0f, 0f),
         Wheel("Gotway Nikola", 100.8f, 79.2f),
@@ -28,10 +27,12 @@ class CalculatorFragment : Fragment() {
         Wheel("Veteran Sherman", 100.8f, 75.6f)
     )
 
-    private lateinit var wheelSelector: Spinner
+    var calculatorService = CalculatorService()
 
-    private lateinit var wheelBattery: TextView
-    private lateinit var wheelVoltage: EditText
+    lateinit var wheelSelector: Spinner
+
+    lateinit var wheelBattery: TextView
+    lateinit var wheelVoltage: EditText
 
     private var wheel: Wheel = Wheel("", 0f, 0f)
 
@@ -53,7 +54,7 @@ class CalculatorFragment : Fragment() {
         wheelBattery = view.findViewById(R.id.wheel_battery)
     }
 
-    private fun onSelectWheel() = { index: Int ->
+    fun onSelectWheel() = { index: Int ->
         when (index) {
             0 -> {
                 wheelVoltage.isVisible = false
@@ -70,7 +71,7 @@ class CalculatorFragment : Fragment() {
         wheelBattery.text = ""
     }
 
-    private fun onUpdateVoltage() = { text: String ->
+    fun onUpdateVoltage() = { text: String ->
         wheelBattery.text = calculatorService.batteryOn(text, wheel.highest, wheel.lowest)
     }
 }
