@@ -3,26 +3,38 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
-            app:startDestination="@id/CalculatorFragment">
+            app:startDestination="@id/TripFragment">
+
+    <fragment
+            android:id="@+id/TripFragment"
+            android:name="quebec.virtualite.unirider.views.TripFragment"
+            android:label="@string/fragment_label_trip"
+            tools:layout="@layout/trip_fragment">
+
+        <action
+                android:id="@+id/action_TripFragment_to_CalculatorFragment"
+                app:destination="@+id/CalculatorFragment"
+        />
+    </fragment>
 
     <fragment
             android:id="@+id/CalculatorFragment"
             android:name="quebec.virtualite.unirider.views.CalculatorFragment"
-            android:label="@string/calculator_fragment_label"
+            android:label="@string/fragment_label_calculator"
             tools:layout="@layout/calculator_fragment">
 
-<!--        <action-->
-<!--            android:id="@+id/action_ScanFragment_to_DeviceFragment"-->
-<!--            app:destination="@+id/DeviceFragment"-->
-<!--        />-->
+        <!--        <action-->
+        <!--            android:id="@+id/action_ScanFragment_to_DeviceFragment"-->
+        <!--            app:destination="@+id/DeviceFragment"-->
+        <!--        />-->
     </fragment>
 
-<!--    <fragment-->
-<!--            android:id="@+id/DeviceFragment"-->
-<!--            android:name="quebec.virtualite.unirider.views.DeviceFragment"-->
-<!--            android:label="@string/device_fragment_label"-->
-<!--            tools:layout="@layout/device_fragment">-->
-<!--    </fragment>-->
+    <!--    <fragment-->
+    <!--            android:id="@+id/DeviceFragment"-->
+    <!--            android:name="quebec.virtualite.unirider.views.DeviceFragment"-->
+    <!--            android:label="@string/device_fragment_label"-->
+    <!--            tools:layout="@layout/device_fragment">-->
+    <!--    </fragment>-->
 
 
     <!--    <fragment-->

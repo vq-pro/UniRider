@@ -13,7 +13,7 @@
 
         <TextView
                 android:id="@+id/devices_label"
-                android:text="@string/devices_label"
+                android:text="@string/label_devices"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -32,7 +32,7 @@
 
         <Button
                 android:id="@+id/scan"
-                android:text="@string/scan_button"
+                android:text="@string/button_scan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

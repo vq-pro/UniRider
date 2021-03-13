@@ -8,6 +8,7 @@ import cucumber.api.java.en.When
 import org.hamcrest.Matchers.not
 import org.junit.Rule
 import quebec.virtualite.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.commons.android.utils.StepsUtils.click
 import quebec.virtualite.commons.android.utils.StepsUtils.enter
 import quebec.virtualite.commons.android.utils.StepsUtils.hasSpinnerRows
 import quebec.virtualite.commons.android.utils.StepsUtils.hasSpinnerText
@@ -63,11 +64,16 @@ class Steps {
         enter(R.id.wheel_voltage, voltage.toString())
     }
 
-    @When("I start the app")
-    fun whenStartApp() {
-        mainActivity = start(activityTestRule)!!
+    @When("I go into the calculator")
+    fun whenGoCalculator() {
+        click(R.id.button_calculator)
 
         assertThat(R.id.wheel_battery, not(isDisplayed()))
         assertThat(R.id.wheel_voltage, not(isDisplayed()))
+    }
+
+    @When("I start the app")
+    fun whenStartApp() {
+        mainActivity = start(activityTestRule)!!
     }
 }

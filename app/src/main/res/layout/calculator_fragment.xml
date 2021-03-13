@@ -27,7 +27,7 @@
 
             <EditText
                     android:id="@+id/wheel_voltage"
-                    android:hint="@string/wheel_voltage"
+                    android:hint="@string/hint_wheel_voltage"
                     android:inputType="numberDecimal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

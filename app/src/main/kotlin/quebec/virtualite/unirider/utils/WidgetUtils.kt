@@ -21,6 +21,10 @@ object WidgetUtils {
         }
     }
 
+    fun onClickListener(callback: (View) -> Unit): View.OnClickListener {
+        return View.OnClickListener { view -> callback(view) }
+    }
+
     fun onItemSelectedListener(callback: (index: Int) -> Unit): AdapterView.OnItemSelectedListener {
 
         return object : AdapterView.OnItemSelectedListener {

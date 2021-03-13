@@ -3,6 +3,7 @@ Feature: Battery Percentage Calculator
 
   Background:
     Given I start the app
+    And I go into the calculator
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I choose the "<Wheel>"
