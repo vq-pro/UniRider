@@ -3,10 +3,10 @@ Feature: Battery Percentage Calculator
 
   Background:
     Given I start the app
-    And I go into the calculator
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I choose the "<Wheel>"
+    And I go into the calculator
     When I enter a voltage of <Voltage>
     Then it displays a percentage of <Battery>
     Examples:
@@ -17,9 +17,11 @@ Feature: Battery Percentage Calculator
       | KingSong 14D    | 63.5    | 80.7%   |
       | Veteran Sherman | 96.5    | 82.9%   |
 
-  Scenario: Switching wheels
-    Given I choose the "Gotway Nikola"
-    And I enter a voltage of 96.4
-    When I choose the "KingSong 14D"
-    Then it blanks the displays
-    
+  Scenario: Going into calculator
+    When I choose the "Gotway Nikola"
+    And I go into the calculator
+    Then I can see the name of the wheel
+
+  Scenario: Going into calculator without selecting a wheel
+    When I don't choose a wheel
+    Then I cannot go into the calculator

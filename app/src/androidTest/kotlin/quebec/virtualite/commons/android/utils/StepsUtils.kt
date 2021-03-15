@@ -60,6 +60,7 @@ object StepsUtils {
     }
 
     fun click(id: Int) {
+        assertThat(id, isEnabled())
         element(id)?.perform(click())
     }
 
@@ -102,6 +103,10 @@ object StepsUtils {
 
     fun hasText(expected: String?): Matcher<View> {
         return withText(equalTo(expected))
+    }
+
+    fun isDisabled(): Matcher<View> {
+        return not(isEnabled())
     }
 
     fun isEmpty(): Matcher<View> {

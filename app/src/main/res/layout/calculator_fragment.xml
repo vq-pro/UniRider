@@ -11,8 +11,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <Spinner
-                android:id="@+id/wheel_selector"
+        <TextView
+                android:id="@+id/wheel_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -34,8 +34,6 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="40dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:visibility="invisible"
-                    tools:visibility="invisible"
             />
 
             <TextView
@@ -45,8 +43,6 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="40dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:visibility="invisible"
-                    tools:visibility="invisible"
             />
         </GridLayout>
 
