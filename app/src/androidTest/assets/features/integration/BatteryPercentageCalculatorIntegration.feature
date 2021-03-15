@@ -22,5 +22,4 @@ Feature: Battery Percentage Calculator
     And I enter a voltage of 96.4
     When I choose the "KingSong 14D"
     Then it blanks the displays
-
-
+    
