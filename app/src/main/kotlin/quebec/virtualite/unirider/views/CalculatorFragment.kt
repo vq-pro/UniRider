@@ -15,7 +15,7 @@ class CalculatorFragment : Fragment() {
 
     var calculatorService = CalculatorService()
 
-    lateinit var wheel: TripFragment.Wheel
+    lateinit var wheel: Wheel
     lateinit var wheelBattery: TextView
     lateinit var wheelName: TextView
     lateinit var wheelVoltage: EditText

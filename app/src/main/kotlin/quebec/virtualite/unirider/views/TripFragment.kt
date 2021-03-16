@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.views
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,20 +10,15 @@ import android.widget.Spinner
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import kotlinx.parcelize.Parcelize
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.utils.WidgetUtils.onClickListener
 import quebec.virtualite.unirider.utils.WidgetUtils.onItemSelectedListener
 
 class TripFragment : Fragment() {
 
-    @Parcelize
-    data class Wheel(val name: String, val highest: Float, val lowest: Float) : Parcelable
-
     private val wheels = listOf(
         Wheel("<Select Model>", 0f, 0f),
-        // FIXME 1 Update minimum to 78.0f
-        Wheel("Gotway Nikola", 100.8f, 79.2f),
+        Wheel("Gotway Nikola+", 100.8f, 78.0f),
         Wheel("Inmotion V10F", 84f, 68f),
         Wheel("KingSong 14D", 67.2f, 48.0f),
         Wheel("Veteran Sherman", 100.8f, 75.6f)
@@ -56,7 +50,8 @@ class TripFragment : Fragment() {
         findNavController()
             .navigate(
                 R.id.action_TripFragment_to_CalculatorFragment,
-                bundleOf("wheel" to wheel))
+                bundleOf("wheel" to wheel)
+            )
     }
 
     fun onSelectWheel() = { index: Int ->
