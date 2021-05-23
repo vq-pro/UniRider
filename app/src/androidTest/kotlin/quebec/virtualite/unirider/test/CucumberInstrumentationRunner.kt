@@ -3,6 +3,7 @@ package quebec.virtualite.unirider.test
 import cucumber.api.CucumberOptions
 import cucumber.api.SnippetType.CAMELCASE
 import quebec.virtualite.commons.android.BaseCucumberInstrumentationRunner
+import quebec.virtualite.unirider.BuildConfig
 
 @CucumberOptions
     (

@@ -15,6 +15,7 @@ Feature: Battery Percentage Calculator
       | Gotway Nikola+  | 89.1    | 48.7%   |
       | Inmotion V10F   | 74.6    | 41.3%   |
       | KingSong 14D    | 63.5    | 80.7%   |
+      | KingSong S18    | 71.4    | 39.1%   |
       | Veteran Sherman | 96.5    | 82.9%   |
 
   Scenario: Going into calculator

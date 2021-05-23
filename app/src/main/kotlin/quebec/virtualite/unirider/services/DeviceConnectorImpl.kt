@@ -34,6 +34,14 @@ class DeviceConnectorImpl : DeviceConnector {
         "0000fc60-0000-1000-8000-00805f9b34fb",
         "0000fe00-0000-1000-8000-00805f9b34fb"
     )
+    private val KINGSONG_SERVICES: List<String> = listOf(
+        "00001800-0000-1000-8000-00805f9b34fb",
+        "00001801-0000-1000-8000-00805f9b34fb",
+        "0000180a-0000-1000-8000-00805f9b34fb",
+        "0000fff0-0000-1000-8000-00805f9b34fb",
+        "0000ffe0-0000-1000-8000-00805f9b34fb"
+    )
+
     private val AUTOCONNECT = true
 
     private lateinit var activity: Activity

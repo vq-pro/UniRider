@@ -20,14 +20,35 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
         />
 
-        <Button
-                android:id="@+id/button_calculator"
-                android:text="@string/button_calculator"
-                android:visibility="visible"
-                android:layout_margin="30dp"
-                android:layout_width="wrap_content"
-                android:layout_row="0"
-                android:layout_column="1"/>
+        <GridLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+            <Button
+                    android:id="@+id/button_calculator"
+                    android:text="@string/button_calculator"
+                    android:visibility="visible"
+                    android:layout_margin="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="1"
+            />
+        </GridLayout>
+
+        <GridLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:id="@+id/trip_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="40dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+        </GridLayout>
     </GridLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

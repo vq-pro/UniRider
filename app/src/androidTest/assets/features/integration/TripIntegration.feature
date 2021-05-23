@@ -6,4 +6,5 @@ Feature: Battery Percentage Calculator
 
   @Ignore
   Scenario: Starting a ride
-    Given I choose the "Gotway Nikola"
+    When I choose the "Gotway Nikola+"
+    Then the initial date and time is displayed
