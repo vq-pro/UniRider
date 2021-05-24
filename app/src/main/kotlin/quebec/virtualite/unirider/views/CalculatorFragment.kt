@@ -9,16 +9,27 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.utils.WidgetUtils.addTextChangedListener
+import quebec.virtualite.unirider.utils.WidgetUtils
 
-class CalculatorFragment : Fragment() {
+class CalculatorFragment : Fragment {
+
+    constructor() {
+        this.widgets = WidgetUtils()
+    }
+
+    constructor(widgets: WidgetUtils) {
+        this.widgets = widgets
+    }
 
     var calculatorService = CalculatorService()
 
     lateinit var wheel: Wheel
+
     lateinit var wheelBattery: TextView
     lateinit var wheelName: TextView
     lateinit var wheelVoltage: EditText
+
+    private val widgets: WidgetUtils
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         wheel = arguments?.getParcelable("wheel")!!
@@ -32,7 +43,7 @@ class CalculatorFragment : Fragment() {
         wheelName.text = wheel.name
 
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
-        wheelVoltage.addTextChangedListener(addTextChangedListener(onUpdateVoltage()))
+        wheelVoltage.addTextChangedListener(widgets.addTextChangedListener(onUpdateVoltage()))
 
         wheelBattery = view.findViewById(R.id.wheel_battery)
     }

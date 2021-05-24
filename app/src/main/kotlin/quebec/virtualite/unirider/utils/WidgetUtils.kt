@@ -1,11 +1,14 @@
 package quebec.virtualite.unirider.utils
 
+import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.SpinnerAdapter
 
-object WidgetUtils {
+open class WidgetUtils {
 
     fun addTextChangedListener(callback: (text: String) -> Unit): TextWatcher {
 
@@ -19,6 +22,10 @@ object WidgetUtils {
                 callback(text.toString())
             }
         }
+    }
+
+    open fun arrayAdapter(context: Context?, id: Int?, contents: List<String>?): SpinnerAdapter {
+        return ArrayAdapter(context!!, id!!, contents!!)
     }
 
     fun onClickListener(callback: (View) -> Unit): View.OnClickListener {

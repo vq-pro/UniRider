@@ -4,15 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.utils.WidgetUtils.onClickListener
-import quebec.virtualite.unirider.utils.WidgetUtils.onItemSelectedListener
+import quebec.virtualite.unirider.utils.WidgetUtils
 
 class TripFragment : Fragment() {
 
@@ -28,6 +26,8 @@ class TripFragment : Fragment() {
     lateinit var buttonCalc: Button
     lateinit var spinnerWheel: Spinner
 
+    var widgets = WidgetUtils()
+
     private var wheel: Wheel = Wheel("", 0f, 0f)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,13 +38,13 @@ class TripFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonCalc = view.findViewById(R.id.button_calculator)
-        buttonCalc.setOnClickListener(onClickListener(onGoCalculator()))
+        buttonCalc.setOnClickListener(widgets.onClickListener(onGoCalculator()))
         buttonCalc.isEnabled = false
 
         spinnerWheel = view.findViewById(R.id.wheel_selector)
-        spinnerWheel.adapter = ArrayAdapter(view.context, R.layout.wheel_item, wheels.map { wheel -> wheel.name })
+        spinnerWheel.adapter = widgets.arrayAdapter(view.context, R.layout.wheel_item, wheels.map { wheel -> wheel.name })
         spinnerWheel.isEnabled = true
-        spinnerWheel.onItemSelectedListener = onItemSelectedListener(onSelectWheel())
+        spinnerWheel.onItemSelectedListener = widgets.onItemSelectedListener(onSelectWheel())
     }
 
     fun onGoCalculator() = { _: View ->
