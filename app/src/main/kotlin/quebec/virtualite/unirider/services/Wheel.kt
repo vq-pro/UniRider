@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.views
+package quebec.virtualite.unirider.services
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

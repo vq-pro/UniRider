@@ -11,7 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class CalculatorServiceTest {
 
     @InjectMocks
-    var calculator = CalculatorService()
+    var service = CalculatorService()
 
     @Test
     fun batteryOn() {
@@ -39,9 +39,29 @@ class CalculatorServiceTest {
         batteryOn("63.5", 0f, 0f, "")
     }
 
+    @Test
+    fun wheels() {
+        // When
+        val wheels = service.wheels()
+
+        // Then
+        assertThat(
+            wheels, equalTo(
+                listOf(
+                    // FIXME 0 Remove voltages from this list, should be purely internal to the service
+                    Wheel("Gotway Nikola+", 100.8f, 78.0f),
+                    Wheel("Inmotion V10F", 84f, 68f),
+                    Wheel("KingSong 14S", 67.2f, 48.0f),
+                    Wheel("KingSong S18", 84.5f, 63.0f),
+                    Wheel("Veteran Sherman", 100.8f, 75.6f)
+                )
+            )
+        )
+    }
+
     internal fun batteryOn(voltage: String, highest: Float, lowest: Float, expectedBattery: String) {
         // When
-        val battery = calculator.batteryOn(voltage, highest, lowest)
+        val battery = service.batteryOn(voltage, highest, lowest)
 
         // Then
         assertThat(battery, equalTo(expectedBattery))

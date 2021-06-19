@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.CalculatorService
+import quebec.virtualite.unirider.services.Wheel
 import quebec.virtualite.unirider.utils.WidgetUtils
 
 class CalculatorFragment : Fragment {

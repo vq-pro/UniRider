@@ -32,4 +32,14 @@ open class CalculatorService {
 
         return ""
     }
+
+    open fun wheels(): List<Wheel> {
+        return listOf(
+            Wheel("Gotway Nikola+", 100.8f, 78.0f),
+            Wheel("Inmotion V10F", 84f, 68f),
+            Wheel("KingSong 14S", 67.2f, 48.0f),
+            Wheel("KingSong S18", 84.5f, 63.0f),
+            Wheel("Veteran Sherman", 100.8f, 75.6f)
+        )
+    }
 }
