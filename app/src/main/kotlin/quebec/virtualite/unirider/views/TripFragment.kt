@@ -11,20 +11,18 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.services.Wheel
 import quebec.virtualite.unirider.utils.WidgetUtils
 
 class TripFragment : Fragment() {
 
-    private val SELECT_WHEEL_TITLE = "<Select Model>"
-    private val SELECT_WHEEL = Wheel(SELECT_WHEEL_TITLE, 0f, 0f)
+    private val SELECT_WHEEL = "<Select Model>"
 
     var calculatorService = CalculatorService()
 
     lateinit var buttonCalc: Button
     lateinit var spinnerWheel: Spinner
 
-    var wheel: Wheel = SELECT_WHEEL
+    var wheel = SELECT_WHEEL
     var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,7 +36,7 @@ class TripFragment : Fragment() {
         buttonCalc.setOnClickListener(widgets.onClickListener(onGoCalculator()))
         buttonCalc.isEnabled = false
 
-        val wheelList = listOf(SELECT_WHEEL_TITLE) + calculatorService.wheels().map { wheel -> wheel.name }
+        val wheelList = listOf(SELECT_WHEEL) + calculatorService.wheels()
 
         spinnerWheel = view.findViewById(R.id.wheel_selector)
         spinnerWheel.adapter = widgets.arrayAdapter(view.context, R.layout.wheel_item, wheelList)

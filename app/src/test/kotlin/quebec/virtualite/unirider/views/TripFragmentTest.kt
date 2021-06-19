@@ -19,7 +19,6 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.services.Wheel
 import quebec.virtualite.unirider.utils.WidgetUtils
 
 @RunWith(MockitoJUnitRunner::class)
@@ -61,12 +60,7 @@ class TripFragmentTest {
         fragment.widgets = mockedWidgets
 
         given(mockedCalculatorService.wheels())
-            .willReturn(
-                listOf(
-                    Wheel(WHEEL_A, 0f, 0f),
-                    Wheel(WHEEL_B, 0f, 0f)
-                )
-            )
+            .willReturn(listOf(WHEEL_A, WHEEL_B))
     }
 
     @Test
@@ -107,7 +101,7 @@ class TripFragmentTest {
 
         // Then
         verify(mockedButtonCalculator).isEnabled = true
-        assertThat(fragment.wheel, equalTo(Wheel(WHEEL_A, 0f, 0f)))
+        assertThat(fragment.wheel, equalTo(WHEEL_A))
     }
 
     @Test
@@ -117,6 +111,6 @@ class TripFragmentTest {
 
         // Then
         verify(mockedButtonCalculator).isEnabled = false
-        assertThat(fragment.wheel, equalTo(Wheel(SELECT_WHEEL, 0f, 0f)))
+        assertThat(fragment.wheel, equalTo(SELECT_WHEEL))
     }
 }

@@ -9,23 +9,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.services.Wheel
 import quebec.virtualite.unirider.utils.WidgetUtils
 
-class CalculatorFragment : Fragment {
-
-    constructor() {
-        this.widgets = WidgetUtils()
-    }
-
-    constructor(widgets: WidgetUtils) {
-        this.widgets = widgets
-    }
+class CalculatorFragment : Fragment() {
 
     var calculatorService = CalculatorService()
 
-    lateinit var wheel: Wheel
-
+    lateinit var wheel: String
     lateinit var wheelBattery: TextView
     lateinit var wheelName: TextView
     lateinit var wheelVoltage: EditText
@@ -33,7 +23,8 @@ class CalculatorFragment : Fragment {
     private val widgets: WidgetUtils
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        wheel = arguments?.getParcelable("wheel")!!
+//        wheel = arguments?.getParcelable("wheel")!!
+        wheel = arguments?.getString("wheel")!!
         return inflater.inflate(R.layout.calculator_fragment, container, false)
     }
 
@@ -41,7 +32,7 @@ class CalculatorFragment : Fragment {
         super.onViewCreated(view, savedInstanceState)
 
         wheelName = view.findViewById(R.id.wheel_name)
-        wheelName.text = wheel.name
+        wheelName.text = wheel
 
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
         wheelVoltage.addTextChangedListener(widgets.addTextChangedListener(onUpdateVoltage()))
@@ -49,7 +40,11 @@ class CalculatorFragment : Fragment {
         wheelBattery = view.findViewById(R.id.wheel_battery)
     }
 
-    fun onUpdateVoltage() = { text: String ->
-        wheelBattery.text = calculatorService.batteryOn(text, wheel.highest, wheel.lowest)
+    fun onUpdateVoltage() = { voltageString: String ->
+        wheelBattery.text = calculatorService.batteryOn(wheel, voltageString)
+    }
+
+    init {
+        this.widgets = WidgetUtils()
     }
 }

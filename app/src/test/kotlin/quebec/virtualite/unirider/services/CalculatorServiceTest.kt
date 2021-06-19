@@ -10,33 +10,38 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class CalculatorServiceTest {
 
+    private val KS_14S = "KingSong 14S"
+    private val KS_S18 = "KingSong S18"
+    private val NIKOLA = "Gotway Nikola+"
+    private val SHERMAN = "Veteran Sherman"
+    private val V10F = "Inmotion V10F"
+
     @InjectMocks
     var service = CalculatorService()
 
     @Test
     fun batteryOn() {
         // Gotway Nikola
-        batteryOn("100.8", 100.8f, 79.2f, "100%")
-        batteryOn("96.4", 100.8f, 79.2f, "79.6%")
-        batteryOn("95.0", 100.8f, 79.2f, "73.1%")
-        batteryOn("95.", 100.8f, 79.2f, "73.1%")
-        batteryOn("95", 100.8f, 79.2f, "73.1%")
-        batteryOn("89.1", 100.8f, 79.2f, "45.8%")
-        batteryOn("79.2", 100.8f, 79.2f, "0%")
+        batteryOn(NIKOLA, "100.8", "100%")
+        batteryOn(NIKOLA, "96.4", "80.7%")
+        batteryOn(NIKOLA, "95.0", "74.6%")
+        batteryOn(NIKOLA, "95.", "74.6%")
+        batteryOn(NIKOLA, "95", "74.6%")
+        batteryOn(NIKOLA, "89.1", "48.7%")
+        batteryOn(NIKOLA, "78.0", "0%")
 
         // Inmotion V10F
-        batteryOn("74.6", 84f, 68f, "41.3%")
+        batteryOn(V10F, "74.6", "41.3%")
 
-        // KingSong 14D
-        batteryOn("63.5", 67.2f, 48.0f, "80.7%")
+        // KingSong 14S
+        batteryOn(KS_14S, "63.5", "80.7%")
 
         // Veteran Sherman
-        batteryOn("96.5", 100.8f, 75.6f, "82.9%")
+        batteryOn(SHERMAN, "96.5", "82.9%")
 
         // Invalid values
-        batteryOn("", 100.8f, 79.2f, "")
-        batteryOn("9", 100.8f, 79.2f, "")
-        batteryOn("63.5", 0f, 0f, "")
+        batteryOn(NIKOLA, "", "")
+        batteryOn(NIKOLA, "9", "")
     }
 
     @Test
@@ -48,20 +53,15 @@ class CalculatorServiceTest {
         assertThat(
             wheels, equalTo(
                 listOf(
-                    // FIXME 0 Remove voltages from this list, should be purely internal to the service
-                    Wheel("Gotway Nikola+", 100.8f, 78.0f),
-                    Wheel("Inmotion V10F", 84f, 68f),
-                    Wheel("KingSong 14S", 67.2f, 48.0f),
-                    Wheel("KingSong S18", 84.5f, 63.0f),
-                    Wheel("Veteran Sherman", 100.8f, 75.6f)
+                    NIKOLA, V10F, KS_14S, KS_S18, SHERMAN
                 )
             )
         )
     }
 
-    internal fun batteryOn(voltage: String, highest: Float, lowest: Float, expectedBattery: String) {
+    internal fun batteryOn(wheelName: String, voltage: String, expectedBattery: String) {
         // When
-        val battery = service.batteryOn(voltage, highest, lowest)
+        val battery = service.batteryOn(wheelName, voltage)
 
         // Then
         assertThat(battery, equalTo(expectedBattery))

@@ -8,7 +8,7 @@ import android.widget.TextView
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
@@ -73,8 +73,8 @@ class CalculatorFragmentTest {
         fragment.calculatorService = mockedCalculatorService
         fragment.wheelBattery = mockedWheelBattery
 
-        given(mockedCalculatorService.batteryOn(anyString(), anyFloat(), anyFloat()))
-            .willReturn(BATTERY)
+//        given(mockedCalculatorService.batteryOn(anyString(), anyFloat(), anyFloat()))
+//            .willReturn(BATTERY)
 
         // When
         fragment.onUpdateVoltage().invoke("95.5")
