@@ -62,11 +62,6 @@ class Steps {
         assertThat(R.id.wheel_battery, hasText(percentage))
     }
 
-    @Then("the initial date and time is displayed")
-    fun thenInitialDateAndTimeDisplayed() {
-        assertThat(R.id.trip_date, hasText("toto"))
-    }
-
     @When("^I choose the \\\"(.*?)\\\"$")
     fun whenChoose(wheelName: String) {
         selectedWheel = wheelName
