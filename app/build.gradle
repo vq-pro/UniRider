@@ -117,8 +117,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
 
     // Cucumber
-    androidTestImplementation 'info.cukes:cucumber-android:1.2.5@jar'
-    androidTestImplementation 'info.cukes:cucumber-picocontainer:1.2.4'
+    androidTestImplementation 'info.cukes:cucumber-android:1.2.6'
+    androidTestImplementation 'info.cukes:cucumber-picocontainer:1.2.6'
 
     // MockWebServer
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
