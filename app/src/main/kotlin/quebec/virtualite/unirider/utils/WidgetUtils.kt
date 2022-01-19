@@ -10,7 +10,7 @@ import android.widget.SpinnerAdapter
 
 open class WidgetUtils {
 
-    fun addTextChangedListener(callback: (text: String) -> Unit): TextWatcher {
+    open fun addTextChangedListener(callback: ((text: String) -> Unit)?): TextWatcher {
 
         return object : TextWatcher {
 
@@ -19,7 +19,7 @@ open class WidgetUtils {
             override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                callback(text.toString())
+                callback?.invoke(text.toString())
             }
         }
     }
@@ -28,11 +28,11 @@ open class WidgetUtils {
         return ArrayAdapter(context!!, id!!, contents!!)
     }
 
-    fun onClickListener(callback: (View) -> Unit): View.OnClickListener {
+    open fun onClickListener(callback: (View) -> Unit): View.OnClickListener {
         return View.OnClickListener { view -> callback(view) }
     }
 
-    fun onItemSelectedListener(callback: (index: Int) -> Unit): AdapterView.OnItemSelectedListener {
+    open fun onItemSelectedListener(callback: (index: Int) -> Unit): AdapterView.OnItemSelectedListener {
 
         return object : AdapterView.OnItemSelectedListener {
 

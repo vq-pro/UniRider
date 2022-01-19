@@ -13,17 +13,15 @@ import quebec.virtualite.unirider.utils.WidgetUtils
 
 class CalculatorFragment : Fragment() {
 
-    var calculatorService = CalculatorService()
+    internal var calculatorService = CalculatorService()
+    internal var widgets = WidgetUtils()
 
-    lateinit var wheel: String
-    lateinit var wheelBattery: TextView
-    lateinit var wheelName: TextView
-    lateinit var wheelVoltage: EditText
-
-    private val widgets: WidgetUtils
+    internal lateinit var wheel: String
+    internal lateinit var wheelBattery: TextView
+    internal lateinit var wheelName: TextView
+    internal lateinit var wheelVoltage: EditText
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-//        wheel = arguments?.getParcelable("wheel")!!
         wheel = arguments?.getString("wheel")!!
         return inflater.inflate(R.layout.calculator_fragment, container, false)
     }

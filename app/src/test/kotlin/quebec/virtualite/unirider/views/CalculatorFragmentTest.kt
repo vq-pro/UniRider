@@ -1,37 +1,38 @@
 package quebec.virtualite.unirider.views
 
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import org.junit.Ignore
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.StringContains.containsString
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.any
 import org.mockito.BDDMockito.given
+import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.CalculatorService
+import quebec.virtualite.unirider.utils.WidgetUtils
+
+private const val NAME = "Sherman"
+private const val PERCENTAGE = "100%"
+private const val VOLTAGE = "100.8"
 
 @RunWith(MockitoJUnitRunner::class)
 class CalculatorFragmentTest {
 
-    private val BATTERY = "100%"
-
     @Mock
     lateinit var mockedBundle: Bundle
-
-    @Mock
-    lateinit var mockedButtonOk: Button
-
-    @Mock
-    lateinit var mockedFieldName: EditText
-
-    @Mock
-    lateinit var mockedFieldTitleMessage: TextView
 
     @Mock
     lateinit var mockedView: View
@@ -42,44 +43,72 @@ class CalculatorFragmentTest {
     @Mock
     lateinit var mockedWheelBattery: TextView
 
+    @Mock
+    lateinit var mockedWheelName: TextView
+
+    @Mock
+    lateinit var mockedWheelVoltage: EditText
+
+    @Mock
+    lateinit var mockedWidgets: WidgetUtils
+
+    @Captor
+    lateinit var lambda: ArgumentCaptor<(String) -> Unit>
+
     @InjectMocks
     var fragment = CalculatorFragment()
 
-    @Ignore("is it necessary?")
+    @Before
+    fun init() {
+        fragment.wheel = NAME
+    }
+
     @Test
     fun onViewCreated() {
         // Given
-        given<Any>(mockedView.findViewById(R.id.send))
-            .willReturn(mockedButtonOk)
+        given<Any>(mockedView.findViewById(R.id.wheel_battery))
+            .willReturn(mockedWheelBattery)
 
-        given<Any>(mockedView.findViewById(R.id.title_message))
-            .willReturn(mockedFieldTitleMessage)
+        given<Any>(mockedView.findViewById(R.id.wheel_name))
+            .willReturn(mockedWheelName)
 
-        given<Any>(mockedView.findViewById(R.id.name))
-            .willReturn(mockedFieldName)
+        given<Any>(mockedView.findViewById(R.id.wheel_voltage))
+            .willReturn(mockedWheelVoltage)
+
+        val onUpdateVoltageListener: TextWatcher = mock(TextWatcher::class.java)
+        given(mockedWidgets.addTextChangedListener(any()))
+            .willReturn(onUpdateVoltageListener)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedView).findViewById<Button>(R.id.send)
-//        verify(mockedButtonOk).setOnClickListener(any())
+        assertThat(fragment.wheelBattery, equalTo(mockedWheelBattery))
+        assertThat(fragment.wheelName, equalTo(mockedWheelName))
+        assertThat(fragment.wheelVoltage, equalTo(mockedWheelVoltage))
+
+        verify(mockedWheelVoltage).addTextChangedListener(onUpdateVoltageListener)
+        verify(mockedWidgets).addTextChangedListener(lambda.capture())
+        assertThat(
+            lambda.value.javaClass.name, containsString(
+                "CalculatorFragment\$onUpdateVoltage\$"
+            )
+        )
     }
 
-    // FIXME 1 Re-enable
-    @Ignore
+    @Test
     fun onUpdateVoltage() {
         // Given
-        fragment.calculatorService = mockedCalculatorService
         fragment.wheelBattery = mockedWheelBattery
 
-//        given(mockedCalculatorService.batteryOn(anyString(), anyFloat(), anyFloat()))
-//            .willReturn(BATTERY)
+        given(mockedCalculatorService.batteryOn(NAME, VOLTAGE))
+            .willReturn(PERCENTAGE)
 
         // When
-        fragment.onUpdateVoltage().invoke("95.5")
+        fragment.onUpdateVoltage().invoke(VOLTAGE)
 
         // Then
-        verify(mockedWheelBattery).setText(BATTERY)
+        verify(mockedCalculatorService).batteryOn(NAME, VOLTAGE)
+        verify(mockedWheelBattery).setText(PERCENTAGE)
     }
 }
