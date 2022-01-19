@@ -13,8 +13,8 @@ import quebec.virtualite.unirider.utils.WidgetUtils
 
 class CalculatorFragment : Fragment() {
 
-    internal var calculatorService = CalculatorService()
-    internal var widgets = WidgetUtils()
+    private var calculatorService = CalculatorService()
+    private var widgets = WidgetUtils()
 
     internal lateinit var wheel: String
     internal lateinit var wheelBattery: TextView
@@ -29,20 +29,16 @@ class CalculatorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        wheelBattery = view.findViewById(R.id.wheel_battery)
+
         wheelName = view.findViewById(R.id.wheel_name)
         wheelName.text = wheel
 
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
-        wheelVoltage.addTextChangedListener(widgets.addTextChangedListener(onUpdateVoltage()))
-
-        wheelBattery = view.findViewById(R.id.wheel_battery)
+        widgets.addTextChangedListener(wheelVoltage, onUpdateVoltage())
     }
 
     fun onUpdateVoltage() = { voltageString: String ->
         wheelBattery.text = calculatorService.batteryOn(wheel, voltageString)
-    }
-
-    init {
-        this.widgets = WidgetUtils()
     }
 }

@@ -6,13 +6,14 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.SpinnerAdapter
 
 open class WidgetUtils {
 
-    open fun addTextChangedListener(callback: ((text: String) -> Unit)?): TextWatcher {
+    open fun addTextChangedListener(widget: EditText?, callback: ((text: String) -> Unit)?) {
 
-        return object : TextWatcher {
+        widget?.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(field: Editable?) {}
 
@@ -21,7 +22,7 @@ open class WidgetUtils {
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
                 callback?.invoke(text.toString())
             }
-        }
+        })
     }
 
     open fun arrayAdapter(context: Context?, id: Int?, contents: List<String>?): SpinnerAdapter {

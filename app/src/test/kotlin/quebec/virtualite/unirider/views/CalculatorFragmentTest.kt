@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.views
 
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -12,12 +11,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
 import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
@@ -75,10 +73,6 @@ class CalculatorFragmentTest {
         given<Any>(mockedView.findViewById(R.id.wheel_voltage))
             .willReturn(mockedWheelVoltage)
 
-        val onUpdateVoltageListener: TextWatcher = mock(TextWatcher::class.java)
-        given(mockedWidgets.addTextChangedListener(any()))
-            .willReturn(onUpdateVoltageListener)
-
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
@@ -87,13 +81,8 @@ class CalculatorFragmentTest {
         assertThat(fragment.wheelName, equalTo(mockedWheelName))
         assertThat(fragment.wheelVoltage, equalTo(mockedWheelVoltage))
 
-        verify(mockedWheelVoltage).addTextChangedListener(onUpdateVoltageListener)
-        verify(mockedWidgets).addTextChangedListener(lambda.capture())
-        assertThat(
-            lambda.value.javaClass.name, containsString(
-                "CalculatorFragment\$onUpdateVoltage\$"
-            )
-        )
+        verify(mockedWidgets).addTextChangedListener(eq(mockedWheelVoltage), lambda.capture())
+        assertThat(lambda.value.javaClass.name, containsString("CalculatorFragment\$onUpdateVoltage\$"))
     }
 
     @Test
@@ -109,6 +98,6 @@ class CalculatorFragmentTest {
 
         // Then
         verify(mockedCalculatorService).batteryOn(NAME, VOLTAGE)
-        verify(mockedWheelBattery).setText(PERCENTAGE)
+        verify(mockedWheelBattery).text = PERCENTAGE
     }
 }
