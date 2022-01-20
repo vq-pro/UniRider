@@ -67,6 +67,7 @@ android {
             buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
         }
 
+        // Like integration, but just those @WIP
         wip {
             buildConfigField 'String', 'SCENARIOS', '"@WIP"'
 

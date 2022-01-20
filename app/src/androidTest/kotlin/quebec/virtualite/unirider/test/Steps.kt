@@ -30,9 +30,18 @@ class Steps {
 
     @After
     fun afterScenario() {
-//        sleep(5000)
-
         stop(activityTestRule)
+    }
+
+    @Then("I see my wheels and their distance")
+    fun seeMyWheelsAndTheirDistance() {
+        // FIXME 0 Put an expected list in there
+//        assertThat(R.id.wheels, isEmpty())
+    }
+
+    @When("I start the app")
+    fun startApp() {
+        mainActivity = start(activityTestRule)!!
     }
 
     @Then("it blanks the displays")
@@ -84,10 +93,5 @@ class Steps {
 
         assertThat(R.id.wheel_voltage, isDisplayed())
 //        assertThat(R.id.wheel_battery, isDisplayed())
-    }
-
-    @When("I start the app")
-    fun whenStartApp() {
-        mainActivity = start(activityTestRule)!!
     }
 }

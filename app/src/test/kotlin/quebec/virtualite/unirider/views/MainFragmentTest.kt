@@ -22,7 +22,7 @@ import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils
 
 @RunWith(MockitoJUnitRunner::class)
-class TripFragmentTest {
+class MainFragmentTest {
 
     val SELECT_WHEEL = "<Select Model>"
     val WHEEL_A = "A"
@@ -53,7 +53,7 @@ class TripFragmentTest {
     lateinit var mockedWidgets: WidgetUtils
 
     @InjectMocks
-    var fragment = TripFragment()
+    var fragment = MainFragment()
 
     @Before
     fun init() {

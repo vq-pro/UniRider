@@ -13,7 +13,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils
 
-class TripFragment : Fragment() {
+class MainFragment : Fragment() {
 
     private val SELECT_WHEEL = "<Select Model>"
 
@@ -26,7 +26,7 @@ class TripFragment : Fragment() {
     var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.trip_fragment, container, false)
+        return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,7 +47,7 @@ class TripFragment : Fragment() {
     fun onGoCalculator() = { _: View ->
         findNavController()
             .navigate(
-                R.id.action_TripFragment_to_CalculatorFragment,
+                R.id.action_MainFragment_to_CalculatorFragment,
                 bundleOf("wheel" to wheel)
             )
     }
