@@ -6,18 +6,19 @@ import cucumber.api.java.After
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import org.junit.Rule
-import quebec.virtualite.commons.android.utils.StepsUtils.assertThat
-import quebec.virtualite.commons.android.utils.StepsUtils.click
-import quebec.virtualite.commons.android.utils.StepsUtils.enter
-import quebec.virtualite.commons.android.utils.StepsUtils.hasSpinnerRows
-import quebec.virtualite.commons.android.utils.StepsUtils.hasSpinnerText
-import quebec.virtualite.commons.android.utils.StepsUtils.hasText
-import quebec.virtualite.commons.android.utils.StepsUtils.isDisabled
-import quebec.virtualite.commons.android.utils.StepsUtils.isEmpty
-import quebec.virtualite.commons.android.utils.StepsUtils.selectSpinnerItem
-import quebec.virtualite.commons.android.utils.StepsUtils.start
-import quebec.virtualite.commons.android.utils.StepsUtils.stop
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.enter
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSpinnerText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
 import quebec.virtualite.unirider.views.MainActivity
 
 class Steps {
@@ -36,7 +37,7 @@ class Steps {
     @Then("I see my wheels and their distance")
     fun seeMyWheelsAndTheirDistance() {
         // FIXME 0 Put an expected list in there
-//        assertThat(R.id.wheels, isEmpty())
+        assertThat(R.id.wheels, hasRows(listOf("A", "B", "C")))
     }
 
     @When("I start the app")
@@ -52,8 +53,13 @@ class Steps {
 
     @Then("I can choose from these wheels:")
     fun thenCanChooseFromTheseWheels(rows: List<String>) {
-        assertThat(R.id.wheel_selector, hasSpinnerText("<Select Model>"))
-        assertThat(R.id.wheel_selector, hasSpinnerRows(rows))
+        assertThat(R.id.wheel_selector, hasRows(rows))
+    }
+
+    @Then("^the selected entry is (.*?)$")
+    fun theSelectedEntryIs(expectedEntry: String) {
+        assertThat(R.id.wheel_selector, hasSpinnerText(expectedEntry))
+        assertThat(R.id.wheel_selector, hasRow(expectedEntry))
     }
 
     @Then("I can see the name of the wheel")
@@ -71,7 +77,7 @@ class Steps {
         assertThat(R.id.wheel_battery, hasText(percentage))
     }
 
-    @When("^I choose the \\\"(.*?)\\\"$")
+    @When("^I choose the (.*?)$")
     fun whenChoose(wheelName: String) {
         selectedWheel = wheelName
         selectSpinnerItem(R.id.wheel_selector, wheelName)

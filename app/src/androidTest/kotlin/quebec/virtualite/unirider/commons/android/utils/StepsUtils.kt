@@ -1,8 +1,9 @@
-package quebec.virtualite.commons.android.utils
+package quebec.virtualite.unirider.commons.android.utils
 
 import android.app.Activity
 import android.content.Intent
 import android.view.View
+import android.widget.AdapterView
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
@@ -10,52 +11,31 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
+import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
+
 
 object StepsUtils {
 
     private const val INTERVAL = 100L
     private const val TIMEOUT = 2000L
 
-    class SpinnerMatcher(expectedEntries: List<String>) {
-        val entries: List<String>
-
-        init {
-            entries = expectedEntries
-        }
-
-        fun lastIndex(): Int {
-            return entries.size - 1
-        }
-
-        fun check(parentId: Int, row: Int) {
-            click(parentId)
-            onData(anything()).atPosition(row).perform(click())
-            element(parentId)?.check(matches(hasRow(entries[row])))
-        }
-    }
-
     fun assertThat(id: Int, assertion: Matcher<View>) {
-        poll { element(id)?.check(matches(assertion)) }
+        poll {
+            try {
+                element(id)?.check(matches(assertion))
+            } catch (e: Exception) {
+                throw AssertionError("Mismatch between the view and the expected", e)
+            }
+        }
     }
 
     fun assertThat(actual: Boolean, expected: Boolean) {
         if (actual != expected) {
             throw AssertionError()
-        }
-    }
-
-    fun assertThat(id: Int, spinnerEntries: SpinnerMatcher) {
-        poll {
-            assertThat(id, isDisplayed())
-            assertThat(id, isEnabled())
-
-            for (i in 0..spinnerEntries.lastIndex()) {
-                spinnerEntries.check(id, i)
-            }
         }
     }
 
@@ -79,14 +59,22 @@ object StepsUtils {
         return withChild(withText(expected))
     }
 
-    fun hasRows(expectedEntries: List<String>): Matcher<View> {
+    fun hasRows(expectedItems: List<String>): Matcher<View> {
+        return object : FeatureMatcher<View, List<String>?>(
+            equalTo(expectedItems), "list", "list"
+        ) {
 
-        val asserts = mutableListOf(isDisplayed(), isEnabled(), hasChildCount(expectedEntries.size))
-        for (entry in expectedEntries) {
-            asserts.add(hasRow(entry))
+            override fun featureValueOf(view: View?): List<String> {
+                val adapter = (view as AdapterView<*>).adapter
+
+                val actualItems = ArrayList<String>()
+                for (i in 0 until adapter.count) {
+                    actualItems.add(adapter.getItem(i).toString())
+                }
+
+                return actualItems
+            }
         }
-
-        return allOf(asserts)
     }
 
     fun hasSpinnerText(expected: String): Matcher<View> {
@@ -95,10 +83,6 @@ object StepsUtils {
             isEnabled(),
             withSpinnerText(equalTo(expected))
         )
-    }
-
-    fun hasSpinnerRows(expectedEntries: List<String>): SpinnerMatcher {
-        return SpinnerMatcher(expectedEntries)
     }
 
     fun hasText(expected: String?): Matcher<View> {

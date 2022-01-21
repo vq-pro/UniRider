@@ -1,13 +1,9 @@
 package quebec.virtualite.unirider.utils
 
-import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.SpinnerAdapter
+import android.widget.*
 
 open class WidgetUtils {
 
@@ -25,8 +21,8 @@ open class WidgetUtils {
         })
     }
 
-    open fun arrayAdapter(context: Context?, id: Int?, contents: List<String>?): SpinnerAdapter {
-        return ArrayAdapter(context!!, id!!, contents!!)
+    open fun listAdapter(view: View, id: Int?, contents: List<String>?): ListAdapter {
+        return arrayAdapter(view, id!!, contents!!) as ListAdapter
     }
 
     open fun onClickListener(callback: (View) -> Unit): View.OnClickListener {
@@ -43,5 +39,13 @@ open class WidgetUtils {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    open fun spinnerAdapter(view: View?, id: Int?, contents: List<String>?): SpinnerAdapter {
+        return arrayAdapter(view!!, id!!, contents!!) as SpinnerAdapter
+    }
+
+    private fun arrayAdapter(view: View, id: Int, contents: List<String>): Adapter {
+        return ArrayAdapter(view.context, id, contents)
     }
 }

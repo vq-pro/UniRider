@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ListView
 import android.widget.Spinner
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import quebec.virtualite.unirider.R
@@ -36,12 +38,17 @@ class MainFragment : Fragment() {
         buttonCalc.setOnClickListener(widgets.onClickListener(onGoCalculator()))
         buttonCalc.isEnabled = false
 
-        val wheelList = listOf(SELECT_WHEEL) + calculatorService.wheels()
+        val spinnerList = listOf(SELECT_WHEEL) + calculatorService.wheels()
 
         spinnerWheel = view.findViewById(R.id.wheel_selector)
-        spinnerWheel.adapter = widgets.arrayAdapter(view.context, R.layout.wheel_item, wheelList)
+        spinnerWheel.adapter = widgets.spinnerAdapter(view, R.layout.wheel_item, spinnerList)
         spinnerWheel.isEnabled = true
         spinnerWheel.onItemSelectedListener = widgets.onItemSelectedListener(onSelectWheel())
+
+        val wheelList = listOf("A", "B", "C")
+        val wheels = view.findViewById(R.id.wheels) as ListView
+        wheels.adapter = widgets.listAdapter(view, R.layout.wheels_item, wheelList)
+        wheels.isVisible = true
     }
 
     fun onGoCalculator() = { _: View ->

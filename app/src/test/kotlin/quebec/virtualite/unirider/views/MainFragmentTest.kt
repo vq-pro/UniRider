@@ -1,9 +1,9 @@
 package quebec.virtualite.unirider.views
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ListView
 import android.widget.Spinner
 import android.widget.SpinnerAdapter
 import org.hamcrest.CoreMatchers.equalTo
@@ -41,7 +41,7 @@ class MainFragmentTest {
     lateinit var mockedCalculatorService: CalculatorService
 
     @Mock
-    lateinit var mockedContext: Context
+    lateinit var mockedWheels: ListView
 
     @Mock
     lateinit var mockedSpinnerWheel: Spinner
@@ -66,16 +66,16 @@ class MainFragmentTest {
     @Test
     fun onViewCreated() {
         // Given
-        given(mockedView.context)
-            .willReturn(mockedContext)
-
         given<Any>(mockedView.findViewById(R.id.button_calculator))
             .willReturn(mockedButtonCalculator)
 
         given<Any>(mockedView.findViewById(R.id.wheel_selector))
             .willReturn(mockedSpinnerWheel)
 
-        given<Any>(mockedWidgets.arrayAdapter(any(), any(), any()))
+        given<Any>(mockedView.findViewById(R.id.wheels))
+            .willReturn(mockedWheels)
+
+        given<Any>(mockedWidgets.spinnerAdapter(any(), any(), any()))
             .willReturn(mockedAdapter)
 
         // When
@@ -83,8 +83,8 @@ class MainFragmentTest {
 
         // Then
         verify(mockedWidgets)
-            .arrayAdapter(
-                mockedContext, R.layout.wheel_item, listOf(
+            .spinnerAdapter(
+                mockedView, R.layout.wheel_item, listOf(
                     SELECT_WHEEL, WHEEL_A, WHEEL_B
                 )
             )
