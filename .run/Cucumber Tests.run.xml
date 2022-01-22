@@ -26,8 +26,8 @@
         </Profilers>
         <method v="2">
             <option name="Android.Gradle.BeforeRunTask" enabled="true" goal=""/>
-            <option name="RunConfigurationTask" enabled="true" run_configuration_name="UniRider.app"
-                    run_configuration_type="AndroidRunConfigurationType"/>
+            <option name="RunConfigurationTask" enabled="true" run_configuration_name="Unit Tests"
+                    run_configuration_type="GradleRunConfiguration"/>
         </method>
     </configuration>
 </component>

@@ -7,7 +7,7 @@
         <option name="CLASS_NAME" value="quebec.virtualite.unirider.ExampleInstrumentedTest"/>
         <option name="PACKAGE_NAME" value=""/>
         <option name="INSTRUMENTATION_RUNNER_CLASS" value=""/>
-        <option name="EXTRA_OPTIONS" value="-e tags @WIP"/>
+        <option name="EXTRA_OPTIONS" value=""/>
         <option name="INCLUDE_GRADLE_EXTRA_OPTIONS" value="true"/>
         <option name="CLEAR_LOGCAT" value="false"/>
         <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false"/>
