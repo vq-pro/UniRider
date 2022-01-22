@@ -34,10 +34,9 @@ class Steps {
         stop(activityTestRule)
     }
 
-    @Then("I see my wheels and their distance")
-    fun seeMyWheelsAndTheirDistance() {
-        // FIXME 0 Put an expected list in there
-        assertThat(R.id.wheels, hasRows(listOf("A", "B", "C")))
+    @Then("I see my wheels and their distance:")
+    fun seeMyWheelsAndTheirDistance(expectedWheels: List<String>) {
+        assertThat(R.id.wheels, hasRows(expectedWheels))
     }
 
     @When("I start the app")

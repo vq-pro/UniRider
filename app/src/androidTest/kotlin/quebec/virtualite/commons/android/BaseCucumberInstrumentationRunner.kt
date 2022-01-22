@@ -4,20 +4,17 @@ import android.os.Bundle
 import androidx.test.runner.MonitoringInstrumentation
 import cucumber.api.android.CucumberInstrumentationCore
 
-open class BaseCucumberInstrumentationRunner : MonitoringInstrumentation()
-{
+open class BaseCucumberInstrumentationRunner : MonitoringInstrumentation() {
     private val instrumentationCore = CucumberInstrumentationCore(this)
 
-    override fun onCreate(arguments: Bundle)
-    {
+    override fun onCreate(arguments: Bundle) {
         super.onCreate(arguments)
 
         instrumentationCore.create(arguments)
         start()
     }
 
-    override fun onStart()
-    {
+    override fun onStart() {
         super.onStart()
 
         waitForIdleSync()
