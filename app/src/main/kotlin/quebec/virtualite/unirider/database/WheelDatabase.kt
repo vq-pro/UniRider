@@ -7,8 +7,3 @@ import androidx.room.RoomDatabase
 abstract class WheelDatabase : RoomDatabase() {
     abstract fun wheelDao(): WheelDistanceDao
 }
-
-//@Database(entities = [Book::class], version = 1)
-//abstract class BookDatabase : RoomDatabase() {
-//    abstract fun bookDao(): BookDao
-//}

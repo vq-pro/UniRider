@@ -5,7 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.database.WheelDatabase
+import quebec.virtualite.unirider.database.WheelDb
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,15 +13,11 @@ class MainActivity : AppCompatActivity() {
 //        var connector: DeviceConnector = DeviceConnectorImpl()
 //        var scanner: DeviceScanner = DeviceScannerImpl()
 
-        lateinit var db: WheelDatabase
+        lateinit var db: WheelDb
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-//        db = Room.databaseBuilder(
-//            applicationContext,
-//            WheelDatabase::class.java,
-//            "wheel_database"
-//        ).build()
+        db = WheelDb(applicationContext)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

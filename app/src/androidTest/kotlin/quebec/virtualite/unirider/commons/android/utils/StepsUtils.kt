@@ -1,9 +1,11 @@
 package quebec.virtualite.unirider.commons.android.utils
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
@@ -49,6 +51,10 @@ object StepsUtils {
 
         element?.perform(clearText())
         element?.perform(typeText(text))
+    }
+
+    fun applicationContext(): Context {
+        return ApplicationProvider.getApplicationContext()!!
     }
 
     fun hasMinimumRows(expected: Int): Matcher<View> {

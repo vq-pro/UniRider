@@ -3,10 +3,13 @@ package quebec.virtualite.unirider.test
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.rule.ActivityTestRule
 import cucumber.api.java.After
+import cucumber.api.java.Before
+import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import org.junit.Rule
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.enter
@@ -19,6 +22,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
+import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.views.MainActivity
 
 class Steps {
@@ -26,8 +30,15 @@ class Steps {
     @Rule
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
+    private var db = WheelDb(applicationContext())
+
     private lateinit var mainActivity: MainActivity
     private lateinit var selectedWheel: String
+
+    @Before
+    fun beforeScenario() {
+        db.deleteAll()
+    }
 
     @After
     fun afterScenario() {
@@ -74,6 +85,11 @@ class Steps {
     @Then("^it displays a percentage of (.*?)$")
     fun thenDisplaysPercentage(percentage: String) {
         assertThat(R.id.wheel_battery, hasText(percentage))
+    }
+
+    @Given("these wheels:")
+    fun givenTheseWheels(wheels: List<String>) {
+        db.saveWheels(wheels)
     }
 
     @When("^I choose the (.*?)$")
