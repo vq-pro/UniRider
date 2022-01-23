@@ -3,26 +3,33 @@ package quebec.virtualite.unirider.views
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.services.*
+import quebec.virtualite.unirider.database.WheelDatabase
 
 class MainActivity : AppCompatActivity() {
 
-//    companion object {
+    companion object {
 //        var connector: DeviceConnector = DeviceConnectorImpl()
 //        var scanner: DeviceScanner = DeviceScannerImpl()
-//    }
+
+        lateinit var db: WheelDatabase
+    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
+//        db = Room.databaseBuilder(
+//            applicationContext,
+//            WheelDatabase::class.java,
+//            "wheel_database"
+//        ).build()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
 //        connector.init(this)
 //        scanner.init(this)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

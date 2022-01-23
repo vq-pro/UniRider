@@ -45,9 +45,8 @@ class MainFragment : Fragment() {
         spinnerWheel.isEnabled = true
         spinnerWheel.onItemSelectedListener = widgets.onItemSelectedListener(onSelectWheel())
 
-        val wheelList = listOf("A", "B", "C")
         val wheels = view.findViewById(R.id.wheels) as ListView
-        wheels.adapter = widgets.listAdapter(view, R.layout.wheels_item, wheelList)
+        wheels.adapter = widgets.listAdapter(view, R.layout.wheels_item, getWheelList())
         wheels.isVisible = true
     }
 
@@ -65,5 +64,12 @@ class MainFragment : Fragment() {
             SELECT_WHEEL
         else
             calculatorService.wheels().get(index - 1)
+    }
+
+    private fun getWheelList(): List<String> {
+//        val dao = db.wheelDao()
+//        val list = dao.getAllWheels()
+        val list = listOf("A", "B", "C")
+        return list
     }
 }
