@@ -2,6 +2,8 @@ package quebec.virtualite.unirider.database
 
 import android.content.Context
 import androidx.room.Room
+import quebec.virtualite.unirider.database.impl.WheelDatabase
+import quebec.virtualite.unirider.database.impl.WheelDistanceDao
 import java.util.stream.Collectors.toList
 
 class WheelDb(applicationContext: Context) {

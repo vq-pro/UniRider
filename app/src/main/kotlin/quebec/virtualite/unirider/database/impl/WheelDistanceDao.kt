@@ -1,8 +1,9 @@
-package quebec.virtualite.unirider.database
+package quebec.virtualite.unirider.database.impl
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import quebec.virtualite.unirider.database.WheelDistance
 
 @Dao
 interface WheelDistanceDao {
