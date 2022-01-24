@@ -11,13 +11,14 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.BDDMockito.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils
 
@@ -41,7 +42,7 @@ class MainFragmentTest {
     lateinit var mockedCalculatorService: CalculatorService
 
     @Mock
-    lateinit var mockedWheels: ListView
+    lateinit var mockedDb: WheelDb
 
     @Mock
     lateinit var mockedSpinnerWheel: Spinner
@@ -50,14 +51,17 @@ class MainFragmentTest {
     lateinit var mockedView: View
 
     @Mock
+    lateinit var mockedWheels: ListView
+
+    @Mock
     lateinit var mockedWidgets: WidgetUtils
 
     @InjectMocks
-    var fragment = MainFragment()
+    var fragment: MainFragment = TestableMainFragment()
 
     @Before
     fun init() {
-        fragment.widgets = mockedWidgets
+        (fragment as TestableMainFragment).mockedDb = mockedDb
 
         given(mockedCalculatorService.wheels())
             .willReturn(listOf(WHEEL_A, WHEEL_B))
@@ -92,6 +96,9 @@ class MainFragmentTest {
         verify(mockedButtonCalculator).isEnabled = false
         verify(mockedSpinnerWheel).isEnabled = true
         verify(mockedSpinnerWheel).adapter = mockedAdapter
+        verify(mockedWheels).isEnabled = true
+
+        verify(mockedDb).getWheelList()
     }
 
     @Test
@@ -112,5 +119,18 @@ class MainFragmentTest {
         // Then
         verify(mockedButtonCalculator).isEnabled = false
         assertThat(fragment.wheel, equalTo(SELECT_WHEEL))
+    }
+
+    class TestableMainFragment : MainFragment() {
+
+        lateinit var mockedDb: WheelDb
+
+        override fun connectDb(): WheelDb {
+            return mockedDb
+        }
+
+        override fun subThread(function: () -> Unit) {
+            function()
+        }
     }
 }

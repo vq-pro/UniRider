@@ -22,7 +22,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
-import quebec.virtualite.unirider.database.WheelDb
+import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import quebec.virtualite.unirider.views.MainActivity
 
 class Steps {
@@ -30,7 +30,7 @@ class Steps {
     @Rule
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
-    private var db = WheelDb(applicationContext())
+    private var db = WheelDbImpl(applicationContext())
 
     private lateinit var mainActivity: MainActivity
     private lateinit var selectedWheel: String

@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
+import quebec.virtualite.unirider.database.impl.WheelDbImpl
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +18,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        db = WheelDb(applicationContext)
+
+        db = WheelDbImpl(applicationContext)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
