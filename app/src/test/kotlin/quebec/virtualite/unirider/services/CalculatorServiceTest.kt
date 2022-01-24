@@ -44,6 +44,12 @@ class CalculatorServiceTest {
         batteryOn(NIKOLA, "9", "")
     }
 
+    @Test(expected = RuntimeException::class)
+    fun batteryOn_withUnknownWheel() {
+        // When
+        service.batteryOn("toto", "96.5")
+    }
+
     @Test
     fun wheels() {
         // When

@@ -1,7 +1,9 @@
 package quebec.virtualite.unirider.views
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
 import android.widget.Spinner
@@ -15,6 +17,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
@@ -24,6 +27,8 @@ import quebec.virtualite.unirider.utils.WidgetUtils
 
 @RunWith(MockitoJUnitRunner::class)
 class MainFragmentTest {
+
+    private val DONT_ATTACH_TO_ROOT = false
 
     val SELECT_WHEEL = "<Select Model>"
     val WHEEL_A = "A"
@@ -65,6 +70,20 @@ class MainFragmentTest {
 
         given(mockedCalculatorService.wheels())
             .willReturn(listOf(WHEEL_A, WHEEL_B))
+    }
+
+    @Test
+    fun onCreateView() {
+        // Given
+        val mockedInflater = mock(LayoutInflater::class.java)
+        val mockedContainer = mock(ViewGroup::class.java)
+        val mockedInstance = mock(Bundle::class.java)
+
+        // When
+        fragment.onCreateView(mockedInflater, mockedContainer, mockedInstance)
+
+        // Then
+        verify(mockedInflater).inflate(R.layout.main_fragment, mockedContainer, DONT_ATTACH_TO_ROOT)
     }
 
     @Test

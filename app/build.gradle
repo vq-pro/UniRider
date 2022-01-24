@@ -27,6 +27,7 @@ android {
     buildTypes {
         debug {
             buildConfigField 'Integer', 'SERVER_PORT', '8080'
+            testCoverageEnabled true
         }
         release {
             minifyEnabled false
@@ -109,7 +110,6 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-//    implementation "androix.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha03"
 
     // Retrofit
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
