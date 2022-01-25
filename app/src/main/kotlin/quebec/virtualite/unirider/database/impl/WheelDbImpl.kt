@@ -7,8 +7,8 @@ import quebec.virtualite.unirider.database.WheelDistance
 import java.util.stream.Collectors
 
 class WheelDbImpl(applicationContext: Context) : WheelDb {
-    val db: WheelDatabase
-    val dao: WheelDistanceDao
+    internal var db: WheelDatabase
+    internal var dao: WheelDistanceDao
 
     init {
         db = Room.databaseBuilder(
