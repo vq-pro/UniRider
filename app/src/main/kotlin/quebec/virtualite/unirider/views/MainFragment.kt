@@ -17,7 +17,6 @@ import quebec.virtualite.unirider.utils.WidgetUtils
 
 open class MainFragment : Fragment() {
 
-    internal var selectedWheel: String? = null
     internal val wheelList = ArrayList<String>()
 
     private var widgets = WidgetUtils()
@@ -49,10 +48,9 @@ open class MainFragment : Fragment() {
     }
 
     fun onSelectWheel() = { _: View, index: Int ->
-        selectedWheel = wheelList.get(index)
         navigateTo(
             R.id.action_MainFragment_to_CalculatorFragment,
-            Pair("wheel", selectedWheel!!)
+            Pair("wheel", wheelList[index])
         )
     }
 
@@ -61,7 +59,7 @@ open class MainFragment : Fragment() {
     }
 
     internal open fun navigateTo(id: Int, parms: Pair<String, String>?) {
-        findNavController().navigate(id, bundleOf(parms!!.first to parms!!.second))
+        findNavController().navigate(id, bundleOf(parms!!.first to parms.second))
     }
 
     internal open fun subThread(function: () -> Unit) {

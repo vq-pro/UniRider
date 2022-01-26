@@ -48,7 +48,7 @@ class MainFragmentTest {
 
     @Before
     fun init() {
-        (fragment as TestableMainFragment).mockedDb = mockedDb
+        fragment.mockedDb = mockedDb
 
         given(mockedDb.getWheelList())
             .willReturn(listOf(WHEEL_B, WHEEL_A))
@@ -86,7 +86,6 @@ class MainFragmentTest {
 
         verify(mockedWheels).isEnabled = true
 
-        assertThat(fragment.selectedWheel, equalTo(null))
         assertThat(fragment.wheelList, equalTo(listOf(WHEEL_A, WHEEL_B)))
     }
 
@@ -100,9 +99,8 @@ class MainFragmentTest {
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        assertThat(fragment.selectedWheel, equalTo(WHEEL_B))
         assertThat(fragment.navigateToId, equalTo(R.id.action_MainFragment_to_CalculatorFragment))
-        assertThat(fragment.navigateToWith, equalTo(Pair<String, String>("wheel", WHEEL_B)))
+        assertThat(fragment.navigateToWith, equalTo(Pair("wheel", WHEEL_B)))
     }
 
     class TestableMainFragment : MainFragment() {
