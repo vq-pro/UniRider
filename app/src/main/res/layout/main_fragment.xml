@@ -11,30 +11,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <Button
-                android:id="@+id/button_calculator"
-                android:text="@string/button_calculator"
-                android:visibility="visible"
-                android:layout_margin="5dp"
-                android:layout_width="wrap_content"
-                android:layout_row="0"
-                android:layout_column="1"
-        />
-    </GridLayout>
-
-    <GridLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
         <ListView
                 android:id="@+id/wheels"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_column="0"
                 android:layout_gravity="bottom"
-                android:layout_margin="100dp"
-                android:layout_marginTop="200dp"
+                android:layout_margin="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_row="2"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:visibility="visible">

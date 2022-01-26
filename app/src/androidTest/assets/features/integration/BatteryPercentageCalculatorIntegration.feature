@@ -11,8 +11,7 @@ Feature: Battery Percentage Calculator
     And I start the app
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
-    Given I choose the <Wheel>
-    And I go into the calculator
+    Given I select the <Wheel>
     When I enter a voltage of <Voltage>
     Then it displays a percentage of <Battery>
     Examples:

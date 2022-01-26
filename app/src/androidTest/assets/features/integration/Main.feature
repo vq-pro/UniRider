@@ -20,12 +20,5 @@ Feature: Main Screen
 
   Scenario: Going into calculator
     Given I start the app
-    When I choose the Veteran Sherman
-    And I go into the calculator
-    Then I can see the name of the wheel
-
-  Scenario: Going into calculator - ERROR - Without selecting a wheel
-    Given I start the app
-    When I don't choose a wheel
-    Then I cannot go into the calculator
-
+    When I select the Veteran Sherman
+    Then I go into the detailed view for that wheel

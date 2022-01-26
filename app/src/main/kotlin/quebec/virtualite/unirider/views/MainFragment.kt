@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ListView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -24,7 +23,6 @@ open class MainFragment : Fragment() {
     private var widgets = WidgetUtils()
 
     private lateinit var db: WheelDb
-    private lateinit var buttonCalc: Button
     private lateinit var wheels: ListView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,10 +33,6 @@ open class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         db = connectDb()
-
-        buttonCalc = view.findViewById(R.id.button_calculator)
-        buttonCalc.isEnabled = false
-        widgets.setOnClickListener(buttonCalc, onGoCalculator())
 
         subThread {
             wheelList.clear()
@@ -54,21 +48,20 @@ open class MainFragment : Fragment() {
         widgets.setOnItemClickListener(wheels, onSelectWheel())
     }
 
-    fun onGoCalculator() = { _: View ->
-        findNavController()
-            .navigate(
-                R.id.action_MainFragment_to_CalculatorFragment,
-                bundleOf("wheel" to selectedWheel)
-            )
-    }
-
     fun onSelectWheel() = { _: View, index: Int ->
-        buttonCalc.isEnabled = true
         selectedWheel = wheelList.get(index)
+        navigateTo(
+            R.id.action_MainFragment_to_CalculatorFragment,
+            Pair("wheel", selectedWheel!!)
+        )
     }
 
     internal open fun connectDb(): WheelDb {
         return MainActivity.db
+    }
+
+    internal open fun navigateTo(id: Int, parms: Pair<String, String>?) {
+        findNavController().navigate(id, bundleOf(parms!!.first to parms!!.second))
     }
 
     internal open fun subThread(function: () -> Unit) {

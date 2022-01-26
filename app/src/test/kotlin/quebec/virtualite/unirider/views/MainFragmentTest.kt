@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ListView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -33,9 +32,6 @@ class MainFragmentTest {
     lateinit var mockedBundle: Bundle
 
     @Mock
-    lateinit var mockedButtonCalculator: Button
-
-    @Mock
     lateinit var mockedDb: WheelDb
 
     @Mock
@@ -48,7 +44,7 @@ class MainFragmentTest {
     lateinit var mockedWidgets: WidgetUtils
 
     @InjectMocks
-    var fragment: MainFragment = TestableMainFragment()
+    var fragment: TestableMainFragment = TestableMainFragment()
 
     @Before
     fun init() {
@@ -75,9 +71,6 @@ class MainFragmentTest {
     @Test
     fun onViewCreated() {
         // Given
-        given<Any>(mockedView.findViewById(R.id.button_calculator))
-            .willReturn(mockedButtonCalculator)
-
         given<Any>(mockedView.findViewById(R.id.wheels))
             .willReturn(mockedWheels)
 
@@ -91,7 +84,6 @@ class MainFragmentTest {
             listOf(WHEEL_A, WHEEL_B)
         )
 
-        verify(mockedButtonCalculator).isEnabled = false
         verify(mockedWheels).isEnabled = true
 
         assertThat(fragment.selectedWheel, equalTo(null))
@@ -108,17 +100,24 @@ class MainFragmentTest {
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        verify(mockedButtonCalculator).isEnabled = true
-
         assertThat(fragment.selectedWheel, equalTo(WHEEL_B))
+        assertThat(fragment.navigateToId, equalTo(R.id.action_MainFragment_to_CalculatorFragment))
+        assertThat(fragment.navigateToWith, equalTo(Pair<String, String>("wheel", WHEEL_B)))
     }
 
     class TestableMainFragment : MainFragment() {
 
         lateinit var mockedDb: WheelDb
+        var navigateToId: Int = -1
+        var navigateToWith: Pair<String, String>? = null
 
         override fun connectDb(): WheelDb {
             return mockedDb
+        }
+
+        override fun navigateTo(id: Int, parms: Pair<String, String>?) {
+            navigateToId = id
+            navigateToWith = parms
         }
 
         override fun subThread(function: () -> Unit) {
