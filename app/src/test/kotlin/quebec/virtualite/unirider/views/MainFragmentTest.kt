@@ -43,13 +43,14 @@ class MainFragmentTest {
     @Mock
     lateinit var mockedWidgets: WidgetUtils
 
+    var navigateToId: Int = -1
+    var navigateToWith: Pair<String, String>? = null
+
     @InjectMocks
-    var fragment: TestableMainFragment = TestableMainFragment()
+    var fragment: MainFragment = TestableMainFragment(this)
 
     @Before
     fun init() {
-        fragment.mockedDb = mockedDb
-
         given(mockedDb.getWheelList())
             .willReturn(listOf(WHEEL_B, WHEEL_A))
     }
@@ -99,23 +100,19 @@ class MainFragmentTest {
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        assertThat(fragment.navigateToId, equalTo(R.id.action_MainFragment_to_CalculatorFragment))
-        assertThat(fragment.navigateToWith, equalTo(Pair("wheel", WHEEL_B)))
+        assertThat(navigateToId, equalTo(R.id.action_MainFragment_to_CalculatorFragment))
+        assertThat(navigateToWith, equalTo(Pair("wheel", WHEEL_B)))
     }
 
-    class TestableMainFragment : MainFragment() {
-
-        lateinit var mockedDb: WheelDb
-        var navigateToId: Int = -1
-        var navigateToWith: Pair<String, String>? = null
+    class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {
 
         override fun connectDb(): WheelDb {
-            return mockedDb
+            return test.mockedDb
         }
 
         override fun navigateTo(id: Int, parms: Pair<String, String>?) {
-            navigateToId = id
-            navigateToWith = parms
+            test.navigateToId = id
+            test.navigateToWith = parms
         }
 
         override fun subThread(function: () -> Unit) {
