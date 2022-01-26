@@ -3,7 +3,13 @@ package quebec.virtualite.unirider.utils
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.Adapter
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ListAdapter
+import android.widget.ListView
+import android.widget.SpinnerAdapter
 
 open class WidgetUtils {
 
@@ -21,12 +27,8 @@ open class WidgetUtils {
         })
     }
 
-    open fun listAdapter(view: View, id: Int?, contents: List<String>?): ListAdapter {
-        return arrayAdapter(view, id!!, contents!!) as ListAdapter
-    }
-
-    open fun onClickListener(callback: (View) -> Unit): View.OnClickListener {
-        return View.OnClickListener { view -> callback(view) }
+    open fun listAdapter(view: View?, id: Int?, contents: List<String>?): ListAdapter {
+        return arrayAdapter(view!!, id!!, contents!!) as ListAdapter
     }
 
     open fun onItemSelectedListener(callback: (index: Int) -> Unit): AdapterView.OnItemSelectedListener {
@@ -41,7 +43,18 @@ open class WidgetUtils {
         }
     }
 
-    open fun spinnerAdapter(view: View?, id: Int?, contents: List<String>?): SpinnerAdapter {
+    open fun setOnClickListener(widget: View, callback: (View) -> Unit) {
+        widget.setOnClickListener(View.OnClickListener { view -> callback(view) })
+    }
+
+    open fun setOnItemClickListener(listView: ListView, callback: (View, Int) -> Unit) {
+        listView.setOnItemClickListener { _: AdapterView<*>, view: View, position: Int, _: Long ->
+            val item = listView.getItemAtPosition(position) as String
+            callback(view, position)
+        }
+    }
+
+    fun spinnerAdapter(view: View?, id: Int?, contents: List<String>?): SpinnerAdapter {
         return arrayAdapter(view!!, id!!, contents!!) as SpinnerAdapter
     }
 

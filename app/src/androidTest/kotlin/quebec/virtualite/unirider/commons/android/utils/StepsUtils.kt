@@ -83,6 +83,14 @@ object StepsUtils {
         }
     }
 
+    fun hasSelectedText(expected: String): Matcher<View> {
+        return allOf(
+            isDisplayed(),
+            isEnabled(),
+            withText(equalTo(expected))
+        )
+    }
+
     fun hasSpinnerText(expected: String): Matcher<View> {
         return allOf(
             isDisplayed(),

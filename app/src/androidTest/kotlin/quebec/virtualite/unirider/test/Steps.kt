@@ -13,13 +13,12 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationCo
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.enter
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSpinnerText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSelectedText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
@@ -61,15 +60,9 @@ class Steps {
         assertThat(R.id.wheel_battery, isEmpty())
     }
 
-    @Then("I can choose from these wheels:")
-    fun thenCanChooseFromTheseWheels(rows: List<String>) {
-        assertThat(R.id.wheel_selector, hasRows(rows))
-    }
-
     @Then("^the selected entry is (.*?)$")
     fun theSelectedEntryIs(expectedEntry: String) {
-        assertThat(R.id.wheel_selector, hasSpinnerText(expectedEntry))
-        assertThat(R.id.wheel_selector, hasRow(expectedEntry))
+        assertThat(R.id.wheels, hasSelectedText(expectedEntry))
     }
 
     @Then("I can see the name of the wheel")
@@ -95,7 +88,7 @@ class Steps {
     @When("^I choose the (.*?)$")
     fun whenChoose(wheelName: String) {
         selectedWheel = wheelName
-        selectSpinnerItem(R.id.wheel_selector, wheelName)
+        selectListViewItem(R.id.wheels, wheelName)
     }
 
     @When("I don't choose a wheel")

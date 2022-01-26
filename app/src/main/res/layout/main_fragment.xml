@@ -11,17 +11,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <Spinner
-                android:id="@+id/wheel_selector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="10dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:visibility="visible"
-                tools:visibility="visible"
-                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"/>
-
         <Button
                 android:id="@+id/button_calculator"
                 android:text="@string/button_calculator"

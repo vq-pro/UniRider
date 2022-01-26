@@ -17,6 +17,7 @@ open class CalculatorService {
 
     ) : Parcelable
 
+    // FIXME 1 Replace with DB entries
     private val WHEELS = listOf(
         Wheel("Gotway Nikola+", 100.8f, 78.0f),
         Wheel("Inmotion V10F", 84f, 68f),
