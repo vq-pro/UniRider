@@ -11,16 +11,15 @@ Feature: Battery Percentage Calculator
       | Veteran Sherman | 100.8V      | 75.6V       |
     And I start the app
 
-#    FIXME 1 Put a V to the voltages
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I select the <Wheel>
     When I enter a voltage of <Voltage>
     Then it displays a percentage of <Battery>
     Examples:
       | Wheel           | Voltage | Battery |
-      | Gotway Nikola+  | 96.4    | 80.7%   |
-      | Gotway Nikola+  | 89.1    | 48.7%   |
-      | KingSong 14S    | 63.5    | 80.7%   |
-      | KingSong S18    | 71.4    | 47.5%   |
-      | Veteran Sherman | 96.5    | 82.9%   |
-      | KingSong S20    | 108.0   | 50.0%   |
+      | Gotway Nikola+  | 96.4V   | 80.7%   |
+      | Gotway Nikola+  | 89.1V   | 48.7%   |
+      | KingSong 14S    | 63.5V   | 80.7%   |
+      | KingSong S18    | 71.4V   | 47.5%   |
+      | Veteran Sherman | 96.5V   | 82.9%   |
+      | KingSong S20    | 108.0V  | 50.0%   |

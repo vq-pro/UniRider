@@ -92,7 +92,7 @@ class Steps {
         selectListViewItem(R.id.wheels, wheelName)
     }
 
-    @When("^I enter a voltage of (.*?)$")
+    @When("^I enter a voltage of (.*?)V$")
     fun whenEnterVoltage(voltage: Float) {
         enter(R.id.wheel_voltage, voltage.toString())
     }
