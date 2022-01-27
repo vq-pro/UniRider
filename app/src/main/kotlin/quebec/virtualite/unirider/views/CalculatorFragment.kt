@@ -14,6 +14,7 @@ import org.apache.http.util.TextUtils.isEmpty
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils
 import java.lang.Float.parseFloat
@@ -47,7 +48,7 @@ open class CalculatorFragment : Fragment() {
 
         subThread {
             wheel = db.findWheel(parmWheelName)
-                ?: throw RuntimeException()
+                ?: throw WheelNotFoundException()
         }
 
         wheelBattery = view.findViewById(R.id.wheel_battery)

@@ -7,6 +7,7 @@ import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,6 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils
 import java.lang.Float.parseFloat
@@ -33,8 +35,6 @@ private const val PERCENTAGE_S = "100.0%"
 private const val VOLTAGE_S = "100.8"
 private const val VOLTAGE_MAX = 100.8f
 private const val VOLTAGE_MIN = 75.6f
-
-private val VOLTAGE = parseFloat(VOLTAGE_S)
 
 @RunWith(MockitoJUnitRunner::class)
 class CalculatorFragmentTest {
@@ -74,11 +74,13 @@ class CalculatorFragmentTest {
         fragment.parmWheelName = NAME
     }
 
-    // FIXME 1 - Handle when wheel isn't found
-
     @Test
     fun onViewCreated() {
         // Given
+        val wheel = WheelEntity(0, NAME, 0, 0f, 0f)
+        given(mockedDb.findWheel(NAME))
+            .willReturn(wheel)
+
         given<Any>(mockedView.findViewById(R.id.wheel_battery))
             .willReturn(mockedWheelBattery)
 
@@ -87,10 +89,6 @@ class CalculatorFragmentTest {
 
         given<Any>(mockedView.findViewById(R.id.wheel_voltage))
             .willReturn(mockedWheelVoltage)
-
-        val wheel = WheelEntity(0, NAME, 0, 0f, 0f)
-        given(mockedDb.findWheel(NAME))
-            .willReturn(wheel)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -105,6 +103,19 @@ class CalculatorFragmentTest {
 
         verify(mockedWidgets).addTextChangedListener(eq(mockedWheelVoltage), lambda.capture())
         assertThat(lambda.value.javaClass.name, containsString("CalculatorFragment\$onUpdateVoltage\$"))
+    }
+
+    @Test
+    fun onViewCreated_whenWheelIsntFound() {
+        // Given
+        given(mockedDb.findWheel(NAME))
+            .willReturn(null)
+
+        // When
+        val result = { fragment.onViewCreated(mockedView, mockedBundle) }
+
+        // Then
+        assertThrows(WheelNotFoundException::class.java, result)
     }
 
     @Test
@@ -149,3 +160,5 @@ class CalculatorFragmentTest {
         }
     }
 }
+private val VOLTAGE = parseFloat(VOLTAGE_S)
+
