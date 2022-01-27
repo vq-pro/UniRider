@@ -88,8 +88,7 @@ class MainFragmentTest {
         // Then
         verify(mockedDb).getWheelList()
         verify(mockedWidgets).listAdapter(
-            mockedView, R.layout.wheels_item,
-            listOf(WHEEL_A, WHEEL_B)
+            mockedWheels, mockedView, R.layout.wheels_item, listOf(WHEEL_A, WHEEL_B)
         )
 
         verify(mockedWheels).isEnabled = true

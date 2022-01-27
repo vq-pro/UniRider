@@ -42,8 +42,7 @@ open class MainFragment : Fragment() {
 
         wheels = view.findViewById(R.id.wheels) as ListView
         wheels.isEnabled = true
-        // FIXME 1 Recoder selon widgets
-        wheels.adapter = widgets.listAdapter(view, R.layout.wheels_item, wheelList)
+        widgets.listAdapter(wheels, view, R.layout.wheels_item, wheelList)
         widgets.setOnItemClickListener(wheels, onSelectWheel())
     }
 

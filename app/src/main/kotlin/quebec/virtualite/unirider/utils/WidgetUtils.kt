@@ -27,8 +27,8 @@ open class WidgetUtils {
         })
     }
 
-    open fun listAdapter(view: View?, id: Int?, contents: List<String>?): ListAdapter {
-        return arrayAdapter(view!!, id!!, contents!!) as ListAdapter
+    open fun listAdapter(listView: ListView, view: View?, id: Int?, contents: List<String>?) {
+        listView.adapter = arrayAdapter(view!!, id!!, contents!!) as ListAdapter
     }
 
     open fun onItemSelectedListener(callback: (index: Int) -> Unit): AdapterView.OnItemSelectedListener {
