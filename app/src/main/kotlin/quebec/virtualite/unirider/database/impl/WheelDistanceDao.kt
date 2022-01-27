@@ -7,7 +7,6 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 @Dao
 interface WheelDistanceDao {
-    // FIXME 2 Define constant somewhere for table name, share with entity
     @Query("SELECT * FROM wheel")
     fun getAllWheels(): List<WheelEntity>
 

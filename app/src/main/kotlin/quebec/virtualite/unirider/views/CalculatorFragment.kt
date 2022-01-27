@@ -20,6 +20,7 @@ import quebec.virtualite.unirider.utils.WidgetUtils
 import java.lang.Float.parseFloat
 import java.util.Locale.ENGLISH
 
+// FIXME 1 Rename to WheelFragment
 open class CalculatorFragment : Fragment() {
 
     companion object {
@@ -77,7 +78,7 @@ open class CalculatorFragment : Fragment() {
         }
     }
 
-    // FIXME 2 Généraliser
+    // FIXME 1 Généraliser
     internal open fun connectDb(): WheelDb {
         return MainActivity.db
     }
