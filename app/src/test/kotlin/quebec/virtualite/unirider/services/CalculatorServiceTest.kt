@@ -26,13 +26,12 @@ class CalculatorServiceTest {
         // Given
         val wheel = WheelEntity(0, NAME, DISTANCE, VOLTAGE_MIN, VOLTAGE_MAX)
 
-        // FIXME 1 Make this a float
         // When
-        val percentage = service.batteryOn(wheel, "108.0")
+        val percentage = service.batteryOn(wheel, 108.0f)
 
         // Then
 
-        // FIXME 1 Make this a float
+        // FIXME 0 Make this a float
         assertThat(percentage, equalTo("50.0%"))
     }
 }

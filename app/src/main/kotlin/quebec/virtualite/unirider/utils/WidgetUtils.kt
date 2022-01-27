@@ -49,7 +49,7 @@ open class WidgetUtils {
 
     open fun setOnItemClickListener(listView: ListView, callback: (View, Int) -> Unit) {
         listView.setOnItemClickListener { _: AdapterView<*>, view: View, position: Int, _: Long ->
-            val item = listView.getItemAtPosition(position) as String
+//            val item = listView.getItemAtPosition(position) as String
             callback(view, position)
         }
     }

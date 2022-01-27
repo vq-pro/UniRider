@@ -10,11 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.apache.http.util.TextUtils.isEmpty
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils
+import java.lang.Float.parseFloat
 
 open class CalculatorFragment : Fragment() {
 
@@ -57,7 +59,9 @@ open class CalculatorFragment : Fragment() {
     }
 
     fun onUpdateVoltage() = { voltageString: String ->
-        wheelBattery.text = calculatorService.batteryOn(wheel, voltageString)
+        wheelBattery.text =
+            if (isEmpty(voltageString.trim())) ""
+            else calculatorService.batteryOn(wheel, parseFloat(voltageString))
     }
 
     // FIXME 2 Généraliser

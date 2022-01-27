@@ -25,14 +25,12 @@ import quebec.virtualite.unirider.utils.WidgetUtils
 class MainFragmentTest {
 
     val DONT_ATTACH_TO_ROOT = false
+    val SAVED_INSTANCE_STATE: Bundle? = null
 
     val DISTANCE_A = 123
     val DISTANCE_B = 456
     val WHEEL_A = "A"
     val WHEEL_B = "B"
-
-    @Mock
-    lateinit var mockedBundle: Bundle
 
     @Mock
     lateinit var mockedDb: WheelDb
@@ -67,10 +65,9 @@ class MainFragmentTest {
         // Given
         val mockedInflater = mock(LayoutInflater::class.java)
         val mockedContainer = mock(ViewGroup::class.java)
-        val mockedInstance = mock(Bundle::class.java)
 
         // When
-        fragment.onCreateView(mockedInflater, mockedContainer, mockedInstance)
+        fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
         // Then
         verify(mockedInflater).inflate(R.layout.main_fragment, mockedContainer, DONT_ATTACH_TO_ROOT)
@@ -83,7 +80,7 @@ class MainFragmentTest {
             .willReturn(mockedWheels)
 
         // When
-        fragment.onViewCreated(mockedView, mockedBundle)
+        fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
         verify(mockedDb).getWheelList()

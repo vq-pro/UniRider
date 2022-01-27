@@ -11,11 +11,13 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
 import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
@@ -23,12 +25,15 @@ import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils
+import java.lang.Float.parseFloat
 
 private const val NAME = "Sherman"
 private const val PERCENTAGE = "100%"
-private const val VOLTAGE = "100.8"
+private const val VOLTAGE_S = "100.8"
 private const val VOLTAGE_MAX = 100.8f
 private const val VOLTAGE_MIN = 75.6f
+
+private val VOLTAGE = parseFloat(VOLTAGE_S)
 
 @RunWith(MockitoJUnitRunner::class)
 class CalculatorFragmentTest {
@@ -111,11 +116,25 @@ class CalculatorFragmentTest {
             .willReturn(PERCENTAGE)
 
         // When
-        fragment.onUpdateVoltage().invoke(VOLTAGE)
+        fragment.onUpdateVoltage().invoke(VOLTAGE_S)
 
         // Then
         verify(mockedCalculatorService).batteryOn(fragment.wheel, VOLTAGE)
         verify(mockedWheelBattery).text = PERCENTAGE
+    }
+
+    @Test
+    fun onUpdateVoltage_whenBlank_noDisplay() {
+        // Given
+        fragment.wheel = WheelEntity(0, NAME, 0, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheelBattery = mockedWheelBattery
+
+        // When
+        fragment.onUpdateVoltage().invoke(" ")
+
+        // Then
+        verify(mockedCalculatorService, never()).batteryOn(eq(fragment.wheel), anyFloat())
+        verify(mockedWheelBattery).text = ""
     }
 
     class TestableCalculatorFragment(val test: CalculatorFragmentTest) : CalculatorFragment() {
