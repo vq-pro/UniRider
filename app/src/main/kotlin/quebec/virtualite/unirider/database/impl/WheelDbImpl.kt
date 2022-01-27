@@ -3,8 +3,7 @@ package quebec.virtualite.unirider.database.impl
 import android.content.Context
 import androidx.room.Room
 import quebec.virtualite.unirider.database.WheelDb
-import quebec.virtualite.unirider.database.WheelDistance
-import java.util.stream.Collectors
+import quebec.virtualite.unirider.database.WheelEntity
 
 class WheelDbImpl(applicationContext: Context) : WheelDb {
     internal var db: WheelDatabase
@@ -24,16 +23,17 @@ class WheelDbImpl(applicationContext: Context) : WheelDb {
         db.clearAllTables()
     }
 
-    override fun getWheelList(): List<String> {
-        return dao.getAllWheels()
-            .stream()
-            .map { wd -> wd.wheel }
-            .collect(Collectors.toList())
+    override fun findWheel(name: String): WheelEntity? {
+        return dao.findWheel(name)
     }
 
-    override fun saveWheels(wheels: List<String>) {
-        wheels.forEach { wheelName ->
-            dao.saveWheel(WheelDistance(0, wheelName, 0))
+    override fun getWheelList(): List<WheelEntity> {
+        return dao.getAllWheels()
+    }
+
+    override fun saveWheels(wheels: List<WheelEntity>) {
+        wheels.forEach { wheel ->
+            dao.saveWheel(wheel)
         }
     }
 }

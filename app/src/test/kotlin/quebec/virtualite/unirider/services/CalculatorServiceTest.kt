@@ -6,70 +6,33 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
 class CalculatorServiceTest {
 
-    private val KS_14S = "KingSong 14S"
-    private val KS_S18 = "KingSong S18"
-    private val NIKOLA = "Gotway Nikola+"
-    private val SHERMAN = "Veteran Sherman"
-    private val V10F = "Inmotion V10F"
+    private val DISTANCE = 123
+    private val NAME = "KingSong S20"
+    private val VOLTAGE_MAX = 126.0f
+    private val VOLTAGE_MIN = 90.0f
 
     @InjectMocks
-    var service = CalculatorService()
+    lateinit var service: CalculatorService
+
+//    FIXME 2 Prévoir le cas où on vient d'ajouter une roue mais on n'a pas encore défini les voltages max et min
 
     @Test
     fun batteryOn() {
-        // Gotway Nikola
-        batteryOn(NIKOLA, "100.8", "100%")
-        batteryOn(NIKOLA, "96.4", "80.7%")
-        batteryOn(NIKOLA, "95.0", "74.6%")
-        batteryOn(NIKOLA, "95.", "74.6%")
-        batteryOn(NIKOLA, "95", "74.6%")
-        batteryOn(NIKOLA, "89.1", "48.7%")
-        batteryOn(NIKOLA, "78.0", "0%")
+        // Given
+        val wheel = WheelEntity(0, NAME, DISTANCE, VOLTAGE_MIN, VOLTAGE_MAX)
 
-        // Inmotion V10F
-        batteryOn(V10F, "74.6", "41.3%")
-
-        // KingSong 14S
-        batteryOn(KS_14S, "63.5", "80.7%")
-
-        // Veteran Sherman
-        batteryOn(SHERMAN, "96.5", "82.9%")
-
-        // Invalid values
-        batteryOn(NIKOLA, "", "")
-        batteryOn(NIKOLA, "9", "")
-    }
-
-    @Test(expected = RuntimeException::class)
-    fun batteryOn_withUnknownWheel() {
+        // FIXME 1 Make this a float
         // When
-        service.batteryOn("toto", "96.5")
-    }
-
-    @Test
-    fun wheels() {
-        // When
-        val wheels = service.wheels()
+        val percentage = service.batteryOn(wheel, "108.0")
 
         // Then
-        assertThat(
-            wheels, equalTo(
-                listOf(
-                    NIKOLA, V10F, KS_14S, KS_S18, SHERMAN
-                )
-            )
-        )
-    }
 
-    internal fun batteryOn(wheelName: String, voltage: String, expectedBattery: String) {
-        // When
-        val battery = service.batteryOn(wheelName, voltage)
-
-        // Then
-        assertThat(battery, equalTo(expectedBattery))
+        // FIXME 1 Make this a float
+        assertThat(percentage, equalTo("50.0%"))
     }
 }

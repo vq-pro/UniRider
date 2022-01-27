@@ -18,6 +18,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
+import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.utils.WidgetUtils
 
 @RunWith(MockitoJUnitRunner::class)
@@ -25,6 +26,8 @@ class MainFragmentTest {
 
     val DONT_ATTACH_TO_ROOT = false
 
+    val DISTANCE_A = 123
+    val DISTANCE_B = 456
     val WHEEL_A = "A"
     val WHEEL_B = "B"
 
@@ -51,8 +54,12 @@ class MainFragmentTest {
 
     @Before
     fun init() {
-        given(mockedDb.getWheelList())
-            .willReturn(listOf(WHEEL_B, WHEEL_A))
+        given(mockedDb.getWheelList()).willReturn(
+            listOf(
+                WheelEntity(0, WHEEL_B, DISTANCE_B, 0f, 0f),
+                WheelEntity(0, WHEEL_A, DISTANCE_A, 0f, 0f)
+            )
+        )
     }
 
     @Test
@@ -101,7 +108,7 @@ class MainFragmentTest {
 
         // Then
         assertThat(navigateToId, equalTo(R.id.action_MainFragment_to_CalculatorFragment))
-        assertThat(navigateToWith, equalTo(Pair("wheel", WHEEL_B)))
+        assertThat(navigateToWith, equalTo(Pair(CalculatorFragment.PARAMETER_WHEEL_NAME, WHEEL_B)))
     }
 
     class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {

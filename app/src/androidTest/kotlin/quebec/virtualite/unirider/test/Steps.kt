@@ -1,11 +1,14 @@
 package quebec.virtualite.unirider.test
 
 import androidx.test.rule.ActivityTestRule
+import cucumber.api.DataTable
 import cucumber.api.java.After
 import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.endsWith
 import org.junit.Rule
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
@@ -18,8 +21,11 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
+import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import quebec.virtualite.unirider.views.MainActivity
+import java.lang.Float.parseFloat
+import java.util.stream.Collectors.toList
 
 class Steps {
 
@@ -73,8 +79,11 @@ class Steps {
     }
 
     @Given("these wheels:")
-    fun givenTheseWheels(wheels: List<String>) {
-        db.saveWheels(wheels)
+    fun givenTheseWheels(wheels: DataTable) {
+        val rows = wheels.cells(1)
+        db.saveWheels(rows.stream()
+            .map { row -> WheelEntity(0, row[0], 0, parseVoltage(row[1]), parseVoltage(row[2])) }
+            .collect(toList()))
     }
 
     @When("^I select the (.*?)$")
@@ -86,5 +95,10 @@ class Steps {
     @When("^I enter a voltage of (.*?)$")
     fun whenEnterVoltage(voltage: Float) {
         enter(R.id.wheel_voltage, voltage.toString())
+    }
+
+    private fun parseVoltage(value: String): Float {
+        assertThat(value, endsWith("V"))
+        return parseFloat(value.substring(0, value.length - 1))
     }
 }

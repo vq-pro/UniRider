@@ -13,7 +13,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
+import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.utils.WidgetUtils
+import java.util.stream.Collectors.toList
 
 open class MainFragment : Fragment() {
 
@@ -35,9 +37,7 @@ open class MainFragment : Fragment() {
 
         subThread {
             wheelList.clear()
-            wheelList.addAll(
-                db.getWheelList().sorted()
-            )
+            wheelList.addAll(getWheelNames(db.getWheelList()))
         }
 
         wheels = view.findViewById(R.id.wheels) as ListView
@@ -50,7 +50,7 @@ open class MainFragment : Fragment() {
     fun onSelectWheel() = { _: View, index: Int ->
         navigateTo(
             R.id.action_MainFragment_to_CalculatorFragment,
-            Pair("wheel", wheelList[index])
+            Pair(CalculatorFragment.PARAMETER_WHEEL_NAME, wheelList[index])
         )
     }
 
@@ -66,5 +66,13 @@ open class MainFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             function()
         }
+    }
+
+    private fun getWheelNames(wheelList: List<WheelEntity>): List<String> {
+        return wheelList
+            .stream()
+            .map { wheel -> wheel.name }
+            .sorted()
+            .collect(toList())
     }
 }
