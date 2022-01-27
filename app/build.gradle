@@ -22,6 +22,12 @@ android {
 
         testApplicationId "quebec.virtualite.unirider.test"
         testInstrumentationRunner "quebec.virtualite.unirider.test.CucumberInstrumentationRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
