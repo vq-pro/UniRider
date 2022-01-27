@@ -30,8 +30,6 @@ class CalculatorServiceTest {
         val percentage = service.batteryOn(wheel, 108.0f)
 
         // Then
-
-        // FIXME 0 Make this a float
-        assertThat(percentage, equalTo("50.0%"))
+        assertThat(percentage, equalTo(50.0f))
     }
 }

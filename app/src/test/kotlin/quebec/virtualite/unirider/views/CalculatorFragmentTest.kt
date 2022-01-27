@@ -28,7 +28,8 @@ import quebec.virtualite.unirider.utils.WidgetUtils
 import java.lang.Float.parseFloat
 
 private const val NAME = "Sherman"
-private const val PERCENTAGE = "100%"
+private const val PERCENTAGE = 100.0f
+private const val PERCENTAGE_S = "100.0%"
 private const val VOLTAGE_S = "100.8"
 private const val VOLTAGE_MAX = 100.8f
 private const val VOLTAGE_MIN = 75.6f
@@ -116,11 +117,11 @@ class CalculatorFragmentTest {
             .willReturn(PERCENTAGE)
 
         // When
-        fragment.onUpdateVoltage().invoke(VOLTAGE_S)
+        fragment.onUpdateVoltage().invoke("$VOLTAGE_S ")
 
         // Then
         verify(mockedCalculatorService).batteryOn(fragment.wheel, VOLTAGE)
-        verify(mockedWheelBattery).text = PERCENTAGE
+        verify(mockedWheelBattery).text = PERCENTAGE_S
     }
 
     @Test

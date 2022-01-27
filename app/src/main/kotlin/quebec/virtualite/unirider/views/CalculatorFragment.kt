@@ -17,6 +17,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils
 import java.lang.Float.parseFloat
+import java.util.Locale.ENGLISH
 
 open class CalculatorFragment : Fragment() {
 
@@ -58,10 +59,21 @@ open class CalculatorFragment : Fragment() {
         widgets.addTextChangedListener(wheelVoltage, onUpdateVoltage())
     }
 
-    fun onUpdateVoltage() = { voltageString: String ->
+    fun onUpdateVoltage() = { voltageParm: String ->
+        val voltage = voltageParm.trim()
         wheelBattery.text =
-            if (isEmpty(voltageString.trim())) ""
-            else calculatorService.batteryOn(wheel, parseFloat(voltageString))
+            if (isEmpty(voltage)) "" else getPercentage(voltage)
+    }
+
+    fun getPercentage(voltageString: String): String {
+        val percentage = calculatorService.batteryOn(wheel, parseFloat(voltageString))
+
+        when (percentage) {
+            in 0f..100f -> {
+                return "%.1f%%".format(ENGLISH, percentage)
+            }
+            else -> return ""
+        }
     }
 
     // FIXME 2 Généraliser
