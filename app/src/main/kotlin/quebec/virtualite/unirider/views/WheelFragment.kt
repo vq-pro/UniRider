@@ -20,8 +20,7 @@ import quebec.virtualite.unirider.utils.WidgetUtils
 import java.lang.Float.parseFloat
 import java.util.Locale.ENGLISH
 
-// FIXME 1 Rename to WheelFragment
-open class CalculatorFragment : Fragment() {
+open class WheelFragment : Fragment() {
 
     companion object {
         const val PARAMETER_WHEEL_NAME = "wheelName"
@@ -39,7 +38,7 @@ open class CalculatorFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelName = arguments?.getString(PARAMETER_WHEEL_NAME)!!
-        return inflater.inflate(R.layout.calculator_fragment, container, false)
+        return inflater.inflate(R.layout.wheel_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

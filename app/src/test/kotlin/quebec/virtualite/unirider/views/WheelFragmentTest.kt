@@ -37,7 +37,7 @@ private const val VOLTAGE_MAX = 100.8f
 private const val VOLTAGE_MIN = 75.6f
 
 @RunWith(MockitoJUnitRunner::class)
-class CalculatorFragmentTest {
+class WheelFragmentTest {
 
     @Mock
     lateinit var mockedBundle: Bundle
@@ -67,7 +67,7 @@ class CalculatorFragmentTest {
     lateinit var lambda: ArgumentCaptor<(String) -> Unit>
 
     @InjectMocks
-    var fragment: CalculatorFragment = TestableCalculatorFragment(this)
+    var fragment: WheelFragment = TestableWheelFragment(this)
 
     @Before
     fun init() {
@@ -102,7 +102,7 @@ class CalculatorFragmentTest {
         assertThat(fragment.wheelVoltage, equalTo(mockedWheelVoltage))
 
         verify(mockedWidgets).addTextChangedListener(eq(mockedWheelVoltage), lambda.capture())
-        assertThat(lambda.value.javaClass.name, containsString("CalculatorFragment\$onUpdateVoltage\$"))
+        assertThat(lambda.value.javaClass.name, containsString("WheelFragment\$onUpdateVoltage\$"))
     }
 
     @Test
@@ -149,7 +149,7 @@ class CalculatorFragmentTest {
         verify(mockedWheelBattery).text = ""
     }
 
-    class TestableCalculatorFragment(val test: CalculatorFragmentTest) : CalculatorFragment() {
+    class TestableWheelFragment(val test: WheelFragmentTest) : WheelFragment() {
 
         override fun connectDb(): WheelDb {
             return test.mockedDb

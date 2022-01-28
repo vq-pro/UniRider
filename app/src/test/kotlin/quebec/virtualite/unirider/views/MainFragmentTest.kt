@@ -103,8 +103,8 @@ class MainFragmentTest {
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        assertThat(navigateToId, equalTo(R.id.action_MainFragment_to_CalculatorFragment))
-        assertThat(navigateToWith, equalTo(Pair(CalculatorFragment.PARAMETER_WHEEL_NAME, WHEEL_B)))
+        assertThat(navigateToId, equalTo(R.id.action_MainFragment_to_WheelFragment))
+        assertThat(navigateToWith, equalTo(Pair(WheelFragment.PARAMETER_WHEEL_NAME, WHEEL_B)))
     }
 
     class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {

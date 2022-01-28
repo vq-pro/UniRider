@@ -48,8 +48,8 @@ open class MainFragment : Fragment() {
 
     fun onSelectWheel() = { _: View, index: Int ->
         navigateTo(
-            R.id.action_MainFragment_to_CalculatorFragment,
-            Pair(CalculatorFragment.PARAMETER_WHEEL_NAME, wheelList[index])
+            R.id.action_MainFragment_to_WheelFragment,
+            Pair(WheelFragment.PARAMETER_WHEEL_NAME, wheelList[index])
         )
     }
 
