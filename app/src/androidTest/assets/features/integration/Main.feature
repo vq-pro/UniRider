@@ -12,6 +12,7 @@ Feature: Main Screen
 
   Scenario: On entering, we see a list of registered wheels and their distance
     When I start the app
+    # FIXME 1 We need some distances here
     Then I see my wheels and their distance:
       | Gotway Nikola+  |
       | KingSong 14S    |
