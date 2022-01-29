@@ -19,17 +19,36 @@ class CalculatorServiceTest {
     @InjectMocks
     lateinit var service: CalculatorService
 
-//    FIXME 2 Prévoir le cas où on vient d'ajouter une roue mais on n'a pas encore défini les voltages max et min
-
     @Test
-    fun batteryOn() {
+    fun percentage() {
         // Given
         val wheel = WheelEntity(0, NAME, DISTANCE, VOLTAGE_MIN, VOLTAGE_MAX)
 
         // When
-        val percentage = service.batteryOn(wheel, 108.0f)
+        val percentage = service.percentage(wheel, 108.0f)
 
         // Then
         assertThat(percentage, equalTo(50.0f))
+    }
+
+    @Test
+    fun percentage_whenVoltagesNotSet_zero() {
+        percentage_whenVoltagesNotSet_zero(0f, 1f)
+        percentage_whenVoltagesNotSet_zero(-1f, 1f)
+        percentage_whenVoltagesNotSet_zero(-100f, 1f)
+        percentage_whenVoltagesNotSet_zero(1f, 0f)
+        percentage_whenVoltagesNotSet_zero(1f, -1f)
+        percentage_whenVoltagesNotSet_zero(1f, -100f)
+    }
+
+    private fun percentage_whenVoltagesNotSet_zero(voltageMin: Float, voltageMax: Float) {
+        // Given
+        val wheel = WheelEntity(0, NAME, DISTANCE, voltageMin, voltageMax)
+
+        // When
+        val percentage = service.percentage(wheel, 108.0f)
+
+        // Then
+        assertThat(percentage, equalTo(0.0f))
     }
 }

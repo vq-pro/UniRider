@@ -29,15 +29,16 @@ import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.utils.WidgetUtils
 import java.lang.Float.parseFloat
 
-private const val NAME = "Sherman"
-private const val PERCENTAGE = 100.0f
-private const val PERCENTAGE_S = "100.0%"
-private const val VOLTAGE_S = "100.8"
-private const val VOLTAGE_MAX = 100.8f
-private const val VOLTAGE_MIN = 75.6f
-
 @RunWith(MockitoJUnitRunner::class)
 class WheelFragmentTest {
+
+    private val NAME = "Sherman"
+    private val PERCENTAGE = 100.0f
+    private val PERCENTAGE_S = "100.0%"
+    private val VOLTAGE_S = "100.8"
+    private val VOLTAGE_MAX = 100.8f
+    private val VOLTAGE_MIN = 75.6f
+    private val VOLTAGE = parseFloat(VOLTAGE_S)
 
     @Mock
     lateinit var mockedBundle: Bundle
@@ -124,14 +125,14 @@ class WheelFragmentTest {
         fragment.wheel = WheelEntity(0, NAME, 0, VOLTAGE_MAX, VOLTAGE_MIN)
         fragment.wheelBattery = mockedWheelBattery
 
-        given(mockedCalculatorService.batteryOn(fragment.wheel, VOLTAGE))
+        given(mockedCalculatorService.percentage(fragment.wheel, VOLTAGE))
             .willReturn(PERCENTAGE)
 
         // When
         fragment.onUpdateVoltage().invoke("$VOLTAGE_S ")
 
         // Then
-        verify(mockedCalculatorService).batteryOn(fragment.wheel, VOLTAGE)
+        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
         verify(mockedWheelBattery).text = PERCENTAGE_S
     }
 
@@ -145,7 +146,7 @@ class WheelFragmentTest {
         fragment.onUpdateVoltage().invoke(" ")
 
         // Then
-        verify(mockedCalculatorService, never()).batteryOn(eq(fragment.wheel), anyFloat())
+        verify(mockedCalculatorService, never()).percentage(eq(fragment.wheel), anyFloat())
         verify(mockedWheelBattery).text = ""
     }
 
@@ -160,6 +161,3 @@ class WheelFragmentTest {
         }
     }
 }
-
-private val VOLTAGE = parseFloat(VOLTAGE_S)
-

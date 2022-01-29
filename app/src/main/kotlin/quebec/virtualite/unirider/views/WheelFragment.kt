@@ -56,12 +56,11 @@ open class WheelFragment : BaseFragment() {
 
     fun onUpdateVoltage() = { voltageParm: String ->
         val voltage = voltageParm.trim()
-        wheelBattery.text =
-            if (isEmpty(voltage)) "" else getPercentage(voltage)
+        wheelBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
     }
 
-    fun getPercentage(voltageString: String): String {
-        val percentage = calculatorService.batteryOn(wheel, parseFloat(voltageString))
+    fun getPercentage(voltage: String): String {
+        val percentage = calculatorService.percentage(wheel, parseFloat(voltage))
 
         when (percentage) {
             in 0f..100f -> {
