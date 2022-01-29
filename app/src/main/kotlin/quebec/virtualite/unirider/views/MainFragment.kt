@@ -5,25 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.utils.WidgetUtils
 import java.util.stream.Collectors.toList
 
-open class MainFragment : Fragment() {
+open class MainFragment : BaseFragment() {
 
     internal val wheelList = ArrayList<String>()
 
     private var widgets = WidgetUtils()
 
-    private lateinit var db: WheelDb
     private lateinit var wheels: ListView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -33,7 +25,7 @@ open class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        db = connectDb()
+        connectDb()
 
         subThread {
             wheelList.clear()
@@ -51,20 +43,6 @@ open class MainFragment : Fragment() {
             R.id.action_MainFragment_to_WheelFragment,
             Pair(WheelFragment.PARAMETER_WHEEL_NAME, wheelList[index])
         )
-    }
-
-    internal open fun connectDb(): WheelDb {
-        return MainActivity.db
-    }
-
-    internal open fun navigateTo(id: Int, parms: Pair<String, String>?) {
-        findNavController().navigate(id, bundleOf(parms!!.first to parms.second))
-    }
-
-    internal open fun subThread(function: () -> Unit) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            function()
-        }
     }
 
     private fun getWheelNames(wheelList: List<WheelEntity>): List<String> {

@@ -109,8 +109,8 @@ class MainFragmentTest {
 
     class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {
 
-        override fun connectDb(): WheelDb {
-            return test.mockedDb
+        override fun connectDb() {
+            db = test.mockedDb
         }
 
         override fun navigateTo(id: Int, parms: Pair<String, String>?) {

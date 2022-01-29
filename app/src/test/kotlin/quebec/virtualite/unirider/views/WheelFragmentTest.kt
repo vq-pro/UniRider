@@ -151,8 +151,8 @@ class WheelFragmentTest {
 
     class TestableWheelFragment(val test: WheelFragmentTest) : WheelFragment() {
 
-        override fun connectDb(): WheelDb {
-            return test.mockedDb
+        override fun connectDb() {
+            db = test.mockedDb
         }
 
         override fun subThread(function: () -> Unit) {
@@ -160,5 +160,6 @@ class WheelFragmentTest {
         }
     }
 }
+
 private val VOLTAGE = parseFloat(VOLTAGE_S)
 
