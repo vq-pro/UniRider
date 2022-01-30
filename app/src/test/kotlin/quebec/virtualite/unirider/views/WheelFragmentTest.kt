@@ -21,12 +21,12 @@ import org.mockito.Mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.utils.WidgetUtils
 import java.lang.Float.parseFloat
 
 @RunWith(MockitoJUnitRunner::class)
@@ -82,14 +82,14 @@ class WheelFragmentTest {
         given(mockedDb.findWheel(NAME))
             .willReturn(wheel)
 
-        given<Any>(mockedView.findViewById(R.id.wheel_battery))
-            .willReturn(mockedWheelBattery)
-
         given<Any>(mockedView.findViewById(R.id.wheel_name))
             .willReturn(mockedWheelName)
 
         given<Any>(mockedView.findViewById(R.id.wheel_voltage))
             .willReturn(mockedWheelVoltage)
+
+        given<Any>(mockedView.findViewById(R.id.wheel_battery))
+            .willReturn(mockedWheelBattery)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -98,9 +98,9 @@ class WheelFragmentTest {
         verify(mockedDb).findWheel(NAME)
 
         assertThat(fragment.wheel, equalTo(wheel))
-        assertThat(fragment.wheelBattery, equalTo(mockedWheelBattery))
         assertThat(fragment.wheelName, equalTo(mockedWheelName))
         assertThat(fragment.wheelVoltage, equalTo(mockedWheelVoltage))
+        assertThat(fragment.wheelBattery, equalTo(mockedWheelBattery))
 
         verify(mockedWidgets).addTextChangedListener(eq(mockedWheelVoltage), lambda.capture())
         assertThat(lambda.value.javaClass.name, containsString("WheelFragment\$onUpdateVoltage\$"))

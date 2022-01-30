@@ -16,7 +16,7 @@ open class BaseFragment : Fragment() {
         db = MainActivity.db
     }
 
-    internal open fun navigateTo(id: Int, parms: Pair<String, String>?) {
+    internal open fun <T> navigateTo(id: Int, parms: Pair<String, T>?) {
         findNavController().navigate(id, bundleOf(parms!!.first to parms.second))
     }
 

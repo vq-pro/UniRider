@@ -5,32 +5,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import android.widget.TextView
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
+import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.utils.WidgetUtils
 
 @RunWith(MockitoJUnitRunner::class)
 class MainFragmentTest {
 
-    val DONT_ATTACH_TO_ROOT = false
-    val SAVED_INSTANCE_STATE: Bundle? = null
+    private val DONT_ATTACH_TO_ROOT = false
+    private val SAVED_INSTANCE_STATE: Bundle? = null
 
-    val DISTANCE_A = 123
-    val DISTANCE_B = 456
-    val WHEEL_A = "A"
-    val WHEEL_B = "B"
+    private val DISTANCE_A = 123
+    private val DISTANCE_B = 456
+    private val WHEEL_A = "A"
+    private val WHEEL_B = "B"
+    private val WHEEL_ITEM_A = WheelRow(WHEEL_A, DISTANCE_A)
+    private val WHEEL_ITEM_B = WheelRow(WHEEL_B, DISTANCE_B)
 
     @Mock
     lateinit var mockedDb: WheelDb
@@ -39,16 +46,25 @@ class MainFragmentTest {
     lateinit var mockedView: View
 
     @Mock
+    lateinit var mockedWheelDistance: TextView
+
+    @Mock
+    lateinit var mockedWheelName: TextView
+
+    @Mock
     lateinit var mockedWheels: ListView
 
     @Mock
     lateinit var mockedWidgets: WidgetUtils
 
-    var navigateToId: Int = -1
-    var navigateToWith: Pair<String, String>? = null
+    @Captor
+    lateinit var lambda: ArgumentCaptor<(View, WheelRow) -> Unit>
 
     @InjectMocks
     var fragment: MainFragment = TestableMainFragment(this)
+
+    var navigateToId: Int = -1
+    var navigateToWith: Pair<String, String>? = null
 
     @Before
     fun init() {
@@ -82,22 +98,41 @@ class MainFragmentTest {
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
+        // FIXME 1 verify setOnItemClickListener
         // Then
         verify(mockedDb).getWheelList()
-        verify(mockedWidgets).listAdapter(
-            mockedWheels, mockedView, R.layout.wheels_item, listOf(WHEEL_A, WHEEL_B)
+        verify(mockedWidgets).customListAdapter(
+            eq(mockedWheels), eq(mockedView), eq(R.layout.wheels_item), eq(listOf(WHEEL_ITEM_A, WHEEL_ITEM_B)),
+            lambda.capture()
         )
-
+        assertThat(lambda.value.javaClass.name, containsString("MainFragment\$onDisplayWheel\$"))
         verify(mockedWheels).isEnabled = true
 
-        assertThat(fragment.wheelList, equalTo(listOf(WHEEL_A, WHEEL_B)))
+        assertThat(fragment.wheelList, equalTo(listOf(WHEEL_ITEM_A, WHEEL_ITEM_B)))
+    }
+
+    @Test
+    fun onDisplayItem() {
+        // Given
+        given(mockedView.findViewById<TextView>(R.id.row_name))
+            .willReturn(mockedWheelName)
+
+        given(mockedView.findViewById<TextView>(R.id.row_distance))
+            .willReturn(mockedWheelDistance)
+
+        // When
+        fragment.onDisplayWheel().invoke(mockedView, WHEEL_ITEM_A)
+
+        // Then
+        verify(mockedWheelName).text = WHEEL_A
+        verify(mockedWheelDistance).text = DISTANCE_A.toString()
     }
 
     @Test
     fun onSelectWheel() {
         // Given
         fragment.wheelList.clear()
-        fragment.wheelList.addAll(listOf(WHEEL_A, WHEEL_B))
+        fragment.wheelList.addAll(listOf(WHEEL_ITEM_A, WHEEL_ITEM_B))
 
         // When
         fragment.onSelectWheel().invoke(mockedView, 1)
@@ -113,9 +148,10 @@ class MainFragmentTest {
             db = test.mockedDb
         }
 
-        override fun navigateTo(id: Int, parms: Pair<String, String>?) {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T> navigateTo(id: Int, parms: Pair<String, T>?) {
             test.navigateToId = id
-            test.navigateToWith = parms
+            test.navigateToWith = parms as Pair<String, String>
         }
 
         override fun subThread(function: () -> Unit) {

@@ -7,8 +7,8 @@ import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
-import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.endsWith
+import org.hamcrest.Matchers.equalTo
 import org.junit.Rule
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
@@ -24,7 +24,9 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import quebec.virtualite.unirider.views.MainActivity
+import quebec.virtualite.unirider.views.WheelRow
 import java.lang.Float.parseFloat
+import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
 class Steps {
@@ -48,8 +50,14 @@ class Steps {
     }
 
     @Then("I see my wheels and their distance:")
-    fun seeMyWheelsAndTheirDistance(expectedWheels: List<String>) {
-        assertThat(R.id.wheels, hasRows(expectedWheels))
+    fun seeMyWheelsAndTheirDistance(expectedWheels: DataTable) {
+        assertThat(expectedWheels.topCells(), equalTo(listOf("Name", "Distance")))
+        val expectedRows = expectedWheels.cells(1)
+            .stream()
+            .map { row -> WheelRow(row[0], parseInt(row[1])) }
+            .collect(toList())
+
+        assertThat(R.id.wheels, hasRows(expectedRows))
     }
 
     @When("I start the app")
@@ -71,6 +79,8 @@ class Steps {
     @Then("I go into the detailed view for that wheel")
     fun thenCanSeeNameOfWheel() {
         assertThat(R.id.wheel_name, hasText(selectedWheel))
+        // FIXME 1 Enable this
+//        assertThat(R.id.wheel_distance, hasText("123"))
     }
 
     @Then("^it displays a percentage of (.*?)$")
@@ -80,16 +90,19 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        val rows = wheels.cells(1)
-        db.saveWheels(rows.stream()
-            .map { row -> WheelEntity(0, row[0], 0, parseVoltage(row[1]), parseVoltage(row[2])) }
-            .collect(toList()))
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Voltage Max", "Voltage Min", "Distance")))
+        val wheelEntities = wheels.cells(1)
+            .stream()
+            .map { row -> WheelEntity(0, row[0], parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2])) }
+            .collect(toList())
+
+        db.saveWheels(wheelEntities)
     }
 
     @When("^I select the (.*?)$")
     fun whenSelect(wheelName: String) {
         selectedWheel = wheelName
-        selectListViewItem(R.id.wheels, wheelName)
+        selectListViewItem(R.id.wheels, "name", wheelName)
     }
 
     @When("^I enter a voltage of (.*?)V$")

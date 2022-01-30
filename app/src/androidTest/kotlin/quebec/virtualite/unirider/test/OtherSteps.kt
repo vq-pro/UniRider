@@ -12,8 +12,6 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isTrue
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
 import quebec.virtualite.unirider.mocks.DeviceScannerMock
 import quebec.virtualite.unirider.services.Device
@@ -44,10 +42,10 @@ class OtherSteps {
 //        whenStartApp()
     }
 
-    @Then("the scanning has stopped")
-    fun thenScanningHasStopped() {
-        assertThat(mockedScanner.isStopped(), isTrue())
-    }
+//    @Then("the scanning has stopped")
+//    fun thenScanningHasStopped() {
+//        assertThat(mockedScanner.isStopped(), isTrue())
+//    }
 
     @Then("I see my devices")
     fun thenSeeListOfDevices() {
@@ -75,13 +73,11 @@ class OtherSteps {
         click(R.id.scan)
     }
 
-    @When("^I select the \\\"(.*?)\\\"$")
-    fun whenSelect(deviceName: String) {
-
-        selectedDevice = mockedScanner.devices
-            .filter { device -> device.name.equals(deviceName) }
-            .first()
-
-        selectListViewItem(R.id.devices, selectedDevice.name)
-    }
+//    @When("^I select the \\\"(.*?)\\\"$")
+//    fun whenSelect(deviceName: String) {
+//
+//        selectedDevice = mockedScanner.devices
+//            .filter { device -> device.name.equals(deviceName) }
+//            .first()
+//    }
 }

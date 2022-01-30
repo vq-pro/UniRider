@@ -9,13 +9,25 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.clearText
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withChild
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
 import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.hasEntry
+import org.hamcrest.Matchers.not
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
@@ -30,15 +42,13 @@ object StepsUtils {
             try {
                 element(id)?.check(matches(assertion))
             } catch (e: Exception) {
-                throw AssertionError("Mismatch between the view and the expected", e)
+                throw AssertionError(e)
             }
         }
     }
 
-    fun assertThat(actual: Boolean, expected: Boolean) {
-        if (actual != expected) {
-            throw AssertionError()
-        }
+    fun <T> assertThat(actual: T, matcher: Matcher<T>) {
+        org.hamcrest.MatcherAssert.assertThat(actual, matcher)
     }
 
     fun click(id: Int) {
@@ -65,17 +75,18 @@ object StepsUtils {
         return withChild(withText(expected))
     }
 
-    fun hasRows(expectedItems: List<String>): Matcher<View> {
-        return object : FeatureMatcher<View, List<String>?>(
-            equalTo(expectedItems), "list", "list"
+    @Suppress("UNCHECKED_CAST")
+    fun <T> hasRows(expectedRows: List<T>): Matcher<View> {
+        return object : FeatureMatcher<View, List<T>?>(
+            equalTo(expectedRows), "list", "list"
         ) {
 
-            override fun featureValueOf(view: View?): List<String> {
+            override fun featureValueOf(view: View?): List<T> {
                 val adapter = (view as AdapterView<*>).adapter
 
-                val actualItems = ArrayList<String>()
+                val actualItems = ArrayList<T>()
                 for (i in 0 until adapter.count) {
-                    actualItems.add(adapter.getItem(i).toString())
+                    actualItems.add(adapter.getItem(i) as T)
                 }
 
                 return actualItems
@@ -115,8 +126,9 @@ object StepsUtils {
         return true
     }
 
-    fun selectListViewItem(id: Int, entry: String) {
-        onData(hasToString(startsWith(entry))).inAdapterView(withId(id)).perform(click())
+    fun selectListViewItem(id: Int, fieldName: String, value: Any) {
+        onData(hasEntry(equalTo(fieldName), `is`(value)))
+            .inAdapterView(withId(id)).perform(click())
     }
 
     fun selectSpinnerItem(id: Int, entry: String) {

@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.utils
+package quebec.virtualite.commons.android.views
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,6 +25,12 @@ open class WidgetUtils {
                 callback?.invoke(text.toString())
             }
         })
+    }
+
+    open fun <T> customListAdapter(
+        listView: ListView?, view: View?, id: Int?, items: List<T>?, display: ((View, T) -> Unit)?
+    ) {
+        listView!!.adapter = CustomListAdapter(view!!.context, id!!, items!!, display!!)
     }
 
     open fun listAdapter(listView: ListView, view: View?, id: Int?, contents: List<String>?) {
@@ -58,7 +64,7 @@ open class WidgetUtils {
         return arrayAdapter(view!!, id!!, contents!!) as SpinnerAdapter
     }
 
-    private fun arrayAdapter(view: View, id: Int, contents: List<String>): Adapter {
+    private fun <T> arrayAdapter(view: View, id: Int, contents: List<T>): Adapter {
         return ArrayAdapter(view.context, id, contents)
     }
 }

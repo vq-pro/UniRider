@@ -5,14 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import android.widget.TextView
+import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.utils.WidgetUtils
 import java.util.stream.Collectors.toList
 
 open class MainFragment : BaseFragment() {
 
-    internal val wheelList = ArrayList<String>()
+    internal val wheelList = ArrayList<WheelRow>()
 
     private var widgets = WidgetUtils()
 
@@ -29,27 +30,40 @@ open class MainFragment : BaseFragment() {
 
         subThread {
             wheelList.clear()
-            wheelList.addAll(getWheelNames(db.getWheelList()))
+            wheelList.addAll(getWheelItems(db.getWheelList()))
         }
 
         wheels = view.findViewById(R.id.wheels) as ListView
         wheels.isEnabled = true
-        widgets.listAdapter(wheels, view, R.layout.wheels_item, wheelList)
+        widgets.customListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(wheels, onSelectWheel())
+    }
+
+    fun onDisplayWheel() = { view: View, item: WheelRow ->
+
+        val wheelName = view.findViewById<TextView?>(R.id.row_name)
+        wheelName.text = item.name()
+
+        val wheelDistance = view.findViewById<TextView?>(R.id.row_distance)
+        wheelDistance.text = item.distance().toString()
     }
 
     fun onSelectWheel() = { _: View, index: Int ->
         navigateTo(
             R.id.action_MainFragment_to_WheelFragment,
-            Pair(WheelFragment.PARAMETER_WHEEL_NAME, wheelList[index])
+            Pair(WheelFragment.PARAMETER_WHEEL_NAME, wheelList[index].name())
         )
     }
 
-    private fun getWheelNames(wheelList: List<WheelEntity>): List<String> {
+    private fun getWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
         return wheelList
             .stream()
-            .map { wheel -> wheel.name }
-            .sorted()
+            .map { wheel ->
+                WheelRow(wheel.name, wheel.distance)
+            }
+            .sorted { itemA, itemB ->
+                itemA.name().compareTo(itemB.name())
+            }
             .collect(toList())
     }
 }
