@@ -9,17 +9,16 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="10dp"
-            android:textSize="16sp"
-            android:textStyle="bold">
-    </TextView>
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+    />
 
     <TextView
             android:id="@+id/row_distance"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="10dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_gravity="right">
-    </TextView>
+            android:layout_gravity="right"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+    />
 </FrameLayout>

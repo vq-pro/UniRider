@@ -4,15 +4,15 @@ Feature: Battery Percentage Calculator
   Background:
     Given these wheels:
       | Name            | Voltage Max | Voltage Min | Distance |
-      | Veteran Sherman | 100.8V      | 75.6V       | 123      |
-      | KingSong S20    | 126.0V      | 90.0V       | 123      |
-      | KingSong 14S    | 67.2V       | 48.0V       | 123      |
-      | Gotway Nikola+  | 100.8V      | 78.0V       | 123      |
-      | KingSong S18    | 84.0V       | 60.0V       | 123      |
-    And I start the app
+      | Veteran Sherman | 100.8V      | 75.6V       | 17622    |
+      | KingSong S20    | 126.0V      | 90.0V       | 0        |
+      | KingSong 14S    | 67.2V       | 48.0V       | 694      |
+      | Gotway Nikola+  | 100.8V      | 78.0V       | 2927     |
+      | KingSong S18    | 84.0V       | 60.0V       | 2850     |
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
-    Given I select the <Wheel>
+    Given I start the app
+    And I select the <Wheel>
     When I enter a voltage of <Voltage>
     Then it displays a percentage of <Battery>
     Examples:

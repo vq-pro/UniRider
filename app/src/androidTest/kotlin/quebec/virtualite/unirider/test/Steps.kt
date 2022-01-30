@@ -61,6 +61,11 @@ class Steps {
         assertThat(R.id.wheels, hasRows(expectedRows))
     }
 
+    @Then("I see the total distance")
+    fun seeTotalDistance() {
+        assertThat(R.id.total_distance, hasText(calculateTotalDistance().toString()))
+    }
+
     @When("I start the app")
     fun startApp() {
         mainActivity = start(activityTestRule)!!
@@ -80,7 +85,9 @@ class Steps {
     @Then("I go into the detailed view for that wheel")
     fun thenCanSeeNameOfWheel() {
         assertThat(R.id.wheel_name, hasText(selectedWheel))
-        assertThat(R.id.wheel_distance, hasText(mapWheels.get(selectedWheel).toString()))
+
+        val selectedWheelDistance = mapWheels.get(selectedWheel)
+        assertThat(R.id.wheel_distance, hasText(selectedWheelDistance.toString()))
     }
 
     @Then("^it displays a percentage of (.*?)$")
@@ -111,6 +118,14 @@ class Steps {
     @When("^I enter a voltage of (.*?)V$")
     fun whenEnterVoltage(voltage: Float) {
         enter(R.id.wheel_voltage, voltage.toString())
+    }
+
+    private fun calculateTotalDistance(): Int {
+        var totalDistance = 0
+        mapWheels.keys.stream()
+            .forEach { wheelName -> totalDistance += mapWheels.get(wheelName)!! }
+
+        return totalDistance
     }
 
     private fun parseVoltage(value: String): Float {

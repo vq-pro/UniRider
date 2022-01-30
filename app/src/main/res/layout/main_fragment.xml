@@ -6,23 +6,45 @@
         android:layout_height="match_parent"
         tools:context=".views.MainFragment">
 
-    <GridLayout
-            android:orientation="vertical"
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            tools:ignore="MissingConstraints">
 
         <ListView
                 android:id="@+id/wheels"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_column="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_margin="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_row="2"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:visibility="visible">
         </ListView>
-    </GridLayout>
 
+        <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="40dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"
+                    android:text="@string/fragment_label_total_distance"
+            />
+
+            <TextView
+                    android:id="@+id/total_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_margin="40dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+        </FrameLayout>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

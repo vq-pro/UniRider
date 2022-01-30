@@ -44,6 +44,9 @@ class MainFragmentTest {
     lateinit var mockedDb: WheelDb
 
     @Mock
+    lateinit var mockedTotalDistance: TextView
+
+    @Mock
     lateinit var mockedView: View
 
     @Mock
@@ -99,6 +102,9 @@ class MainFragmentTest {
         given<Any>(mockedView.findViewById(R.id.wheels))
             .willReturn(mockedWheels)
 
+        given<Any>(mockedView.findViewById(R.id.total_distance))
+            .willReturn(mockedTotalDistance)
+
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
@@ -106,7 +112,6 @@ class MainFragmentTest {
         val expectedWheels = listOf(WHEEL_ITEM_456, WHEEL_ITEM_123)
 
         verify(mockedDb).getWheelList()
-        assertThat(fragment.wheelList, equalTo(expectedWheels))
 
         verify(mockedWidgets).multifieldListAdapter(
             eq(mockedWheels), eq(mockedView), eq(R.layout.wheels_item), eq(expectedWheels),
@@ -117,6 +122,8 @@ class MainFragmentTest {
 
         verify(mockedWidgets).setOnItemClickListener(eq(mockedWheels), captorOnSelect.capture())
         assertThat(captorOnSelect.value.javaClass.name, containsString("MainFragment\$onSelectWheel\$"))
+
+        verify(mockedTotalDistance).text = (DISTANCE_A + DISTANCE_B).toString()
     }
 
     @Test

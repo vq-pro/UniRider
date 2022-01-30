@@ -19,7 +19,7 @@ Feature: Main Screen
       | KingSong S18    | 2850     |
       | KingSong 14S    | 694      |
       | KingSong S20    | 0        |
-#    FIXME 1 View total distance for all wheels
+    And I see the total distance
 
   Scenario: Going into calculator
     Given I start the app

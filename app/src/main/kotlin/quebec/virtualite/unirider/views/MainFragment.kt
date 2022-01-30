@@ -17,6 +17,7 @@ open class MainFragment : BaseFragment() {
 
     private var widgets = WidgetUtils()
 
+    private lateinit var wheelTotalDistance: TextView
     private lateinit var wheels: ListView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -31,9 +32,12 @@ open class MainFragment : BaseFragment() {
         widgets.multifieldListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(wheels, onSelectWheel())
 
+        wheelTotalDistance = view.findViewById(R.id.total_distance)
+
         connectDb {
-            wheelList.clear()
-            wheelList.addAll(getSortedWheelItems(db.getWheelList()))
+            wheelList += getSortedWheelItems(db.getWheelList())
+
+            wheelTotalDistance.text = calculateTotalDistance().toString()
         }
     }
 
@@ -51,6 +55,15 @@ open class MainFragment : BaseFragment() {
             R.id.action_MainFragment_to_WheelFragment,
             Pair(WheelFragment.PARAMETER_WHEEL_NAME, wheelList[index].name())
         )
+    }
+
+    private fun calculateTotalDistance(): Int {
+        var totalDistance = 0
+        wheelList.forEach { wheel ->
+            totalDistance += wheel.distance()
+        }
+
+        return totalDistance
     }
 
     private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
