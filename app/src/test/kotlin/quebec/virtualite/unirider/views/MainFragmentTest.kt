@@ -22,6 +22,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.views.WidgetUtils
+import quebec.virtualite.commons.views.NavigatedTo
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
@@ -66,17 +67,17 @@ class MainFragmentTest {
     @InjectMocks
     var fragment: MainFragment = TestableMainFragment(this)
 
-    var navigateToId: Int = -1
-    var navigateToWith: Pair<String, String>? = null
+    lateinit var navigatedTo: NavigatedTo
 
     @Before
     fun init() {
-        given(mockedDb.getWheelList()).willReturn(
-            listOf(
-                WheelEntity(0, WHEEL_B, DISTANCE_B, 0f, 0f),
-                WheelEntity(0, WHEEL_A, DISTANCE_A, 0f, 0f)
+        given(mockedDb.getWheelList())
+            .willReturn(
+                listOf(
+                    WheelEntity(0, WHEEL_B, DISTANCE_B, 0f, 0f),
+                    WheelEntity(0, WHEEL_A, DISTANCE_A, 0f, 0f)
+                )
             )
-        )
     }
 
     @Test
@@ -137,15 +138,20 @@ class MainFragmentTest {
     @Test
     fun onSelectWheel() {
         // Given
-        fragment.wheelList.clear()
-        fragment.wheelList.addAll(listOf(WHEEL_ITEM_A, WHEEL_ITEM_B))
+        fragment.wheelList += listOf(WHEEL_ITEM_A, WHEEL_ITEM_B)
 
         // When
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        assertThat(navigateToId, equalTo(R.id.action_MainFragment_to_WheelFragment))
-        assertThat(navigateToWith, equalTo(Pair(WheelFragment.PARAMETER_WHEEL_NAME, WHEEL_B)))
+        assertThat(
+            navigatedTo, equalTo(
+                NavigatedTo(
+                    R.id.action_MainFragment_to_WheelFragment,
+                    Pair(WheelFragment.PARAMETER_WHEEL_NAME, WHEEL_B)
+                )
+            )
+        )
     }
 
     class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {
@@ -155,10 +161,8 @@ class MainFragmentTest {
             function()
         }
 
-        @Suppress("UNCHECKED_CAST")
-        override fun <T> navigateTo(id: Int, parms: Pair<String, T>?) {
-            test.navigateToId = id
-            test.navigateToWith = parms as Pair<String, String>
+        override fun navigateTo(id: Int, parms: Pair<String, String>) {
+            test.navigatedTo = NavigatedTo(id, parms)
         }
     }
 }

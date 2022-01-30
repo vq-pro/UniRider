@@ -18,8 +18,8 @@ open class BaseFragment : Fragment() {
         subThread(function)
     }
 
-    internal open fun <T> navigateTo(id: Int, parms: Pair<String, T>?) {
-        findNavController().navigate(id, bundleOf(parms!!.first to parms.second))
+    internal open fun navigateTo(id: Int, parms: Pair<String, String>) {
+        findNavController().navigate(id, bundleOf(parms.first to parms.second))
     }
 
     internal open fun subThread(function: () -> Unit) {
