@@ -12,8 +12,10 @@ open class BaseFragment : Fragment() {
 
     lateinit var db: WheelDb
 
-    internal open fun connectDb() {
+    internal open fun connectDb(function: () -> Unit) {
         db = MainActivity.db
+
+        subThread(function)
     }
 
     internal open fun <T> navigateTo(id: Int, parms: Pair<String, T>?) {

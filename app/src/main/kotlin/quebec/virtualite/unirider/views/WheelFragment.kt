@@ -49,9 +49,7 @@ open class WheelFragment : BaseFragment() {
 
         wheelBattery = view.findViewById(R.id.wheel_battery)
 
-        // FIXME 1 Join these two steps
-        connectDb()
-        subThread {
+        connectDb {
             wheel = db.findWheel(parmWheelName)
                 ?: throw WheelNotFoundException()
 

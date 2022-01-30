@@ -144,18 +144,15 @@ class MainFragmentTest {
 
     class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {
 
-        override fun connectDb() {
+        override fun connectDb(function: () -> Unit) {
             db = test.mockedDb
+            function()
         }
 
         @Suppress("UNCHECKED_CAST")
         override fun <T> navigateTo(id: Int, parms: Pair<String, T>?) {
             test.navigateToId = id
             test.navigateToWith = parms as Pair<String, String>
-        }
-
-        override fun subThread(function: () -> Unit) {
-            function()
         }
     }
 }

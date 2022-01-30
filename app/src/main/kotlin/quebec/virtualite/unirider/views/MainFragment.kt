@@ -31,9 +31,7 @@ open class MainFragment : BaseFragment() {
         widgets.customListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(wheels, onSelectWheel())
 
-        // FIXME 1 Join these two steps
-        connectDb()
-        subThread {
+        connectDb {
             wheelList.clear()
             wheelList.addAll(getWheelItems(db.getWheelList()))
         }

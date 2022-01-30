@@ -159,11 +159,8 @@ class WheelFragmentTest {
 
     class TestableWheelFragment(val test: WheelFragmentTest) : WheelFragment() {
 
-        override fun connectDb() {
+        override fun connectDb(function: () -> Unit) {
             db = test.mockedDb
-        }
-
-        override fun subThread(function: () -> Unit) {
             function()
         }
     }
