@@ -24,6 +24,7 @@ open class WheelFragment : BaseFragment() {
     internal lateinit var parmWheelName: String
     internal lateinit var wheel: WheelEntity
     internal lateinit var wheelBattery: TextView
+    internal lateinit var wheelDistance: TextView
     internal lateinit var wheelName: TextView
     internal lateinit var wheelVoltage: EditText
 
@@ -38,20 +39,24 @@ open class WheelFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        connectDb()
-
-        subThread {
-            wheel = db.findWheel(parmWheelName)
-                ?: throw WheelNotFoundException()
-        }
-
         wheelName = view.findViewById(R.id.wheel_name)
         wheelName.text = parmWheelName
+
+        wheelDistance = view.findViewById(R.id.wheel_distance)
 
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
         widgets.addTextChangedListener(wheelVoltage, onUpdateVoltage())
 
         wheelBattery = view.findViewById(R.id.wheel_battery)
+
+        // FIXME 1 Join these two steps
+        connectDb()
+        subThread {
+            wheel = db.findWheel(parmWheelName)
+                ?: throw WheelNotFoundException()
+
+            wheelDistance.text = wheel.distance.toString()
+        }
     }
 
     fun onUpdateVoltage() = { voltageParm: String ->

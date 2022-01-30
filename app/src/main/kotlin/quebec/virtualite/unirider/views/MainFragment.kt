@@ -26,17 +26,17 @@ open class MainFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        connectDb()
-
-        subThread {
-            wheelList.clear()
-            wheelList.addAll(getWheelItems(db.getWheelList()))
-        }
-
         wheels = view.findViewById(R.id.wheels) as ListView
         wheels.isEnabled = true
         widgets.customListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(wheels, onSelectWheel())
+
+        // FIXME 1 Join these two steps
+        connectDb()
+        subThread {
+            wheelList.clear()
+            wheelList.addAll(getWheelItems(db.getWheelList()))
+        }
     }
 
     fun onDisplayWheel() = { view: View, item: WheelRow ->

@@ -56,6 +56,9 @@ class WheelFragmentTest {
     lateinit var mockedWheelBattery: TextView
 
     @Mock
+    lateinit var mockedWheelDistance: TextView
+
+    @Mock
     lateinit var mockedWheelName: TextView
 
     @Mock
@@ -73,6 +76,18 @@ class WheelFragmentTest {
     @Before
     fun init() {
         fragment.parmWheelName = NAME
+
+        given<Any>(mockedView.findViewById(R.id.wheel_name))
+            .willReturn(mockedWheelName)
+
+        given<Any>(mockedView.findViewById(R.id.wheel_distance))
+            .willReturn(mockedWheelDistance)
+
+        given<Any>(mockedView.findViewById(R.id.wheel_voltage))
+            .willReturn(mockedWheelVoltage)
+
+        given<Any>(mockedView.findViewById(R.id.wheel_battery))
+            .willReturn(mockedWheelBattery)
     }
 
     @Test
@@ -82,15 +97,6 @@ class WheelFragmentTest {
         given(mockedDb.findWheel(NAME))
             .willReturn(wheel)
 
-        given<Any>(mockedView.findViewById(R.id.wheel_name))
-            .willReturn(mockedWheelName)
-
-        given<Any>(mockedView.findViewById(R.id.wheel_voltage))
-            .willReturn(mockedWheelVoltage)
-
-        given<Any>(mockedView.findViewById(R.id.wheel_battery))
-            .willReturn(mockedWheelBattery)
-
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
@@ -99,6 +105,7 @@ class WheelFragmentTest {
 
         assertThat(fragment.wheel, equalTo(wheel))
         assertThat(fragment.wheelName, equalTo(mockedWheelName))
+        assertThat(fragment.wheelDistance, equalTo(mockedWheelDistance))
         assertThat(fragment.wheelVoltage, equalTo(mockedWheelVoltage))
         assertThat(fragment.wheelBattery, equalTo(mockedWheelBattery))
 

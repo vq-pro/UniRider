@@ -79,8 +79,7 @@ class Steps {
     @Then("I go into the detailed view for that wheel")
     fun thenCanSeeNameOfWheel() {
         assertThat(R.id.wheel_name, hasText(selectedWheel))
-        // FIXME 1 Enable this
-//        assertThat(R.id.wheel_distance, hasText("123"))
+        assertThat(R.id.wheel_distance, hasText("123"))
     }
 
     @Then("^it displays a percentage of (.*?)$")
