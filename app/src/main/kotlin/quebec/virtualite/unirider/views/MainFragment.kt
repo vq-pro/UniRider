@@ -28,7 +28,7 @@ open class MainFragment : BaseFragment() {
 
         wheels = view.findViewById(R.id.wheels) as ListView
         wheels.isEnabled = true
-        widgets.customListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
+        widgets.mapListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(wheels, onSelectWheel())
 
         connectDb {

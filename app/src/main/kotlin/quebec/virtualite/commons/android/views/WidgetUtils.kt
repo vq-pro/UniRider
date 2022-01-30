@@ -27,7 +27,7 @@ open class WidgetUtils {
         })
     }
 
-    open fun <T> customListAdapter(
+    open fun <T> mapListAdapter(
         listView: ListView?, view: View?, id: Int?, items: List<T>?, display: ((View, T) -> Unit)?
     ) {
         listView!!.adapter = CustomListAdapter(view!!.context, id!!, items!!, display!!)
@@ -53,10 +53,10 @@ open class WidgetUtils {
         widget.setOnClickListener(View.OnClickListener { view -> callback(view) })
     }
 
-    open fun setOnItemClickListener(listView: ListView, callback: (View, Int) -> Unit) {
-        listView.setOnItemClickListener { _: AdapterView<*>, view: View, position: Int, _: Long ->
+    open fun setOnItemClickListener(listView: ListView?, callback: ((View, Int) -> Unit)?) {
+        listView!!.setOnItemClickListener { _: AdapterView<*>, view: View, position: Int, _: Long ->
 //            val item = listView.getItemAtPosition(position) as String
-            callback(view, position)
+            callback!!(view, position)
         }
     }
 

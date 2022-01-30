@@ -58,7 +58,10 @@ class MainFragmentTest {
     lateinit var mockedWidgets: WidgetUtils
 
     @Captor
-    lateinit var lambda: ArgumentCaptor<(View, WheelRow) -> Unit>
+    lateinit var captorOnDisplay: ArgumentCaptor<(View, WheelRow) -> Unit>
+
+    @Captor
+    lateinit var captorOnSelect: ArgumentCaptor<(View, Int) -> Unit>
 
     @InjectMocks
     var fragment: MainFragment = TestableMainFragment(this)
@@ -98,15 +101,18 @@ class MainFragmentTest {
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
-        // FIXME 1 verify setOnItemClickListener
         // Then
         verify(mockedDb).getWheelList()
-        verify(mockedWidgets).customListAdapter(
+
+        verify(mockedWidgets).mapListAdapter(
             eq(mockedWheels), eq(mockedView), eq(R.layout.wheels_item), eq(listOf(WHEEL_ITEM_A, WHEEL_ITEM_B)),
-            lambda.capture()
+            captorOnDisplay.capture()
         )
-        assertThat(lambda.value.javaClass.name, containsString("MainFragment\$onDisplayWheel\$"))
+        assertThat(captorOnDisplay.value.javaClass.name, containsString("MainFragment\$onDisplayWheel\$"))
         verify(mockedWheels).isEnabled = true
+
+        verify(mockedWidgets).setOnItemClickListener(eq(mockedWheels), captorOnSelect.capture())
+        assertThat(captorOnSelect.value.javaClass.name, containsString("MainFragment\$onSelectWheel\$"))
 
         assertThat(fragment.wheelList, equalTo(listOf(WHEEL_ITEM_A, WHEEL_ITEM_B)))
     }
