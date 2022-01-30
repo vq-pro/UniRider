@@ -27,7 +27,7 @@ open class WidgetUtils {
         })
     }
 
-    open fun <T> mapListAdapter(
+    open fun <T> multifieldListAdapter(
         listView: ListView?, view: View?, id: Int?, items: List<T>?, display: ((View, T) -> Unit)?
     ) {
         listView!!.adapter = CustomListAdapter(view!!.context, id!!, items!!, display!!)

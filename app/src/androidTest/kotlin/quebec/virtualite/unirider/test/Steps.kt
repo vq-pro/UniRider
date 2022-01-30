@@ -34,7 +34,8 @@ class Steps {
     @Rule
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
-    private var db = WheelDbImpl(applicationContext())
+    private val db = WheelDbImpl(applicationContext())
+    private val mapWheels = HashMap<String, Int>()
 
     private lateinit var mainActivity: MainActivity
     private lateinit var selectedWheel: String
@@ -79,7 +80,7 @@ class Steps {
     @Then("I go into the detailed view for that wheel")
     fun thenCanSeeNameOfWheel() {
         assertThat(R.id.wheel_name, hasText(selectedWheel))
-        assertThat(R.id.wheel_distance, hasText("123"))
+        assertThat(R.id.wheel_distance, hasText(mapWheels.get(selectedWheel).toString()))
     }
 
     @Then("^it displays a percentage of (.*?)$")
@@ -92,7 +93,10 @@ class Steps {
         assertThat(wheels.topCells(), equalTo(listOf("Name", "Voltage Max", "Voltage Min", "Distance")))
         val wheelEntities = wheels.cells(1)
             .stream()
-            .map { row -> WheelEntity(0, row[0], parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2])) }
+            .map { row ->
+                mapWheels.put(row[0], parseInt(row[3]))
+                WheelEntity(0, row[0], parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
+            }
             .collect(toList())
 
         db.saveWheels(wheelEntities)

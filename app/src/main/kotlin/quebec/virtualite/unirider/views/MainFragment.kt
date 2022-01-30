@@ -28,12 +28,12 @@ open class MainFragment : BaseFragment() {
 
         wheels = view.findViewById(R.id.wheels) as ListView
         wheels.isEnabled = true
-        widgets.mapListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
+        widgets.multifieldListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(wheels, onSelectWheel())
 
         connectDb {
             wheelList.clear()
-            wheelList.addAll(getWheelItems(db.getWheelList()))
+            wheelList.addAll(getSortedWheelItems(db.getWheelList()))
         }
     }
 
@@ -53,14 +53,14 @@ open class MainFragment : BaseFragment() {
         )
     }
 
-    private fun getWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
+    private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
         return wheelList
             .stream()
             .map { wheel ->
                 WheelRow(wheel.name, wheel.distance)
             }
             .sorted { itemA, itemB ->
-                itemA.name().compareTo(itemB.name())
+                itemB.distance().compareTo(itemA.distance())
             }
             .collect(toList())
     }

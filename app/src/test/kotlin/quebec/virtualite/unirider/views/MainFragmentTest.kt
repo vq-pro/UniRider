@@ -37,8 +37,8 @@ class MainFragmentTest {
     private val DISTANCE_B = 456
     private val WHEEL_A = "A"
     private val WHEEL_B = "B"
-    private val WHEEL_ITEM_A = WheelRow(WHEEL_A, DISTANCE_A)
-    private val WHEEL_ITEM_B = WheelRow(WHEEL_B, DISTANCE_B)
+    private val WHEEL_ITEM_123 = WheelRow(WHEEL_A, DISTANCE_A)
+    private val WHEEL_ITEM_456 = WheelRow(WHEEL_B, DISTANCE_B)
 
     @Mock
     lateinit var mockedDb: WheelDb
@@ -74,8 +74,8 @@ class MainFragmentTest {
         given(mockedDb.getWheelList())
             .willReturn(
                 listOf(
-                    WheelEntity(0, WHEEL_B, DISTANCE_B, 0f, 0f),
-                    WheelEntity(0, WHEEL_A, DISTANCE_A, 0f, 0f)
+                    WheelEntity(0, WHEEL_A, DISTANCE_A, 0f, 0f),
+                    WheelEntity(0, WHEEL_B, DISTANCE_B, 0f, 0f)
                 )
             )
     }
@@ -103,10 +103,13 @@ class MainFragmentTest {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        verify(mockedDb).getWheelList()
+        val expectedWheels = listOf(WHEEL_ITEM_456, WHEEL_ITEM_123)
 
-        verify(mockedWidgets).mapListAdapter(
-            eq(mockedWheels), eq(mockedView), eq(R.layout.wheels_item), eq(listOf(WHEEL_ITEM_A, WHEEL_ITEM_B)),
+        verify(mockedDb).getWheelList()
+        assertThat(fragment.wheelList, equalTo(expectedWheels))
+
+        verify(mockedWidgets).multifieldListAdapter(
+            eq(mockedWheels), eq(mockedView), eq(R.layout.wheels_item), eq(expectedWheels),
             captorOnDisplay.capture()
         )
         assertThat(captorOnDisplay.value.javaClass.name, containsString("MainFragment\$onDisplayWheel\$"))
@@ -114,8 +117,6 @@ class MainFragmentTest {
 
         verify(mockedWidgets).setOnItemClickListener(eq(mockedWheels), captorOnSelect.capture())
         assertThat(captorOnSelect.value.javaClass.name, containsString("MainFragment\$onSelectWheel\$"))
-
-        assertThat(fragment.wheelList, equalTo(listOf(WHEEL_ITEM_A, WHEEL_ITEM_B)))
     }
 
     @Test
@@ -128,7 +129,7 @@ class MainFragmentTest {
             .willReturn(mockedWheelDistance)
 
         // When
-        fragment.onDisplayWheel().invoke(mockedView, WHEEL_ITEM_A)
+        fragment.onDisplayWheel().invoke(mockedView, WHEEL_ITEM_123)
 
         // Then
         verify(mockedWheelName).text = WHEEL_A
@@ -138,7 +139,7 @@ class MainFragmentTest {
     @Test
     fun onSelectWheel() {
         // Given
-        fragment.wheelList += listOf(WHEEL_ITEM_A, WHEEL_ITEM_B)
+        fragment.wheelList += listOf(WHEEL_ITEM_123, WHEEL_ITEM_456)
 
         // When
         fragment.onSelectWheel().invoke(mockedView, 1)
