@@ -23,7 +23,7 @@ Feature: Main Screen
       | Veteran Abrams  | 0        |
     And I see the total distance
 
-  Scenario: Going into calculator
+  Scenario: Going into the wheel details
     Given I start the app
     When I select the KingSong S20
     Then I go into the detailed view for that wheel

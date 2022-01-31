@@ -1,5 +1,5 @@
 @Integration
-Feature: Battery Percentage Calculator
+Feature: Wheel Details
 
   Background:
     Given these wheels:
