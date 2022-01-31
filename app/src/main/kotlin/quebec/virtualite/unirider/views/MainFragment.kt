@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
+import quebec.virtualite.commons.android.utils.ArrayListUtils.set
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -35,8 +36,7 @@ open class MainFragment : BaseFragment() {
         wheelTotalDistance = view.findViewById(R.id.total_distance)
 
         connectDb {
-            wheelList += getSortedWheelItems(db.getWheelList())
-
+            set(wheelList, getSortedWheelItems(db.getWheelList()))
             wheelTotalDistance.text = calculateTotalDistance().toString()
         }
     }
@@ -73,7 +73,8 @@ open class MainFragment : BaseFragment() {
                 WheelRow(wheel.name, wheel.distance)
             }
             .sorted { itemA, itemB ->
-                itemB.distance().compareTo(itemA.distance())
+                val byDistance = itemB.distance().compareTo(itemA.distance())
+                if (byDistance != 0) byDistance else itemA.name().compareTo(itemB.name())
             }
             .collect(toList())
     }
