@@ -10,11 +10,6 @@ Feature: Main Screen
       | KingSong 14S    | 67.2V       | 48.0V       | 694      |
       | Gotway Nikola+  | 100.8V      | 78.0V       | 2927     |
       | KingSong S18    | 84.0V       | 60.0V       | 2850     |
-      | A               | 1V          | 2V          | 0        |
-      | B               | 1V          | 2V          | 0        |
-      | C               | 1V          | 2V          | 0        |
-      | D               | 1V          | 2V          | 0        |
-      | E               | 1V          | 2V          | 0        |
 
   Scenario: On entering, we see a list of registered wheels and their distance
     When I start the app
@@ -24,11 +19,6 @@ Feature: Main Screen
       | Gotway Nikola+  | 2927     |
       | KingSong S18    | 2850     |
       | KingSong 14S    | 694      |
-      | A               | 0        |
-      | B               | 0        |
-      | C               | 0        |
-      | D               | 0        |
-      | E               | 0        |
       | KingSong S20    | 0        |
       | Veteran Abrams  | 0        |
     And I see the total distance
