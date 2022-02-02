@@ -33,7 +33,10 @@ class WheelDbImpl(applicationContext: Context) : WheelDb {
 
     override fun saveWheels(wheels: List<WheelEntity>) {
         wheels.forEach { wheel ->
-            dao.saveWheel(wheel)
+            if (wheel.id == 0L)
+                dao.insertWheel(wheel)
+            else
+                dao.updateWheel(wheel)
         }
     }
 }

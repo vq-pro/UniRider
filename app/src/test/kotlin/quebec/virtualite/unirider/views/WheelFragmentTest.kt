@@ -32,7 +32,10 @@ import java.lang.Float.parseFloat
 @RunWith(MockitoJUnitRunner::class)
 class WheelFragmentTest {
 
+    private val DISTANCE = 1111
+    private val ID = 2222L
     private val NAME = "Sherman"
+    private val NEW_DISTANCE = 3333
     private val PERCENTAGE = 100.0f
     private val PERCENTAGE_S = "100.0%"
     private val VOLTAGE_S = "100.8"
@@ -56,7 +59,7 @@ class WheelFragmentTest {
     lateinit var mockedWheelBattery: TextView
 
     @Mock
-    lateinit var mockedWheelDistance: TextView
+    lateinit var mockedWheelDistance: EditText
 
     @Mock
     lateinit var mockedWheelName: TextView
@@ -68,7 +71,7 @@ class WheelFragmentTest {
     lateinit var mockedWidgets: WidgetUtils
 
     @Captor
-    lateinit var lambda: ArgumentCaptor<(String) -> Unit>
+    lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
 
     @InjectMocks
     var fragment: WheelFragment = TestableWheelFragment(this)
@@ -93,7 +96,7 @@ class WheelFragmentTest {
     @Test
     fun onViewCreated() {
         // Given
-        val wheel = WheelEntity(0, NAME, 0, 0f, 0f)
+        val wheel = WheelEntity(0, NAME, DISTANCE, 0f, 0f)
         given(mockedDb.findWheel(NAME))
             .willReturn(wheel)
 
@@ -109,8 +112,12 @@ class WheelFragmentTest {
         assertThat(fragment.wheelVoltage, equalTo(mockedWheelVoltage))
         assertThat(fragment.wheelBattery, equalTo(mockedWheelBattery))
 
-        verify(mockedWidgets).addTextChangedListener(eq(mockedWheelVoltage), lambda.capture())
-        assertThat(lambda.value.javaClass.name, containsString("WheelFragment\$onUpdateVoltage\$"))
+        verify(mockedWheelDistance).setText(DISTANCE.toString())
+        verify(mockedWidgets).addTextChangedListener(eq(mockedWheelDistance), lambdaOnUpdateText.capture())
+        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelFragment\$onUpdateDistance\$"))
+
+        verify(mockedWidgets).addTextChangedListener(eq(mockedWheelVoltage), lambdaOnUpdateText.capture())
+        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelFragment\$onUpdateVoltage\$"))
     }
 
     @Test
@@ -127,9 +134,21 @@ class WheelFragmentTest {
     }
 
     @Test
+    fun onUpdateDistance() {
+        // Given
+        fragment.wheel = WheelEntity(ID, NAME, DISTANCE, VOLTAGE_MAX, VOLTAGE_MIN)
+
+        // When
+        fragment.onUpdateDistance().invoke("$NEW_DISTANCE ")
+
+        // Then
+        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, NEW_DISTANCE, VOLTAGE_MAX, VOLTAGE_MIN)))
+    }
+
+    @Test
     fun onUpdateVoltage() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, 0, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheel = WheelEntity(0, NAME, DISTANCE, VOLTAGE_MAX, VOLTAGE_MIN)
         fragment.wheelBattery = mockedWheelBattery
 
         given(mockedCalculatorService.percentage(fragment.wheel, VOLTAGE))
@@ -146,7 +165,7 @@ class WheelFragmentTest {
     @Test
     fun onUpdateVoltage_whenBlank_noDisplay() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, 0, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheel = WheelEntity(0, NAME, DISTANCE, VOLTAGE_MAX, VOLTAGE_MIN)
         fragment.wheelBattery = mockedWheelBattery
 
         // When
@@ -161,6 +180,10 @@ class WheelFragmentTest {
 
         override fun connectDb(function: () -> Unit) {
             db = test.mockedDb
+            function()
+        }
+
+        override fun runDb(function: () -> Unit) {
             function()
         }
     }

@@ -26,4 +26,4 @@ Feature: Main Screen
   Scenario: Going into the wheel details
     Given I start the app
     When I select the KingSong S20
-    Then I go into the detailed view for that wheel
+    Then the details view shows the correct name and a distance of that wheel

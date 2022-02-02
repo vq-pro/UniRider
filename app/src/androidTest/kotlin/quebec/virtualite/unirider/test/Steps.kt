@@ -13,12 +13,16 @@ import org.junit.Rule
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.enter
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSelectedText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
 import quebec.virtualite.unirider.database.WheelEntity
@@ -40,6 +44,8 @@ class Steps {
     private lateinit var mainActivity: MainActivity
     private lateinit var selectedWheel: String
 
+    private var updatedDistance = 0
+
     @Before
     fun beforeScenario() {
         db.deleteAll()
@@ -48,6 +54,24 @@ class Steps {
     @After
     fun afterScenario() {
         stop(activityTestRule)
+    }
+
+    @When("^I change the distance to (.*?)$")
+    fun changeDistanceTo(newDistance: Int) {
+//        makeEditable(R.id.wheel_distance)
+        updatedDistance = newDistance
+        setText(R.id.wheel_distance, newDistance.toString())
+    }
+
+    @Then("it shows the new distance on the details view")
+    fun itShowsTheNewDistanceOnDetailsView() {
+        assertThat(R.id.wheel_distance, hasText(updatedDistance.toString()))
+    }
+
+    @Then("it shows the updated distance on the main view")
+    fun itShowsTheUpdatedDistanceOnTheMainView() {
+        back(R.id.wheel_distance)
+        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel, updatedDistance)))
     }
 
     @Then("I see my wheels and their distance:")
@@ -82,8 +106,8 @@ class Steps {
         assertThat(R.id.wheels, hasSelectedText(expectedEntry))
     }
 
-    @Then("I go into the detailed view for that wheel")
-    fun thenCanSeeNameOfWheel() {
+    @Then("the details view shows the correct name and a distance of that wheel")
+    fun detailsViewShowsNameAndDistance() {
         assertThat(R.id.wheel_name, hasText(selectedWheel))
 
         val selectedWheelDistance = mapWheels.get(selectedWheel)
@@ -126,6 +150,10 @@ class Steps {
             .forEach { wheelName -> totalDistance += mapWheels.get(wheelName)!! }
 
         return totalDistance
+    }
+
+    private fun makeEditable(id: Int) {
+        click(id)
     }
 
     private fun parseVoltage(value: String): Float {

@@ -22,6 +22,10 @@ open class BaseFragment : Fragment() {
         findNavController().navigate(id, bundleOf(parms.first to parms.second))
     }
 
+    internal open fun runDb(function: () -> Unit) {
+        subThread(function)
+    }
+
     internal open fun subThread(function: () -> Unit) {
         lifecycleScope.launch(Dispatchers.IO) {
             function()

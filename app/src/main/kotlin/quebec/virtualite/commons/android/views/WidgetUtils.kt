@@ -49,8 +49,8 @@ open class WidgetUtils {
         }
     }
 
-    open fun setOnClickListener(widget: View, callback: (View) -> Unit) {
-        widget.setOnClickListener(View.OnClickListener { view -> callback(view) })
+    open fun setOnClickListener(widget: View?, callback: ((View) -> Unit)?) {
+        widget!!.setOnClickListener({ view -> callback!!(view) })
     }
 
     open fun setOnItemClickListener(listView: ListView?, callback: ((View, Int) -> Unit)?) {

@@ -8,6 +8,7 @@
     <string name="fragment_label_main">Main</string>
     <string name="fragment_label_scan">Devices</string>
     <string name="fragment_label_total_distance">Total</string>
+    <string name="hint_wheel_distance">distance</string>
     <string name="hint_wheel_voltage">voltage</string>
     <string name="label_devices">Devices</string>
     <string name="message_title">Enter your name</string>

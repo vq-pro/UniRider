@@ -14,8 +14,9 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.database.WheelEntity
 
-private const val DISTANCE1 = 123
-private const val DISTANCE2 = 456
+private const val DISTANCE1 = 111
+private const val DISTANCE2 = 222
+private const val ID = 333L
 private const val NAME1 = "name1"
 private const val NAME2 = "name2"
 private const val VMAX1 = 100.8f
@@ -23,8 +24,9 @@ private const val VMIN1 = 75.6f
 private const val VMAX2 = 84.0f
 private const val VMIN2 = 60.0f
 
-private val WHEEL1 = WheelEntity(0, NAME1, DISTANCE1, VMAX1, VMIN1)
-private val WHEEL2 = WheelEntity(0, NAME2, DISTANCE2, VMAX2, VMIN2)
+private val EXISTING_WHEEL = WheelEntity(ID, NAME1, DISTANCE1, VMAX1, VMIN1)
+private val NEW_WHEEL = WheelEntity(0, NAME1, DISTANCE1, VMAX1, VMIN1)
+private val NEW_WHEEL2 = WheelEntity(0, NAME2, DISTANCE2, VMAX2, VMIN2)
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelDbImplTest {
@@ -89,12 +91,21 @@ class WheelDbImplTest {
     }
 
     @Test
-    fun saveWheels() {
+    fun saveWheels_whenExisting_update() {
         // When
-        dbImpl.saveWheels(listOf(WHEEL1, WHEEL2))
+        dbImpl.saveWheels(listOf(EXISTING_WHEEL))
 
         // Then
-        verify(mockedDao).saveWheel(WHEEL1)
-        verify(mockedDao).saveWheel(WHEEL2)
+        verify(mockedDao).updateWheel(EXISTING_WHEEL)
+    }
+
+    @Test
+    fun saveWheels_whenNew_insert() {
+        // When
+        dbImpl.saveWheels(listOf(NEW_WHEEL, NEW_WHEEL2))
+
+        // Then
+        verify(mockedDao).insertWheel(NEW_WHEEL)
+        verify(mockedDao).insertWheel(NEW_WHEEL2)
     }
 }

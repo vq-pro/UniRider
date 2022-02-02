@@ -11,12 +11,13 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.pressBack
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -27,6 +28,7 @@ import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
+import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.not
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
@@ -51,6 +53,10 @@ object StepsUtils {
         org.hamcrest.MatcherAssert.assertThat(actual, matcher)
     }
 
+    fun back(id: Int) {
+        element(id)?.perform(pressBack())
+    }
+
     fun click(id: Int) {
         assertThat(id, isEnabled())
         element(id)?.perform(click())
@@ -71,25 +77,22 @@ object StepsUtils {
         return hasMinimumChildCount(expected)
     }
 
-    fun hasRow(expected: String?): Matcher<View> {
-        return withChild(withText(expected))
+    fun <T> hasRow(expectedRow: T): Matcher<View> {
+        return object : FeatureMatcher<View, List<T>?>(
+            hasItem(expectedRow), "list", "list"
+        ) {
+            override fun featureValueOf(view: View?): List<T> {
+                return actualListViewItemsFor(view)
+            }
+        }
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun <T> hasRows(expectedRows: List<T>): Matcher<View> {
         return object : FeatureMatcher<View, List<T>?>(
             equalTo(expectedRows), "list", "list"
         ) {
-
             override fun featureValueOf(view: View?): List<T> {
-                val adapter = (view as AdapterView<*>).adapter
-
-                val actualItems = ArrayList<T>()
-                for (i in 0 until adapter.count) {
-                    actualItems.add(adapter.getItem(i) as T)
-                }
-
-                return actualItems
+                return actualListViewItemsFor(view)
             }
         }
     }
@@ -136,6 +139,11 @@ object StepsUtils {
         onData(`is`(entry)).perform(click())
     }
 
+    fun setText(id: Int, newText: String) {
+        assertThat(id, isEnabled())
+        element(id)?.perform(replaceText(newText))
+    }
+
     fun <T : Activity> start(activityTestRule: ActivityTestRule<T>): T? {
         activityTestRule.launchActivity(Intent())
         return activityTestRule.activity
@@ -145,11 +153,23 @@ object StepsUtils {
         activityTestRule.finishActivity()
     }
 
-    internal fun element(id: Int): ViewInteraction? {
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> actualListViewItemsFor(view: View?): ArrayList<T> {
+        val adapter = (view as AdapterView<*>).adapter
+
+        val actualItems = ArrayList<T>()
+        for (i in 0 until adapter.count) {
+            actualItems.add(adapter.getItem(i) as T)
+        }
+
+        return actualItems
+    }
+
+    private fun element(id: Int): ViewInteraction? {
         return onView(withId(id))
     }
 
-    internal fun poll(callback: () -> Unit) {
+    private fun poll(callback: () -> Unit) {
 
         var exception: Throwable? = null
         val start = currentTimeMillis()

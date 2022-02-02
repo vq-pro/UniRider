@@ -3,6 +3,7 @@ package quebec.virtualite.unirider.database.impl
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import quebec.virtualite.unirider.database.WheelEntity
 
 @Dao
@@ -14,5 +15,8 @@ interface WheelDistanceDao {
     fun findWheel(name: String): WheelEntity?
 
     @Insert
-    fun saveWheel(wheel: WheelEntity)
+    fun insertWheel(wheel: WheelEntity)
+
+    @Update
+    fun updateWheel(wheel: WheelEntity)
 }

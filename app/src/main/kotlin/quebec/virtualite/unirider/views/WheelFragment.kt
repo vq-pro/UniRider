@@ -24,7 +24,7 @@ open class WheelFragment : BaseFragment() {
     internal lateinit var parmWheelName: String
     internal lateinit var wheel: WheelEntity
     internal lateinit var wheelBattery: TextView
-    internal lateinit var wheelDistance: TextView
+    internal lateinit var wheelDistance: EditText
     internal lateinit var wheelName: TextView
     internal lateinit var wheelVoltage: EditText
 
@@ -43,6 +43,7 @@ open class WheelFragment : BaseFragment() {
         wheelName.text = parmWheelName
 
         wheelDistance = view.findViewById(R.id.wheel_distance)
+        widgets.addTextChangedListener(wheelDistance, onUpdateDistance())
 
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
         widgets.addTextChangedListener(wheelVoltage, onUpdateVoltage())
@@ -53,7 +54,23 @@ open class WheelFragment : BaseFragment() {
             wheel = db.findWheel(parmWheelName)
                 ?: throw WheelNotFoundException()
 
-            wheelDistance.text = wheel.distance.toString()
+            wheelDistance.setText(wheel.distance.toString())
+        }
+    }
+
+    fun onUpdateDistance() = { newDistance: String ->
+        runDb {
+            db.saveWheels(
+                listOf(
+                    WheelEntity(
+                        wheel.id,
+                        wheel.name,
+                        newDistance.trim().toInt(),
+                        wheel.voltageMax,
+                        wheel.voltageMin
+                    )
+                )
+            )
         }
     }
 
@@ -62,7 +79,7 @@ open class WheelFragment : BaseFragment() {
         wheelBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
     }
 
-    fun getPercentage(voltage: String): String {
+    private fun getPercentage(voltage: String): String {
         val percentage = calculatorService.percentage(wheel, parseFloat(voltage))
 
         when (percentage) {
