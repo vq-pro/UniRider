@@ -60,17 +60,10 @@ open class WheelFragment : BaseFragment() {
 
     fun onUpdateDistance() = { newDistance: String ->
         runDb {
-            db.saveWheels(
-                listOf(
-                    WheelEntity(
-                        wheel.id,
-                        wheel.name,
-                        newDistance.trim().toInt(),
-                        wheel.voltageMax,
-                        wheel.voltageMin
-                    )
-                )
-            )
+            val updatedWheel =
+                WheelEntity(wheel.id, wheel.name, newDistance.trim().toInt(), wheel.voltageMax, wheel.voltageMin)
+
+            db.saveWheels(listOf(updatedWheel))
         }
     }
 
