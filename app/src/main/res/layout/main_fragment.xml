@@ -36,11 +36,11 @@
                     android:layout_margin="20dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textStyle="bold"
-                    android:text="@string/fragment_label_total_distance"
+                    android:text="@string/fragment_label_total_mileage"
             />
 
             <TextView
-                    android:id="@+id/total_distance"
+                    android:id="@+id/total_mileage"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"

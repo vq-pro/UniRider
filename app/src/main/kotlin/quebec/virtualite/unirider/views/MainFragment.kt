@@ -18,7 +18,7 @@ open class MainFragment : BaseFragment() {
 
     private var widgets = WidgetUtils()
 
-    private lateinit var wheelTotalDistance: TextView
+    private lateinit var wheelTotalMileage: TextView
     private lateinit var wheels: ListView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -33,11 +33,11 @@ open class MainFragment : BaseFragment() {
         widgets.multifieldListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(wheels, onSelectWheel())
 
-        wheelTotalDistance = view.findViewById(R.id.total_distance)
+        wheelTotalMileage = view.findViewById(R.id.total_mileage)
 
         connectDb {
             set(wheelList, getSortedWheelItems(db.getWheelList()))
-            wheelTotalDistance.text = calculateTotalDistance().toString()
+            wheelTotalMileage.text = calculateTotalMileage().toString()
         }
     }
 
@@ -46,8 +46,8 @@ open class MainFragment : BaseFragment() {
         val wheelName = view.findViewById<TextView?>(R.id.row_name)
         wheelName.text = item.name()
 
-        val wheelDistance = view.findViewById<TextView?>(R.id.row_distance)
-        wheelDistance.text = item.distance().toString()
+        val wheelMileage = view.findViewById<TextView?>(R.id.row_mileage)
+        wheelMileage.text = item.mileage().toString()
     }
 
     fun onSelectWheel() = { _: View, index: Int ->
@@ -57,24 +57,24 @@ open class MainFragment : BaseFragment() {
         )
     }
 
-    private fun calculateTotalDistance(): Int {
-        var totalDistance = 0
+    private fun calculateTotalMileage(): Int {
+        var totalMileage = 0
         wheelList.forEach { wheel ->
-            totalDistance += wheel.distance()
+            totalMileage += wheel.mileage()
         }
 
-        return totalDistance
+        return totalMileage
     }
 
     private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
         return wheelList
             .stream()
             .map { wheel ->
-                WheelRow(wheel.name, wheel.distance)
+                WheelRow(wheel.name, wheel.mileage)
             }
             .sorted { itemA, itemB ->
-                val byDistance = itemB.distance().compareTo(itemA.distance())
-                if (byDistance != 0) byDistance else itemA.name().compareTo(itemB.name())
+                val byMileage = itemB.mileage().compareTo(itemA.mileage())
+                if (byMileage != 0) byMileage else itemA.name().compareTo(itemB.name())
             }
             .collect(toList())
     }

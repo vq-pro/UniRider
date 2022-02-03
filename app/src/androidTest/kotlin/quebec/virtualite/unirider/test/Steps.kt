@@ -44,7 +44,7 @@ class Steps {
     private lateinit var mainActivity: MainActivity
     private lateinit var selectedWheel: String
 
-    private var updatedDistance = 0
+    private var updatedMileage = 0
 
     @Before
     fun beforeScenario() {
@@ -56,27 +56,27 @@ class Steps {
         stop(activityTestRule)
     }
 
-    @When("^I change the distance to (.*?)$")
-    fun changeDistanceTo(newDistance: Int) {
-//        makeEditable(R.id.wheel_distance)
-        updatedDistance = newDistance
-        setText(R.id.wheel_distance, newDistance.toString())
+    @When("^I change the mileage to (.*?)$")
+    fun changeMileageTo(newMileage: Int) {
+//        makeEditable(R.id.wheel_mileage)
+        updatedMileage = newMileage
+        setText(R.id.wheel_mileage, newMileage.toString())
     }
 
-    @Then("it shows the new distance on the details view")
-    fun itShowsTheNewDistanceOnDetailsView() {
-        assertThat(R.id.wheel_distance, hasText(updatedDistance.toString()))
+    @Then("it shows the new mileage on the details view")
+    fun itShowsTheNewMileageOnDetailsView() {
+        assertThat(R.id.wheel_mileage, hasText(updatedMileage.toString()))
     }
 
-    @Then("it shows the updated distance on the main view")
-    fun itShowsTheUpdatedDistanceOnTheMainView() {
-        back(R.id.wheel_distance)
-        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel, updatedDistance)))
+    @Then("it shows the updated mileage on the main view")
+    fun itShowsTheUpdatedMileageOnTheMainView() {
+        back(R.id.wheel_mileage)
+        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel, updatedMileage)))
     }
 
-    @Then("I see my wheels and their distance:")
-    fun seeMyWheelsAndTheirDistance(expectedWheels: DataTable) {
-        assertThat(expectedWheels.topCells(), equalTo(listOf("Name", "Distance")))
+    @Then("I see my wheels and their mileage:")
+    fun seeMyWheelsAndTheirMileage(expectedWheels: DataTable) {
+        assertThat(expectedWheels.topCells(), equalTo(listOf("Name", "Mileage")))
         val expectedRows = expectedWheels.cells(1)
             .stream()
             .map { row -> WheelRow(row[0], parseInt(row[1])) }
@@ -85,9 +85,9 @@ class Steps {
         assertThat(R.id.wheels, hasRows(expectedRows))
     }
 
-    @Then("I see the total distance")
-    fun seeTotalDistance() {
-        assertThat(R.id.total_distance, hasText(calculateTotalDistance().toString()))
+    @Then("I see the total mileage")
+    fun seeTotalMileage() {
+        assertThat(R.id.total_mileage, hasText(calculateTotalMileage().toString()))
     }
 
     @When("I start the app")
@@ -106,12 +106,12 @@ class Steps {
         assertThat(R.id.wheels, hasSelectedText(expectedEntry))
     }
 
-    @Then("the details view shows the correct name and a distance of that wheel")
-    fun detailsViewShowsNameAndDistance() {
+    @Then("the details view shows the correct name and a mileage of that wheel")
+    fun detailsViewShowsNameAndMileage() {
         assertThat(R.id.wheel_name, hasText(selectedWheel))
 
-        val selectedWheelDistance = mapWheels.get(selectedWheel)
-        assertThat(R.id.wheel_distance, hasText(selectedWheelDistance.toString()))
+        val selectedWheelMileage = mapWheels.get(selectedWheel)
+        assertThat(R.id.wheel_mileage, hasText(selectedWheelMileage.toString()))
     }
 
     @Then("^it displays a percentage of (.*?)$")
@@ -121,7 +121,7 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Voltage Max", "Voltage Min", "Distance")))
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Voltage Max", "Voltage Min", "Mileage")))
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
@@ -144,12 +144,12 @@ class Steps {
         enter(R.id.wheel_voltage, voltage.toString())
     }
 
-    private fun calculateTotalDistance(): Int {
-        var totalDistance = 0
+    private fun calculateTotalMileage(): Int {
+        var totalMileage = 0
         mapWheels.keys.stream()
-            .forEach { wheelName -> totalDistance += mapWheels.get(wheelName)!! }
+            .forEach { wheelName -> totalMileage += mapWheels.get(wheelName)!! }
 
-        return totalDistance
+        return totalMileage
     }
 
     private fun makeEditable(id: Int) {

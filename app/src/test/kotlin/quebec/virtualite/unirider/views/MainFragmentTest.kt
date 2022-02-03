@@ -34,27 +34,27 @@ class MainFragmentTest {
     private val DONT_ATTACH_TO_ROOT = false
     private val SAVED_INSTANCE_STATE: Bundle? = null
 
-    private val DISTANCE_A = 123
-    private val DISTANCE_B = 456
-    private val DISTANCE_C = 123
+    private val MILEAGE_A = 123
+    private val MILEAGE_B = 456
+    private val MILEAGE_C = 123
     private val WHEEL_A = "A"
     private val WHEEL_B = "B"
     private val WHEEL_C = "C"
-    private val WHEEL_ITEM_A_123 = WheelRow(WHEEL_A, DISTANCE_A)
-    private val WHEEL_ITEM_B_456 = WheelRow(WHEEL_B, DISTANCE_B)
-    private val WHEEL_ITEM_C_123 = WheelRow(WHEEL_C, DISTANCE_C)
+    private val WHEEL_ITEM_A_123 = WheelRow(WHEEL_A, MILEAGE_A)
+    private val WHEEL_ITEM_B_456 = WheelRow(WHEEL_B, MILEAGE_B)
+    private val WHEEL_ITEM_C_123 = WheelRow(WHEEL_C, MILEAGE_C)
 
     @Mock
     lateinit var mockedDb: WheelDb
 
     @Mock
-    lateinit var mockedTotalDistance: TextView
+    lateinit var mockedTotalMileage: TextView
 
     @Mock
     lateinit var mockedView: View
 
     @Mock
-    lateinit var mockedWheelDistance: TextView
+    lateinit var mockedWheelMileage: TextView
 
     @Mock
     lateinit var mockedWheelName: TextView
@@ -81,9 +81,9 @@ class MainFragmentTest {
         given(mockedDb.getWheelList())
             .willReturn(
                 listOf(
-                    WheelEntity(0, WHEEL_C, DISTANCE_C, 0f, 0f),
-                    WheelEntity(0, WHEEL_B, DISTANCE_B, 0f, 0f),
-                    WheelEntity(0, WHEEL_A, DISTANCE_A, 0f, 0f),
+                    WheelEntity(0, WHEEL_C, MILEAGE_C, 0f, 0f),
+                    WheelEntity(0, WHEEL_B, MILEAGE_B, 0f, 0f),
+                    WheelEntity(0, WHEEL_A, MILEAGE_A, 0f, 0f),
                 )
             )
     }
@@ -107,8 +107,8 @@ class MainFragmentTest {
         given<Any>(mockedView.findViewById(R.id.wheels))
             .willReturn(mockedWheels)
 
-        given<Any>(mockedView.findViewById(R.id.total_distance))
-            .willReturn(mockedTotalDistance)
+        given<Any>(mockedView.findViewById(R.id.total_mileage))
+            .willReturn(mockedTotalMileage)
 
         set(fragment.wheelList, listOf(WheelRow("some previous content", 999)))
 
@@ -130,7 +130,7 @@ class MainFragmentTest {
         verify(mockedWidgets).setOnItemClickListener(eq(mockedWheels), captorOnSelect.capture())
         assertThat(captorOnSelect.value.javaClass.name, containsString("MainFragment\$onSelectWheel\$"))
 
-        verify(mockedTotalDistance).text = (DISTANCE_A + DISTANCE_B + DISTANCE_C).toString()
+        verify(mockedTotalMileage).text = (MILEAGE_A + MILEAGE_B + MILEAGE_C).toString()
     }
 
     @Test
@@ -139,15 +139,15 @@ class MainFragmentTest {
         given(mockedView.findViewById<TextView>(R.id.row_name))
             .willReturn(mockedWheelName)
 
-        given(mockedView.findViewById<TextView>(R.id.row_distance))
-            .willReturn(mockedWheelDistance)
+        given(mockedView.findViewById<TextView>(R.id.row_mileage))
+            .willReturn(mockedWheelMileage)
 
         // When
         fragment.onDisplayWheel().invoke(mockedView, WHEEL_ITEM_A_123)
 
         // Then
         verify(mockedWheelName).text = WHEEL_A
-        verify(mockedWheelDistance).text = DISTANCE_A.toString()
+        verify(mockedWheelMileage).text = MILEAGE_A.toString()
     }
 
     @Test

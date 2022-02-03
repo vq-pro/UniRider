@@ -24,7 +24,7 @@ open class WheelFragment : BaseFragment() {
     internal lateinit var parmWheelName: String
     internal lateinit var wheel: WheelEntity
     internal lateinit var wheelBattery: TextView
-    internal lateinit var wheelDistance: EditText
+    internal lateinit var wheelMileage: EditText
     internal lateinit var wheelName: TextView
     internal lateinit var wheelVoltage: EditText
 
@@ -42,8 +42,8 @@ open class WheelFragment : BaseFragment() {
         wheelName = view.findViewById(R.id.wheel_name)
         wheelName.text = parmWheelName
 
-        wheelDistance = view.findViewById(R.id.wheel_distance)
-        widgets.addTextChangedListener(wheelDistance, onUpdateDistance())
+        wheelMileage = view.findViewById(R.id.wheel_mileage)
+        widgets.addTextChangedListener(wheelMileage, onUpdateMileage())
 
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
         widgets.addTextChangedListener(wheelVoltage, onUpdateVoltage())
@@ -54,14 +54,14 @@ open class WheelFragment : BaseFragment() {
             wheel = db.findWheel(parmWheelName)
                 ?: throw WheelNotFoundException()
 
-            wheelDistance.setText(wheel.distance.toString())
+            wheelMileage.setText(wheel.mileage.toString())
         }
     }
 
-    fun onUpdateDistance() = { newDistance: String ->
+    fun onUpdateMileage() = { newMileage: String ->
         runDb {
             val updatedWheel =
-                WheelEntity(wheel.id, wheel.name, newDistance.trim().toInt(), wheel.voltageMax, wheel.voltageMin)
+                WheelEntity(wheel.id, wheel.name, newMileage.trim().toInt(), wheel.voltageMax, wheel.voltageMin)
 
             db.saveWheels(listOf(updatedWheel))
         }

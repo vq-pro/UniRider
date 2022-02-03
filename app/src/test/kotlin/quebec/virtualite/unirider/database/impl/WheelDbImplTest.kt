@@ -14,8 +14,8 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.database.WheelEntity
 
-private const val DISTANCE1 = 111
-private const val DISTANCE2 = 222
+private const val MILEAGE1 = 111
+private const val MILEAGE2 = 222
 private const val ID = 333L
 private const val NAME1 = "name1"
 private const val NAME2 = "name2"
@@ -24,9 +24,9 @@ private const val VMIN1 = 75.6f
 private const val VMAX2 = 84.0f
 private const val VMIN2 = 60.0f
 
-private val EXISTING_WHEEL = WheelEntity(ID, NAME1, DISTANCE1, VMAX1, VMIN1)
-private val NEW_WHEEL = WheelEntity(0, NAME1, DISTANCE1, VMAX1, VMIN1)
-private val NEW_WHEEL2 = WheelEntity(0, NAME2, DISTANCE2, VMAX2, VMIN2)
+private val EXISTING_WHEEL = WheelEntity(ID, NAME1, MILEAGE1, VMAX1, VMIN1)
+private val NEW_WHEEL = WheelEntity(0, NAME1, MILEAGE1, VMAX1, VMIN1)
+private val NEW_WHEEL2 = WheelEntity(0, NAME2, MILEAGE2, VMAX2, VMIN2)
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelDbImplTest {
@@ -34,7 +34,7 @@ class WheelDbImplTest {
     lateinit var mockedDb: WheelDatabase
 
     @Mock
-    lateinit var mockedDao: WheelDistanceDao
+    lateinit var mockedDao: WheelMileageDao
 
     @InjectMocks
     var dbImpl = WheelDbImpl(mock(Context::class.java))
@@ -74,8 +74,8 @@ class WheelDbImplTest {
     fun getWheelList() {
         // Given
         val wheels = listOf(
-            WheelEntity(0, NAME1, DISTANCE1, VMAX1, VMIN1),
-            WheelEntity(0, NAME2, DISTANCE2, VMAX2, VMIN2)
+            WheelEntity(0, NAME1, MILEAGE1, VMAX1, VMIN1),
+            WheelEntity(0, NAME2, MILEAGE2, VMAX2, VMIN2)
         )
 
         given(mockedDao.getAllWheels())

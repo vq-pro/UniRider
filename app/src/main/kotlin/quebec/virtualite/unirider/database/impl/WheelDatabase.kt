@@ -6,5 +6,5 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 @Database(entities = [WheelEntity::class], exportSchema = true, version = 1)
 abstract class WheelDatabase : RoomDatabase() {
-    abstract fun wheelDao(): WheelDistanceDao
+    abstract fun wheelDao(): WheelMileageDao
 }

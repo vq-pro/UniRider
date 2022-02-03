@@ -3,7 +3,7 @@ Feature: Wheel Details
 
   Background:
     Given these wheels:
-      | Name            | Voltage Max | Voltage Min | Distance |
+      | Name            | Voltage Max | Voltage Min | Mileage |
       | Veteran Sherman | 100.8V      | 75.6V       | 17622    |
       | Veteran Abrams  | 74.5V       | 100.8V      | 0        |
       | KingSong S20    | 126.0V      | 90.0V       | 0        |
@@ -25,9 +25,9 @@ Feature: Wheel Details
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108.0V  | 50.0%   |
 
-  Scenario: Editing wheel distance
+  Scenario: Editing wheel mileage
     Given I start the app
     And I select the Veteran Sherman
-    When I change the distance to 18000
-    Then it shows the new distance on the details view
-    And it shows the updated distance on the main view
+    When I change the mileage to 18000
+    Then it shows the new mileage on the details view
+    And it shows the updated mileage on the main view

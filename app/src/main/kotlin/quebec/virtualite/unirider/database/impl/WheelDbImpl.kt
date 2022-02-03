@@ -7,7 +7,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 class WheelDbImpl(applicationContext: Context) : WheelDb {
     internal var db: WheelDatabase
-    internal var dao: WheelDistanceDao
+    internal var dao: WheelMileageDao
 
     init {
         db = Room.databaseBuilder(

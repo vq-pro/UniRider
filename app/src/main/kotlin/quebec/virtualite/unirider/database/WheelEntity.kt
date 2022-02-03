@@ -9,7 +9,7 @@ data class WheelEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val name: String,
-    val distance: Int,
+    val mileage: Int,
     val voltageMax: Float,
     val voltageMin: Float
 )

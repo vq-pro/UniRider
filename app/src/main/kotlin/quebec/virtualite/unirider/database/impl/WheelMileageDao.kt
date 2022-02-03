@@ -7,7 +7,7 @@ import androidx.room.Update
 import quebec.virtualite.unirider.database.WheelEntity
 
 @Dao
-interface WheelDistanceDao {
+interface WheelMileageDao {
     @Query("SELECT * FROM wheel")
     fun getAllWheels(): List<WheelEntity>
 

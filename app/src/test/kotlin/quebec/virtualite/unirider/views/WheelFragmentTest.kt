@@ -32,10 +32,10 @@ import java.lang.Float.parseFloat
 @RunWith(MockitoJUnitRunner::class)
 class WheelFragmentTest {
 
-    private val DISTANCE = 1111
+    private val MILEAGE = 1111
     private val ID = 2222L
     private val NAME = "Sherman"
-    private val NEW_DISTANCE = 3333
+    private val NEW_MILEAGE = 3333
     private val PERCENTAGE = 100.0f
     private val PERCENTAGE_S = "100.0%"
     private val VOLTAGE_S = "100.8"
@@ -59,7 +59,7 @@ class WheelFragmentTest {
     lateinit var mockedWheelBattery: TextView
 
     @Mock
-    lateinit var mockedWheelDistance: EditText
+    lateinit var mockedWheelMileage: EditText
 
     @Mock
     lateinit var mockedWheelName: TextView
@@ -83,8 +83,8 @@ class WheelFragmentTest {
         given<Any>(mockedView.findViewById(R.id.wheel_name))
             .willReturn(mockedWheelName)
 
-        given<Any>(mockedView.findViewById(R.id.wheel_distance))
-            .willReturn(mockedWheelDistance)
+        given<Any>(mockedView.findViewById(R.id.wheel_mileage))
+            .willReturn(mockedWheelMileage)
 
         given<Any>(mockedView.findViewById(R.id.wheel_voltage))
             .willReturn(mockedWheelVoltage)
@@ -96,7 +96,7 @@ class WheelFragmentTest {
     @Test
     fun onViewCreated() {
         // Given
-        val wheel = WheelEntity(0, NAME, DISTANCE, 0f, 0f)
+        val wheel = WheelEntity(0, NAME, MILEAGE, 0f, 0f)
         given(mockedDb.findWheel(NAME))
             .willReturn(wheel)
 
@@ -108,13 +108,13 @@ class WheelFragmentTest {
 
         assertThat(fragment.wheel, equalTo(wheel))
         assertThat(fragment.wheelName, equalTo(mockedWheelName))
-        assertThat(fragment.wheelDistance, equalTo(mockedWheelDistance))
+        assertThat(fragment.wheelMileage, equalTo(mockedWheelMileage))
         assertThat(fragment.wheelVoltage, equalTo(mockedWheelVoltage))
         assertThat(fragment.wheelBattery, equalTo(mockedWheelBattery))
 
-        verify(mockedWheelDistance).setText(DISTANCE.toString())
-        verify(mockedWidgets).addTextChangedListener(eq(mockedWheelDistance), lambdaOnUpdateText.capture())
-        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelFragment\$onUpdateDistance\$"))
+        verify(mockedWheelMileage).setText(MILEAGE.toString())
+        verify(mockedWidgets).addTextChangedListener(eq(mockedWheelMileage), lambdaOnUpdateText.capture())
+        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelFragment\$onUpdateMileage\$"))
 
         verify(mockedWidgets).addTextChangedListener(eq(mockedWheelVoltage), lambdaOnUpdateText.capture())
         assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelFragment\$onUpdateVoltage\$"))
@@ -134,21 +134,21 @@ class WheelFragmentTest {
     }
 
     @Test
-    fun onUpdateDistance() {
+    fun onUpdateMileage() {
         // Given
-        fragment.wheel = WheelEntity(ID, NAME, DISTANCE, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)
 
         // When
-        fragment.onUpdateDistance().invoke("$NEW_DISTANCE ")
+        fragment.onUpdateMileage().invoke("$NEW_MILEAGE ")
 
         // Then
-        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, NEW_DISTANCE, VOLTAGE_MAX, VOLTAGE_MIN)))
+        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, NEW_MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)))
     }
 
     @Test
     fun onUpdateVoltage() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, DISTANCE, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)
         fragment.wheelBattery = mockedWheelBattery
 
         given(mockedCalculatorService.percentage(fragment.wheel, VOLTAGE))
@@ -165,7 +165,7 @@ class WheelFragmentTest {
     @Test
     fun onUpdateVoltage_whenBlank_noDisplay() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, DISTANCE, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)
         fragment.wheelBattery = mockedWheelBattery
 
         // When

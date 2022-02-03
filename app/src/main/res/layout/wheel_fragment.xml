@@ -21,7 +21,7 @@
         />
 
         <!--        <TextView-->
-        <!--                android:id="@+id/wheel_distance"-->
+        <!--                android:id="@+id/wheel_mileage"-->
         <!--                android:layout_width="wrap_content"-->
         <!--                android:layout_height="wrap_content"-->
         <!--                android:layout_gravity="center_horizontal"-->
@@ -30,8 +30,8 @@
         <!--        />-->
 
         <EditText
-                android:id="@+id/wheel_distance"
-                android:hint="@string/hint_wheel_distance"
+                android:id="@+id/wheel_mileage"
+                android:hint="@string/hint_wheel_mileage"
                 android:inputType="numberDecimal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
