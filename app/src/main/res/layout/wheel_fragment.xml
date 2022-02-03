@@ -21,17 +21,18 @@
         />
 
         <!--        <TextView-->
-        <!--                android:id="@+id/wheel_mileage"-->
+        <!--                android:labelFor="@+id/wheel_mileage"-->
         <!--                android:layout_width="wrap_content"-->
         <!--                android:layout_height="wrap_content"-->
         <!--                android:layout_gravity="center_horizontal"-->
         <!--                android:layout_margin="40dp"-->
         <!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+        <!--                android:text="@string/label_wheel_mileage"-->
         <!--        />-->
 
         <EditText
                 android:id="@+id/wheel_mileage"
-                android:hint="@string/hint_wheel_mileage"
+                android:hint="@string/label_wheel_mileage"
                 android:inputType="numberDecimal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
