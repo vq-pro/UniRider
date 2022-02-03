@@ -3,25 +3,25 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
-            app:startDestination="@id/TripFragment">
+            app:startDestination="@id/MainFragment">
 
     <fragment
-            android:id="@+id/TripFragment"
-            android:name="quebec.virtualite.unirider.views.TripFragment"
-            android:label="@string/fragment_label_trip"
-            tools:layout="@layout/trip_fragment">
+            android:id="@+id/MainFragment"
+            android:name="quebec.virtualite.unirider.views.MainFragment"
+            android:label="@string/fragment_label_main"
+            tools:layout="@layout/main_fragment">
 
         <action
-                android:id="@+id/action_TripFragment_to_CalculatorFragment"
-                app:destination="@+id/CalculatorFragment"
+                android:id="@+id/action_MainFragment_to_WheelFragment"
+                app:destination="@+id/WheelFragment"
         />
     </fragment>
 
     <fragment
-            android:id="@+id/CalculatorFragment"
-            android:name="quebec.virtualite.unirider.views.CalculatorFragment"
+            android:id="@+id/WheelFragment"
+            android:name="quebec.virtualite.unirider.views.WheelFragment"
             android:label="@string/fragment_label_calculator"
-            tools:layout="@layout/calculator_fragment">
+            tools:layout="@layout/wheel_fragment">
 
         <!--        <action-->
         <!--            android:id="@+id/action_ScanFragment_to_DeviceFragment"-->

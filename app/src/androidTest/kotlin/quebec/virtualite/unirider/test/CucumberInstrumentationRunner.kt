@@ -12,6 +12,8 @@ import quebec.virtualite.unirider.BuildConfig
     monochrome = true,
     snippets = CAMELCASE,
     strict = true,
-    tags = ["~@Ignore", BuildConfig.SCENARIOS]
+    tags = [
+//        "@WIP",
+        "~@Ignore", BuildConfig.SCENARIOS]
 )
 class CucumberInstrumentationRunner : BaseCucumberInstrumentationRunner()

@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".views.CalculatorFragment">
+        tools:context=".views.WheelFragment">
 
     <GridLayout
             android:orientation="vertical"
@@ -18,6 +18,29 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="40dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+        <!--        <TextView-->
+        <!--                android:labelFor="@+id/wheel_mileage"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="center_horizontal"-->
+        <!--                android:layout_margin="40dp"-->
+        <!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+        <!--                android:text="@string/label_wheel_mileage"-->
+        <!--        />-->
+
+        <EditText
+                android:id="@+id/wheel_mileage"
+                android:hint="@string/label_wheel_mileage"
+                android:inputType="numberDecimal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="40dp"
+                android:gravity="right"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:autofillHints=""
         />
 
         <GridLayout
@@ -34,7 +57,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="40dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
+                    android:autofillHints=""/>
 
             <TextView
                     android:id="@+id/wheel_battery"

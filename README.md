@@ -16,10 +16,9 @@
 ## Unit
 
 * Run Configuration
-* Android JUnit
+* Gradle
 * Name = Unit Tests
-* Test kind = All in directory
-* Directory: ..\app\src\test\kotlin\quebec\virtualite\unirider
+* Run = :app:testIntegrationDebugUnitTest --tests "quebec.virtualite.unirider.*"
 
 ## Cucumber
 
@@ -28,13 +27,10 @@
 * Name = Cucumber Tests
 * Test = All in Module
 * Instrumentation class = CucumberInstrumentationRunner
-* Before launch = Unit Tests
-
-## Cucumber (WIP)
-
-* Same thing as previous
-* Add an instrumentation argument: 
-  tags = @WIP
+* Before launch =
+  * Run Gradle task "app:cleanBuildCache"
+  * Gradle-aware Make
+  * Run 'Gradle Unit Tests'
 
 ## To choose between E2E (global) and App (smaller operations)
 

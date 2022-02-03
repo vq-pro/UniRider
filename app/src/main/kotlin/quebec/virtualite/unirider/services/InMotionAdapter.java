@@ -3,7 +3,6 @@ package quebec.virtualite.unirider.services;
 import static quebec.virtualite.unirider.services.InMotionAdapter.Model.Glide3;
 import static quebec.virtualite.unirider.services.InMotionAdapter.Model.L6;
 import static quebec.virtualite.unirider.services.InMotionAdapter.Model.R0;
-import static quebec.virtualite.unirider.services.InMotionAdapter.Model.UNKNOWN;
 import static quebec.virtualite.unirider.services.InMotionAdapter.Model.V10;
 import static quebec.virtualite.unirider.services.InMotionAdapter.Model.V10F;
 import static quebec.virtualite.unirider.services.InMotionAdapter.Model.V10F_test;
@@ -383,7 +382,7 @@ public class InMotionAdapter {
         private final double batt;
         private final double current;
         private final double power;
-        private final double distance;
+        private final double mileage;
         private final double lock;
 		private final double temperature;
 		private final double temperature2;
@@ -397,24 +396,35 @@ public class InMotionAdapter {
             batt = 0;
             current = 0;
             power = 0;
-            distance = 0;
+            mileage = 0;
             lock = 0;
 			temperature = 0;
 			temperature2 = 0;
 			workModeInt=0;
         }
 
-        Status(double angle, double roll, double speed, double voltage, double batt, double current, double power, double distance, double lock, double temperature, double temperature2, int workModeInt) {
+        Status(double angle,
+                double roll,
+                double speed,
+                double voltage,
+                double batt,
+                double current,
+                double power,
+                double mileage,
+                double lock,
+                double temperature,
+                double temperature2,
+                int workModeInt) {
             this.angle = angle;
-			this.roll = roll;
+            this.roll = roll;
             this.speed = speed;
             this.voltage = voltage;
             this.batt = batt;
             this.current = current;
             this.power = power;
-            this.distance = distance;
+            this.mileage = mileage;
             this.lock = lock;
-			this.temperature = temperature;
+            this.temperature = temperature;
 			this.temperature2 = temperature2;
 			this.workModeInt = workModeInt;
         }	
@@ -447,17 +457,19 @@ public class InMotionAdapter {
             return power;
         }
 
-        public double getDistance() {
-            return distance;
+        public double getMileage() {
+            return mileage;
         }
 
         public double getLock() {
             return lock;
         }
-		public double getTemperature() {
+
+        public double getTemperature() {
             return temperature;
         }
-		public double getTemperature2() {
+
+        public double getTemperature2() {
             return temperature2;
         }
 		public String getWorkModeString() {
@@ -483,17 +495,17 @@ public class InMotionAdapter {
         public String toString() {
             return "Status{" +
                     "angle=" + angle +
-					", roll=" + roll +
+                    ", roll=" + roll +
                     ", speed=" + speed +
                     ", voltage=" + voltage +
                     ", batt=" + batt +
                     ", current=" + current +
                     ", power=" + power +
-                    ", distance=" + distance +
+                    ", mileage=" + mileage +
                     ", lock=" + lock +
-					", temperature=" + temperature +
-					", temperature2=" + temperature2 +
-					", workmode=" + workModeInt +
+                    ", temperature=" + temperature +
+                    ", temperature2=" + temperature2 +
+                    ", workmode=" + workModeInt +
                     '}';
         }
     }
@@ -1086,19 +1098,19 @@ public class InMotionAdapter {
             double batt = batteryFromVoltage(voltage, model);
             double power = voltage * current;
 
-            double distance;
+            double mileage;
 
             if (model.belongToInputType( "1") || model.belongToInputType( "5") ||
                     model == V8 || model == Glide3 || model == V10 || model == V10F || model == V10_test || model == V10F_test) {
-                distance = (double) (this.intFromBytes(ex_data, 44)) / 1000.0d; ///// V10F 48 byte - trip distance
+                mileage = (double) (this.intFromBytes(ex_data, 44)) / 1000.0d; ///// V10F 48 byte - trip mileage
             } else if (model == R0) {
-                distance = (double) (this.longFromBytes(ex_data, 44)) / 1000.0d;
+                mileage = (double) (this.longFromBytes(ex_data, 44)) / 1000.0d;
 
             } else if (model == L6) {
-                distance = (double) (this.longFromBytes(ex_data, 44)) / 10.0;
+                mileage = (double) (this.longFromBytes(ex_data, 44)) / 10.0;
 
             } else {
-                distance = (double) (this.longFromBytes(ex_data, 44)) / 5.711016379455429E7d;
+                mileage = (double) (this.longFromBytes(ex_data, 44)) / 5.711016379455429E7d;
             }
 			int workModeInt = this.intFromBytes(ex_data, 60)&0xF;
             WorkMode workMode = intToWorkMode(workModeInt);
@@ -1112,7 +1124,18 @@ public class InMotionAdapter {
                     break;
             }
 
-            return new Status(angle, roll, speed, voltage, batt, current, power, distance, lock, temperature, temperature2, workModeInt);
+            return new Status(angle,
+                    roll,
+                    speed,
+                    voltage,
+                    batt,
+                    current,
+                    power,
+                    mileage,
+                    lock,
+                    temperature,
+                    temperature2,
+                    workModeInt);
         }
 
         // Return SerialNumber, Model, Version
