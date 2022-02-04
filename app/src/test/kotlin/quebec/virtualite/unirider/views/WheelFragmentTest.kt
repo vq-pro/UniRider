@@ -42,6 +42,7 @@ class WheelFragmentTest {
     private val VOLTAGE_MAX = 100.8f
     private val VOLTAGE_MIN = 75.6f
     private val VOLTAGE = parseFloat(VOLTAGE_S)
+    private val ZERO_MILEAGE = 0
 
     @Mock
     lateinit var mockedBundle: Bundle
@@ -77,7 +78,7 @@ class WheelFragmentTest {
     var fragment: WheelFragment = TestableWheelFragment(this)
 
     @Before
-    fun init() {
+    fun before() {
         fragment.parmWheelName = NAME
 
         given<Any>(mockedView.findViewById(R.id.wheel_name))
@@ -143,6 +144,18 @@ class WheelFragmentTest {
 
         // Then
         verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, NEW_MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)))
+    }
+
+    @Test
+    fun onUpdateMileage_whenMileageIsEmpty_zero() {
+        // Given
+        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)
+
+        // When
+        fragment.onUpdateMileage().invoke("")
+
+        // Then
+        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, ZERO_MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)))
     }
 
     @Test

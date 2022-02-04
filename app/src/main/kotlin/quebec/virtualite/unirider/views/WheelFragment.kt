@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import org.apache.http.util.TextUtils.isEmpty
+import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -59,10 +60,11 @@ open class WheelFragment : BaseFragment() {
     }
 
     fun onUpdateMileage() = { newMileage: String ->
-        runDb {
-            val updatedWheel =
-                WheelEntity(wheel.id, wheel.name, newMileage.trim().toInt(), wheel.voltageMax, wheel.voltageMin)
 
+        val updatedWheel =
+            WheelEntity(wheel.id, wheel.name, intOf(newMileage), wheel.voltageMax, wheel.voltageMin)
+
+        runDb {
             db.saveWheels(listOf(updatedWheel))
         }
     }
