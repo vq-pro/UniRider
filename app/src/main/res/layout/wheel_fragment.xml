@@ -9,44 +9,63 @@
     <GridLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints">
 
-        <TextView
-                android:id="@+id/wheel_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="40dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        />
+        <GridLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <!--        <TextView-->
-        <!--                android:labelFor="@+id/wheel_mileage"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_gravity="center_horizontal"-->
-        <!--                android:layout_margin="40dp"-->
-        <!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-        <!--                android:text="@string/label_wheel_mileage"-->
-        <!--        />-->
-
-        <EditText
-                android:id="@+id/wheel_mileage"
-                android:hint="@string/label_wheel_mileage"
-                android:inputType="numberDecimal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="40dp"
-                android:gravity="right"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:autofillHints=""
-        />
+            <TextView
+                    android:id="@+id/wheel_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="40dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"
+            />
+        </GridLayout>
 
         <GridLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:labelFor="@+id/wheel_mileage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/label_wheel_mileage"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="italic"
+            />
+
+            <EditText
+                    android:id="@+id/wheel_mileage"
+                    android:inputType="numberDecimal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="80dp"
+                    android:gravity="right"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:autofillHints="@string/label_wheel_mileage"
+                    android:textStyle="italic"
+            />
+        </GridLayout>
+
+        <GridLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+        >
 
             <EditText
                     android:id="@+id/wheel_voltage"
@@ -55,7 +74,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_margin="40dp"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginRight="10dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:autofillHints=""/>
 
@@ -64,10 +84,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_margin="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="80dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
             />
         </GridLayout>
-
     </GridLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
