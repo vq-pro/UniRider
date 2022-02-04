@@ -4,12 +4,12 @@ Feature: Wheel Details
   Background:
     Given these wheels:
       | Name            | Voltage Max | Voltage Min | Mileage |
-      | Veteran Sherman | 100.8V      | 75.6V       | 17622    |
-      | Veteran Abrams  | 74.5V       | 100.8V      | 0        |
-      | KingSong S20    | 126.0V      | 90.0V       | 0        |
-      | KingSong 14S    | 67.2V       | 48.0V       | 694      |
-      | Gotway Nikola+  | 100.8V      | 78.0V       | 2927     |
-      | KingSong S18    | 84.0V       | 60.0V       | 2850     |
+      | Veteran Sherman | 100.8V      | 75.6V       | 17622   |
+      | Veteran Abrams  | 74.5V       | 100.8V      | 0       |
+      | KingSong S20    | 126.0V      | 90.0V       | 0       |
+      | KingSong 14S    | 67.2V       | 48.0V       | 694     |
+      | Gotway Nikola+  | 100.8V      | 78.0V       | 2927    |
+      | KingSong S18    | 84.0V       | 60.0V       | 2850    |
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I start the app
