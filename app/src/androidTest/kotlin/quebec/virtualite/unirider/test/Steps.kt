@@ -14,7 +14,6 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.enter
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
@@ -58,7 +57,6 @@ class Steps {
 
     @When("^I change the mileage to (.*?)$")
     fun changeMileageTo(newMileage: Int) {
-//        makeEditable(R.id.wheel_mileage)
         updatedMileage = newMileage
         setText(R.id.wheel_mileage, newMileage.toString())
     }
@@ -150,10 +148,6 @@ class Steps {
             .forEach { wheelName -> totalMileage += mapWheels.get(wheelName)!! }
 
         return totalMileage
-    }
-
-    private fun makeEditable(id: Int) {
-        click(id)
     }
 
     private fun parseVoltage(value: String): Float {
