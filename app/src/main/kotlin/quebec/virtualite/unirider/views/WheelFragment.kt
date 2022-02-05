@@ -28,6 +28,8 @@ open class WheelFragment : BaseFragment() {
     internal lateinit var wheelMileage: EditText
     internal lateinit var wheelName: TextView
     internal lateinit var wheelVoltage: EditText
+    internal lateinit var wheelVoltageMax: EditText
+    internal lateinit var wheelVoltageMin: EditText
 
     private var calculatorService = CalculatorService()
     private var widgets = WidgetUtils()
@@ -46,6 +48,9 @@ open class WheelFragment : BaseFragment() {
         wheelMileage = view.findViewById(R.id.wheel_mileage)
         widgets.addTextChangedListener(wheelMileage, onUpdateMileage())
 
+        wheelVoltageMin = view.findViewById(R.id.wheel_voltage_min)
+        wheelVoltageMax = view.findViewById(R.id.wheel_voltage_max)
+
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
         widgets.addTextChangedListener(wheelVoltage, onUpdateVoltage())
 
@@ -56,6 +61,8 @@ open class WheelFragment : BaseFragment() {
                 ?: throw WheelNotFoundException()
 
             wheelMileage.setText(wheel.mileage.toString())
+            wheelVoltageMin.setText("${wheel.voltageMin}")
+            wheelVoltageMax.setText("${wheel.voltageMax}")
         }
     }
 

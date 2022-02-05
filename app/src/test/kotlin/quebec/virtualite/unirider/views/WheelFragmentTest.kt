@@ -69,6 +69,12 @@ class WheelFragmentTest {
     lateinit var mockedWheelVoltage: EditText
 
     @Mock
+    lateinit var mockedWheelVoltageMin: EditText
+
+    @Mock
+    lateinit var mockedWheelVoltageMax: EditText
+
+    @Mock
     lateinit var mockedWidgets: WidgetUtils
 
     @Captor
@@ -87,6 +93,12 @@ class WheelFragmentTest {
         given<Any>(mockedView.findViewById(R.id.wheel_mileage))
             .willReturn(mockedWheelMileage)
 
+        given<Any>(mockedView.findViewById(R.id.wheel_voltage_min))
+            .willReturn(mockedWheelVoltageMin)
+
+        given<Any>(mockedView.findViewById(R.id.wheel_voltage_max))
+            .willReturn(mockedWheelVoltageMax)
+
         given<Any>(mockedView.findViewById(R.id.wheel_voltage))
             .willReturn(mockedWheelVoltage)
 
@@ -97,7 +109,7 @@ class WheelFragmentTest {
     @Test
     fun onViewCreated() {
         // Given
-        val wheel = WheelEntity(0, NAME, MILEAGE, 0f, 0f)
+        val wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         given(mockedDb.findWheel(NAME))
             .willReturn(wheel)
 
@@ -110,12 +122,17 @@ class WheelFragmentTest {
         assertThat(fragment.wheel, equalTo(wheel))
         assertThat(fragment.wheelName, equalTo(mockedWheelName))
         assertThat(fragment.wheelMileage, equalTo(mockedWheelMileage))
+        assertThat(fragment.wheelVoltageMin, equalTo(mockedWheelVoltageMin))
+        assertThat(fragment.wheelVoltageMax, equalTo(mockedWheelVoltageMax))
         assertThat(fragment.wheelVoltage, equalTo(mockedWheelVoltage))
         assertThat(fragment.wheelBattery, equalTo(mockedWheelBattery))
 
         verify(mockedWheelMileage).setText(MILEAGE.toString())
         verify(mockedWidgets).addTextChangedListener(eq(mockedWheelMileage), lambdaOnUpdateText.capture())
         assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelFragment\$onUpdateMileage\$"))
+
+        verify(mockedWheelVoltageMin).setText("${VOLTAGE_MIN}")
+        verify(mockedWheelVoltageMax).setText("${VOLTAGE_MAX}")
 
         verify(mockedWidgets).addTextChangedListener(eq(mockedWheelVoltage), lambdaOnUpdateText.capture())
         assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelFragment\$onUpdateVoltage\$"))

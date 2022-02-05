@@ -34,6 +34,13 @@ import java.util.stream.Collectors.toList
 
 class Steps {
 
+    private val mapDetailToId = mapOf(
+        Pair("Name", R.id.wheel_name),
+        Pair("Mileage", R.id.wheel_mileage),
+        Pair("Voltage Min", R.id.wheel_voltage_min),
+        Pair("Voltage Max", R.id.wheel_voltage_max)
+    )
+
     @Rule
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
@@ -107,6 +114,13 @@ class Steps {
     @Then("the details view shows the details for that wheel")
     fun InDetailsView() {
         assertThat(R.id.wheel_name, hasText(selectedWheel))
+    }
+
+    @Then("the details view shows the wheel's:")
+    fun detailsViewShowsTheseDetails(expectedDetails: DataTable) {
+        expectedDetails.cells(0).forEach { detail ->
+            assertThat(mapDetailToId.get(detail.get(0))!!, hasText(detail.get(1)))
+        }
     }
 
     @Then("the details view shows the correct name and a mileage of that wheel")

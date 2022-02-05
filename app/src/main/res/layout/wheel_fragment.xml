@@ -22,7 +22,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_margin="40dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textStyle="bold"
             />
@@ -31,7 +33,64 @@
         <GridLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+        >
+
+            <TextView
+                    android:labelFor="@+id/wheel_voltage_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/label_wheel_voltage"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="italic"
+            />
+
+            <EditText
+                    android:id="@+id/wheel_voltage_min"
+                    android:inputType="numberDecimal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="right"
+                    android:autofillHints="@string/label_wheel_mileage"
+            />
+
+            <TextView
+                    android:labelFor="@+id/wheel_voltage_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:text="@string/label_wheel_between_voltages"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            />
+
+            <EditText
+                    android:id="@+id/wheel_voltage_max"
+                    android:inputType="numberDecimal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="80dp"
+                    android:gravity="right"
+            />
+
+        </GridLayout>
+
+        <GridLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+        >
 
             <TextView
                     android:labelFor="@+id/wheel_mileage"
@@ -42,7 +101,6 @@
                     android:layout_marginRight="10dp"
                     android:text="@string/label_wheel_mileage"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textStyle="italic"
             />
 
             <EditText
@@ -56,7 +114,6 @@
                     android:gravity="right"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:autofillHints="@string/label_wheel_mileage"
-                    android:textStyle="italic"
             />
         </GridLayout>
 
@@ -69,7 +126,7 @@
 
             <EditText
                     android:id="@+id/wheel_voltage"
-                    android:hint="@string/hint_wheel_voltage"
+                    android:hint="@string/label_wheel_voltage"
                     android:inputType="numberDecimal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
