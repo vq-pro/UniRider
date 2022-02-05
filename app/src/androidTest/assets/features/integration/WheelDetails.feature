@@ -32,7 +32,7 @@ Feature: Wheel Details
     Then it shows the new mileage on the details view
     And it shows the updated mileage on the main view
 
-  Scenario: Viewing a wheel's details
+  Scenario: Viewing a wheel's details in full
     Given I start the app
     When I select the KingSong S20
     Then the details view shows the wheel's:

@@ -23,7 +23,7 @@ Feature: Main Screen
       | Veteran Abrams  | 0       |
     And I see the total mileage
 
-  Scenario: Navigating to the wheel details
+  Scenario: Viewing a wheel's details
     Given I start the app
     When I select the KingSong S20
     Then the details view shows the details for that wheel
