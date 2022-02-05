@@ -36,6 +36,13 @@ import java.util.stream.Collectors.toList
 
 class Steps {
 
+    private val mapDetailToId = mapOf(
+        Pair("Name", R.id.wheel_name_edit),
+        Pair("Mileage", R.id.wheel_mileage),
+        Pair("Voltage Min", R.id.wheel_voltage_min),
+        Pair("Voltage Max", R.id.wheel_voltage_max)
+    )
+
     @Rule
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
@@ -43,7 +50,9 @@ class Steps {
     private val mapWheels = HashMap<String, Int>()
 
     private lateinit var mainActivity: MainActivity
-    private lateinit var selectedWheel: String
+
+    private lateinit var selectedWheel: WheelEntity
+    private lateinit var updatedWheel: WheelEntity
 
     private var updatedMileage = 0
 
@@ -71,7 +80,7 @@ class Steps {
     @Then("it shows the updated mileage on the main view")
     fun itShowsTheUpdatedMileageOnTheMainView() {
         back(R.id.wheel_mileage)
-        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel, updatedMileage)))
+        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.name, updatedMileage)))
     }
 
     @Then("I see my wheels and their mileage:")
@@ -88,6 +97,26 @@ class Steps {
     @Then("I see the total mileage")
     fun seeTotalMileage() {
         assertThat(R.id.total_mileage, hasText(calculateTotalMileage().toString()))
+    }
+
+    @When("I set these new values:")
+    fun setNewWheelValues(newValues: DataTable) {
+        val mapEntity = mutableMapOf<String, String>()
+        newValues.cells(0).forEach { row ->
+            val field = row[0]
+            val value = row[1]
+            mapEntity[field] = value
+
+            setText(mapDetailToId[field]!!, value)
+        }
+
+        updatedWheel = WheelEntity(
+            selectedWheel.id,
+            mapEntity["Name"]!!,
+            parseInt(mapEntity["Mileage"]!!),
+            parseFloat(mapEntity["Voltage Min"]!!),
+            parseFloat(mapEntity["Voltage Max"]!!)
+        )
     }
 
     @When("I start the app")
@@ -108,14 +137,14 @@ class Steps {
 
     @Then("the details view shows the details for that wheel")
     fun inDetailsView() {
-        assertThat(R.id.wheel_name, hasText(selectedWheel))
+        assertThat(R.id.wheel_name_view, hasText(selectedWheel.name))
     }
 
     @Then("the details view shows the correct name and a mileage of that wheel")
     fun detailsViewShowsNameAndMileage() {
-        assertThat(R.id.wheel_name, hasText(selectedWheel))
+        assertThat(R.id.wheel_name_view, hasText(selectedWheel.name))
 
-        val selectedWheelMileage = mapWheels.get(selectedWheel)
+        val selectedWheelMileage = mapWheels.get(selectedWheel.name)
         assertThat(R.id.wheel_mileage, hasText(selectedWheelMileage.toString()))
     }
 
@@ -145,8 +174,14 @@ class Steps {
 
     @When("^I select the (.*?)$")
     fun whenSelect(wheelName: String) {
-        selectedWheel = wheelName
+        selectedWheel = db.findWheel(wheelName)!!
         selectListViewItem(R.id.wheels, "name", wheelName)
+    }
+
+    @Then("the wheel was updated")
+    fun wheelWasUpdated() {
+        val wheel = db.getWheel(selectedWheel.id)
+        assertThat(wheel, equalTo(updatedWheel))
     }
 
     @When("^I enter a voltage of (.*?)V$")

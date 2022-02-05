@@ -71,6 +71,22 @@ class WheelDbImplTest {
     }
 
     @Test
+    fun getWheel() {
+        // Given
+        val wheel = WheelEntity(ID, NAME1, 0, 0f, 0f)
+        given(mockedDao.getWheel(ID))
+            .willReturn(wheel)
+
+        // When
+        val result = dbImpl.getWheel(ID)
+
+        // Then
+        verify(mockedDao).getWheel(ID)
+
+        assertThat(result, equalTo(wheel))
+    }
+
+    @Test
     fun getWheelList() {
         // Given
         val wheels = listOf(

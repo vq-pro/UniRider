@@ -20,5 +20,16 @@
             android:id="@+id/WheelViewFragment"
             android:name="quebec.virtualite.unirider.views.WheelViewFragment"
             tools:layout="@layout/wheel_view_fragment">
+
+        <action
+                android:id="@+id/action_WheelViewFragment_to_WheelEditFragment"
+                app:destination="@+id/WheelEditFragment"
+        />
+    </fragment>
+
+    <fragment
+            android:id="@+id/WheelEditFragment"
+            android:name="quebec.virtualite.unirider.views.WheelEditFragment"
+            tools:layout="@layout/wheel_edit_fragment">
     </fragment>
 </navigation>

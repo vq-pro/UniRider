@@ -34,16 +34,16 @@ Feature: Wheel Details
 #    And it shows the updated mileage on the main view
 
 # FIXME-1 Editing a wheel
-#  Scenario: Editing a wheel
-#    Given I start the app
-#    And I select the Veteran Sherman
-#    When I edit the wheel
-#    And I set these new values:
-#      | Name        | Veteran Sherman Max |
-#      | Mileage     | 150                 |
-#      | Voltage Min | 74.5                |
-#      | Voltage Max | 100.9               |
-#    Then the wheel was updated
+  Scenario: Editing a wheel
+    Given I start the app
+    And I select the Veteran Sherman
+    When I edit the wheel
+    And I set these new values:
+      | Name        | Veteran Sherman Max |
+      | Mileage     | 150                 |
+      | Voltage Min | 74.5                |
+      | Voltage Max | 100.9               |
+    Then the wheel was updated
 
   Scenario: Viewing a wheel's details in full
     Given I start the app

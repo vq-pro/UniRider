@@ -6,19 +6,23 @@
         android:layout_height="match_parent"
         tools:context=".views.WheelViewFragment">
 
-    <RelativeLayout
+    <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            tools:ignore="MissingConstraints">
+            android:padding="20dp"
+            android:stretchColumns="*"
+            android:shrinkColumns="*"
+            tools:ignore="MissingConstraints"
+    >
 
-        <GridLayout
-                android:orientation="vertical"
+        <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <TextView
-                    android:id="@+id/wheel_name"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+        >
+            <EditText
+                    android:id="@+id/wheel_name_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -27,14 +31,16 @@
                     android:layout_marginRight="40dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textStyle="bold"
-            />
-        </GridLayout>
+                    android:autofillHints="@string/label_wheel_name"
+                    android:inputType="text"
+                    tools:ignore="LabelFor"/>
+        </TableRow>
 
-        <GridLayout
-                android:orientation="horizontal"
+        <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
         >
 
             <TextView
@@ -58,7 +64,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:gravity="right"
-                    android:autofillHints="@string/label_wheel_mileage"
+                    android:autofillHints="@string/label_min"
             />
 
             <TextView
@@ -81,15 +87,16 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="80dp"
                     android:gravity="right"
+                    android:autofillHints="@string/label_max"
             />
 
-        </GridLayout>
+        </TableRow>
 
-        <GridLayout
-                android:orientation="horizontal"
+        <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="80dp"
+                android:gravity="center"
         >
 
             <TextView
@@ -115,49 +122,6 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:autofillHints="@string/label_wheel_mileage"
             />
-        </GridLayout>
-
-        <GridLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="60dp"
-        >
-
-            <EditText
-                    android:id="@+id/wheel_voltage"
-                    android:hint="@string/label_wheel_voltage"
-                    android:inputType="numberDecimal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="80dp"
-                    android:layout_marginRight="10dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:autofillHints=""/>
-
-            <TextView
-                    android:id="@+id/wheel_battery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="80dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
-        </GridLayout>
-
-        <FrameLayout
-                android:id="@+id/footer_wheel_view"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true">
-
-            <Button
-                    android:id="@+id/action_edit_wheel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-            />
-        </FrameLayout>
-    </RelativeLayout>
+        </TableRow>
+    </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,8 +7,11 @@
     <string name="fragment_label_device">Device</string>
     <string name="fragment_label_scan">Devices</string>
     <string name="fragment_label_total_mileage">Total</string>
-    <string name="label_wheel_mileage">mileage</string>
+    <string name="label_max">max</string>
+    <string name="label_min">min</string>
     <string name="label_wheel_between_voltages"><![CDATA[->]]></string>
+    <string name="label_wheel_mileage">mileage</string>
+    <string name="label_wheel_name">name</string>
     <string name="label_wheel_voltage">voltage</string>
     <string name="label_wheel_voltage_max">Vmax</string>
     <string name="label_wheel_voltage_min">Vmin</string>

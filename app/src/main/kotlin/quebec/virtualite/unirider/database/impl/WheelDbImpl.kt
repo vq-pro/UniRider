@@ -27,12 +27,16 @@ class WheelDbImpl(applicationContext: Context) : WheelDb {
         return dao.findWheel(name)
     }
 
+    override fun getWheel(id: Long): WheelEntity? {
+        return dao.getWheel(id)
+    }
+
     override fun getWheelList(): List<WheelEntity> {
         return dao.getAllWheels()
     }
 
-    override fun saveWheels(wheels: List<WheelEntity>) {
-        wheels.forEach { wheel ->
+    override fun saveWheels(wheels: List<WheelEntity>?) {
+        wheels!!.forEach { wheel ->
             if (wheel.id == 0L)
                 dao.insertWheel(wheel)
             else
