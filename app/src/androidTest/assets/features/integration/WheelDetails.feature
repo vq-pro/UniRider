@@ -25,18 +25,29 @@ Feature: Wheel Details
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108.0V  | 50.0%   |
 
-  Scenario: Editing the wheel mileage
-    Given I start the app
-    And I select the Veteran Sherman
-    When I change the mileage to 18000
-    Then it shows the new mileage on the details view
-    And it shows the updated mileage on the main view
+# FIXME-2 Cleanup
+#  Scenario: Editing the wheel mileage
+#    Given I start the app
+#    And I select the Veteran Sherman
+#    When I change the mileage to 18000
+#    Then it shows the new mileage on the details view
+#    And it shows the updated mileage on the main view
+
+# FIXME-1 Editing a wheel
+#  Scenario: Editing a wheel
+#    Given I start the app
+#    And I select the Veteran Sherman
+#    When I edit the wheel
+#    And I set these new values:
+#      | Name        | Veteran Sherman Max |
+#      | Mileage     | 150                 |
+#      | Voltage Min | 74.5                |
+#      | Voltage Max | 100.9               |
+#    Then the wheel was updated
 
   Scenario: Viewing a wheel's details in full
     Given I start the app
     When I select the KingSong S20
-    Then the details view shows the wheel's:
-      | Name        | KingSong S20 |
-      | Mileage     | 0            |
-      | Voltage Min | 90.0         |
-      | Voltage Max | 126.0        |
+    Then the details view shows the correct name and a mileage of that wheel
+
+# FIXME-2 Adding a wheel

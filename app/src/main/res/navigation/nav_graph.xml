@@ -11,14 +11,14 @@
             tools:layout="@layout/main_fragment">
 
         <action
-                android:id="@+id/action_MainFragment_to_WheelFragment"
-                app:destination="@+id/WheelFragment"
+                android:id="@+id/action_MainFragment_to_WheelViewFragment"
+                app:destination="@+id/WheelViewFragment"
         />
     </fragment>
 
     <fragment
-            android:id="@+id/WheelFragment"
-            android:name="quebec.virtualite.unirider.views.WheelFragment"
-            tools:layout="@layout/wheel_fragment">
+            android:id="@+id/WheelViewFragment"
+            android:name="quebec.virtualite.unirider.views.WheelViewFragment"
+            tools:layout="@layout/wheel_view_fragment">
     </fragment>
 </navigation>

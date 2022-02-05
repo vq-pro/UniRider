@@ -4,12 +4,12 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".views.WheelFragment">
+        tools:context=".views.WheelViewFragment">
 
-    <GridLayout
-            android:orientation="vertical"
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             tools:ignore="MissingConstraints">
 
         <GridLayout
@@ -146,5 +146,18 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
             />
         </GridLayout>
-    </GridLayout>
+
+        <FrameLayout
+                android:id="@+id/footer_wheel_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+            <Button
+                    android:id="@+id/action_edit_wheel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+            />
+        </FrameLayout>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

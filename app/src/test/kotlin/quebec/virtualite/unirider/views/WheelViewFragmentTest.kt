@@ -30,7 +30,7 @@ import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelFragmentTest {
+class WheelViewFragmentTest {
 
     private val MILEAGE = 1111
     private val ID = 2222L
@@ -60,7 +60,7 @@ class WheelFragmentTest {
     lateinit var mockedWheelBattery: TextView
 
     @Mock
-    lateinit var mockedWheelMileage: EditText
+    lateinit var mockedWheelMileage: TextView
 
     @Mock
     lateinit var mockedWheelName: TextView
@@ -69,19 +69,13 @@ class WheelFragmentTest {
     lateinit var mockedWheelVoltage: EditText
 
     @Mock
-    lateinit var mockedWheelVoltageMin: EditText
-
-    @Mock
-    lateinit var mockedWheelVoltageMax: EditText
-
-    @Mock
     lateinit var mockedWidgets: WidgetUtils
 
     @Captor
     lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
 
     @InjectMocks
-    var fragment: WheelFragment = TestableWheelFragment(this)
+    var fragment: WheelViewFragment = TestableWheelViewFragment(this)
 
     @Before
     fun before() {
@@ -92,12 +86,6 @@ class WheelFragmentTest {
 
         given<Any>(mockedView.findViewById(R.id.wheel_mileage))
             .willReturn(mockedWheelMileage)
-
-        given<Any>(mockedView.findViewById(R.id.wheel_voltage_min))
-            .willReturn(mockedWheelVoltageMin)
-
-        given<Any>(mockedView.findViewById(R.id.wheel_voltage_max))
-            .willReturn(mockedWheelVoltageMax)
 
         given<Any>(mockedView.findViewById(R.id.wheel_voltage))
             .willReturn(mockedWheelVoltage)
@@ -122,20 +110,13 @@ class WheelFragmentTest {
         assertThat(fragment.wheel, equalTo(wheel))
         assertThat(fragment.wheelName, equalTo(mockedWheelName))
         assertThat(fragment.wheelMileage, equalTo(mockedWheelMileage))
-        assertThat(fragment.wheelVoltageMin, equalTo(mockedWheelVoltageMin))
-        assertThat(fragment.wheelVoltageMax, equalTo(mockedWheelVoltageMax))
         assertThat(fragment.wheelVoltage, equalTo(mockedWheelVoltage))
         assertThat(fragment.wheelBattery, equalTo(mockedWheelBattery))
 
         verify(mockedWheelMileage).setText(MILEAGE.toString())
-        verify(mockedWidgets).addTextChangedListener(eq(mockedWheelMileage), lambdaOnUpdateText.capture())
-        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelFragment\$onUpdateMileage\$"))
-
-        verify(mockedWheelVoltageMin).setText("${VOLTAGE_MIN}")
-        verify(mockedWheelVoltageMax).setText("${VOLTAGE_MAX}")
 
         verify(mockedWidgets).addTextChangedListener(eq(mockedWheelVoltage), lambdaOnUpdateText.capture())
-        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelFragment\$onUpdateVoltage\$"))
+        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("WheelViewFragment\$onUpdateVoltage\$"))
     }
 
     @Test
@@ -151,29 +132,29 @@ class WheelFragmentTest {
         assertThrows(WheelNotFoundException::class.java, result)
     }
 
-    @Test
-    fun onUpdateMileage() {
-        // Given
-        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-
-        // When
-        fragment.onUpdateMileage().invoke("$NEW_MILEAGE ")
-
-        // Then
-        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, NEW_MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)))
-    }
-
-    @Test
-    fun onUpdateMileage_whenMileageIsEmpty_zero() {
-        // Given
-        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-
-        // When
-        fragment.onUpdateMileage().invoke("")
-
-        // Then
-        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, ZERO_MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)))
-    }
+//    @Test
+//    fun onUpdateMileage() {
+//        // Given
+//        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+//
+//        // When
+//        fragment.onUpdateMileage().invoke("$NEW_MILEAGE ")
+//
+//        // Then
+//        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, NEW_MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)))
+//    }
+//
+//    @Test
+//    fun onUpdateMileage_whenMileageIsEmpty_zero() {
+//        // Given
+//        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+//
+//        // When
+//        fragment.onUpdateMileage().invoke("")
+//
+//        // Then
+//        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, ZERO_MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)))
+//    }
 
     @Test
     fun onUpdateVoltage() {
@@ -206,7 +187,7 @@ class WheelFragmentTest {
         verify(mockedWheelBattery).text = ""
     }
 
-    class TestableWheelFragment(val test: WheelFragmentTest) : WheelFragment() {
+    class TestableWheelViewFragment(val test: WheelViewFragmentTest) : WheelViewFragment() {
 
         override fun connectDb(function: () -> Unit) {
             db = test.mockedDb

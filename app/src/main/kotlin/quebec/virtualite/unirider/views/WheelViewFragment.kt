@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import org.apache.http.util.TextUtils.isEmpty
-import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -16,7 +15,7 @@ import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
 import java.util.Locale.ENGLISH
 
-open class WheelFragment : BaseFragment() {
+open class WheelViewFragment : BaseFragment() {
 
     companion object {
         const val PARAMETER_WHEEL_NAME = "wheelName"
@@ -25,18 +24,16 @@ open class WheelFragment : BaseFragment() {
     internal lateinit var parmWheelName: String
     internal lateinit var wheel: WheelEntity
     internal lateinit var wheelBattery: TextView
-    internal lateinit var wheelMileage: EditText
+    internal lateinit var wheelMileage: TextView
     internal lateinit var wheelName: TextView
     internal lateinit var wheelVoltage: EditText
-    internal lateinit var wheelVoltageMax: EditText
-    internal lateinit var wheelVoltageMin: EditText
 
     private var calculatorService = CalculatorService()
     private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelName = arguments?.getString(PARAMETER_WHEEL_NAME)!!
-        return inflater.inflate(R.layout.wheel_fragment, container, false)
+        return inflater.inflate(R.layout.wheel_view_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,10 +43,6 @@ open class WheelFragment : BaseFragment() {
         wheelName.text = parmWheelName
 
         wheelMileage = view.findViewById(R.id.wheel_mileage)
-        widgets.addTextChangedListener(wheelMileage, onUpdateMileage())
-
-        wheelVoltageMin = view.findViewById(R.id.wheel_voltage_min)
-        wheelVoltageMax = view.findViewById(R.id.wheel_voltage_max)
 
         wheelVoltage = view.findViewById(R.id.wheel_voltage)
         widgets.addTextChangedListener(wheelVoltage, onUpdateVoltage())
@@ -61,20 +54,18 @@ open class WheelFragment : BaseFragment() {
                 ?: throw WheelNotFoundException()
 
             wheelMileage.setText(wheel.mileage.toString())
-            wheelVoltageMin.setText("${wheel.voltageMin}")
-            wheelVoltageMax.setText("${wheel.voltageMax}")
         }
     }
 
-    fun onUpdateMileage() = { newMileage: String ->
-
-        val updatedWheel =
-            WheelEntity(wheel.id, wheel.name, intOf(newMileage), wheel.voltageMin, wheel.voltageMax)
-
-        runDb {
-            db.saveWheels(listOf(updatedWheel))
-        }
-    }
+//    fun onUpdateMileage() = { newMileage: String ->
+//
+//        val updatedWheel =
+//            WheelEntity(wheel.id, wheel.name, intOf(newMileage), wheel.voltageMin, wheel.voltageMax)
+//
+//        runDb {
+//            db.saveWheels(listOf(updatedWheel))
+//        }
+//    }
 
     fun onUpdateVoltage() = { voltageParm: String ->
         val voltage = voltageParm.trim()

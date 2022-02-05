@@ -14,6 +14,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.enter
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
@@ -32,18 +33,8 @@ import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
-// FIXME-2 Editing the voltage
-// FIXME-2 Changing the name
-// FIXME-2 Adding a wheel
 
 class Steps {
-
-    private val mapDetailToId = mapOf(
-        Pair("Name", R.id.wheel_name),
-        Pair("Mileage", R.id.wheel_mileage),
-        Pair("Voltage Min", R.id.wheel_voltage_min),
-        Pair("Voltage Max", R.id.wheel_voltage_max)
-    )
 
     @Rule
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
@@ -116,15 +107,8 @@ class Steps {
     }
 
     @Then("the details view shows the details for that wheel")
-    fun InDetailsView() {
+    fun inDetailsView() {
         assertThat(R.id.wheel_name, hasText(selectedWheel))
-    }
-
-    @Then("the details view shows the wheel's:")
-    fun detailsViewShowsTheseDetails(expectedDetails: DataTable) {
-        expectedDetails.cells(0).forEach { detail ->
-            assertThat(mapDetailToId.get(detail.get(0))!!, hasText(detail.get(1)))
-        }
     }
 
     @Then("the details view shows the correct name and a mileage of that wheel")
@@ -140,13 +124,18 @@ class Steps {
         assertThat(R.id.wheel_battery, hasText(percentage))
     }
 
+    @When("I edit the wheel")
+    fun editWheel() {
+        click(R.id.action_edit_wheel)
+    }
+
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
         assertThat(wheels.topCells(), equalTo(listOf("Name", "Voltage Min", "Voltage Max", "Mileage")))
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
-                mapWheels.put(row[0], parseInt(row[3]))
+                mapWheels[row[0]] = parseInt(row[3])
                 WheelEntity(0, row[0], parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
             }
             .collect(toList())

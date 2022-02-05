@@ -162,8 +162,8 @@ class MainFragmentTest {
         assertThat(
             navigatedTo, equalTo(
                 NavigatedTo(
-                    R.id.action_MainFragment_to_WheelFragment,
-                    Pair(WheelFragment.PARAMETER_WHEEL_NAME, WHEEL_B)
+                    R.id.action_MainFragment_to_WheelViewFragment,
+                    Pair(WheelViewFragment.PARAMETER_WHEEL_NAME, WHEEL_B)
                 )
             )
         )

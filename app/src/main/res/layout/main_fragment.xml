@@ -19,13 +19,13 @@
                 android:layout_alignParentTop="true"
                 android:layout_margin="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_above="@+id/footer"
+                android:layout_above="@+id/footer_main"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:visibility="visible">
         </ListView>
 
         <FrameLayout
-                android:id="@+id/footer"
+                android:id="@+id/footer_main"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true">
