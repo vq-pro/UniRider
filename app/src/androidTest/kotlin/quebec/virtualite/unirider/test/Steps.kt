@@ -104,6 +104,11 @@ class Steps {
         assertThat(R.id.wheels, hasSelectedText(expectedEntry))
     }
 
+    @Then("the details view shows the details for that wheel")
+    fun InDetailsView() {
+        assertThat(R.id.wheel_name, hasText(selectedWheel))
+    }
+
     @Then("the details view shows the correct name and a mileage of that wheel")
     fun detailsViewShowsNameAndMileage() {
         assertThat(R.id.wheel_name, hasText(selectedWheel))
@@ -119,7 +124,7 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Voltage Max", "Voltage Min", "Mileage")))
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Voltage Min", "Voltage Max", "Mileage")))
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->

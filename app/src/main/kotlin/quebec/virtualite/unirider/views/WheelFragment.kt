@@ -62,7 +62,7 @@ open class WheelFragment : BaseFragment() {
     fun onUpdateMileage() = { newMileage: String ->
 
         val updatedWheel =
-            WheelEntity(wheel.id, wheel.name, intOf(newMileage), wheel.voltageMax, wheel.voltageMin)
+            WheelEntity(wheel.id, wheel.name, intOf(newMileage), wheel.voltageMin, wheel.voltageMax)
 
         runDb {
             db.saveWheels(listOf(updatedWheel))

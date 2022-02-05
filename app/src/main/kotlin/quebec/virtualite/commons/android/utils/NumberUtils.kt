@@ -1,8 +1,8 @@
 package quebec.virtualite.commons.android.utils
 
-import org.apache.http.util.TextUtils
+import org.apache.http.util.TextUtils.isBlank
 
 object NumberUtils {
 
-    fun intOf(string: String): Int = if (TextUtils.isBlank(string.trim())) 0 else string.trim().toInt()
+    fun intOf(string: String): Int = if (isBlank(string.trim())) 0 else string.trim().toInt()
 }

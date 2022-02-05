@@ -3,13 +3,13 @@ Feature: Wheel Details
 
   Background:
     Given these wheels:
-      | Name            | Voltage Max | Voltage Min | Mileage |
-      | Veteran Sherman | 100.8V      | 75.6V       | 17622   |
+      | Name            | Voltage Min | Voltage Max | Mileage |
+      | Veteran Sherman | 75.6V       | 100.8V      | 17622   |
       | Veteran Abrams  | 74.5V       | 100.8V      | 0       |
-      | KingSong S20    | 126.0V      | 90.0V       | 0       |
-      | KingSong 14S    | 67.2V       | 48.0V       | 694     |
-      | Gotway Nikola+  | 100.8V      | 78.0V       | 2927    |
-      | KingSong S18    | 84.0V       | 60.0V       | 2850    |
+      | KingSong S20    | 90.0V       | 126.0V      | 0       |
+      | KingSong 14S    | 48.0V       | 67.2V       | 694     |
+      | Gotway Nikola+  | 78.0V       | 100.8V      | 2927    |
+      | KingSong S18    | 60.0V       | 84.0V       | 2850    |
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I start the app
@@ -25,7 +25,12 @@ Feature: Wheel Details
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108.0V  | 50.0%   |
 
-  Scenario: Editing wheel mileage
+  Scenario: Editing the wheel details
+    Given I start the app
+    When I select the KingSong S20
+    Then the details view shows the correct name and a mileage of that wheel
+
+  Scenario: Editing the wheel mileage
     Given I start the app
     And I select the Veteran Sherman
     When I change the mileage to 18000

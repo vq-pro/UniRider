@@ -137,31 +137,31 @@ class WheelFragmentTest {
     @Test
     fun onUpdateMileage() {
         // Given
-        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
 
         // When
         fragment.onUpdateMileage().invoke("$NEW_MILEAGE ")
 
         // Then
-        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, NEW_MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)))
+        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, NEW_MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)))
     }
 
     @Test
     fun onUpdateMileage_whenMileageIsEmpty_zero() {
         // Given
-        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
 
         // When
         fragment.onUpdateMileage().invoke("")
 
         // Then
-        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, ZERO_MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)))
+        verify(mockedDb).saveWheels(listOf(WheelEntity(ID, NAME, ZERO_MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)))
     }
 
     @Test
     fun onUpdateVoltage() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         fragment.wheelBattery = mockedWheelBattery
 
         given(mockedCalculatorService.percentage(fragment.wheel, VOLTAGE))
@@ -178,7 +178,7 @@ class WheelFragmentTest {
     @Test
     fun onUpdateVoltage_whenBlank_noDisplay() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MAX, VOLTAGE_MIN)
+        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         fragment.wheelBattery = mockedWheelBattery
 
         // When
