@@ -32,6 +32,10 @@ import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
+// FIXME-2 Editing the voltage
+// FIXME-2 Changing the name
+// FIXME-2 Adding a wheel
+
 class Steps {
 
     private val mapDetailToId = mapOf(
