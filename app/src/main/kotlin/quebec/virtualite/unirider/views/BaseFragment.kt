@@ -18,6 +18,10 @@ open class BaseFragment : Fragment() {
         subThread(function)
     }
 
+    internal open fun navigateBack() {
+        findNavController().popBackStack()
+    }
+
     internal open fun navigateTo(id: Int, parms: Pair<String, String>) {
         findNavController().navigate(id, bundleOf(parms.first to parms.second))
     }

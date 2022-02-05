@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ListView
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
 import org.mockito.ArgumentCaptor
@@ -53,7 +54,12 @@ open class BaseFragmentTest(val fragmentClass: String) {
     @Captor
     private lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
 
+    var navigatedBack = false
     lateinit var navigatedTo: NavigatedTo
+
+    fun mockArgument(fragment: BaseFragment, param: String, value: Long) {
+        mockArgument(fragment, param, value.toString())
+    }
 
     fun mockArgument(fragment: BaseFragment, param: String, value: String) {
         given(mockedBundle.getString(param))
@@ -95,5 +101,13 @@ open class BaseFragmentTest(val fragmentClass: String) {
             (lambdaOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
         )
         assertThat(lambdaOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    }
+
+    fun verifyNavigatedBack() {
+        assertThat(navigatedBack, equalTo(true))
+    }
+
+    fun verifyNavigatedTo(id: Int, param: Pair<String, String>) {
+        assertThat(navigatedTo, equalTo(NavigatedTo(id, param)))
     }
 }

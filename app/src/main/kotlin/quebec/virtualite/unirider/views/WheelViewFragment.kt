@@ -44,7 +44,7 @@ open class WheelViewFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         textName = view.findViewById(R.id.view_name)
-        textName.text = parmWheelName
+        textName.setText(parmWheelName)
 
         textMileage = view.findViewById(R.id.view_mileage)
 

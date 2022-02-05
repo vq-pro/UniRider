@@ -2,8 +2,6 @@ package quebec.virtualite.unirider.views
 
 import android.widget.ListView
 import android.widget.TextView
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
@@ -109,13 +107,9 @@ class MainFragmentTest :
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        assertThat(
-            navigatedTo, equalTo(
-                NavigatedTo(
-                    R.id.action_MainFragment_to_WheelViewFragment,
-                    Pair(WheelViewFragment.PARAMETER_WHEEL_NAME, WHEEL_B)
-                )
-            )
+        verifyNavigatedTo(
+            R.id.action_MainFragment_to_WheelViewFragment,
+            Pair(WheelViewFragment.PARAMETER_WHEEL_NAME, WHEEL_B)
         )
     }
 

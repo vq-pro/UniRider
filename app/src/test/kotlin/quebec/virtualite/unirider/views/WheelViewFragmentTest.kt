@@ -135,14 +135,7 @@ class WheelViewFragmentTest :
         fragment.onEdit().invoke(mockedView)
 
         // Then
-        assertThat(
-            navigatedTo, equalTo(
-                NavigatedTo(
-                    R.id.action_WheelViewFragment_to_WheelEditFragment,
-                    Pair(PARAMETER_WHEEL_NAME, NAME)
-                )
-            )
-        )
+        verifyNavigatedTo(R.id.action_WheelViewFragment_to_WheelEditFragment, Pair(PARAMETER_WHEEL_NAME, NAME))
     }
 
     @Test

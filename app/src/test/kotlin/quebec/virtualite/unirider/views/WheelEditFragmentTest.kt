@@ -130,6 +130,7 @@ class WheelEditFragmentTest :
 
         // Then
         verify(mockedDb).saveWheel(fragment.updatedWheel)
+        verifyNavigatedBack()
     }
 
     @Test
@@ -173,6 +174,10 @@ class WheelEditFragmentTest :
         override fun connectDb(function: () -> Unit) {
             db = test.mockedDb
             function()
+        }
+
+        override fun navigateBack() {
+            test.navigatedBack = true
         }
 
         override fun runDb(function: () -> Unit) {
