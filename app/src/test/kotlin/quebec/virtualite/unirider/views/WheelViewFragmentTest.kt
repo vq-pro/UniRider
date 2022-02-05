@@ -22,10 +22,12 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 import quebec.virtualite.unirider.services.CalculatorService
+import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_NAME
 import java.lang.Float.parseFloat
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelViewFragmentTest : BaseFragmentTest() {
+class WheelViewFragmentTest :
+    BaseFragmentTest(WheelViewFragment::class.java.simpleName) {
 
     private val MILEAGE = 1111
     private val ID = 2222L
@@ -47,32 +49,32 @@ class WheelViewFragmentTest : BaseFragmentTest() {
     lateinit var mockedCalculatorService: CalculatorService
 
     @Mock
-    lateinit var mockedFieldBattery: TextView
+    lateinit var mockedEditVoltage: EditText
 
     @Mock
-    lateinit var mockedFieldMileage: TextView
+    lateinit var mockedTextBattery: TextView
 
     @Mock
-    lateinit var mockedFieldName: TextView
+    lateinit var mockedTextMileage: TextView
 
     @Mock
-    lateinit var mockedFieldVoltage: EditText
+    lateinit var mockedTextName: TextView
 
     @Before
     fun before() {
         fragment.parmWheelName = NAME
 
-        mockField(R.id.action_edit_wheel, mockedButtonEdit)
-        mockField(R.id.wheel_name_view, mockedFieldName)
-        mockField(R.id.wheel_mileage, mockedFieldMileage)
-        mockField(R.id.wheel_voltage, mockedFieldVoltage)
-        mockField(R.id.wheel_battery, mockedFieldBattery)
+        mockField(R.id.button_edit, mockedButtonEdit)
+        mockField(R.id.view_name, mockedTextName)
+        mockField(R.id.view_mileage, mockedTextMileage)
+        mockField(R.id.edit_voltage, mockedEditVoltage)
+        mockField(R.id.view_battery, mockedTextBattery)
     }
 
     @Test
     fun onCreateView() {
         // Given
-        mockArgument(fragment, WheelViewFragment.PARAMETER_WHEEL_NAME, NAME)
+        mockArgument(fragment, PARAMETER_WHEEL_NAME, NAME)
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
@@ -96,19 +98,19 @@ class WheelViewFragmentTest : BaseFragmentTest() {
 
         assertThat(fragment.wheel, equalTo(wheel))
 
-        assertThat(fragment.fieldName, equalTo(mockedFieldName))
-        verify(fragment.fieldName).setText(NAME)
+        assertThat(fragment.textName, equalTo(mockedTextName))
+        verify(fragment.textName).setText(NAME)
 
-        assertThat(fragment.fieldMileage, equalTo(mockedFieldMileage))
-        verify(mockedFieldMileage).setText(MILEAGE.toString())
+        assertThat(fragment.textMileage, equalTo(mockedTextMileage))
+        verify(mockedTextMileage).setText("$MILEAGE")
 
-        assertThat(fragment.fieldVoltage, equalTo(mockedFieldVoltage))
-        verifyOnUpdateText(mockedFieldVoltage, "WheelViewFragment", "onUpdateVoltage")
+        assertThat(fragment.editVoltage, equalTo(mockedEditVoltage))
+        verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
 
-        assertThat(fragment.fieldBattery, equalTo(mockedFieldBattery))
+        assertThat(fragment.textBattery, equalTo(mockedTextBattery))
 
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
-        verifyOnClick(mockedButtonEdit, "WheelViewFragment", "onEdit")
+        verifyOnClick(mockedButtonEdit, "onEdit")
     }
 
     @Test
@@ -137,7 +139,7 @@ class WheelViewFragmentTest : BaseFragmentTest() {
             navigatedTo, equalTo(
                 NavigatedTo(
                     R.id.action_WheelViewFragment_to_WheelEditFragment,
-                    Pair(WheelViewFragment.PARAMETER_WHEEL_NAME, NAME)
+                    Pair(PARAMETER_WHEEL_NAME, NAME)
                 )
             )
         )
@@ -147,7 +149,7 @@ class WheelViewFragmentTest : BaseFragmentTest() {
     fun onUpdateVoltage() {
         // Given
         fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-        fragment.fieldBattery = mockedFieldBattery
+        fragment.textBattery = mockedTextBattery
 
         given(mockedCalculatorService.percentage(fragment.wheel, VOLTAGE))
             .willReturn(PERCENTAGE)
@@ -157,21 +159,21 @@ class WheelViewFragmentTest : BaseFragmentTest() {
 
         // Then
         verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
-        verify(mockedFieldBattery).text = PERCENTAGE_S
+        verify(mockedTextBattery).text = PERCENTAGE_S
     }
 
     @Test
     fun onUpdateVoltage_whenBlank_noDisplay() {
         // Given
         fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-        fragment.fieldBattery = mockedFieldBattery
+        fragment.textBattery = mockedTextBattery
 
         // When
         fragment.onUpdateVoltage().invoke(" ")
 
         // Then
         verify(mockedCalculatorService, never()).percentage(eq(fragment.wheel), anyFloat())
-        verify(mockedFieldBattery).text = ""
+        verify(mockedTextBattery).text = ""
     }
 
     class TestableWheelViewFragment(val test: WheelViewFragmentTest) : WheelViewFragment() {

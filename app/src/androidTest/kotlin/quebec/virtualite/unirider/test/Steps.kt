@@ -36,13 +36,6 @@ import java.util.stream.Collectors.toList
 
 class Steps {
 
-    private val mapDetailToId = mapOf(
-        Pair("Name", R.id.wheel_name_edit),
-        Pair("Mileage", R.id.wheel_mileage),
-        Pair("Voltage Min", R.id.wheel_voltage_min),
-        Pair("Voltage Max", R.id.wheel_voltage_max)
-    )
-
     @Rule
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
@@ -69,17 +62,17 @@ class Steps {
     @When("^I change the mileage to (.*?)$")
     fun changeMileageTo(newMileage: Int) {
         updatedMileage = newMileage
-        setText(R.id.wheel_mileage, newMileage.toString())
+        setText(R.id.edit_mileage, newMileage.toString())
     }
 
     @Then("it shows the new mileage on the details view")
     fun itShowsTheNewMileageOnDetailsView() {
-        assertThat(R.id.wheel_mileage, hasText(updatedMileage.toString()))
+        assertThat(R.id.view_mileage, hasText(updatedMileage.toString()))
     }
 
     @Then("it shows the updated mileage on the main view")
     fun itShowsTheUpdatedMileageOnTheMainView() {
-        back(R.id.wheel_mileage)
+        back(R.id.view_mileage)
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.name, updatedMileage)))
     }
 
@@ -101,13 +94,22 @@ class Steps {
 
     @When("I set these new values:")
     fun setNewWheelValues(newValues: DataTable) {
+
+        val mapDetailToId = mapOf(
+            Pair("Name", R.id.edit_name),
+            Pair("Mileage", R.id.edit_mileage),
+            Pair("Voltage Min", R.id.edit_voltage_min),
+            Pair("Voltage Max", R.id.edit_voltage_max)
+        )
+
         val mapEntity = mutableMapOf<String, String>()
         newValues.cells(0).forEach { row ->
             val field = row[0]
             val value = row[1]
             mapEntity[field] = value
 
-            setText(mapDetailToId[field]!!, value)
+            val key = mapDetailToId[field]!!
+            setText(key, value)
         }
 
         updatedWheel = WheelEntity(
@@ -117,6 +119,8 @@ class Steps {
             parseFloat(mapEntity["Voltage Min"]!!),
             parseFloat(mapEntity["Voltage Max"]!!)
         )
+
+        click(R.id.button_save)
     }
 
     @When("I start the app")
@@ -126,8 +130,8 @@ class Steps {
 
     @Then("it blanks the displays")
     fun thenBlanksTheDisplays() {
-        assertThat(R.id.wheel_voltage, isEmpty())
-        assertThat(R.id.wheel_battery, isEmpty())
+        assertThat(R.id.edit_voltage, isEmpty())
+        assertThat(R.id.view_battery, isEmpty())
     }
 
     @Then("^the selected entry is (.*?)$")
@@ -137,25 +141,25 @@ class Steps {
 
     @Then("the details view shows the details for that wheel")
     fun inDetailsView() {
-        assertThat(R.id.wheel_name_view, hasText(selectedWheel.name))
+        assertThat(R.id.view_name, hasText(selectedWheel.name))
     }
 
     @Then("the details view shows the correct name and a mileage of that wheel")
     fun detailsViewShowsNameAndMileage() {
-        assertThat(R.id.wheel_name_view, hasText(selectedWheel.name))
+        assertThat(R.id.view_name, hasText(selectedWheel.name))
 
-        val selectedWheelMileage = mapWheels.get(selectedWheel.name)
-        assertThat(R.id.wheel_mileage, hasText(selectedWheelMileage.toString()))
+        val selectedWheelMileage = mapWheels[selectedWheel.name]
+        assertThat(R.id.view_mileage, hasText(selectedWheelMileage.toString()))
     }
 
     @Then("^it displays a percentage of (.*?)$")
     fun thenDisplaysPercentage(percentage: String) {
-        assertThat(R.id.wheel_battery, hasText(percentage))
+        assertThat(R.id.view_battery, hasText(percentage))
     }
 
     @When("I edit the wheel")
     fun editWheel() {
-        click(R.id.action_edit_wheel)
+        click(R.id.button_edit)
     }
 
     @Given("these wheels:")
@@ -186,13 +190,13 @@ class Steps {
 
     @When("^I enter a voltage of (.*?)V$")
     fun whenEnterVoltage(voltage: Float) {
-        enter(R.id.wheel_voltage, voltage.toString())
+        enter(R.id.edit_voltage, voltage.toString())
     }
 
     private fun calculateTotalMileage(): Int {
         var totalMileage = 0
         mapWheels.keys.stream()
-            .forEach { wheelName -> totalMileage += mapWheels.get(wheelName)!! }
+            .forEach { wheelName -> totalMileage += mapWheels[wheelName]!! }
 
         return totalMileage
     }

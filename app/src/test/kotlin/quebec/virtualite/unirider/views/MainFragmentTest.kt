@@ -17,7 +17,8 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
-class MainFragmentTest : BaseFragmentTest() {
+class MainFragmentTest :
+    BaseFragmentTest(MainFragment::class.java.simpleName) {
 
     private val MILEAGE_A = 123
     private val MILEAGE_B = 456
@@ -33,16 +34,16 @@ class MainFragmentTest : BaseFragmentTest() {
     val fragment: MainFragment = TestableMainFragment(this)
 
     @Mock
-    lateinit var mockedFieldMileage: TextView
+    lateinit var mockedLVWheels: ListView
 
     @Mock
-    lateinit var mockedFieldName: TextView
+    lateinit var mockedTextMileage: TextView
 
     @Mock
-    lateinit var mockedFieldTotalMileage: TextView
+    lateinit var mockedTextName: TextView
 
     @Mock
-    lateinit var mockedWheels: ListView
+    lateinit var mockedTextTotalMileage: TextView
 
     @Test
     fun onCreateView() {
@@ -65,8 +66,8 @@ class MainFragmentTest : BaseFragmentTest() {
                 )
             )
 
-        mockField(R.id.wheels, mockedWheels)
-        mockField(R.id.total_mileage, mockedFieldTotalMileage)
+        mockField(R.id.wheels, mockedLVWheels)
+        mockField(R.id.total_mileage, mockedTextTotalMileage)
 
         set(fragment.wheelList, listOf(WheelRow("some previous content", 999)))
 
@@ -78,30 +79,25 @@ class MainFragmentTest : BaseFragmentTest() {
 
         verify(mockedDb).getWheelList()
 
-        verify(mockedWheels).isEnabled = true
-        verifyMultiFieldListAdapter(
-            mockedWheels, R.layout.wheels_item, expectedWheels, "MainFragment", "onDisplayWheel"
-        )
-        verifyOnSelectItem(mockedWheels, "MainFragment", "onSelectWheel")
+        verify(mockedLVWheels).isEnabled = true
+        verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedWheels, "onDisplayWheel")
+        verifyOnSelectItem(mockedLVWheels, "onSelectWheel")
 
-        verify(mockedFieldTotalMileage).text = (MILEAGE_A + MILEAGE_B + MILEAGE_C).toString()
+        verify(mockedTextTotalMileage).text = (MILEAGE_A + MILEAGE_B + MILEAGE_C).toString()
     }
 
     @Test
     fun onDisplayItem() {
         // Given
-        given(mockedView.findViewById<TextView>(R.id.row_name))
-            .willReturn(mockedFieldName)
-
-        given(mockedView.findViewById<TextView>(R.id.row_mileage))
-            .willReturn(mockedFieldMileage)
+        mockField(R.id.row_name, mockedTextName)
+        mockField(R.id.row_mileage, mockedTextMileage)
 
         // When
         fragment.onDisplayWheel().invoke(mockedView, WHEEL_ITEM_A_123)
 
         // Then
-        verify(mockedFieldName).text = WHEEL_A
-        verify(mockedFieldMileage).text = MILEAGE_A.toString()
+        verify(mockedTextName).text = WHEEL_A
+        verify(mockedTextMileage).text = MILEAGE_A.toString()
     }
 
     @Test

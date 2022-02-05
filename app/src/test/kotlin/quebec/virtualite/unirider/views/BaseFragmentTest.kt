@@ -18,7 +18,7 @@ import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.commons.views.NavigatedTo
 import quebec.virtualite.unirider.database.WheelDb
 
-open class BaseFragmentTest {
+open class BaseFragmentTest(val fragmentClass: String) {
 
     internal val DONT_ATTACH_TO_ROOT = false
     internal val SAVED_INSTANCE_STATE: Bundle? = null
@@ -71,29 +71,29 @@ open class BaseFragmentTest {
         verify(mockedInflater).inflate(expectedId, mockedContainer, DONT_ATTACH_TO_ROOT)
     }
 
-    fun verifyOnClick(mockedField: View, className: String, methodName: String) {
+    fun verifyOnClick(mockedField: View, methodName: String) {
         verify(mockedWidgets).setOnClickListener(eq(mockedField), lambdaOnClick.capture())
-        assertThat(lambdaOnClick.value.javaClass.name, containsString("$className\$$methodName\$"))
+        assertThat(lambdaOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
-    fun verifyOnSelectItem(mockedField: ListView, className: String, methodName: String) {
+    fun verifyOnSelectItem(mockedField: ListView, methodName: String) {
         verify(mockedWidgets).setOnItemClickListener(eq(mockedField), lambdaOnSelect.capture())
-        assertThat(lambdaOnSelect.value.javaClass.name, containsString("$className\$$methodName\$"))
+        assertThat(lambdaOnSelect.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
-    fun verifyOnUpdateText(mockedField: EditText, className: String, methodName: String) {
+    fun verifyOnUpdateText(mockedField: EditText, methodName: String) {
         verify(mockedWidgets).addTextChangedListener(eq(mockedField), lambdaOnUpdateText.capture())
-        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("$className\$$methodName\$"))
+        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     @Suppress("UNCHECKED_CAST")
     fun <T> verifyMultiFieldListAdapter(
-        mockedField: ListView, expectedId: Int, expectedData: List<T>, className: String, methodName: String
+        mockedField: ListView, expectedId: Int, expectedData: List<T>, methodName: String
     ) {
         verify(mockedWidgets).multifieldListAdapter(
             eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData),
             (lambdaOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
         )
-        assertThat(lambdaOnDisplay.value.javaClass.name, containsString("$className\$$methodName\$"))
+        assertThat(lambdaOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 }

@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
+import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -13,10 +15,11 @@ import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WH
 
 open class WheelEditFragment : BaseFragment() {
 
-    internal lateinit var fieldMileage: EditText
-    internal lateinit var fieldName: EditText
-    internal lateinit var fieldVoltageMax: EditText
-    internal lateinit var fieldVoltageMin: EditText
+    internal lateinit var buttonSave: Button
+    internal lateinit var editMileage: EditText
+    internal lateinit var editName: EditText
+    internal lateinit var editVoltageMax: EditText
+    internal lateinit var editVoltageMin: EditText
 
     internal lateinit var parmWheelName: String
 
@@ -33,24 +36,43 @@ open class WheelEditFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fieldName = view.findViewById(R.id.wheel_name_edit)
-        fieldName.setText(parmWheelName)
-        widgets.addTextChangedListener(fieldName, onUpdateName())
+        editName = view.findViewById(R.id.edit_name)
+        editName.setText(parmWheelName)
+        widgets.addTextChangedListener(editName, onUpdateName())
 
-        fieldMileage = view.findViewById(R.id.wheel_mileage)
+        editMileage = view.findViewById(R.id.edit_mileage)
+        widgets.addTextChangedListener(editMileage, onUpdateMileage())
 
-        fieldVoltageMax = view.findViewById(R.id.wheel_voltage_max)
-        fieldVoltageMin = view.findViewById(R.id.wheel_voltage_min)
+        editVoltageMax = view.findViewById(R.id.edit_voltage_max)
+        editVoltageMin = view.findViewById(R.id.edit_voltage_min)
+
+        buttonSave = view.findViewById(R.id.button_save)
+        widgets.setOnClickListener(buttonSave, onSave())
 
         connectDb {
             initialWheel = db.findWheel(parmWheelName)
                 ?: throw WheelNotFoundException()
             updatedWheel = initialWheel
 
-            fieldMileage.setText("${initialWheel.mileage}")
-            fieldVoltageMax.setText("${initialWheel.voltageMax}")
-            fieldVoltageMin.setText("${initialWheel.voltageMin}")
+            editMileage.setText("${initialWheel.mileage}")
+            editVoltageMax.setText("${initialWheel.voltageMax}")
+            editVoltageMin.setText("${initialWheel.voltageMin}")
         }
+    }
+
+    fun onSave() = { _: View ->
+        runDb { db.saveWheel(updatedWheel) }
+//        findNavController().navigateUp()
+    }
+
+    fun onUpdateMileage() = { newMileage: String ->
+        updatedWheel = WheelEntity(
+            updatedWheel.id,
+            updatedWheel.name,
+            intOf(newMileage),
+            updatedWheel.voltageMin,
+            updatedWheel.voltageMax
+        )
     }
 
     fun onUpdateName() = { newName: String ->

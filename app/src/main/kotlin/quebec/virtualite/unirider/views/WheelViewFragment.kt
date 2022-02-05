@@ -23,10 +23,10 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     internal lateinit var buttonEdit: Button
-    internal lateinit var fieldBattery: TextView
-    internal lateinit var fieldMileage: TextView
-    internal lateinit var fieldName: TextView
-    internal lateinit var fieldVoltage: EditText
+    internal lateinit var textBattery: TextView
+    internal lateinit var textMileage: TextView
+    internal lateinit var textName: TextView
+    internal lateinit var editVoltage: EditText
 
     internal lateinit var parmWheelName: String
 
@@ -43,36 +43,26 @@ open class WheelViewFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fieldName = view.findViewById(R.id.wheel_name_view)
-        fieldName.text = parmWheelName
+        textName = view.findViewById(R.id.view_name)
+        textName.text = parmWheelName
 
-        fieldMileage = view.findViewById(R.id.wheel_mileage)
+        textMileage = view.findViewById(R.id.view_mileage)
 
-        fieldVoltage = view.findViewById(R.id.wheel_voltage)
-        widgets.addTextChangedListener(fieldVoltage, onUpdateVoltage())
+        editVoltage = view.findViewById(R.id.edit_voltage)
+        widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
 
-        fieldBattery = view.findViewById(R.id.wheel_battery)
+        textBattery = view.findViewById(R.id.view_battery)
 
-        buttonEdit = view.findViewById(R.id.action_edit_wheel)
+        buttonEdit = view.findViewById(R.id.button_edit)
         widgets.setOnClickListener(buttonEdit, onEdit())
 
         connectDb {
             wheel = db.findWheel(parmWheelName)
                 ?: throw WheelNotFoundException()
 
-            fieldMileage.setText(wheel.mileage.toString())
+            textMileage.setText(wheel.mileage.toString())
         }
     }
-
-//    fun onUpdateMileage() = { newMileage: String ->
-//
-//        val updatedWheel =
-//            WheelEntity(wheel.id, wheel.name, intOf(newMileage), wheel.voltageMin, wheel.voltageMax)
-//
-//        runDb {
-//            db.saveWheels(listOf(updatedWheel))
-//        }
-//    }
 
     fun onEdit() = { _: View ->
         navigateTo(
@@ -83,7 +73,7 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onUpdateVoltage() = { voltageParm: String ->
         val voltage = voltageParm.trim()
-        fieldBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
+        textBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
     }
 
     private fun getPercentage(voltage: String): String {

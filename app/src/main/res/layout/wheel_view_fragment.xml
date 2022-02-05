@@ -19,10 +19,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
-                android:gravity="center"
-        >
+                android:gravity="center">
+
             <TextView
-                    android:id="@+id/wheel_name_view"
+                    android:id="@+id/view_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -35,10 +35,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="40dp"
-                android:gravity="center"
-        >
+                android:gravity="center">
+
             <TextView
-                    android:labelFor="@+id/wheel_mileage"
+                    android:labelFor="@+id/view_mileage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -47,7 +47,7 @@
             />
 
             <TextView
-                    android:id="@+id/wheel_mileage"
+                    android:id="@+id/view_mileage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -63,7 +63,7 @@
                 android:gravity="center"
         >
             <EditText
-                    android:id="@+id/wheel_voltage"
+                    android:id="@+id/edit_voltage"
                     android:hint="@string/label_wheel_voltage"
                     android:inputType="numberDecimal"
                     android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                     android:autofillHints=""/>
 
             <TextView
-                    android:id="@+id/wheel_battery"
+                    android:id="@+id/view_battery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -89,7 +89,7 @@
                 android:gravity="center"
         >
             <Button
-                    android:id="@+id/action_edit_wheel"
+                    android:id="@+id/button_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
