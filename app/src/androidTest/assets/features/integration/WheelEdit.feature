@@ -25,4 +25,10 @@ Feature: Wheel Edit
     And I don't set any new values
     Then the wheel cannot be saved
 
+  Scenario: Cannot save a wheel with a blank name
+    Given I select the Veteran Sherman
+    When I edit the wheel
+    And I set a blank name
+    Then the wheel cannot be saved
+
 # FIXME-1 Editing a wheel - with cancel

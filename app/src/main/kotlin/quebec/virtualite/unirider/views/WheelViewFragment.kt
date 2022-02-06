@@ -20,7 +20,6 @@ open class WheelViewFragment : BaseFragment() {
 
     companion object {
         const val PARAMETER_WHEEL_ID = "wheelID"
-        const val PARAMETER_WHEEL_NAME = "wheelName"
     }
 
     internal lateinit var buttonEdit: Button

@@ -22,11 +22,13 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editVoltageMax: EditText
     internal lateinit var editVoltageMin: EditText
 
+
     internal lateinit var initialWheel: WheelEntity
     internal lateinit var updatedWheel: WheelEntity
 
     internal var parmWheelId: Long? = 0
 
+    private var saveComparator = SaveComparator()
     private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -63,6 +65,13 @@ open class WheelEditFragment : BaseFragment() {
         }
     }
 
+    fun enableSaveIfChanged() {
+        if (saveComparator.canSave(updatedWheel, initialWheel))
+            widgets.enable(buttonSave)
+        else
+            widgets.disable(buttonSave)
+    }
+
     fun onSave() = { _: View ->
         runDb { db.saveWheel(updatedWheel) }
         navigateBack()
@@ -77,7 +86,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.voltageMax
         )
 
-        widgets.enable(buttonSave)
+        enableSaveIfChanged()
     }
 
     fun onUpdateName() = { newName: String ->
@@ -89,7 +98,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.voltageMax
         )
 
-        widgets.enable(buttonSave)
+        enableSaveIfChanged()
     }
 
     fun onUpdateVoltageMax() = { newVoltage: String ->
@@ -101,7 +110,7 @@ open class WheelEditFragment : BaseFragment() {
             floatOf(newVoltage)
         )
 
-        widgets.enable(buttonSave)
+        enableSaveIfChanged()
     }
 
     fun onUpdateVoltageMin() = { newVoltage: String ->
@@ -113,6 +122,6 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.voltageMax
         )
 
-        widgets.enable(buttonSave)
+        enableSaveIfChanged()
     }
 }

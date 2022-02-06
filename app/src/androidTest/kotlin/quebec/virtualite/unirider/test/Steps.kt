@@ -95,6 +95,11 @@ class Steps {
         assertThat(R.id.total_mileage, hasText(calculateTotalMileage().toString()))
     }
 
+    @When("I set a blank name")
+    fun setBlankName() {
+        setText(R.id.edit_name, " ")
+    }
+
     @When("I set these new values:")
     fun setNewWheelValues(newValues: DataTable) {
 

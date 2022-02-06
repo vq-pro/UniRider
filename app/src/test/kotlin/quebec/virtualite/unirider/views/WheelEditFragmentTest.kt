@@ -52,6 +52,9 @@ class WheelEditFragmentTest :
     @Mock
     lateinit var mockedEditVoltageMin: EditText
 
+    @Mock
+    lateinit var mockedSaveComparator: SaveComparator
+
     @Before
     fun before() {
         fragment.parmWheelId = ID
@@ -124,6 +127,30 @@ class WheelEditFragmentTest :
     }
 
     @Test
+    fun enableSaveIfChanged_whenChanged_enabled() {
+        // Given
+        initForUpdates(true)
+
+        // When
+        fragment.enableSaveIfChanged()
+
+        // Then
+        verify(mockedWidgets).enable(mockedButtonSave)
+    }
+
+    @Test
+    fun enableSaveIfChanged_whenNotChanged_disabled() {
+        // Given
+        initForUpdates(false)
+
+        // When
+        fragment.enableSaveIfChanged()
+
+        // Then
+        verify(mockedWidgets).disable(mockedButtonSave)
+    }
+
+    @Test
     fun onSave() {
         // Given
         fragment.updatedWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
@@ -139,13 +166,14 @@ class WheelEditFragmentTest :
     @Test
     fun onUpdateMileage() {
         // Given
-        fragment.updatedWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        initForUpdates(true)
 
         // When
         fragment.onUpdateMileage().invoke("$NEW_MILEAGE ")
 
         // Then
         verify(mockedDb, never()).saveWheels(any())
+        verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(
@@ -158,13 +186,14 @@ class WheelEditFragmentTest :
     @Test
     fun onUpdateName() {
         // Given
-        fragment.updatedWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        initForUpdates(true)
 
         // When
         fragment.onUpdateName().invoke("$NEW_NAME ")
 
         // Then
         verify(mockedDb, never()).saveWheels(any())
+        verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(
@@ -177,13 +206,14 @@ class WheelEditFragmentTest :
     @Test
     fun onUpdateVoltageMax() {
         // Given
-        fragment.updatedWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        initForUpdates(true)
 
         // When
         fragment.onUpdateVoltageMax().invoke("$NEW_VOLTAGE_MAX ")
 
         // Then
         verify(mockedDb, never()).saveWheels(any())
+        verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(
@@ -196,13 +226,14 @@ class WheelEditFragmentTest :
     @Test
     fun onUpdateVoltageMin() {
         // Given
-        fragment.updatedWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        initForUpdates(true)
 
         // When
         fragment.onUpdateVoltageMin().invoke("$NEW_VOLTAGE_MIN ")
 
         // Then
         verify(mockedDb, never()).saveWheels(any())
+        verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(
@@ -210,6 +241,31 @@ class WheelEditFragmentTest :
                 WheelEntity(ID, NAME, MILEAGE, NEW_VOLTAGE_MIN, VOLTAGE_MAX)
             )
         )
+    }
+
+    private fun enableSaveIfChanged(
+        name: String, mileage: Int, voltageMin: Float, voltageMax: Float, shouldEnable: Boolean
+    ) {
+        // Given
+        fragment.initialWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.updatedWheel = WheelEntity(ID, name, mileage, voltageMin, voltageMax)
+
+        // When
+        fragment.enableSaveIfChanged()
+
+        // Then
+        if (shouldEnable)
+            verify(mockedWidgets).enable(mockedButtonSave)
+        else
+            verify(mockedWidgets).disable(mockedButtonSave)
+    }
+
+    private fun initForUpdates(canSave: Boolean) {
+        fragment.initialWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.updatedWheel = fragment.initialWheel
+
+        given(mockedSaveComparator.canSave(any(), any()))
+            .willReturn(canSave)
     }
 
     class TestableWheelEditFragment(val test: WheelEditFragmentTest) : WheelEditFragment() {
