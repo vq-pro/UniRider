@@ -11,7 +11,7 @@ import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
-import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_NAME
+import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
 open class WheelEditFragment : BaseFragment() {
 
@@ -21,15 +21,15 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editVoltageMax: EditText
     internal lateinit var editVoltageMin: EditText
 
-    internal lateinit var parmWheelName: String
-
     internal lateinit var initialWheel: WheelEntity
     internal lateinit var updatedWheel: WheelEntity
+
+    internal var parmWheelId: Long? = 0
 
     private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelName = arguments?.getString(PARAMETER_WHEEL_NAME)!!
+        parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)!!
         return inflater.inflate(R.layout.wheel_edit_fragment, container, false)
     }
 
@@ -37,23 +37,21 @@ open class WheelEditFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         editName = view.findViewById(R.id.edit_name)
-        editName.setText(parmWheelName)
-        widgets.addTextChangedListener(editName, onUpdateName())
-
         editMileage = view.findViewById(R.id.edit_mileage)
-        widgets.addTextChangedListener(editMileage, onUpdateMileage())
-
         editVoltageMax = view.findViewById(R.id.edit_voltage_max)
         editVoltageMin = view.findViewById(R.id.edit_voltage_min)
-
         buttonSave = view.findViewById(R.id.button_save)
+
+        widgets.addTextChangedListener(editName, onUpdateName())
+        widgets.addTextChangedListener(editMileage, onUpdateMileage())
         widgets.setOnClickListener(buttonSave, onSave())
 
         connectDb {
-            initialWheel = db.findWheel(parmWheelName)
+            initialWheel = db.getWheel(parmWheelId!!)
                 ?: throw WheelNotFoundException()
             updatedWheel = initialWheel
 
+            editName.setText(initialWheel.name)
             editMileage.setText("${initialWheel.mileage}")
             editVoltageMax.setText("${initialWheel.voltageMax}")
             editVoltageMin.setText("${initialWheel.voltageMin}")

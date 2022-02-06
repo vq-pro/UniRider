@@ -22,7 +22,7 @@ open class BaseFragment : Fragment() {
         findNavController().popBackStack()
     }
 
-    internal open fun navigateTo(id: Int, param: Pair<String, String>) {
+    internal open fun navigateTo(id: Int, param: Pair<String, Any>) {
         findNavController().navigate(id, bundleOf(param.first to param.second))
     }
 

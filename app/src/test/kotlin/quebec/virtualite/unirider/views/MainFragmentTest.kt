@@ -17,15 +17,18 @@ import quebec.virtualite.unirider.database.WheelEntity
 class MainFragmentTest :
     BaseFragmentTest(MainFragment::class.java.simpleName) {
 
+    private val ID_A = 111L
+    private val ID_B = 222L
+    private val ID_C = 333L
     private val MILEAGE_A = 123
     private val MILEAGE_B = 456
     private val MILEAGE_C = 123
     private val WHEEL_A = "A"
     private val WHEEL_B = "B"
     private val WHEEL_C = "C"
-    private val WHEEL_ITEM_A_123 = WheelRow(WHEEL_A, MILEAGE_A)
-    private val WHEEL_ITEM_B_456 = WheelRow(WHEEL_B, MILEAGE_B)
-    private val WHEEL_ITEM_C_123 = WheelRow(WHEEL_C, MILEAGE_C)
+    private val WHEEL_ITEM_A_123 = WheelRow(ID_A, WHEEL_A, MILEAGE_A)
+    private val WHEEL_ITEM_B_456 = WheelRow(ID_B, WHEEL_B, MILEAGE_B)
+    private val WHEEL_ITEM_C_123 = WheelRow(ID_C, WHEEL_C, MILEAGE_C)
 
     @InjectMocks
     val fragment: MainFragment = TestableMainFragment(this)
@@ -54,19 +57,19 @@ class MainFragmentTest :
     @Test
     fun onViewCreated() {
         // Given
-        given(mockedDb.getWheelList())
+        given(mockedDb.getWheels())
             .willReturn(
                 listOf(
-                    WheelEntity(0, WHEEL_C, MILEAGE_C, 0f, 0f),
-                    WheelEntity(0, WHEEL_B, MILEAGE_B, 0f, 0f),
-                    WheelEntity(0, WHEEL_A, MILEAGE_A, 0f, 0f),
+                    WheelEntity(ID_C, WHEEL_C, MILEAGE_C, 0f, 0f),
+                    WheelEntity(ID_B, WHEEL_B, MILEAGE_B, 0f, 0f),
+                    WheelEntity(ID_A, WHEEL_A, MILEAGE_A, 0f, 0f),
                 )
             )
 
         mockField(R.id.wheels, mockedLVWheels)
         mockField(R.id.total_mileage, mockedTextTotalMileage)
 
-        set(fragment.wheelList, listOf(WheelRow("some previous content", 999)))
+        set(fragment.wheelList, listOf(WheelRow(999, "some previous content", 999)))
 
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
@@ -74,7 +77,7 @@ class MainFragmentTest :
         // Then
         val expectedWheels = listOf(WHEEL_ITEM_B_456, WHEEL_ITEM_A_123, WHEEL_ITEM_C_123)
 
-        verify(mockedDb).getWheelList()
+        verify(mockedDb).getWheels()
 
         verify(mockedLVWheels).isEnabled = true
         verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedWheels, "onDisplayWheel")
@@ -108,7 +111,7 @@ class MainFragmentTest :
         // Then
         verifyNavigatedTo(
             R.id.action_MainFragment_to_WheelViewFragment,
-            Pair(WheelViewFragment.PARAMETER_WHEEL_NAME, WHEEL_B)
+            Pair(WheelViewFragment.PARAMETER_WHEEL_ID, ID_B)
         )
     }
 
@@ -118,7 +121,7 @@ class MainFragmentTest :
             test.connectDb(this, function)
         }
 
-        override fun navigateTo(id: Int, param: Pair<String, String>) {
+        override fun navigateTo(id: Int, param: Pair<String, Any>) {
             test.navigateTo(id, param)
         }
     }

@@ -63,7 +63,10 @@ open class BaseFragmentTest(val fragmentClass: String) {
     }
 
     fun mockArgument(fragment: BaseFragment, param: String, value: Long) {
-        mockArgument(fragment, param, value.toString())
+        given(mockedBundle.getLong(param))
+            .willReturn(value)
+
+        fragment.arguments = mockedBundle
     }
 
     fun mockArgument(fragment: BaseFragment, param: String, value: String) {
@@ -82,7 +85,7 @@ open class BaseFragmentTest(val fragmentClass: String) {
         navigatedBack = true
     }
 
-    fun navigateTo(id: Int, parms: Pair<String, String>) {
+    fun navigateTo(id: Int, parms: Pair<String, Any>) {
         navigatedTo = NavigatedTo(id, parms)
     }
 
@@ -124,7 +127,7 @@ open class BaseFragmentTest(val fragmentClass: String) {
         assertThat(navigatedBack, equalTo(true))
     }
 
-    fun verifyNavigatedTo(id: Int, param: Pair<String, String>) {
+    fun verifyNavigatedTo(id: Int, param: Pair<String, Any>) {
         assertThat(navigatedTo, equalTo(NavigatedTo(id, param)))
     }
 }

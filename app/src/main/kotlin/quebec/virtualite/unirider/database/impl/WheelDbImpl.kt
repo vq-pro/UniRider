@@ -31,7 +31,7 @@ class WheelDbImpl(applicationContext: Context) : WheelDb {
         return dao.getWheel(id)
     }
 
-    override fun getWheelList(): List<WheelEntity> {
+    override fun getWheels(): List<WheelEntity> {
         return dao.getAllWheels()
     }
 

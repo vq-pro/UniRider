@@ -40,7 +40,7 @@ class Steps {
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
     private val db = WheelDbImpl(applicationContext())
-    private val mapWheels = HashMap<String, Int>()
+    private val mapWheels = HashMap<String, WheelEntity>()
 
     private lateinit var mainActivity: MainActivity
 
@@ -73,7 +73,7 @@ class Steps {
     @Then("it shows the updated mileage on the main view")
     fun itShowsTheUpdatedMileageOnTheMainView() {
         back(R.id.view_mileage)
-        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.name, updatedMileage)))
+        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, selectedWheel.name, updatedMileage)))
     }
 
     @Then("I see my wheels and their mileage:")
@@ -81,7 +81,11 @@ class Steps {
         assertThat(expectedWheels.topCells(), equalTo(listOf("Name", "Mileage")))
         val expectedRows = expectedWheels.cells(1)
             .stream()
-            .map { row -> WheelRow(row[0], parseInt(row[1])) }
+            .map { row ->
+                val name = row[0]
+                val mileage = parseInt(row[1])
+                WheelRow(mapWheels[name]!!.id, name, mileage)
+            }
             .collect(toList())
 
         assertThat(R.id.wheels, hasRows(expectedRows))
@@ -148,8 +152,8 @@ class Steps {
     fun detailsViewShowsNameAndMileage() {
         assertThat(R.id.view_name, hasText(selectedWheel.name))
 
-        val selectedWheelMileage = mapWheels[selectedWheel.name]
-        assertThat(R.id.view_mileage, hasText(selectedWheelMileage.toString()))
+        val selectedWheelMileage = mapWheels[selectedWheel.name]!!.mileage
+        assertThat(R.id.view_mileage, hasText("$selectedWheelMileage"))
     }
 
     @Then("^it displays a percentage of (.*?)$")
@@ -168,12 +172,15 @@ class Steps {
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
-                mapWheels[row[0]] = parseInt(row[3])
                 WheelEntity(0, row[0], parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
             }
             .collect(toList())
 
         db.saveWheels(wheelEntities)
+
+        db.getWheels().forEach { wheel ->
+            mapWheels[wheel.name] = wheel
+        }
     }
 
     @When("^I select the (.*?)$")
@@ -196,7 +203,7 @@ class Steps {
     private fun calculateTotalMileage(): Int {
         var totalMileage = 0
         mapWheels.keys.stream()
-            .forEach { wheelName -> totalMileage += mapWheels[wheelName]!! }
+            .forEach { wheelName -> totalMileage += mapWheels[wheelName]!!.mileage }
 
         return totalMileage
     }

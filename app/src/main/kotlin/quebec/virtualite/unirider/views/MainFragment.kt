@@ -10,6 +10,7 @@ import quebec.virtualite.commons.android.utils.ArrayListUtils.set
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.util.stream.Collectors.toList
 
 open class MainFragment : BaseFragment() {
@@ -29,14 +30,14 @@ open class MainFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         wheels = view.findViewById(R.id.wheels) as ListView
+        wheelTotalMileage = view.findViewById(R.id.total_mileage)
+
         wheels.isEnabled = true
         widgets.multifieldListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(wheels, onSelectWheel())
 
-        wheelTotalMileage = view.findViewById(R.id.total_mileage)
-
         connectDb {
-            set(wheelList, getSortedWheelItems(db.getWheelList()))
+            set(wheelList, getSortedWheelItems(db.getWheels()))
             wheelTotalMileage.text = calculateTotalMileage().toString()
         }
     }
@@ -53,7 +54,7 @@ open class MainFragment : BaseFragment() {
     fun onSelectWheel() = { _: View, index: Int ->
         navigateTo(
             R.id.action_MainFragment_to_WheelViewFragment,
-            Pair(WheelViewFragment.PARAMETER_WHEEL_NAME, wheelList[index].name())
+            Pair(PARAMETER_WHEEL_ID, wheelList[index].id())
         )
     }
 
@@ -70,7 +71,7 @@ open class MainFragment : BaseFragment() {
         return wheelList
             .stream()
             .map { wheel ->
-                WheelRow(wheel.name, wheel.mileage)
+                WheelRow(wheel.id, wheel.name, wheel.mileage)
             }
             .sorted { itemA, itemB ->
                 val byMileage = itemB.mileage().compareTo(itemA.mileage())

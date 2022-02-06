@@ -1,7 +1,7 @@
 @Integration
 Feature: Wheel Details
 
-#  FIXME-1 Split this into distinst view and edit feature files
+#  FIXME-2 Split this into distinst view and edit feature files
   Background:
     Given these wheels:
       | Name            | Voltage Min | Voltage Max | Mileage |

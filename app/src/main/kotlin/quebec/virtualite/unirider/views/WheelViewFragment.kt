@@ -19,6 +19,7 @@ import java.util.Locale.ENGLISH
 open class WheelViewFragment : BaseFragment() {
 
     companion object {
+        const val PARAMETER_WHEEL_ID = "wheelID"
         const val PARAMETER_WHEEL_NAME = "wheelName"
     }
 
@@ -28,15 +29,15 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textName: TextView
     internal lateinit var editVoltage: EditText
 
-    internal lateinit var parmWheelName: String
-
     internal lateinit var wheel: WheelEntity
+
+    internal var parmWheelId: Long? = 0
 
     private var calculatorService = CalculatorService()
     private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelName = arguments?.getString(PARAMETER_WHEEL_NAME)!!
+        parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
         return inflater.inflate(R.layout.wheel_view_fragment, container, false)
     }
 
@@ -44,22 +45,19 @@ open class WheelViewFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         textName = view.findViewById(R.id.view_name)
-        textName.setText(parmWheelName)
-
         textMileage = view.findViewById(R.id.view_mileage)
-
         editVoltage = view.findViewById(R.id.edit_voltage)
-        widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
-
         textBattery = view.findViewById(R.id.view_battery)
-
         buttonEdit = view.findViewById(R.id.button_edit)
+
+        widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
         widgets.setOnClickListener(buttonEdit, onEdit())
 
         connectDb {
-            wheel = db.findWheel(parmWheelName)
+            wheel = db.getWheel(parmWheelId!!)
                 ?: throw WheelNotFoundException()
 
+            textName.setText(wheel.name)
             textMileage.setText(wheel.mileage.toString())
         }
     }
@@ -67,7 +65,7 @@ open class WheelViewFragment : BaseFragment() {
     fun onEdit() = { _: View ->
         navigateTo(
             R.id.action_WheelViewFragment_to_WheelEditFragment,
-            Pair(PARAMETER_WHEEL_NAME, wheel.name)
+            Pair(PARAMETER_WHEEL_ID, wheel.id)
         )
     }
 

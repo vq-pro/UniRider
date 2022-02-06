@@ -21,7 +21,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_NAME
+import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.lang.Float.parseFloat
 
 @RunWith(MockitoJUnitRunner::class)
@@ -61,7 +61,7 @@ class WheelViewFragmentTest :
 
     @Before
     fun before() {
-        fragment.parmWheelName = NAME
+        fragment.parmWheelId = ID
 
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.view_name, mockedTextName)
@@ -73,8 +73,7 @@ class WheelViewFragmentTest :
     @Test
     fun onCreateView() {
         // Given
-//        FIXME-1 Change this to ID
-        mockArgument(fragment, PARAMETER_WHEEL_NAME, NAME)
+        mockArgument(fragment, PARAMETER_WHEEL_ID, ID)
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
@@ -87,36 +86,34 @@ class WheelViewFragmentTest :
     fun onViewCreated() {
         // Given
         val wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-        given(mockedDb.findWheel(NAME))
+        given(mockedDb.getWheel(ID))
             .willReturn(wheel)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedDb).findWheel(NAME)
+        verify(mockedDb).getWheel(ID)
 
         assertThat(fragment.wheel, equalTo(wheel))
 
         assertThat(fragment.textName, equalTo(mockedTextName))
-        verify(fragment.textName).setText(NAME)
-
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
+        assertThat(fragment.editVoltage, equalTo(mockedEditVoltage))
+        assertThat(fragment.textBattery, equalTo(mockedTextBattery))
+        assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
+
+        verify(fragment.textName).setText(NAME)
         verify(mockedTextMileage).setText("$MILEAGE")
 
-        assertThat(fragment.editVoltage, equalTo(mockedEditVoltage))
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
-
-        assertThat(fragment.textBattery, equalTo(mockedTextBattery))
-
-        assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
         verifyOnClick(mockedButtonEdit, "onEdit")
     }
 
     @Test
     fun onViewCreated_whenWheelIsntFound() {
         // Given
-        given(mockedDb.findWheel(NAME))
+        given(mockedDb.getWheel(ID))
             .willReturn(null)
 
         // When
@@ -135,7 +132,10 @@ class WheelViewFragmentTest :
         fragment.onEdit().invoke(mockedView)
 
         // Then
-        verifyNavigatedTo(R.id.action_WheelViewFragment_to_WheelEditFragment, Pair(PARAMETER_WHEEL_NAME, NAME))
+        verifyNavigatedTo(
+            R.id.action_WheelViewFragment_to_WheelEditFragment,
+            Pair(PARAMETER_WHEEL_ID, ID)
+        )
     }
 
     @Test
@@ -175,7 +175,7 @@ class WheelViewFragmentTest :
             test.connectDb(this, function)
         }
 
-        override fun navigateTo(id: Int, param: Pair<String, String>) {
+        override fun navigateTo(id: Int, param: Pair<String, Any>) {
             test.navigateTo(id, param)
         }
 

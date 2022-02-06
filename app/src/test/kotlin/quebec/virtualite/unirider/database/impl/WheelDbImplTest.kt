@@ -84,7 +84,7 @@ class WheelDbImplTest {
     }
 
     @Test
-    fun getWheelList() {
+    fun getWheels() {
         // Given
         val wheels = listOf(
             WheelEntity(0, NAME1, MILEAGE1, VMIN1, VMAX1),
@@ -95,7 +95,7 @@ class WheelDbImplTest {
             .willReturn(wheels)
 
         // When
-        val results = dbImpl.getWheelList()
+        val results = dbImpl.getWheels()
 
         // Then
         verify(mockedDao).getAllWheels()
