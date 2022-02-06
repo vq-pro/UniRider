@@ -17,14 +17,15 @@ import quebec.virtualite.unirider.database.WheelEntity
 @RunWith(MockitoJUnitRunner::class)
 class WheelDbImplTest {
 
-    private val MILEAGE1 = 111
-    private val MILEAGE2 = 222
-    private val ID = 333L
-    private val NAME1 = "name1"
+    private val ID = 111L
+    private val ID2 = 222L
+    private val MILEAGE = 333
+    private val MILEAGE2 = 444
+    private val NAME = "name1"
     private val NAME2 = "name2"
-    private val VMAX1 = 100.8f
-    private val VMIN1 = 75.6f
+    private val VMAX = 100.8f
     private val VMAX2 = 84.0f
+    private val VMIN = 75.6f
     private val VMIN2 = 60.0f
 
     @Mock
@@ -52,17 +53,60 @@ class WheelDbImplTest {
     }
 
     @Test
+    fun findDuplicate_whenFoundWithDifferentId_true() {
+        // Given
+        given(mockedDao.findWheel(NAME))
+            .willReturn(WheelEntity(ID2, NAME, MILEAGE, VMIN, VMAX))
+
+        // When
+        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, 0, 0f, 0f))
+
+        // Then
+        verify(mockedDao).findWheel(NAME)
+
+        assertThat(result, equalTo(true))
+    }
+
+    @Test
+    fun findDuplicate_whenFoundWithSameId_false() {
+        // Given
+        given(mockedDao.findWheel(NAME))
+            .willReturn(WheelEntity(ID, NAME, MILEAGE, VMIN, VMAX))
+
+        // When
+        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, 0, 0f, 0f))
+
+        // Then
+        verify(mockedDao).findWheel(NAME)
+
+        assertThat(result, equalTo(false))
+    }
+
+    @Test
+    fun findDuplicate_whenNotFound_false() {
+        // Given
+        given(mockedDao.findWheel(NAME))
+            .willReturn(null)
+
+        // When
+        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, 0, 0f, 0f))
+
+        // Then
+        assertThat(result, equalTo(false))
+    }
+
+    @Test
     fun findWheel() {
         // Given
-        val wheel = WheelEntity(0, NAME1, 0, 0f, 0f)
-        given(mockedDao.findWheel(NAME1))
+        val wheel = WheelEntity(0, NAME, 0, 0f, 0f)
+        given(mockedDao.findWheel(NAME))
             .willReturn(wheel)
 
         // When
-        val result = dbImpl.findWheel(NAME1)
+        val result = dbImpl.findWheel(NAME)
 
         // Then
-        verify(mockedDao).findWheel(NAME1)
+        verify(mockedDao).findWheel(NAME)
 
         assertThat(result, equalTo(wheel))
     }
@@ -70,7 +114,7 @@ class WheelDbImplTest {
     @Test
     fun getWheel() {
         // Given
-        val wheel = WheelEntity(ID, NAME1, 0, 0f, 0f)
+        val wheel = WheelEntity(ID, NAME, 0, 0f, 0f)
         given(mockedDao.getWheel(ID))
             .willReturn(wheel)
 
@@ -87,8 +131,8 @@ class WheelDbImplTest {
     fun getWheels() {
         // Given
         val wheels = listOf(
-            WheelEntity(0, NAME1, MILEAGE1, VMIN1, VMAX1),
-            WheelEntity(0, NAME2, MILEAGE2, VMIN2, VMAX2)
+            WheelEntity(ID, NAME, MILEAGE, VMIN, VMAX),
+            WheelEntity(ID2, NAME2, MILEAGE2, VMIN2, VMAX2)
         )
 
         given(mockedDao.getAllWheels())
@@ -106,7 +150,7 @@ class WheelDbImplTest {
     @Test
     fun saveWheel_whenExisting_update() {
         // Given
-        val existingWheel = WheelEntity(ID, NAME1, MILEAGE1, 0f, 0f)
+        val existingWheel = WheelEntity(ID, NAME, MILEAGE, 0f, 0f)
 
         // When
         dbImpl.saveWheel(existingWheel)
@@ -118,7 +162,7 @@ class WheelDbImplTest {
     @Test
     fun saveWheel_whenNew_insert() {
         // Given
-        val newWheel = WheelEntity(0, NAME1, MILEAGE1, 0f, 0f)
+        val newWheel = WheelEntity(0, NAME, MILEAGE, 0f, 0f)
 
         // When
         dbImpl.saveWheel(newWheel)
@@ -130,7 +174,7 @@ class WheelDbImplTest {
     @Test
     fun saveWheels() {
         // Given
-        val wheel1 = WheelEntity(0, NAME1, MILEAGE1, VMIN1, VMAX1)
+        val wheel1 = WheelEntity(0, NAME, MILEAGE, VMIN, VMAX)
         val wheel2 = WheelEntity(0, NAME2, MILEAGE2, VMIN2, VMAX2)
 
         // When

@@ -2,9 +2,10 @@
 Feature: Wheel Edit
 
   Background:
-    Given this wheel:
+    Given these wheels:
       | Name            | Voltage Min | Voltage Max | Mileage |
       | Veteran Sherman | 75.6V       | 100.8V      | 17622   |
+      | KingSong S18    | 60.0V       | 84.0V       | 2850    |
     And I start the app
 
   Scenario: Editing a wheel in full
@@ -25,16 +26,17 @@ Feature: Wheel Edit
     And I <do something>
     Then the wheel <can or cannot> be saved
     Examples:
-      | can or cannot | do something               |
-      | can           | change the name            |
-      | can           | change the mileage         |
-      | can           | blank the mileage          |
-      | can           | change the maximum voltage |
-      | can           | change the minimum voltage |
-      | cannot        | change nothing             |
-      | cannot        | blank the name             |
-      | cannot        | blank the maximum voltage  |
-      | cannot        | blank the minimum voltage  |
+      | can or cannot | do something                |
+      | can           | change the name             |
+      | can           | change the mileage          |
+      | can           | blank the mileage           |
+      | can           | change the maximum voltage  |
+      | can           | change the minimum voltage  |
+      | cannot        | blank the name              |
+      | cannot        | blank the maximum voltage   |
+      | cannot        | blank the minimum voltage   |
+      | cannot        | change nothing              |
+      | cannot        | reuse the name KingSong S18 |
 
   Scenario: Adding a wheel in full
     When I add a new wheel

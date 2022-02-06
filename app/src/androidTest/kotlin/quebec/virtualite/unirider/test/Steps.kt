@@ -83,6 +83,11 @@ class Steps {
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, updatedWheel.mileage)))
     }
 
+    @When("^I reuse the name (.*?)$")
+    fun reuseTheWheelName(newName: String) {
+        setText(R.id.edit_name, newName)
+    }
+
     @Then("I see my wheels and their mileage:")
     fun seeMyWheelsAndTheirMileage(expectedWheels: DataTable) {
         assertThat(expectedWheels.topCells(), equalTo(listOf("Name", "Mileage")))
