@@ -47,8 +47,6 @@ class Steps {
     private lateinit var selectedWheel: WheelEntity
     private lateinit var updatedWheel: WheelEntity
 
-    private var updatedMileage = 0
-
     @Before
     fun beforeScenario() {
         db.deleteAll()
@@ -59,21 +57,10 @@ class Steps {
         stop(activityTestRule)
     }
 
-    @When("^I change the mileage to (.*?)$")
-    fun changeMileageTo(newMileage: Int) {
-        updatedMileage = newMileage
-        setText(R.id.edit_mileage, newMileage.toString())
-    }
-
-    @Then("it shows the new mileage on the details view")
-    fun itShowsTheNewMileageOnDetailsView() {
-        assertThat(R.id.view_mileage, hasText(updatedMileage.toString()))
-    }
-
-    @Then("it shows the updated mileage on the main view")
-    fun itShowsTheUpdatedMileageOnTheMainView() {
-        back(R.id.view_mileage)
-        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, selectedWheel.name, updatedMileage)))
+    @Then("it shows the updated name and mileage on the main view")
+    fun itShowsTheUpdatedNameAndMileageOnTheMainView() {
+        back(R.id.view_name)
+        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, updatedWheel.mileage)))
     }
 
     @Then("I see my wheels and their mileage:")
