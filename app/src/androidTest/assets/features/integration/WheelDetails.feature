@@ -1,7 +1,7 @@
 @Integration
 Feature: Wheel Details
+# FIXME-0 Split this into distinct view and edit feature files
 
-#  FIXME-2 Split this into distinst view and edit feature files
   Background:
     Given these wheels:
       | Name            | Voltage Min | Voltage Max | Mileage |
@@ -26,6 +26,7 @@ Feature: Wheel Details
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108.0V  | 50.0%   |
 
+# FIXME-1 Editing a wheel and cancelling
   Scenario: Editing a wheel
     Given I start the app
     And I select the Veteran Sherman
@@ -43,5 +44,4 @@ Feature: Wheel Details
     When I select the KingSong S20
     Then the details view shows the correct name and a mileage of that wheel
 
-#  FIXME-2 Editing a wheel and cancelling
 # FIXME-2 Adding a wheel
