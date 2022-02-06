@@ -6,7 +6,8 @@ Feature: Wheel Edit
       | Name            | Voltage Min | Voltage Max | Mileage |
       | Veteran Sherman | 75.6V       | 100.8V      | 17622   |
 
-# FIXME-1 Editing a wheel and cancelling
+# FIXME-1 Editing a wheel - cannot save with blank fields
+# FIXME-1 Editing a wheel - with cancel
   Scenario: Editing a wheel in full
     Given I start the app
     And I select the Veteran Sherman
