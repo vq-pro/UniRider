@@ -34,5 +34,3 @@ Feature: Wheel Edit
       | cannot        | blank the name             |
       | cannot        | blank the maximum voltage  |
       | cannot        | blank the minimum voltage  |
-
-# FIXME-1 Editing a wheel - with cancel
