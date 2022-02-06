@@ -27,16 +27,24 @@ class WheelDbImpl(applicationContext: Context) : WheelDb {
         return dao.findWheel(name)
     }
 
-    override fun getWheelList(): List<WheelEntity> {
+    override fun getWheel(id: Long): WheelEntity? {
+        return dao.getWheel(id)
+    }
+
+    override fun getWheels(): List<WheelEntity> {
         return dao.getAllWheels()
     }
 
-    override fun saveWheels(wheels: List<WheelEntity>) {
-        wheels.forEach { wheel ->
-            if (wheel.id == 0L)
-                dao.insertWheel(wheel)
-            else
-                dao.updateWheel(wheel)
+    override fun saveWheel(wheel: WheelEntity?) {
+        if (wheel!!.id == 0L)
+            dao.insertWheel(wheel)
+        else
+            dao.updateWheel(wheel)
+    }
+
+    override fun saveWheels(wheels: List<WheelEntity>?) {
+        wheels!!.forEach { wheel ->
+            saveWheel(wheel)
         }
     }
 }

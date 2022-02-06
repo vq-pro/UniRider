@@ -54,8 +54,6 @@
             <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048"/>
         </Profilers>
         <method v="2">
-            <option name="Gradle.BeforeRunTask" enabled="false" tasks="cleanBuildCache"
-                    externalProjectPath="$PROJECT_DIR$/app" vmOptions="" scriptParameters=""/>
             <option name="Android.Gradle.BeforeRunTask" enabled="true" goal=""/>
             <option name="RunConfigurationTask" enabled="true" run_configuration_name="Unit Tests"
                     run_configuration_type="GradleRunConfiguration"/>

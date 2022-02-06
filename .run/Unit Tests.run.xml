@@ -10,9 +10,7 @@
             </option>
             <option name="taskNames">
                 <list>
-                    <option value=":app:testIntegrationDebugUnitTest"/>
-                    <option value="--tests"/>
-                    <option value="&quot;quebec.virtualite.unirider.*&quot;"/>
+                    <option value="testIntegrationDebugUnitTest"/>
                 </list>
             </option>
             <option name="vmOptions"/>

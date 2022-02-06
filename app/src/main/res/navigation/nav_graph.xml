@@ -8,57 +8,33 @@
     <fragment
             android:id="@+id/MainFragment"
             android:name="quebec.virtualite.unirider.views.MainFragment"
-            android:label="@string/fragment_label_main"
             tools:layout="@layout/main_fragment">
 
         <action
-                android:id="@+id/action_MainFragment_to_WheelFragment"
-                app:destination="@+id/WheelFragment"
+                android:id="@+id/action_MainFragment_to_WheelViewFragment"
+                app:destination="@+id/WheelViewFragment"
+        />
+
+        <action
+                android:id="@+id/action_MainFragment_to_WheelEditFragment"
+                app:destination="@+id/WheelEditFragment"
         />
     </fragment>
 
     <fragment
-            android:id="@+id/WheelFragment"
-            android:name="quebec.virtualite.unirider.views.WheelFragment"
-            android:label="@string/fragment_label_calculator"
-            tools:layout="@layout/wheel_fragment">
+            android:id="@+id/WheelViewFragment"
+            android:name="quebec.virtualite.unirider.views.WheelViewFragment"
+            tools:layout="@layout/wheel_view_fragment">
 
-        <!--        <action-->
-        <!--            android:id="@+id/action_ScanFragment_to_DeviceFragment"-->
-        <!--            app:destination="@+id/DeviceFragment"-->
-        <!--        />-->
+        <action
+                android:id="@+id/action_WheelViewFragment_to_WheelEditFragment"
+                app:destination="@+id/WheelEditFragment"
+        />
     </fragment>
 
-    <!--    <fragment-->
-    <!--            android:id="@+id/DeviceFragment"-->
-    <!--            android:name="quebec.virtualite.unirider.views.DeviceFragment"-->
-    <!--            android:label="@string/device_fragment_label"-->
-    <!--            tools:layout="@layout/device_fragment">-->
-    <!--    </fragment>-->
-
-
-    <!--    <fragment-->
-    <!--            android:id="@+id/GreetingsFragment"-->
-    <!--            android:name="quebec.virtualite.unirider.views.GreetingsFragment"-->
-    <!--            android:label="@string/greetings_fragment_label"-->
-    <!--            tools:layout="@layout/greetings_fragment">-->
-
-    <!--        <action-->
-    <!--                android:id="@+id/action_FirstFragment_to_SecondFragment"-->
-    <!--                app:destination="@id/SecondFragment"/>-->
-    <!--    </fragment>-->
-    <!--    <fragment-->
-    <!--            android:id="@+id/SecondFragment"-->
-    <!--            android:name="quebec.virtualite.unirider.views.SecondFragment"-->
-    <!--            android:label="@string/second_fragment_label"-->
-    <!--            tools:layout="@layout/fragment_second">-->
-    <!---->
-    <!--        <action-->
-    <!--                android:id="@+id/action_SecondFragment_to_FirstFragment"-->
-    <!--                app:destination="@id/FirstFragment"/>-->
-    <!---->
-    <!--        <argument-->
-    <!--                android:name="myArg"-->
-    <!--                app:argType="string"/>-->
-    <!--    </fragment>-->
+    <fragment
+            android:id="@+id/WheelEditFragment"
+            android:name="quebec.virtualite.unirider.views.WheelEditFragment"
+            tools:layout="@layout/wheel_edit_fragment">
+    </fragment>
 </navigation>

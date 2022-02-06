@@ -1,183 +1,165 @@
 package quebec.virtualite.unirider.views
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
-import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.commons.android.utils.ArrayListUtils.set
-import quebec.virtualite.commons.android.views.WidgetUtils
-import quebec.virtualite.commons.views.NavigatedTo
+import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
-class MainFragmentTest {
+class MainFragmentTest :
+    BaseFragmentTest(MainFragment::class.java) {
 
-    private val DONT_ATTACH_TO_ROOT = false
-    private val SAVED_INSTANCE_STATE: Bundle? = null
-
+    private val ID_A = 111L
+    private val ID_B = 222L
+    private val ID_C = 333L
     private val MILEAGE_A = 123
     private val MILEAGE_B = 456
     private val MILEAGE_C = 123
     private val WHEEL_A = "A"
     private val WHEEL_B = "B"
     private val WHEEL_C = "C"
-    private val WHEEL_ITEM_A_123 = WheelRow(WHEEL_A, MILEAGE_A)
-    private val WHEEL_ITEM_B_456 = WheelRow(WHEEL_B, MILEAGE_B)
-    private val WHEEL_ITEM_C_123 = WheelRow(WHEEL_C, MILEAGE_C)
-
-    @Mock
-    lateinit var mockedDb: WheelDb
-
-    @Mock
-    lateinit var mockedTotalMileage: TextView
-
-    @Mock
-    lateinit var mockedView: View
-
-    @Mock
-    lateinit var mockedWheelMileage: TextView
-
-    @Mock
-    lateinit var mockedWheelName: TextView
-
-    @Mock
-    lateinit var mockedWheels: ListView
-
-    @Mock
-    lateinit var mockedWidgets: WidgetUtils
-
-    @Captor
-    lateinit var captorOnDisplay: ArgumentCaptor<(View, WheelRow) -> Unit>
-
-    @Captor
-    lateinit var captorOnSelect: ArgumentCaptor<(View, Int) -> Unit>
+    private val WHEEL_NEW = "<New>"
+    private val WHEEL_ITEM_A_123 = WheelRow(ID_A, WHEEL_A, MILEAGE_A)
+    private val WHEEL_ITEM_B_456 = WheelRow(ID_B, WHEEL_B, MILEAGE_B)
+    private val WHEEL_ITEM_C_123 = WheelRow(ID_C, WHEEL_C, MILEAGE_C)
+    private val WHEEL_ITEM_NEW = WheelRow(0, WHEEL_NEW, 0)
 
     @InjectMocks
-    var fragment: MainFragment = TestableMainFragment(this)
+    val fragment: MainFragment = TestableMainFragment(this)
 
-    lateinit var navigatedTo: NavigatedTo
+    @Mock
+    lateinit var mockedLVWheels: ListView
 
-    @Before
-    fun init() {
-        given(mockedDb.getWheelList())
-            .willReturn(
-                listOf(
-                    WheelEntity(0, WHEEL_C, MILEAGE_C, 0f, 0f),
-                    WheelEntity(0, WHEEL_B, MILEAGE_B, 0f, 0f),
-                    WheelEntity(0, WHEEL_A, MILEAGE_A, 0f, 0f),
-                )
-            )
-    }
+    @Mock
+    lateinit var mockedTextMileage: TextView
+
+    @Mock
+    lateinit var mockedTextName: TextView
+
+    @Mock
+    lateinit var mockedTextTotalMileage: TextView
 
     @Test
     fun onCreateView() {
-        // Given
-        val mockedInflater = mock(LayoutInflater::class.java)
-        val mockedContainer = mock(ViewGroup::class.java)
-
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
         // Then
-        verify(mockedInflater).inflate(R.layout.main_fragment, mockedContainer, DONT_ATTACH_TO_ROOT)
+        verifyInflate(R.layout.main_fragment)
     }
 
     @Test
     fun onViewCreated() {
         // Given
-        given<Any>(mockedView.findViewById(R.id.wheels))
-            .willReturn(mockedWheels)
+        given(mockedDb.getWheels())
+            .willReturn(
+                listOf(
+                    WheelEntity(ID_C, WHEEL_C, MILEAGE_C, 0f, 0f),
+                    WheelEntity(ID_B, WHEEL_B, MILEAGE_B, 0f, 0f),
+                    WheelEntity(ID_A, WHEEL_A, MILEAGE_A, 0f, 0f),
+                )
+            )
 
-        given<Any>(mockedView.findViewById(R.id.total_mileage))
-            .willReturn(mockedTotalMileage)
+        mockField(R.id.wheels, mockedLVWheels)
+        mockField(R.id.total_mileage, mockedTextTotalMileage)
 
-        set(fragment.wheelList, listOf(WheelRow("some previous content", 999)))
+        setList(fragment.wheelList, listOf(WheelRow(999, "some previous content", 999)))
 
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        val expectedWheels = listOf(WHEEL_ITEM_B_456, WHEEL_ITEM_A_123, WHEEL_ITEM_C_123)
-
-        verify(mockedDb).getWheelList()
-
-        verify(mockedWidgets).multifieldListAdapter(
-            eq(mockedWheels), eq(mockedView), eq(R.layout.wheels_item), eq(expectedWheels),
-            captorOnDisplay.capture()
+        val expectedEntries = listOf(
+            WHEEL_ITEM_B_456,
+            WHEEL_ITEM_A_123,
+            WHEEL_ITEM_C_123,
+            WHEEL_ITEM_NEW
         )
-        assertThat(captorOnDisplay.value.javaClass.name, containsString("MainFragment\$onDisplayWheel\$"))
-        verify(mockedWheels).isEnabled = true
 
-        verify(mockedWidgets).setOnItemClickListener(eq(mockedWheels), captorOnSelect.capture())
-        assertThat(captorOnSelect.value.javaClass.name, containsString("MainFragment\$onSelectWheel\$"))
+        verify(mockedDb).getWheels()
 
-        verify(mockedTotalMileage).text = (MILEAGE_A + MILEAGE_B + MILEAGE_C).toString()
+        verify(mockedLVWheels).isEnabled = true
+        verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
+        verifyOnSelectItem(mockedLVWheels, "onSelectWheel")
+
+        verify(mockedTextTotalMileage).text = (MILEAGE_A + MILEAGE_B + MILEAGE_C).toString()
     }
 
     @Test
     fun onDisplayItem() {
         // Given
-        given(mockedView.findViewById<TextView>(R.id.row_name))
-            .willReturn(mockedWheelName)
-
-        given(mockedView.findViewById<TextView>(R.id.row_mileage))
-            .willReturn(mockedWheelMileage)
+        mockField(R.id.row_name, mockedTextName)
+        mockField(R.id.row_mileage, mockedTextMileage)
 
         // When
         fragment.onDisplayWheel().invoke(mockedView, WHEEL_ITEM_A_123)
 
         // Then
-        verify(mockedWheelName).text = WHEEL_A
-        verify(mockedWheelMileage).text = MILEAGE_A.toString()
+        verify(mockedTextName).text = WHEEL_A
+        verify(mockedTextMileage).text = MILEAGE_A.toString()
+    }
+
+    @Test
+    fun onDisplayItem_newItem_hideMileageZero() {
+        // Given
+        mockField(R.id.row_name, mockedTextName)
+        mockField(R.id.row_mileage, mockedTextMileage)
+
+        // When
+        fragment.onDisplayWheel().invoke(mockedView, WHEEL_ITEM_NEW)
+
+        // Then
+        verify(mockedTextName).text = WHEEL_NEW
+        verify(mockedTextMileage).text = ""
     }
 
     @Test
     fun onSelectWheel() {
         // Given
-        fragment.wheelList += listOf(WHEEL_ITEM_A_123, WHEEL_ITEM_B_456)
+        fragment.wheelList += listOf(WHEEL_ITEM_A_123, WHEEL_ITEM_B_456, WHEEL_ITEM_NEW)
 
         // When
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        assertThat(
-            navigatedTo, equalTo(
-                NavigatedTo(
-                    R.id.action_MainFragment_to_WheelFragment,
-                    Pair(WheelFragment.PARAMETER_WHEEL_NAME, WHEEL_B)
-                )
-            )
+        verifyNavigatedTo(
+            R.id.action_MainFragment_to_WheelViewFragment,
+            Pair(PARAMETER_WHEEL_ID, ID_B)
+        )
+    }
+
+    @Test
+    fun onSelectWheel_withNewEntry_straightToEditInAddMode() {
+        // Given
+        fragment.wheelList += listOf(WHEEL_ITEM_A_123, WHEEL_ITEM_B_456, WHEEL_ITEM_NEW)
+
+        // When
+        fragment.onSelectWheel().invoke(mockedView, 2)
+
+        // Then
+        verifyNavigatedTo(
+            R.id.action_MainFragment_to_WheelEditFragment,
+            Pair(PARAMETER_WHEEL_ID, 0L)
         )
     }
 
     class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {
 
         override fun connectDb(function: () -> Unit) {
-            db = test.mockedDb
-            function()
+            test.connectDb(this, function)
         }
 
-        override fun navigateTo(id: Int, parms: Pair<String, String>) {
-            test.navigatedTo = NavigatedTo(id, parms)
+        override fun navigateTo(id: Int, param: Pair<String, Any>) {
+            test.navigateTo(id, param)
         }
     }
 }

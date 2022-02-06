@@ -10,6 +10,6 @@ data class WheelEntity(
     val id: Long,
     val name: String,
     val mileage: Int,
-    val voltageMax: Float,
-    val voltageMin: Float
+    val voltageMin: Float,
+    val voltageMax: Float
 )

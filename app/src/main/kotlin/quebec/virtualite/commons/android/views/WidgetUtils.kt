@@ -13,6 +13,8 @@ import android.widget.SpinnerAdapter
 
 open class WidgetUtils {
 
+    private val POST_DELAY = 10L
+
     open fun addTextChangedListener(widget: EditText?, callback: ((text: String) -> Unit)?) {
 
         widget?.addTextChangedListener(object : TextWatcher {
@@ -25,6 +27,14 @@ open class WidgetUtils {
                 callback?.invoke(text.toString())
             }
         })
+    }
+
+    open fun disable(widget: View) {
+        widget.postDelayed({ widget.isEnabled = false }, POST_DELAY)
+    }
+
+    open fun enable(widget: View) {
+        widget.postDelayed({ widget.isEnabled = true }, POST_DELAY)
     }
 
     open fun <T> multifieldListAdapter(

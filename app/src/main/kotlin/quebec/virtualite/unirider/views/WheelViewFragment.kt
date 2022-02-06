@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import org.apache.http.util.TextUtils.isEmpty
@@ -15,61 +16,61 @@ import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
 import java.util.Locale.ENGLISH
 
-open class WheelFragment : BaseFragment() {
+open class WheelViewFragment : BaseFragment() {
 
     companion object {
-        const val PARAMETER_WHEEL_NAME = "wheelName"
+        const val PARAMETER_WHEEL_ID = "wheelID"
     }
 
-    internal lateinit var parmWheelName: String
+    internal lateinit var buttonEdit: Button
+    internal lateinit var textBattery: TextView
+    internal lateinit var textMileage: TextView
+    internal lateinit var textName: TextView
+    internal lateinit var editVoltage: EditText
+
     internal lateinit var wheel: WheelEntity
-    internal lateinit var wheelBattery: TextView
-    internal lateinit var wheelMileage: EditText
-    internal lateinit var wheelName: TextView
-    internal lateinit var wheelVoltage: EditText
+
+    internal var parmWheelId: Long? = 0
 
     private var calculatorService = CalculatorService()
     private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelName = arguments?.getString(PARAMETER_WHEEL_NAME)!!
-        return inflater.inflate(R.layout.wheel_fragment, container, false)
+        parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
+        return inflater.inflate(R.layout.wheel_view_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        wheelName = view.findViewById(R.id.wheel_name)
-        wheelName.text = parmWheelName
+        textName = view.findViewById(R.id.view_name)
+        textMileage = view.findViewById(R.id.view_mileage)
+        editVoltage = view.findViewById(R.id.edit_voltage)
+        textBattery = view.findViewById(R.id.view_battery)
+        buttonEdit = view.findViewById(R.id.button_edit)
 
-        wheelMileage = view.findViewById(R.id.wheel_mileage)
-        widgets.addTextChangedListener(wheelMileage, onUpdateMileage())
-
-        wheelVoltage = view.findViewById(R.id.wheel_voltage)
-        widgets.addTextChangedListener(wheelVoltage, onUpdateVoltage())
-
-        wheelBattery = view.findViewById(R.id.wheel_battery)
+        widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
+        widgets.setOnClickListener(buttonEdit, onEdit())
 
         connectDb {
-            wheel = db.findWheel(parmWheelName)
+            wheel = db.getWheel(parmWheelId!!)
                 ?: throw WheelNotFoundException()
 
-            wheelMileage.setText(wheel.mileage.toString())
+            textName.setText(wheel.name)
+            textMileage.setText(wheel.mileage.toString())
         }
     }
 
-    fun onUpdateMileage() = { newMileage: String ->
-        runDb {
-            val updatedWheel =
-                WheelEntity(wheel.id, wheel.name, newMileage.trim().toInt(), wheel.voltageMax, wheel.voltageMin)
-
-            db.saveWheels(listOf(updatedWheel))
-        }
+    fun onEdit() = { _: View ->
+        navigateTo(
+            R.id.action_WheelViewFragment_to_WheelEditFragment,
+            Pair(PARAMETER_WHEEL_ID, wheel.id)
+        )
     }
 
     fun onUpdateVoltage() = { voltageParm: String ->
         val voltage = voltageParm.trim()
-        wheelBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
+        textBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
     }
 
     private fun getPercentage(voltage: String): String {

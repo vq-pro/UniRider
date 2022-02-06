@@ -8,11 +8,14 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 @Dao
 interface WheelMileageDao {
+    @Query("SELECT * FROM wheel WHERE name=:name")
+    fun findWheel(name: String): WheelEntity?
+
     @Query("SELECT * FROM wheel")
     fun getAllWheels(): List<WheelEntity>
 
-    @Query("SELECT * FROM wheel WHERE name=:name")
-    fun findWheel(name: String): WheelEntity?
+    @Query("SELECT * FROM wheel WHERE id=:id")
+    fun getWheel(id: Long): WheelEntity?
 
     @Insert
     fun insertWheel(wheel: WheelEntity)

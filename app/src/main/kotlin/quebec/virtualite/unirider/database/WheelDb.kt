@@ -4,6 +4,8 @@ interface WheelDb {
 
     fun deleteAll()
     fun findWheel(name: String): WheelEntity?
-    fun getWheelList(): List<WheelEntity>
-    fun saveWheels(wheels: List<WheelEntity>)
+    fun getWheel(id: Long): WheelEntity?
+    fun getWheels(): List<WheelEntity>
+    fun saveWheel(wheel: WheelEntity?)
+    fun saveWheels(wheels: List<WheelEntity>?)
 }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".views.WheelViewFragment">
+
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:stretchColumns="*"
+            android:shrinkColumns="*"
+            tools:ignore="MissingConstraints"
+    >
+
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+
+            <EditText
+                    android:id="@+id/edit_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"
+                    android:autofillHints="@string/label_wheel_name"
+                    android:inputType="text"
+                    tools:ignore="LabelFor"/>
+        </TableRow>
+
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:gravity="center">
+
+            <TextView
+                    android:labelFor="@+id/edit_mileage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/label_wheel_mileage"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+
+            <EditText
+                    android:id="@+id/edit_mileage"
+                    android:inputType="numberDecimal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:autofillHints="@string/label_wheel_mileage"/>
+
+        </TableRow>
+
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:gravity="center">
+
+            <TextView
+                    android:labelFor="@+id/edit_voltage_max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/label_wheel_voltage_max"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+
+            <EditText
+                    android:id="@+id/edit_voltage_max"
+                    android:inputType="numberDecimal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:autofillHints="@string/label_max"
+            />
+
+        </TableRow>
+
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:gravity="center">
+
+            <TextView
+                    android:labelFor="@+id/edit_voltage_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/label_wheel_voltage_min"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+
+            <EditText
+                    android:id="@+id/edit_voltage_min"
+                    android:inputType="numberDecimal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:autofillHints="@string/label_min"
+            />
+        </TableRow>
+
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="80dp"
+                android:gravity="center"
+        >
+            <Button
+                    android:id="@+id/button_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="@string/button_save"
+            />
+        </TableRow>
+    </TableLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
