@@ -16,6 +16,7 @@ Feature: Wheel Edit
       | Voltage Min | 74.5                |
       | Voltage Max | 100.9               |
     Then the wheel was updated
+    And we go back to the main view
     And it shows the updated name and mileage on the main view
 
   Scenario Outline: Wheel <can or cannot> be saved if we <do something>
@@ -34,3 +35,13 @@ Feature: Wheel Edit
       | cannot        | blank the name             |
       | cannot        | blank the maximum voltage  |
       | cannot        | blank the minimum voltage  |
+
+  Scenario: Adding a wheel in full
+    When I add a new wheel
+    And I set these new values:
+      | Name        | Veteran Sherman Max |
+      | Mileage     | 150                 |
+      | Voltage Min | 74.5                |
+      | Voltage Max | 100.9               |
+    Then the wheel was added
+    And it shows the updated name and mileage on the main view

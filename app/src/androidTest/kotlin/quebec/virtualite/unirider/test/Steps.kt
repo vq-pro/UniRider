@@ -63,6 +63,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
+        selectedWheel = WheelEntity(0L, "", 0, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -78,8 +79,6 @@ class Steps {
 
     @Then("it shows the updated name and mileage on the main view")
     fun itShowsTheUpdatedNameAndMileageOnTheMainView() {
-        back(R.id.view_name)
-
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, updatedWheel.mileage)))
     }
@@ -249,6 +248,11 @@ class Steps {
         }
     }
 
+    @Then("we go back to the main view")
+    fun weGoBackToMainView() {
+        back(R.id.view_name)
+    }
+
     @Then("the wheel can be saved")
     fun wheelCanBeSaved() {
         assertThat(R.id.button_save, isEnabled())
@@ -257,6 +261,16 @@ class Steps {
     @Then("the wheel cannot be saved")
     fun wheelCannotBeSaved() {
         assertThat(R.id.button_save, isDisabled())
+    }
+
+    @Then("the wheel was added")
+    fun wheelWasAdded() {
+        selectedWheel = db.findWheel(updatedWheel.name)!!
+
+        assertThat(selectedWheel.name, equalTo(updatedWheel.name))
+        assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))
+        assertThat(selectedWheel.voltageMax, equalTo(updatedWheel.voltageMax))
+        assertThat(selectedWheel.voltageMin, equalTo(updatedWheel.voltageMin))
     }
 
     @Then("the wheel was updated")
