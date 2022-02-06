@@ -10,15 +10,14 @@ Feature: Wheel View
       | KingSong 14S    | 48.0V       | 67.2V       | 694     |
       | Gotway Nikola+  | 78.0V       | 100.8V      | 2927    |
       | KingSong S18    | 60.0V       | 84.0V       | 2850    |
+    And I start the app
 
   Scenario: Viewing a wheel's details in full
-    Given I start the app
     When I select the KingSong S20
     Then the details view shows the correct name and a mileage of that wheel
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
-    Given I start the app
-    And I select the <Wheel>
+    Given I select the <Wheel>
     When I enter a voltage of <Voltage>
     Then it displays a percentage of <Battery>
     Examples:
@@ -30,9 +29,8 @@ Feature: Wheel View
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108.0V  | 50.0%   |
 
-  Scenario: Editing a wheel
-    Given I start the app
-    And I select the Veteran Sherman
+  Scenario: Editing the wheel
+    Given I select the Veteran Sherman
     When I edit the wheel
     Then it shows that every field is editable
 

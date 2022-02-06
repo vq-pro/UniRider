@@ -5,12 +5,12 @@ Feature: Wheel Edit
     Given this wheel:
       | Name            | Voltage Min | Voltage Max | Mileage |
       | Veteran Sherman | 75.6V       | 100.8V      | 17622   |
+    And I start the app
+    And I select the Veteran Sherman
 
 # FIXME-1 Editing a wheel - cannot save with blank fields
 # FIXME-1 Editing a wheel - with cancel
   Scenario: Editing a wheel in full
-    Given I start the app
-    And I select the Veteran Sherman
     When I edit the wheel
     And I set these new values:
       | Name        | Veteran Sherman Max |
