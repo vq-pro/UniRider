@@ -139,7 +139,24 @@ class WheelEditFragmentTest :
         fragment.enableSaveIfChanged()
 
         // Then
+        verify(mockedDb).findDuplicate(WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX))
         verify(mockedWidgets).enable(mockedButtonSave)
+    }
+
+    @Test
+    fun enableSaveIfChanged_whenChangedAndDuplicate_disabled() {
+        // Given
+        initForUpdates(true)
+
+        given(mockedDb.findDuplicate(any()))
+            .willReturn(true)
+
+        // When
+        fragment.enableSaveIfChanged()
+
+        // Then
+        verify(mockedDb).findDuplicate(WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX))
+        verify(mockedWidgets).disable(mockedButtonSave)
     }
 
     @Test
@@ -151,6 +168,7 @@ class WheelEditFragmentTest :
         fragment.enableSaveIfChanged()
 
         // Then
+        verify(mockedDb, never()).findDuplicate(any())
         verify(mockedWidgets).disable(mockedButtonSave)
     }
 

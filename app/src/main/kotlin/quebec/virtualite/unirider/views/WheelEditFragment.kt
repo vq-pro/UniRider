@@ -68,9 +68,14 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun enableSaveIfChanged() {
-        if (saveComparator.canSave(updatedWheel, initialWheel))
-            widgets.enable(buttonSave)
-        else
+        if (saveComparator.canSave(updatedWheel, initialWheel)) {
+            runDb {
+                if (!db.findDuplicate(updatedWheel))
+                    widgets.enable(buttonSave)
+                else
+                    widgets.disable(buttonSave)
+            }
+        } else
             widgets.disable(buttonSave)
     }
 

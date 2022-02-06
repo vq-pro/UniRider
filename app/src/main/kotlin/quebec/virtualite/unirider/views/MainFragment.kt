@@ -82,15 +82,14 @@ open class MainFragment : BaseFragment() {
     private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
         return wheelList
             .stream()
-            .map { wheel ->
-                WheelRow(wheel.id, wheel.name, wheel.mileage)
-            }
-            // FIXME-1 Put this comparator in a method
-            .sorted { itemA, itemB ->
-                val byMileage = itemB.mileage().compareTo(itemA.mileage())
-                if (byMileage != 0) byMileage else itemA.name().compareTo(itemB.name())
-            }
+            .map { wheel -> WheelRow(wheel.id, wheel.name, wheel.mileage) }
+            .sorted(sortWheelsByMileageDescAndNameAsc())
             .collect(toList())
+    }
+
+    private fun sortWheelsByMileageDescAndNameAsc() = { rowA: WheelRow, rowB: WheelRow ->
+        val byMileage = rowB.mileage().compareTo(rowA.mileage())
+        if (byMileage != 0) byMileage else rowA.name().compareTo(rowB.name())
     }
 
     private fun viewWheel(wheel: WheelRow) {

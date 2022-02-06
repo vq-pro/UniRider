@@ -33,3 +33,5 @@ Feature: Wheel View
     Given I select the Veteran Sherman
     When I edit the wheel
     Then it shows that every field is editable
+
+#    FIXME-2 Delete wheel

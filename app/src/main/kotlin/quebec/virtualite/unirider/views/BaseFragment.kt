@@ -14,7 +14,6 @@ open class BaseFragment : Fragment() {
 
     internal open fun connectDb(function: () -> Unit) {
         db = MainActivity.db
-
         subThread(function)
     }
 
