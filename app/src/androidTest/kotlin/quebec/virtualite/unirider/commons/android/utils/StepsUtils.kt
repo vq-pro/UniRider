@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
+import androidx.fragment.app.Fragment
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
@@ -30,6 +31,7 @@ import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
 import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.not
+import quebec.virtualite.unirider.views.MainActivity
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
@@ -60,6 +62,11 @@ object StepsUtils {
     fun click(id: Int) {
         assertThat(id, isEnabled())
         element(id)?.perform(click())
+    }
+
+    fun currentFragment(mainActivity: MainActivity): Class<Fragment> {
+        return mainActivity.supportFragmentManager.fragments[0]
+            .childFragmentManager.fragments[0].javaClass
     }
 
     fun enter(id: Int, text: String) {

@@ -26,7 +26,7 @@ import java.lang.Float.parseFloat
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelViewFragmentTest :
-    BaseFragmentTest(WheelViewFragment::class.java.simpleName) {
+    BaseFragmentTest(WheelViewFragment::class.java) {
 
     private val MILEAGE = 1111
     private val ID = 2222L

@@ -15,6 +15,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationCo
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.currentFragment
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.enter
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
@@ -28,7 +29,10 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import quebec.virtualite.unirider.views.MainActivity
+import quebec.virtualite.unirider.views.MainFragment
+import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
+import quebec.virtualite.unirider.views.WheelViewFragment
 import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
@@ -60,6 +64,8 @@ class Steps {
     @Then("it shows the updated name and mileage on the main view")
     fun itShowsTheUpdatedNameAndMileageOnTheMainView() {
         back(R.id.view_name)
+
+        assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, updatedWheel.mileage)))
     }
 
@@ -132,6 +138,7 @@ class Steps {
 
     @Then("the details view shows the details for that wheel")
     fun inDetailsView() {
+        assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
         assertThat(R.id.view_name, hasText(selectedWheel.name))
     }
 
@@ -151,6 +158,7 @@ class Steps {
     @When("I edit the wheel")
     fun editWheel() {
         click(R.id.button_edit)
+        assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
     }
 
     @Given("these wheels:")

@@ -19,7 +19,9 @@ import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.commons.views.NavigatedTo
 import quebec.virtualite.unirider.database.WheelDb
 
-open class BaseFragmentTest(val fragmentClass: String) {
+open class BaseFragmentTest(fragmentType: Class<*>) {
+
+    internal val fragmentClass: String = fragmentType.simpleName
 
     internal val DONT_ATTACH_TO_ROOT = false
     internal val SAVED_INSTANCE_STATE: Bundle? = null

@@ -15,7 +15,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
 class MainFragmentTest :
-    BaseFragmentTest(MainFragment::class.java.simpleName) {
+    BaseFragmentTest(MainFragment::class.java) {
 
     private val ID_A = 111L
     private val ID_B = 222L

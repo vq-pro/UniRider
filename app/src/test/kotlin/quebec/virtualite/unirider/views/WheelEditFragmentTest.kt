@@ -22,7 +22,7 @@ import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WH
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelEditFragmentTest :
-    BaseFragmentTest(WheelEditFragment::class.java.simpleName) {
+    BaseFragmentTest(WheelEditFragment::class.java) {
 
     private val ID = 1111L
     private val MILEAGE = 2222
