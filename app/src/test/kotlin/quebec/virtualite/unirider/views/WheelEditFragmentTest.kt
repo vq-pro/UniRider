@@ -29,6 +29,8 @@ class WheelEditFragmentTest :
     private val NAME = "Sherman"
     private val NEW_MILEAGE = 3333
     private val NEW_NAME = "Sherman Max"
+    private val NEW_VOLTAGE_MAX = 100.9f
+    private val NEW_VOLTAGE_MIN = 74.5f
     private val VOLTAGE_MAX = 100.8f
     private val VOLTAGE_MIN = 75.6f
 
@@ -102,6 +104,8 @@ class WheelEditFragmentTest :
 
         verifyOnUpdateText(mockedEditName, "onUpdateName")
         verifyOnUpdateText(mockedEditMileage, "onUpdateMileage")
+        verifyOnUpdateText(mockedEditVoltageMax, "onUpdateVoltageMax")
+        verifyOnUpdateText(mockedEditVoltageMin, "onUpdateVoltageMin")
         verifyOnClick(mockedButtonSave, "onSave")
     }
 
@@ -163,6 +167,42 @@ class WheelEditFragmentTest :
         assertThat(
             fragment.updatedWheel, equalTo(
                 WheelEntity(ID, NEW_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+            )
+        )
+    }
+
+    @Test
+    fun onUpdateVoltageMax() {
+        // Given
+        fragment.updatedWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+
+        // When
+        fragment.onUpdateVoltageMax().invoke("$NEW_VOLTAGE_MAX ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+
+        assertThat(
+            fragment.updatedWheel, equalTo(
+                WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, NEW_VOLTAGE_MAX)
+            )
+        )
+    }
+
+    @Test
+    fun onUpdateVoltageMin() {
+        // Given
+        fragment.updatedWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+
+        // When
+        fragment.onUpdateVoltageMin().invoke("$NEW_VOLTAGE_MIN ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+
+        assertThat(
+            fragment.updatedWheel, equalTo(
+                WheelEntity(ID, NAME, MILEAGE, NEW_VOLTAGE_MIN, VOLTAGE_MAX)
             )
         )
     }

@@ -51,4 +51,5 @@ Feature: Wheel Details
     When I select the KingSong S20
     Then the details view shows the correct name and a mileage of that wheel
 
+#  FIXME-2 Editing a wheel and cancelling
 # FIXME-2 Adding a wheel

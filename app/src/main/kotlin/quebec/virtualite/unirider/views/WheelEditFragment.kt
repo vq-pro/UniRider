@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
@@ -44,6 +45,8 @@ open class WheelEditFragment : BaseFragment() {
 
         widgets.addTextChangedListener(editName, onUpdateName())
         widgets.addTextChangedListener(editMileage, onUpdateMileage())
+        widgets.addTextChangedListener(editVoltageMax, onUpdateVoltageMax())
+        widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
         widgets.setOnClickListener(buttonSave, onSave())
 
         connectDb {
@@ -79,6 +82,26 @@ open class WheelEditFragment : BaseFragment() {
             newName.trim(),
             updatedWheel.mileage,
             updatedWheel.voltageMin,
+            updatedWheel.voltageMax
+        )
+    }
+
+    fun onUpdateVoltageMax() = { newVoltage: String ->
+        updatedWheel = WheelEntity(
+            updatedWheel.id,
+            updatedWheel.name,
+            updatedWheel.mileage,
+            updatedWheel.voltageMin,
+            floatOf(newVoltage)
+        )
+    }
+
+    fun onUpdateVoltageMin() = { newVoltage: String ->
+        updatedWheel = WheelEntity(
+            updatedWheel.id,
+            updatedWheel.name,
+            updatedWheel.mileage,
+            floatOf(newVoltage),
             updatedWheel.voltageMax
         )
     }
