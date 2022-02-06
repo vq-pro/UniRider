@@ -9,9 +9,10 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.commons.android.utils.ArrayListUtils.set
+import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
 class MainFragmentTest :
@@ -26,9 +27,11 @@ class MainFragmentTest :
     private val WHEEL_A = "A"
     private val WHEEL_B = "B"
     private val WHEEL_C = "C"
+    private val WHEEL_NEW = "<New>"
     private val WHEEL_ITEM_A_123 = WheelRow(ID_A, WHEEL_A, MILEAGE_A)
     private val WHEEL_ITEM_B_456 = WheelRow(ID_B, WHEEL_B, MILEAGE_B)
     private val WHEEL_ITEM_C_123 = WheelRow(ID_C, WHEEL_C, MILEAGE_C)
+    private val WHEEL_ITEM_NEW = WheelRow(0, WHEEL_NEW, 0)
 
     @InjectMocks
     val fragment: MainFragment = TestableMainFragment(this)
@@ -69,18 +72,23 @@ class MainFragmentTest :
         mockField(R.id.wheels, mockedLVWheels)
         mockField(R.id.total_mileage, mockedTextTotalMileage)
 
-        set(fragment.wheelList, listOf(WheelRow(999, "some previous content", 999)))
+        setList(fragment.wheelList, listOf(WheelRow(999, "some previous content", 999)))
 
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        val expectedWheels = listOf(WHEEL_ITEM_B_456, WHEEL_ITEM_A_123, WHEEL_ITEM_C_123)
+        val expectedEntries = listOf(
+            WHEEL_ITEM_B_456,
+            WHEEL_ITEM_A_123,
+            WHEEL_ITEM_C_123,
+            WHEEL_ITEM_NEW
+        )
 
         verify(mockedDb).getWheels()
 
         verify(mockedLVWheels).isEnabled = true
-        verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedWheels, "onDisplayWheel")
+        verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
         verifyOnSelectItem(mockedLVWheels, "onSelectWheel")
 
         verify(mockedTextTotalMileage).text = (MILEAGE_A + MILEAGE_B + MILEAGE_C).toString()
@@ -101,9 +109,23 @@ class MainFragmentTest :
     }
 
     @Test
+    fun onDisplayItem_newItem_hideMileageZero() {
+        // Given
+        mockField(R.id.row_name, mockedTextName)
+        mockField(R.id.row_mileage, mockedTextMileage)
+
+        // When
+        fragment.onDisplayWheel().invoke(mockedView, WHEEL_ITEM_NEW)
+
+        // Then
+        verify(mockedTextName).text = WHEEL_NEW
+        verify(mockedTextMileage).text = ""
+    }
+
+    @Test
     fun onSelectWheel() {
         // Given
-        fragment.wheelList += listOf(WHEEL_ITEM_A_123, WHEEL_ITEM_B_456)
+        fragment.wheelList += listOf(WHEEL_ITEM_A_123, WHEEL_ITEM_B_456, WHEEL_ITEM_NEW)
 
         // When
         fragment.onSelectWheel().invoke(mockedView, 1)
@@ -111,7 +133,22 @@ class MainFragmentTest :
         // Then
         verifyNavigatedTo(
             R.id.action_MainFragment_to_WheelViewFragment,
-            Pair(WheelViewFragment.PARAMETER_WHEEL_ID, ID_B)
+            Pair(PARAMETER_WHEEL_ID, ID_B)
+        )
+    }
+
+    @Test
+    fun onSelectWheel_withNewEntry_straightToEditInAddMode() {
+        // Given
+        fragment.wheelList += listOf(WHEEL_ITEM_A_123, WHEEL_ITEM_B_456, WHEEL_ITEM_NEW)
+
+        // When
+        fragment.onSelectWheel().invoke(mockedView, 2)
+
+        // Then
+        verifyNavigatedTo(
+            R.id.action_MainFragment_to_WheelEditFragment,
+            Pair(PARAMETER_WHEEL_ID, 0L)
         )
     }
 

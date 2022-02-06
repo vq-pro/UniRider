@@ -21,9 +21,15 @@ Feature: Main Screen
       | KingSong 14S    | 694     |
       | KingSong S20    | 0       |
       | Veteran Abrams  | 0       |
+      | <New>           |         |
     And I see the total mileage
 
   Scenario: Viewing a wheel's details
     Given I start the app
     When I select the KingSong S20
     Then the details view shows the details for that wheel
+
+  Scenario: Adding a wheel
+    Given I start the app
+    When I add a new wheel
+    Then I can enter the details for that wheel

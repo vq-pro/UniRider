@@ -10,6 +10,8 @@
             </option>
             <option name="taskNames">
                 <list>
+                    <option value="assembleIntegrationDebug"/>
+                    <option value="assembleIntegrationDebugAndroidTest"/>
                     <option value="testIntegrationDebugUnitTest"/>
                 </list>
             </option>

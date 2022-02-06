@@ -6,14 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
-import quebec.virtualite.commons.android.utils.ArrayListUtils.set
+import quebec.virtualite.commons.android.utils.ArrayListUtils.addTo
+import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.util.stream.Collectors.toList
 
+
 open class MainFragment : BaseFragment() {
+
+    private val NEW_ENTRY = "<New>"
+    private val NEW_ROW = WheelRow(0, NEW_ENTRY, 0)
 
     internal val wheelList = ArrayList<WheelRow>()
 
@@ -37,24 +42,31 @@ open class MainFragment : BaseFragment() {
         widgets.setOnItemClickListener(wheels, onSelectWheel())
 
         connectDb {
-            set(wheelList, getSortedWheelItems(db.getWheels()))
+            setList(wheelList, addTo(getSortedWheelItems(db.getWheels()), NEW_ROW))
             wheelTotalMileage.text = calculateTotalMileage().toString()
         }
     }
 
     fun onDisplayWheel() = { view: View, item: WheelRow ->
 
-        val wheelName = view.findViewById<TextView?>(R.id.row_name)
-        wheelName.text = item.name()
+        val textName = view.findViewById<TextView?>(R.id.row_name)
+        textName.text = item.name()
 
-        val wheelMileage = view.findViewById<TextView?>(R.id.row_mileage)
-        wheelMileage.text = item.mileage().toString()
+        val textMileage = view.findViewById<TextView?>(R.id.row_mileage)
+        textMileage.text = if (item.name() == NEW_ENTRY) "" else "${item.mileage()}"
     }
 
     fun onSelectWheel() = { _: View, index: Int ->
+        when {
+            wheelList[index].name() == NEW_ENTRY -> addWheel()
+            else -> viewWheel(wheelList[index])
+        }
+    }
+
+    private fun addWheel() {
         navigateTo(
-            R.id.action_MainFragment_to_WheelViewFragment,
-            Pair(PARAMETER_WHEEL_ID, wheelList[index].id())
+            R.id.action_MainFragment_to_WheelEditFragment,
+            Pair(PARAMETER_WHEEL_ID, 0L)
         )
     }
 
@@ -73,10 +85,18 @@ open class MainFragment : BaseFragment() {
             .map { wheel ->
                 WheelRow(wheel.id, wheel.name, wheel.mileage)
             }
+            // FIXME-1 Put this comparator in a method
             .sorted { itemA, itemB ->
                 val byMileage = itemB.mileage().compareTo(itemA.mileage())
                 if (byMileage != 0) byMileage else itemA.name().compareTo(itemB.name())
             }
             .collect(toList())
+    }
+
+    private fun viewWheel(wheel: WheelRow) {
+        navigateTo(
+            R.id.action_MainFragment_to_WheelViewFragment,
+            Pair(PARAMETER_WHEEL_ID, wheel.id())
+        )
     }
 }

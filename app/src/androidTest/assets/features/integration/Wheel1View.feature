@@ -34,4 +34,4 @@ Feature: Wheel View
     When I edit the wheel
     Then it shows that every field is editable
 
-# FIXME-2 Adding a wheel
+# FIXME-0 Adding a wheel

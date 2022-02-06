@@ -11,6 +11,7 @@ import cucumber.api.java.en.When
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import org.junit.Rule
+import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
@@ -42,6 +43,8 @@ import java.util.stream.Collectors.toList
 
 class Steps {
 
+    private val NEW_WHEEL_ENTRY = "<New>"
+
     @Rule
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
@@ -56,6 +59,11 @@ class Steps {
     @Before
     fun beforeScenario() {
         db.deleteAll()
+    }
+
+    @When("I add a new wheel")
+    fun addNewWheel() {
+        selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
     @After
@@ -83,8 +91,10 @@ class Steps {
             .stream()
             .map { row ->
                 val name = row[0]
-                val mileage = parseInt(row[1])
-                WheelRow(mapWheels[name]!!.id, name, mileage)
+                val mileage = intOf(row[1])
+                val id = if (name == NEW_WHEEL_ENTRY) 0 else mapWheels[name]!!.id
+
+                WheelRow(id, name, mileage)
             }
             .collect(toList())
 
@@ -167,6 +177,11 @@ class Steps {
     @When("I blank the minimum voltage")
     fun blankWheelMinimumVoltage() {
         setText(R.id.edit_voltage_min, " ")
+    }
+
+    @Then("I can enter the details for that wheel")
+    fun canEnterDetailsForNewWheel() {
+        assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
     }
 
     @When("I change nothing")

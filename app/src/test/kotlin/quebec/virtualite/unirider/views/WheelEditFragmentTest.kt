@@ -4,11 +4,11 @@ import android.widget.Button
 import android.widget.EditText
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -17,7 +17,6 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
@@ -114,16 +113,21 @@ class WheelEditFragmentTest :
     }
 
     @Test
-    fun onViewCreated_whenWheelIsntFound() {
+    fun onViewCreated_whenAdding() {
         // Given
-        given(mockedDb.getWheel(ID))
-            .willReturn(null)
+        fragment.parmWheelId = 0L
+
+        val newWheel = WheelEntity(0L, "", 0, 0f, 0f)
 
         // When
-        val result = { fragment.onViewCreated(mockedView, mockedBundle) }
+        fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        assertThrows(WheelNotFoundException::class.java, result)
+        verify(mockedDb, never()).getWheel(anyLong())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.initialWheel, equalTo(newWheel))
+        assertThat(fragment.updatedWheel, equalTo(newWheel))
     }
 
     @Test
