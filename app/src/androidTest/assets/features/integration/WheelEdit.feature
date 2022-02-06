@@ -18,29 +18,21 @@ Feature: Wheel Edit
     Then the wheel was updated
     And it shows the updated name and mileage on the main view
 
-  Scenario Outline: Can change just the <field>
+  Scenario Outline: Wheel <can or cannot> be saved if we <do something>
     Given I select the Veteran Sherman
     When I edit the wheel
-    And I change the <field>
-    Then the wheel can be saved
+    And I <do something>
+    Then the wheel <can or cannot> be saved
     Examples:
-      | field           |
-      | name            |
-      | mileage         |
-      | minimum voltage |
-      | maximum voltage |
-
-  Scenario Outline: Cannot edit a wheel with <an invalid change>
-    Given I select the Veteran Sherman
-    When I edit the wheel
-    And I set <an invalid change>
-    Then the wheel cannot be saved
-    Examples:
-      | an invalid change       |
-      | no changed values       |
-      | a blank name            |
-      | a blank mileage         |
-      | a blank minimum voltage |
-      | a blank maximum voltage |
+      | can or cannot | do something               |
+      | can           | change the name            |
+      | can           | change the mileage         |
+      | can           | blank the mileage          |
+      | can           | change the maximum voltage |
+      | can           | change the minimum voltage |
+      | cannot        | change nothing             |
+      | cannot        | blank the name             |
+      | cannot        | blank the maximum voltage  |
+      | cannot        | blank the minimum voltage  |
 
 # FIXME-1 Editing a wheel - with cancel

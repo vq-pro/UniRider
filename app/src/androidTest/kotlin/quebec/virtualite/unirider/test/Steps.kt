@@ -96,26 +96,6 @@ class Steps {
         assertThat(R.id.total_mileage, hasText(calculateTotalMileage().toString()))
     }
 
-    @When("I set a blank maximum voltage")
-    fun setBlankVoltageMax() {
-        setText(R.id.edit_voltage_max, " ")
-    }
-
-    @When("I set a blank mileage")
-    fun setBlankMileage() {
-        setText(R.id.edit_mileage, " ")
-    }
-
-    @When("I set a blank minimum voltage")
-    fun setBlankVoltageMin() {
-        setText(R.id.edit_voltage_min, " ")
-    }
-
-    @When("I set a blank name")
-    fun setBlankName() {
-        setText(R.id.edit_name, " ")
-    }
-
     @When("I set these new values:")
     fun setNewWheelValues(newValues: DataTable) {
 
@@ -147,10 +127,6 @@ class Steps {
         click(R.id.button_save)
     }
 
-    @When("I set no changed values")
-    fun setNoChangedWheelValues() {
-    }
-
     @When("I start the app")
     fun startApp() {
         mainActivity = start(activityTestRule)!!
@@ -171,6 +147,30 @@ class Steps {
     fun inDetailsView() {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
         assertThat(R.id.view_name, hasText(selectedWheel.name))
+    }
+
+    @When("I blank the mileage")
+    fun blankWheelMileage() {
+        setText(R.id.edit_mileage, " ")
+    }
+
+    @When("I blank the name")
+    fun blankWheelName() {
+        setText(R.id.edit_name, " ")
+    }
+
+    @When("I blank the maximum voltage")
+    fun blankWheelMaximumVoltage() {
+        setText(R.id.edit_voltage_max, " ")
+    }
+
+    @When("I blank the minimum voltage")
+    fun blankWheelMinimumVoltage() {
+        setText(R.id.edit_voltage_min, " ")
+    }
+
+    @When("I change nothing")
+    fun changeNothing() {
     }
 
     @When("I change the mileage")
