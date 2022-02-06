@@ -27,8 +27,12 @@ open class WidgetUtils {
         })
     }
 
+    open fun disable(widget: View) {
+        widget.postDelayed({ widget.isEnabled = false }, 100)
+    }
+
     open fun enable(widget: View) {
-        widget.postDelayed({ widget.isEnabled = true }, 500)
+        widget.postDelayed({ widget.isEnabled = true }, 100)
     }
 
     open fun <T> multifieldListAdapter(

@@ -101,7 +101,7 @@ class WheelEditFragmentTest :
         verify(mockedEditMileage).setText("$MILEAGE")
         verify(mockedEditVoltageMax).setText("$VOLTAGE_MAX")
         verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
-        verify(mockedButtonSave).isEnabled = false
+        verify(mockedWidgets).disable(mockedButtonSave)
 
         verifyOnUpdateText(mockedEditName, "onUpdateName")
         verifyOnUpdateText(mockedEditMileage, "onUpdateMileage")

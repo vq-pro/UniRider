@@ -58,9 +58,9 @@ open class WheelEditFragment : BaseFragment() {
             editMileage.setText("${initialWheel.mileage}")
             editVoltageMax.setText("${initialWheel.voltageMax}")
             editVoltageMin.setText("${initialWheel.voltageMin}")
-        }
 
-        buttonSave.isEnabled = false
+            widgets.disable(buttonSave)
+        }
     }
 
     fun onSave() = { _: View ->
