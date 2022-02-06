@@ -13,7 +13,7 @@ import android.widget.SpinnerAdapter
 
 open class WidgetUtils {
 
-    private val POST_DELAY = 25L
+    private val POST_DELAY = 10L
 
     open fun addTextChangedListener(widget: EditText?, callback: ((text: String) -> Unit)?) {
 

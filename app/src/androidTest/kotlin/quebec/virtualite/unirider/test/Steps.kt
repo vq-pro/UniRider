@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.test
 
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.rule.ActivityTestRule
 import cucumber.api.DataTable
 import cucumber.api.java.After
@@ -95,6 +96,21 @@ class Steps {
         assertThat(R.id.total_mileage, hasText(calculateTotalMileage().toString()))
     }
 
+    @When("I set a blank maximum voltage")
+    fun setBlankVoltageMax() {
+        setText(R.id.edit_voltage_max, " ")
+    }
+
+    @When("I set a blank mileage")
+    fun setBlankMileage() {
+        setText(R.id.edit_mileage, " ")
+    }
+
+    @When("I set a blank minimum voltage")
+    fun setBlankVoltageMin() {
+        setText(R.id.edit_voltage_min, " ")
+    }
+
     @When("I set a blank name")
     fun setBlankName() {
         setText(R.id.edit_name, " ")
@@ -131,9 +147,8 @@ class Steps {
         click(R.id.button_save)
     }
 
-    @When("I don't set any new values")
-    fun setNoNewWheelValues() {
-
+    @When("I set no changed values")
+    fun setNoChangedWheelValues() {
     }
 
     @When("I start the app")
@@ -156,6 +171,26 @@ class Steps {
     fun inDetailsView() {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
         assertThat(R.id.view_name, hasText(selectedWheel.name))
+    }
+
+    @When("I change the mileage")
+    fun changeWheelMileage() {
+        setText(R.id.edit_mileage, "123")
+    }
+
+    @When("I change the minimum voltage")
+    fun changeWheelVoltageMin() {
+        setText(R.id.edit_voltage_min, "1.2")
+    }
+
+    @When("I change the maximum voltage")
+    fun changeWheelVoltageMax() {
+        setText(R.id.edit_voltage_max, "2.4")
+    }
+
+    @When("I change the name")
+    fun changeWheelName() {
+        setText(R.id.edit_name, "Toto")
     }
 
     @Then("the details view shows the correct name and a mileage of that wheel")
@@ -197,6 +232,11 @@ class Steps {
         db.getWheels().forEach { wheel ->
             mapWheels[wheel.name] = wheel
         }
+    }
+
+    @Then("the wheel can be saved")
+    fun wheelCanBeSaved() {
+        assertThat(R.id.button_save, isEnabled())
     }
 
     @Then("the wheel cannot be saved")

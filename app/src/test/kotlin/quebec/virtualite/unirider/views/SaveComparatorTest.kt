@@ -26,9 +26,19 @@ class SaveComparatorTest {
 
     @Test
     fun canSave() {
-        canSave(NEW_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, true)
         canSave(NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, false)
-        canSave("", MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, false)
+
+        canSave(NEW_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, true)
+        canSave("", NEW_MILEAGE, NEW_VOLTAGE_MIN, NEW_VOLTAGE_MAX, false)
+
+        canSave(NAME, NEW_MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, true)
+        canSave(NEW_NAME, 0, NEW_VOLTAGE_MIN, NEW_VOLTAGE_MAX, false)
+
+        canSave(NAME, MILEAGE, NEW_VOLTAGE_MIN, VOLTAGE_MAX, true)
+        canSave(NEW_NAME, NEW_MILEAGE, 0f, NEW_VOLTAGE_MAX, false)
+
+        canSave(NAME, MILEAGE, VOLTAGE_MIN, NEW_VOLTAGE_MAX, true)
+        canSave(NEW_NAME, NEW_MILEAGE, NEW_VOLTAGE_MIN, 0f, false)
     }
 
     private fun canSave(name: String, mileage: Int, voltageMin: Float, voltageMax: Float, expectedCanSave: Boolean) {

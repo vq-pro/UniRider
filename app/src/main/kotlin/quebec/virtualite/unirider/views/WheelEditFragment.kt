@@ -22,7 +22,6 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editVoltageMax: EditText
     internal lateinit var editVoltageMin: EditText
 
-
     internal lateinit var initialWheel: WheelEntity
     internal lateinit var updatedWheel: WheelEntity
 

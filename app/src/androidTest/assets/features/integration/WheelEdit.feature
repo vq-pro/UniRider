@@ -18,17 +18,29 @@ Feature: Wheel Edit
     Then the wheel was updated
     And it shows the updated name and mileage on the main view
 
-# FIXME-0 Editing a wheel - cannot save with blank fields
-  Scenario: Cannot edit a wheel with no changes
+  Scenario Outline: Can change just the <field>
     Given I select the Veteran Sherman
     When I edit the wheel
-    And I don't set any new values
-    Then the wheel cannot be saved
+    And I change the <field>
+    Then the wheel can be saved
+    Examples:
+      | field           |
+      | name            |
+      | mileage         |
+      | minimum voltage |
+      | maximum voltage |
 
-  Scenario: Cannot save a wheel with a blank name
+  Scenario Outline: Cannot edit a wheel with <an invalid change>
     Given I select the Veteran Sherman
     When I edit the wheel
-    And I set a blank name
+    And I set <an invalid change>
     Then the wheel cannot be saved
+    Examples:
+      | an invalid change       |
+      | no changed values       |
+      | a blank name            |
+      | a blank mileage         |
+      | a blank minimum voltage |
+      | a blank maximum voltage |
 
 # FIXME-1 Editing a wheel - with cancel

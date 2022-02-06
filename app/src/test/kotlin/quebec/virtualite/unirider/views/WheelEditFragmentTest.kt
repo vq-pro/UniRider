@@ -184,6 +184,25 @@ class WheelEditFragmentTest :
     }
 
     @Test
+    fun onUpdateMileage_whenEmpty_zero() {
+        // Given
+        initForUpdates(false)
+
+        // When
+        fragment.onUpdateMileage().invoke(" ")
+
+        // Then
+        verify(mockedSaveComparator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(
+            fragment.updatedWheel, equalTo(
+                WheelEntity(ID, NAME, 0, VOLTAGE_MIN, VOLTAGE_MAX)
+            )
+        )
+    }
+
+    @Test
     fun onUpdateName() {
         // Given
         initForUpdates(true)
@@ -224,6 +243,26 @@ class WheelEditFragmentTest :
     }
 
     @Test
+    fun onUpdateVoltageMax_whenEmpty_zero() {
+        // Given
+        initForUpdates(false)
+
+        // When
+        fragment.onUpdateVoltageMax().invoke(" ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedSaveComparator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(
+            fragment.updatedWheel, equalTo(
+                WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, 0f)
+            )
+        )
+    }
+
+    @Test
     fun onUpdateVoltageMin() {
         // Given
         initForUpdates(true)
@@ -243,21 +282,24 @@ class WheelEditFragmentTest :
         )
     }
 
-    private fun enableSaveIfChanged(
-        name: String, mileage: Int, voltageMin: Float, voltageMax: Float, shouldEnable: Boolean
-    ) {
+    @Test
+    fun onUpdateVoltageMin_whenEmpty_zero() {
         // Given
-        fragment.initialWheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-        fragment.updatedWheel = WheelEntity(ID, name, mileage, voltageMin, voltageMax)
+        initForUpdates(false)
 
         // When
-        fragment.enableSaveIfChanged()
+        fragment.onUpdateVoltageMin().invoke(" ")
 
         // Then
-        if (shouldEnable)
-            verify(mockedWidgets).enable(mockedButtonSave)
-        else
-            verify(mockedWidgets).disable(mockedButtonSave)
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedSaveComparator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(
+            fragment.updatedWheel, equalTo(
+                WheelEntity(ID, NAME, MILEAGE, 0f, VOLTAGE_MAX)
+            )
+        )
     }
 
     private fun initForUpdates(canSave: Boolean) {
