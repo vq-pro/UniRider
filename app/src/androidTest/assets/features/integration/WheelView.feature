@@ -1,6 +1,5 @@
 @Integration
-Feature: Wheel Details
-# FIXME-0 Split this into distinct view and edit feature files
+Feature: Wheel View
 
   Background:
     Given these wheels:
@@ -11,6 +10,11 @@ Feature: Wheel Details
       | KingSong 14S    | 48.0V       | 67.2V       | 694     |
       | Gotway Nikola+  | 78.0V       | 100.8V      | 2927    |
       | KingSong S18    | 60.0V       | 84.0V       | 2850    |
+
+  Scenario: Viewing a wheel's details in full
+    Given I start the app
+    When I select the KingSong S20
+    Then the details view shows the correct name and a mileage of that wheel
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I start the app
@@ -26,22 +30,10 @@ Feature: Wheel Details
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108.0V  | 50.0%   |
 
-# FIXME-1 Editing a wheel and cancelling
   Scenario: Editing a wheel
     Given I start the app
     And I select the Veteran Sherman
     When I edit the wheel
-    And I set these new values:
-      | Name        | Veteran Sherman Max |
-      | Mileage     | 150                 |
-      | Voltage Min | 74.5                |
-      | Voltage Max | 100.9               |
-    Then the wheel was updated
-    And it shows the updated name and mileage on the main view
-
-  Scenario: Viewing a wheel's details in full
-    Given I start the app
-    When I select the KingSong S20
-    Then the details view shows the correct name and a mileage of that wheel
+    Then it shows that every field is editable
 
 # FIXME-2 Adding a wheel

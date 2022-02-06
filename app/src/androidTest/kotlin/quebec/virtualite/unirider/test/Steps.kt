@@ -61,6 +61,11 @@ class Steps {
         stop(activityTestRule)
     }
 
+    @Then("it shows that every field is editable")
+    fun itShowsThatEveryFieldIsEditable() {
+        assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
+    }
+
     @Then("it shows the updated name and mileage on the main view")
     fun itShowsTheUpdatedNameAndMileageOnTheMainView() {
         back(R.id.view_name)
@@ -159,6 +164,11 @@ class Steps {
     fun editWheel() {
         click(R.id.button_edit)
         assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
+    }
+
+    @Given("this wheel:")
+    fun givenThisWheel(wheel: DataTable) {
+        givenTheseWheels(wheel)
     }
 
     @Given("these wheels:")
