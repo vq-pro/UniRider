@@ -17,7 +17,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.commons.views.NavigatedTo
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
@@ -74,6 +73,7 @@ class WheelViewFragmentTest :
     @Test
     fun onCreateView() {
         // Given
+//        FIXME-1 Change this to ID
         mockArgument(fragment, PARAMETER_WHEEL_NAME, NAME)
 
         // When
@@ -172,16 +172,15 @@ class WheelViewFragmentTest :
     class TestableWheelViewFragment(val test: WheelViewFragmentTest) : WheelViewFragment() {
 
         override fun connectDb(function: () -> Unit) {
-            db = test.mockedDb
-            function()
+            test.connectDb(this, function)
         }
 
-        override fun navigateTo(id: Int, parms: Pair<String, String>) {
-            test.navigatedTo = NavigatedTo(id, parms)
+        override fun navigateTo(id: Int, param: Pair<String, String>) {
+            test.navigateTo(id, param)
         }
 
         override fun runDb(function: () -> Unit) {
-            function()
+            test.runDb(function)
         }
     }
 }

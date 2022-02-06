@@ -22,8 +22,8 @@ open class BaseFragment : Fragment() {
         findNavController().popBackStack()
     }
 
-    internal open fun navigateTo(id: Int, parms: Pair<String, String>) {
-        findNavController().navigate(id, bundleOf(parms.first to parms.second))
+    internal open fun navigateTo(id: Int, param: Pair<String, String>) {
+        findNavController().navigate(id, bundleOf(param.first to param.second))
     }
 
     internal open fun runDb(function: () -> Unit) {

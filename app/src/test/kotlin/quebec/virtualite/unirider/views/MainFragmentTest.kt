@@ -10,7 +10,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.set
-import quebec.virtualite.commons.views.NavigatedTo
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 
@@ -116,12 +115,11 @@ class MainFragmentTest :
     class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {
 
         override fun connectDb(function: () -> Unit) {
-            db = test.mockedDb
-            function()
+            test.connectDb(this, function)
         }
 
-        override fun navigateTo(id: Int, parms: Pair<String, String>) {
-            test.navigatedTo = NavigatedTo(id, parms)
+        override fun navigateTo(id: Int, param: Pair<String, String>) {
+            test.navigateTo(id, param)
         }
     }
 }

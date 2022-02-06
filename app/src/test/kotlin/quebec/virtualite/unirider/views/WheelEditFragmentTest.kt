@@ -64,6 +64,7 @@ class WheelEditFragmentTest :
     @Test
     fun onCreateView() {
         // Given
+//        FIXME-1 Change this to ID
         mockArgument(fragment, PARAMETER_WHEEL_NAME, NAME)
 
         // When
@@ -172,16 +173,15 @@ class WheelEditFragmentTest :
     class TestableWheelEditFragment(val test: WheelEditFragmentTest) : WheelEditFragment() {
 
         override fun connectDb(function: () -> Unit) {
-            db = test.mockedDb
-            function()
+            test.connectDb(this, function)
         }
 
         override fun navigateBack() {
-            test.navigatedBack = true
+            test.navigateBack()
         }
 
         override fun runDb(function: () -> Unit) {
-            function()
+            test.runDb(function)
         }
     }
 }

@@ -54,8 +54,13 @@ open class BaseFragmentTest(val fragmentClass: String) {
     @Captor
     private lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
 
-    var navigatedBack = false
-    lateinit var navigatedTo: NavigatedTo
+    private var navigatedBack = false
+    private var navigatedTo: NavigatedTo? = null
+
+    fun connectDb(fragment: BaseFragment, function: () -> Unit) {
+        fragment.db = mockedDb
+        function()
+    }
 
     fun mockArgument(fragment: BaseFragment, param: String, value: Long) {
         mockArgument(fragment, param, value.toString())
@@ -71,6 +76,18 @@ open class BaseFragmentTest(val fragmentClass: String) {
     fun mockField(id: Int, mockedField: View) {
         given<Any>(mockedView.findViewById(id))
             .willReturn(mockedField)
+    }
+
+    fun navigateBack() {
+        navigatedBack = true
+    }
+
+    fun navigateTo(id: Int, parms: Pair<String, String>) {
+        navigatedTo = NavigatedTo(id, parms)
+    }
+
+    fun runDb(function: () -> Unit) {
+        function()
     }
 
     fun verifyInflate(expectedId: Int) {
