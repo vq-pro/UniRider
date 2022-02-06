@@ -27,6 +27,10 @@ open class WidgetUtils {
         })
     }
 
+    open fun enable(widget: View) {
+        widget.postDelayed({ widget.isEnabled = true }, 500)
+    }
+
     open fun <T> multifieldListAdapter(
         listView: ListView?, view: View?, id: Int?, items: List<T>?, display: ((View, T) -> Unit)?
     ) {

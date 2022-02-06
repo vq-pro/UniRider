@@ -101,6 +101,7 @@ class WheelEditFragmentTest :
         verify(mockedEditMileage).setText("$MILEAGE")
         verify(mockedEditVoltageMax).setText("$VOLTAGE_MAX")
         verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
+        verify(mockedButtonSave).isEnabled = false
 
         verifyOnUpdateText(mockedEditName, "onUpdateName")
         verifyOnUpdateText(mockedEditMileage, "onUpdateMileage")
@@ -145,6 +146,7 @@ class WheelEditFragmentTest :
 
         // Then
         verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(
             fragment.updatedWheel, equalTo(
@@ -163,6 +165,7 @@ class WheelEditFragmentTest :
 
         // Then
         verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(
             fragment.updatedWheel, equalTo(
@@ -181,6 +184,7 @@ class WheelEditFragmentTest :
 
         // Then
         verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(
             fragment.updatedWheel, equalTo(
@@ -199,6 +203,7 @@ class WheelEditFragmentTest :
 
         // Then
         verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(
             fragment.updatedWheel, equalTo(

@@ -59,6 +59,8 @@ open class WheelEditFragment : BaseFragment() {
             editVoltageMax.setText("${initialWheel.voltageMax}")
             editVoltageMin.setText("${initialWheel.voltageMin}")
         }
+
+        buttonSave.isEnabled = false
     }
 
     fun onSave() = { _: View ->
@@ -74,6 +76,8 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.voltageMin,
             updatedWheel.voltageMax
         )
+
+        widgets.enable(buttonSave)
     }
 
     fun onUpdateName() = { newName: String ->
@@ -84,6 +88,8 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.voltageMin,
             updatedWheel.voltageMax
         )
+
+        widgets.enable(buttonSave)
     }
 
     fun onUpdateVoltageMax() = { newVoltage: String ->
@@ -94,6 +100,8 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.voltageMin,
             floatOf(newVoltage)
         )
+
+        widgets.enable(buttonSave)
     }
 
     fun onUpdateVoltageMin() = { newVoltage: String ->
@@ -104,5 +112,7 @@ open class WheelEditFragment : BaseFragment() {
             floatOf(newVoltage),
             updatedWheel.voltageMax
         )
+
+        widgets.enable(buttonSave)
     }
 }

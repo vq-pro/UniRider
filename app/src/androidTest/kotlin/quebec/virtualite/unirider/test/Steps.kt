@@ -21,6 +21,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSelectedText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
@@ -125,6 +126,11 @@ class Steps {
         click(R.id.button_save)
     }
 
+    @When("I don't set any new values")
+    fun setNoNewWheelValues() {
+
+    }
+
     @When("I start the app")
     fun startApp() {
         mainActivity = start(activityTestRule)!!
@@ -188,10 +194,9 @@ class Steps {
         }
     }
 
-    @When("^I select the (.*?)$")
-    fun whenSelect(wheelName: String) {
-        selectedWheel = db.findWheel(wheelName)!!
-        selectListViewItem(R.id.wheels, "name", wheelName)
+    @Then("the wheel cannot be saved")
+    fun wheelCannotBeSaved() {
+        assertThat(R.id.button_save, isDisabled())
     }
 
     @Then("the wheel was updated")
@@ -203,6 +208,12 @@ class Steps {
     @When("^I enter a voltage of (.*?)V$")
     fun whenEnterVoltage(voltage: Float) {
         enter(R.id.edit_voltage, voltage.toString())
+    }
+
+    @When("^I select the (.*?)$")
+    fun whenSelect(wheelName: String) {
+        selectedWheel = db.findWheel(wheelName)!!
+        selectListViewItem(R.id.wheels, "name", wheelName)
     }
 
     private fun calculateTotalMileage(): Int {
