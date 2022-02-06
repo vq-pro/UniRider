@@ -8,6 +8,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 
+// FIXME-2 Coverage
 class MainActivity : AppCompatActivity() {
 
     companion object {

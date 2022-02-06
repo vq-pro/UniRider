@@ -169,6 +169,22 @@ class WheelViewFragmentTest :
         verify(mockedTextBattery).text = ""
     }
 
+    @Test
+    fun onUpdateVoltage_whenOverTheTop_noDisplay() {
+        // Given
+        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.textBattery = mockedTextBattery
+
+        given(mockedCalculatorService.percentage(fragment.wheel, 200f))
+            .willReturn(2 * PERCENTAGE)
+
+        // When
+        fragment.onUpdateVoltage().invoke("200 ")
+
+        // Then
+        verify(mockedTextBattery).text = ""
+    }
+
     class TestableWheelViewFragment(val test: WheelViewFragmentTest) : WheelViewFragment() {
 
         override fun connectDb(function: () -> Unit) {
