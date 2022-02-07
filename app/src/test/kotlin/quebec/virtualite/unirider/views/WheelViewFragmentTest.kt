@@ -42,6 +42,9 @@ class WheelViewFragmentTest :
     val fragment: WheelViewFragment = TestableWheelViewFragment(this)
 
     @Mock
+    lateinit var mockedButtonDelete: Button
+
+    @Mock
     lateinit var mockedButtonEdit: Button
 
     @Mock
@@ -63,6 +66,7 @@ class WheelViewFragmentTest :
     fun before() {
         fragment.parmWheelId = ID
 
+        mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_mileage, mockedTextMileage)
@@ -102,12 +106,14 @@ class WheelViewFragmentTest :
         assertThat(fragment.editVoltage, equalTo(mockedEditVoltage))
         assertThat(fragment.textBattery, equalTo(mockedTextBattery))
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
+        assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
         verify(fragment.textName).setText(NAME)
         verify(mockedTextMileage).setText("$MILEAGE")
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
         verifyOnClick(mockedButtonEdit, "onEdit")
+        verifyOnClick(mockedButtonDelete, "onDelete")
     }
 
     @Test
@@ -121,6 +127,19 @@ class WheelViewFragmentTest :
 
         // Then
         assertThrows(WheelNotFoundException::class.java, result)
+    }
+
+    @Test
+    fun onDelete() {
+        // Given
+        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+
+        // When
+        fragment.onDelete().invoke(mockedView)
+
+        // Then
+        verify(mockedDb).deleteWheel(ID)
+        verifyNavigatedBack()
     }
 
     @Test
@@ -189,6 +208,10 @@ class WheelViewFragmentTest :
 
         override fun connectDb(function: () -> Unit) {
             test.connectDb(this, function)
+        }
+
+        override fun navigateBack() {
+            test.navigateBack()
         }
 
         override fun navigateTo(id: Int, param: Pair<String, Any>) {

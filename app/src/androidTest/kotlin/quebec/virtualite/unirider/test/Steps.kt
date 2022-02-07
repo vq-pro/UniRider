@@ -10,6 +10,7 @@ import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.not
 import org.junit.Rule
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
@@ -61,15 +62,21 @@ class Steps {
         db.deleteAll()
     }
 
+    @After
+    fun afterScenario() {
+        stop(activityTestRule)
+    }
+
     @When("I add a new wheel")
     fun addNewWheel() {
         selectedWheel = WheelEntity(0L, "", 0, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
-    @After
-    fun afterScenario() {
-        stop(activityTestRule)
+    @Then("I am back to the main screen and the wheel is gone")
+    fun backOnMainScreenAndWheelIsGone() {
+        assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
+        assertThat(R.id.wheels, not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))))
     }
 
     @Then("it shows that every field is editable")
@@ -110,6 +117,11 @@ class Steps {
         assertThat(R.id.total_mileage, hasText(calculateTotalMileage().toString()))
     }
 
+    @Then("^the selected entry is (.*?)$")
+    fun selectedEntryIs(expectedEntry: String) {
+        assertThat(R.id.wheels, hasSelectedText(expectedEntry))
+    }
+
     @When("I set these new values:")
     fun setNewWheelValues(newValues: DataTable) {
 
@@ -146,21 +158,16 @@ class Steps {
         mainActivity = start(activityTestRule)!!
     }
 
-    @Then("it blanks the displays")
-    fun thenBlanksTheDisplays() {
-        assertThat(R.id.edit_voltage, isEmpty())
-        assertThat(R.id.view_battery, isEmpty())
-    }
-
-    @Then("^the selected entry is (.*?)$")
-    fun theSelectedEntryIs(expectedEntry: String) {
-        assertThat(R.id.wheels, hasSelectedText(expectedEntry))
-    }
-
     @Then("the details view shows the details for that wheel")
     fun inDetailsView() {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
         assertThat(R.id.view_name, hasText(selectedWheel.name))
+    }
+
+    @Then("it blanks the displays")
+    fun blanksTheDisplays() {
+        assertThat(R.id.edit_voltage, isEmpty())
+        assertThat(R.id.view_battery, isEmpty())
     }
 
     @When("I blank the mileage")
@@ -212,6 +219,11 @@ class Steps {
         setText(R.id.edit_name, "Toto")
     }
 
+    @When("I delete the wheel")
+    fun deleteWheel() {
+        click(R.id.button_delete)
+    }
+
     @Then("the details view shows the correct name and a mileage of that wheel")
     fun detailsViewShowsNameAndMileage() {
         assertThat(R.id.view_name, hasText(selectedWheel.name))
@@ -221,7 +233,7 @@ class Steps {
     }
 
     @Then("^it displays a percentage of (.*?)$")
-    fun thenDisplaysPercentage(percentage: String) {
+    fun displaysPercentage(percentage: String) {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 

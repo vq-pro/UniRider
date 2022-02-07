@@ -34,4 +34,7 @@ Feature: Wheel View
     When I edit the wheel
     Then it shows that every field is editable
 
-#    FIXME-2 Delete wheel
+  Scenario: Deleting the wheel
+    Given I select the Veteran Abrams
+    When I delete the wheel
+    Then I am back to the main screen and the wheel is gone

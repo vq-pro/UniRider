@@ -53,6 +53,15 @@ class WheelDbImplTest {
     }
 
     @Test
+    fun deleteWheel() {
+        // When
+        dbImpl.deleteWheel(ID)
+
+        // Then
+        verify(mockedDao).deleteWheel(ID)
+    }
+
+    @Test
     fun findDuplicate_whenFoundWithDifferentId_true() {
         // Given
         given(mockedDao.findWheel(NAME))
