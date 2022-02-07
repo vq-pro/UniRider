@@ -1,5 +1,5 @@
 @Integration
-Feature: Wheel Edit
+Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
@@ -7,6 +7,16 @@ Feature: Wheel Edit
       | Veteran Sherman | 75.6V       | 100.8V      | 17622   |
       | KingSong S18    | 60.0V       | 84.0V       | 2850    |
     And I start the app
+
+  Scenario: Adding a wheel in full
+    When I add a new wheel
+    And I set these new values:
+      | Name        | Veteran Sherman Max |
+      | Mileage     | 150                 |
+      | Voltage Min | 74.5                |
+      | Voltage Max | 100.9               |
+    Then the wheel was added
+    And it shows the updated name and mileage on the main view
 
   Scenario: Editing a wheel in full
     Given I select the Veteran Sherman
@@ -37,13 +47,3 @@ Feature: Wheel Edit
       | cannot        | blank the minimum voltage   |
       | cannot        | change nothing              |
       | cannot        | reuse the name KingSong S18 |
-
-  Scenario: Adding a wheel in full
-    When I add a new wheel
-    And I set these new values:
-      | Name        | Veteran Sherman Max |
-      | Mileage     | 150                 |
-      | Voltage Min | 74.5                |
-      | Voltage Max | 100.9               |
-    Then the wheel was added
-    And it shows the updated name and mileage on the main view
