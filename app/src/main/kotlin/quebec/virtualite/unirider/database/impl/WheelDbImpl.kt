@@ -23,6 +23,10 @@ class WheelDbImpl(applicationContext: Context) : WheelDb {
         db.clearAllTables()
     }
 
+    override fun deleteWheel(id: Long) {
+        dao.deleteWheel(id)
+    }
+
     override fun findDuplicate(wheel: WheelEntity?): Boolean {
         val existing = dao.findWheel(wheel!!.name)
         return (existing != null) && (existing.id != wheel.id)

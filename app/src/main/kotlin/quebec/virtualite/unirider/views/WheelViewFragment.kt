@@ -22,6 +22,7 @@ open class WheelViewFragment : BaseFragment() {
         const val PARAMETER_WHEEL_ID = "wheelID"
     }
 
+    internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
     internal lateinit var textBattery: TextView
     internal lateinit var textMileage: TextView
@@ -48,9 +49,11 @@ open class WheelViewFragment : BaseFragment() {
         editVoltage = view.findViewById(R.id.edit_voltage)
         textBattery = view.findViewById(R.id.view_battery)
         buttonEdit = view.findViewById(R.id.button_edit)
+        buttonDelete = view.findViewById(R.id.button_delete)
 
         widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
         widgets.setOnClickListener(buttonEdit, onEdit())
+        widgets.setOnClickListener(buttonDelete, onDelete())
 
         connectDb {
             wheel = db.getWheel(parmWheelId!!)
@@ -59,6 +62,11 @@ open class WheelViewFragment : BaseFragment() {
             textName.setText(wheel.name)
             textMileage.setText(wheel.mileage.toString())
         }
+    }
+
+    fun onDelete() = { _: View ->
+        runDb { db.deleteWheel(wheel.id) }
+        navigateBack()
     }
 
     fun onEdit() = { _: View ->
@@ -74,13 +82,11 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun getPercentage(voltage: String): String {
-        val percentage = calculatorService.percentage(wheel, parseFloat(voltage))
 
-        when (percentage) {
-            in 0f..100f -> {
-                return "%.1f%%".format(ENGLISH, percentage)
-            }
-            else -> return ""
+        val percentage = calculatorService.percentage(wheel, parseFloat(voltage))
+        return when (percentage) {
+            in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
+            else -> ""
         }
     }
 }

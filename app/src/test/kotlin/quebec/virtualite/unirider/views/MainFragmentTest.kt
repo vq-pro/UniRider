@@ -104,8 +104,8 @@ class MainFragmentTest :
         fragment.onDisplayWheel().invoke(mockedView, WHEEL_ITEM_A_123)
 
         // Then
-        verify(mockedTextName).text = WHEEL_A
-        verify(mockedTextMileage).text = MILEAGE_A.toString()
+        verify(mockedTextName).setText(WHEEL_A)
+        verify(mockedTextMileage).setText(MILEAGE_A.toString())
     }
 
     @Test

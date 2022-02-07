@@ -8,6 +8,9 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 @Dao
 interface WheelMileageDao {
+    @Query("DELETE FROM wheel WHERE id=:id")
+    fun deleteWheel(id: Long)
+
     @Query("SELECT * FROM wheel WHERE name=:name")
     fun findWheel(name: String): WheelEntity?
 

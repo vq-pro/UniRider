@@ -1,5 +1,5 @@
 @Integration
-Feature: Wheel View
+Feature: Wheel Viewing
 
   Background:
     Given these wheels:
@@ -29,9 +29,12 @@ Feature: Wheel View
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108.0V  | 50.0%   |
 
-  Scenario: Editing the wheel
+  Scenario: => Editing the wheel
     Given I select the Veteran Sherman
     When I edit the wheel
     Then it shows that every field is editable
 
-#    FIXME-2 Delete wheel
+  Scenario: => Deleting the wheel
+    Given I select the Veteran Abrams
+    When I delete the wheel
+    Then I am back to the main screen and the wheel is gone
