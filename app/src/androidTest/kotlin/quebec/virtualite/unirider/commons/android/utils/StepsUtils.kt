@@ -12,6 +12,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.pressBack
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
@@ -134,6 +135,11 @@ object StepsUtils {
 
     fun isTrue(): Boolean {
         return true
+    }
+
+    fun longClick(id: Int) {
+        assertThat(id, isEnabled())
+        element(id)?.perform(longClick())
     }
 
     fun selectListViewItem(id: Int, fieldName: String, value: Any) {

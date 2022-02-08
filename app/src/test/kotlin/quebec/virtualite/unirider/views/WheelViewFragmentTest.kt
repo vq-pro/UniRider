@@ -113,7 +113,7 @@ class WheelViewFragmentTest :
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
         verifyOnClick(mockedButtonEdit, "onEdit")
-        verifyOnClick(mockedButtonDelete, "onDelete")
+        verifyOnLongClick(mockedButtonDelete, "onDelete")
     }
 
     @Test

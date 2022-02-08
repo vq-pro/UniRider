@@ -51,6 +51,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     private lateinit var lambdaOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
 
     @Captor
+    private lateinit var lambdaOnLongClick: ArgumentCaptor<(View) -> Boolean>
+
+    @Captor
     private lateinit var lambdaOnSelect: ArgumentCaptor<(View, Int) -> Unit>
 
     @Captor
@@ -102,6 +105,11 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     fun verifyOnClick(mockedField: View, methodName: String) {
         verify(mockedWidgets).setOnClickListener(eq(mockedField), lambdaOnClick.capture())
         assertThat(lambdaOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    }
+
+    fun verifyOnLongClick(mockedField: View, methodName: String) {
+        verify(mockedWidgets).setOnLongClickListener(eq(mockedField), lambdaOnLongClick.capture())
+        assertThat(lambdaOnLongClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyOnSelectItem(mockedField: ListView, methodName: String) {
