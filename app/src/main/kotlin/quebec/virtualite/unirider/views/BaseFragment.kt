@@ -17,8 +17,13 @@ open class BaseFragment : Fragment() {
         subThread(function)
     }
 
-    internal open fun navigateBack() {
-        findNavController().popBackStack()
+    internal open fun navigateBack(nb: Int = 1) {
+        if (nb < 1)
+            throw RuntimeException("Cannot go back $nb times")
+
+        var i = nb
+        while (i-- > 0)
+            findNavController().popBackStack()
     }
 
     internal open fun navigateTo(id: Int, param: Pair<String, Any>) {
