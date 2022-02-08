@@ -1,9 +1,15 @@
+# Features
+
+* [Main Screen](app/src/androidTest/assets/features/integration/Int0_Main.feature)
+* [Wheel Viewing](app/src/androidTest/assets/features/integration/Int1_WheelView.feature)
+* [Wheel Editing & Adding](app/src/androidTest/assets/features/integration/Int2_WheelEdit.feature)
+
 # Bluetooth
 
 * Go in phone and enable the "localization" permission in the app settings
 * When uninstall the app on the phone:
-    * Ensure to uninstall it for all users
-    * Settings / Application / <app> / Uninstall for all users
+  * Ensure to uninstall it for all users
+  * Settings / Application / <app> / Uninstall for all users
 
 # Directory Setup
 
