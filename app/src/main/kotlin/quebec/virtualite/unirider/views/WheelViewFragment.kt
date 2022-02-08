@@ -22,6 +22,8 @@ open class WheelViewFragment : BaseFragment() {
         const val PARAMETER_WHEEL_ID = "wheelID"
     }
 
+    private val CONSUMED = true
+
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
     internal lateinit var textBattery: TextView
@@ -53,7 +55,7 @@ open class WheelViewFragment : BaseFragment() {
 
         widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
         widgets.setOnClickListener(buttonEdit, onEdit())
-        widgets.setOnClickListener(buttonDelete, onDelete())
+        widgets.setOnLongClickListener(buttonDelete, onDelete())
 
         connectDb {
             wheel = db.getWheel(parmWheelId!!)
@@ -67,6 +69,7 @@ open class WheelViewFragment : BaseFragment() {
     fun onDelete() = { _: View ->
         runDb { db.deleteWheel(wheel.id) }
         navigateBack()
+        CONSUMED
     }
 
     fun onEdit() = { _: View ->

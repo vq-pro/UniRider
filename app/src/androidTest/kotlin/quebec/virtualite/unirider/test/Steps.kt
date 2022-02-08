@@ -26,6 +26,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSelectedTe
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
@@ -40,7 +41,6 @@ import quebec.virtualite.unirider.views.WheelViewFragment
 import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
-
 
 class Steps {
 
@@ -221,7 +221,7 @@ class Steps {
 
     @When("I delete the wheel")
     fun deleteWheel() {
-        click(R.id.button_delete)
+        longClick(R.id.button_delete)
     }
 
     @Then("the details view shows the correct name and a mileage of that wheel")

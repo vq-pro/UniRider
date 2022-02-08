@@ -70,6 +70,10 @@ open class WidgetUtils {
         }
     }
 
+    open fun setOnLongClickListener(widget: View?, callback: ((View) -> Boolean)?) {
+        widget!!.setOnLongClickListener({ view -> callback!!(view) })
+    }
+
     fun spinnerAdapter(view: View?, id: Int?, contents: List<String>?): SpinnerAdapter {
         return arrayAdapter(view!!, id!!, contents!!) as SpinnerAdapter
     }
