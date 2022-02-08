@@ -35,6 +35,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import quebec.virtualite.unirider.views.MainActivity
 import quebec.virtualite.unirider.views.MainFragment
+import quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
@@ -217,6 +218,12 @@ class Steps {
     @When("I change the name")
     fun changeWheelName() {
         setText(R.id.edit_name, "Toto")
+    }
+
+    @When("I confirm the deletion")
+    fun confirmDelete() {
+        assertThat(currentFragment(mainActivity), equalTo(WheelDeleteConfirmationFragment::class.java))
+        click(R.id.button_delete_confirmation)
     }
 
     @When("I delete the wheel")

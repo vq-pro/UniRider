@@ -5,13 +5,14 @@ import android.widget.EditText
 import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.never
@@ -19,7 +20,6 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.lang.Float.parseFloat
@@ -28,8 +28,8 @@ import java.lang.Float.parseFloat
 class WheelViewFragmentTest :
     BaseFragmentTest(WheelViewFragment::class.java) {
 
-    private val MILEAGE = 1111
-    private val ID = 2222L
+    private val ID = 1111L
+    private val MILEAGE = 2222
     private val NAME = "Sherman"
     private val PERCENTAGE = 100.0f
     private val PERCENTAGE_S = "100.0%"
@@ -108,7 +108,7 @@ class WheelViewFragmentTest :
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
         assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
-        verify(fragment.textName).setText(NAME)
+        verify(mockedTextName).setText(NAME)
         verify(mockedTextMileage).setText("$MILEAGE")
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
@@ -123,10 +123,12 @@ class WheelViewFragmentTest :
             .willReturn(null)
 
         // When
-        val result = { fragment.onViewCreated(mockedView, mockedBundle) }
+        fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        assertThrows(WheelNotFoundException::class.java, result)
+        verifyNoInteractions(mockedWidgets)
+        verify(mockedTextName, never()).setText(anyString())
+        verify(mockedTextMileage, never()).setText(anyString())
     }
 
     @Test
@@ -138,8 +140,10 @@ class WheelViewFragmentTest :
         fragment.onDelete().invoke(mockedView)
 
         // Then
-        verify(mockedDb).deleteWheel(ID)
-        verifyNavigatedBack()
+        verifyNavigatedTo(
+            R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment,
+            Pair(PARAMETER_WHEEL_ID, ID)
+        )
     }
 
     @Test
@@ -210,16 +214,16 @@ class WheelViewFragmentTest :
             test.connectDb(this, function)
         }
 
-        override fun navigateBack() {
-            test.navigateBack()
-        }
+//        override fun navigateBack() {
+//            test.navigateBack()
+//        }
 
         override fun navigateTo(id: Int, param: Pair<String, Any>) {
             test.navigateTo(id, param)
         }
 
-        override fun runDb(function: () -> Unit) {
-            test.runDb(function)
-        }
+//        override fun runDb(function: () -> Unit) {
+//            test.runDb(function)
+//        }
     }
 }

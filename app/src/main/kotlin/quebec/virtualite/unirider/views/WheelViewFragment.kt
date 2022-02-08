@@ -11,7 +11,6 @@ import org.apache.http.util.TextUtils.isEmpty
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
 import java.util.Locale.ENGLISH
@@ -22,8 +21,6 @@ open class WheelViewFragment : BaseFragment() {
         const val PARAMETER_WHEEL_ID = "wheelID"
     }
 
-    private val CONSUMED = true
-
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
     internal lateinit var textBattery: TextView
@@ -31,7 +28,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textName: TextView
     internal lateinit var editVoltage: EditText
 
-    internal lateinit var wheel: WheelEntity
+    internal var wheel: WheelEntity? = null
 
     internal var parmWheelId: Long? = 0
 
@@ -53,29 +50,32 @@ open class WheelViewFragment : BaseFragment() {
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
 
-        widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
-        widgets.setOnClickListener(buttonEdit, onEdit())
-        widgets.setOnLongClickListener(buttonDelete, onDelete())
-
         connectDb {
             wheel = db.getWheel(parmWheelId!!)
-                ?: throw WheelNotFoundException()
 
-            textName.setText(wheel.name)
-            textMileage.setText(wheel.mileage.toString())
+            if (wheel != null) {
+                widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
+                widgets.setOnClickListener(buttonEdit, onEdit())
+                widgets.setOnLongClickListener(buttonDelete, onDelete())
+
+                textName.setText(wheel!!.name)
+                textMileage.setText("${wheel!!.mileage}")
+            }
         }
     }
 
     fun onDelete() = { _: View ->
-        runDb { db.deleteWheel(wheel.id) }
-        navigateBack()
-        CONSUMED
+        navigateTo(
+            R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment,
+            Pair(PARAMETER_WHEEL_ID, wheel!!.id)
+        )
+        true
     }
 
     fun onEdit() = { _: View ->
         navigateTo(
             R.id.action_WheelViewFragment_to_WheelEditFragment,
-            Pair(PARAMETER_WHEEL_ID, wheel.id)
+            Pair(PARAMETER_WHEEL_ID, wheel!!.id)
         )
     }
 

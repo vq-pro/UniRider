@@ -59,7 +59,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     @Captor
     private lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
 
-    private var navigatedBack = false
+    private var navigatedBack: Int = 0
     private var navigatedTo: NavigatedTo? = null
 
     fun connectDb(fragment: BaseFragment, function: () -> Unit) {
@@ -86,8 +86,8 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
             .willReturn(mockedField)
     }
 
-    fun navigateBack() {
-        navigatedBack = true
+    fun navigateBack(nb: Int) {
+        navigatedBack += nb
     }
 
     fun navigateTo(id: Int, parms: Pair<String, Any>) {
@@ -133,8 +133,8 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         assertThat(lambdaOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
-    fun verifyNavigatedBack() {
-        assertThat(navigatedBack, equalTo(true))
+    fun verifyNavigatedBack(nb: Int = 1) {
+        assertThat(navigatedBack, equalTo(nb))
     }
 
     fun verifyNavigatedTo(id: Int, param: Pair<String, Any>) {

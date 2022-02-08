@@ -37,4 +37,5 @@ Feature: Wheel Viewing
   Scenario: => Deleting the wheel
     Given I select the Veteran Abrams
     When I delete the wheel
+    And I confirm the deletion
     Then I am back to the main screen and the wheel is gone

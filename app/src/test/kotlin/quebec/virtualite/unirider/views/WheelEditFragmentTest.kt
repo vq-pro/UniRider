@@ -338,8 +338,8 @@ class WheelEditFragmentTest :
             test.connectDb(this, function)
         }
 
-        override fun navigateBack() {
-            test.navigateBack()
+        override fun navigateBack(nb: Int) {
+            test.navigateBack(nb)
         }
 
         override fun runDb(function: () -> Unit) {
