@@ -21,6 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
+import quebec.virtualite.unirider.services.WheelScanner
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.lang.Float.parseFloat
 
@@ -40,6 +41,9 @@ class WheelViewFragmentTest :
 
     @InjectMocks
     val fragment: WheelViewFragment = TestableWheelViewFragment(this)
+
+    @Mock
+    lateinit var mockedButtonConnect: Button
 
     @Mock
     lateinit var mockedButtonDelete: Button
@@ -62,10 +66,14 @@ class WheelViewFragmentTest :
     @Mock
     lateinit var mockedTextName: TextView
 
+    @Mock
+    lateinit var mockedWheelScanner: WheelScanner
+
     @Before
     fun before() {
         fragment.parmWheelId = ID
 
+        mockField(R.id.button_connect, mockedButtonConnect)
         mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.view_name, mockedTextName)
@@ -105,6 +113,7 @@ class WheelViewFragmentTest :
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
         assertThat(fragment.editVoltage, equalTo(mockedEditVoltage))
         assertThat(fragment.textBattery, equalTo(mockedTextBattery))
+        assertThat(fragment.buttonConnect, equalTo(mockedButtonConnect))
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
         assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
@@ -112,6 +121,7 @@ class WheelViewFragmentTest :
         verify(mockedTextMileage).setText("$MILEAGE")
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
+        verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
         verifyOnLongClick(mockedButtonDelete, "onDelete")
     }
@@ -129,6 +139,21 @@ class WheelViewFragmentTest :
         verifyNoInteractions(mockedWidgets)
         verify(mockedTextName, never()).setText(anyString())
         verify(mockedTextMileage, never()).setText(anyString())
+    }
+
+    @Test
+    fun onConnect() {
+        // Given
+        fragment.textMileage = mockedTextMileage
+
+        // When
+        fragment.onConnect().invoke(mockedView)
+
+        // Then
+        verify(mockedWheelScanner).scan()
+
+        // FIXME-1 Remove this when we can actually connect
+        verify(mockedTextMileage).setText("655")
     }
 
     @Test

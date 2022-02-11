@@ -91,6 +91,11 @@ class Steps {
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, updatedWheel.mileage)))
     }
 
+    @Then("^the mileage is updated to (.*?)$")
+    fun mileageUpdatedToMoreThan(expectedMileage: Int) {
+        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
+    }
+
     @When("^I reuse the name (.*?)$")
     fun reuseTheWheelName(newName: String) {
         setText(R.id.edit_name, newName)
@@ -189,6 +194,11 @@ class Steps {
     @When("I blank the minimum voltage")
     fun blankWheelMinimumVoltage() {
         setText(R.id.edit_voltage_min, " ")
+    }
+
+    @Then("^the wheel's Bluetooth name is updated to (.*?)$")
+    fun bluetoothNameUpdatedTo(expectedBTName: String) {
+        // FIXME-0 Implement
     }
 
     @Then("I can enter the details for that wheel")
@@ -301,6 +311,11 @@ class Steps {
     fun wheelWasUpdated() {
         val wheel = db.getWheel(selectedWheel.id)
         assertThat(wheel, equalTo(updatedWheel))
+    }
+
+    @When("I connect to the wheel")
+    fun whenConnectToWheel() {
+        click(R.id.button_connect)
     }
 
     @When("^I enter a voltage of (.*?)V$")
