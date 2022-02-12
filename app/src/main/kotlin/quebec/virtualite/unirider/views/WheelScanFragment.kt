@@ -8,6 +8,8 @@ import android.widget.ListView
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.services.Device
+import quebec.virtualite.unirider.services.WheelScanner
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
 open class WheelScanFragment : BaseFragment() {
@@ -15,8 +17,9 @@ open class WheelScanFragment : BaseFragment() {
     internal val devices = ArrayList<String>()
 
     internal var parmWheelId: Long? = 0
-    internal var scanner = MainActivity.scanner
     internal var wheel: WheelEntity? = null
+
+    internal lateinit var scanner: WheelScanner
 
     private var widgets = WidgetUtils()
 
@@ -35,13 +38,13 @@ open class WheelScanFragment : BaseFragment() {
         lvWheels.isEnabled = true
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
-        scanner.scan { device ->
-            devices.add(device.name)
-            widgets.stringListAdapter(lvWheels, view, devices)
-        }
-
         connectDb {
             wheel = db.getWheel(parmWheelId!!)
+        }
+
+        connectScanner { device ->
+            devices.add(device.name)
+            widgets.stringListAdapter(lvWheels, view, devices)
         }
     }
 
@@ -55,5 +58,10 @@ open class WheelScanFragment : BaseFragment() {
         }
 
         navigateBack()
+    }
+
+    internal open fun connectScanner(function: (Device) -> Unit) {
+        scanner = MainActivity.scanner
+        scanner.scan(function)
     }
 }

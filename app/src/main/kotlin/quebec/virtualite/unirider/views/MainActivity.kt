@@ -7,31 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
-import quebec.virtualite.unirider.services.DeviceConnector
-import quebec.virtualite.unirider.services.DeviceConnectorImpl
-import quebec.virtualite.unirider.services.DeviceScanner
-import quebec.virtualite.unirider.services.DeviceScannerImpl
+import quebec.virtualite.unirider.services.WheelScanner
 
-// FIXME-2 Coverage
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        var connector: DeviceConnector = DeviceConnectorImpl()
-        var scanner: DeviceScanner = DeviceScannerImpl()
-
         lateinit var db: WheelDb
+        lateinit var scanner: WheelScanner
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
 
         db = WheelDbImpl(applicationContext)
+        scanner = WheelScanner(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
-        connector.init(this)
-        scanner.init(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

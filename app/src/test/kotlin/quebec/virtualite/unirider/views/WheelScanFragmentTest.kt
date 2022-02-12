@@ -6,7 +6,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -15,18 +14,23 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.services.DeviceScanner
+import quebec.virtualite.unirider.services.Device
+import quebec.virtualite.unirider.services.WheelScanner
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelScanFragmentTest :
     BaseFragmentTest(WheelScanFragment::class.java) {
 
+    private val DEVICE_ADDR = "ABCDEF"
+    private val DEVICE_NAME = "LK2000"
     private val ID = 1111L
     private val MILEAGE = 2222
     private val NAME = "Sherman"
     private val VOLTAGE_MAX = 100.8f
     private val VOLTAGE_MIN = 75.6f
     private val WHEEL = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+
+    private val DEVICE = Device(DEVICE_NAME, DEVICE_ADDR)
 
     @InjectMocks
     val fragment: WheelScanFragment = TestableWheelScanFragment(this)
@@ -35,7 +39,7 @@ class WheelScanFragmentTest :
     lateinit var mockedLvWheels: ListView
 
     @Mock
-    lateinit var mockedScanner: DeviceScanner
+    lateinit var mockedScanner: WheelScanner
 
     @Before
     fun before() {
@@ -66,15 +70,13 @@ class WheelScanFragmentTest :
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        verify(mockedScanner).scan(any())
         verify(mockedDb).getWheel(ID)
 
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(WHEEL))
 
         verify(mockedLvWheels).isEnabled = true
-        // FIXME-1 Reactivate using captor on scan
-//        verifyStringListAdapter(mockedLvWheels, listOf())
+        verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
         verifyOnItemClick(mockedLvWheels, "onSelectDevice")
     }
 
@@ -95,6 +97,10 @@ class WheelScanFragmentTest :
 
         override fun connectDb(function: () -> Unit) {
             test.connectDb(this, function)
+        }
+
+        override fun connectScanner(function: (Device) -> Unit) {
+            function.invoke(test.DEVICE)
         }
 
         override fun navigateBack(nb: Int) {
