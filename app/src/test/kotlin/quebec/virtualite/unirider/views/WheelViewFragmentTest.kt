@@ -21,7 +21,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.services.WheelScanner
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.lang.Float.parseFloat
 
@@ -38,6 +37,7 @@ class WheelViewFragmentTest :
     private val VOLTAGE_MAX = 100.8f
     private val VOLTAGE_MIN = 75.6f
     private val VOLTAGE = parseFloat(VOLTAGE_S)
+    private val WHEEL = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
 
     @InjectMocks
     val fragment: WheelViewFragment = TestableWheelViewFragment(this)
@@ -69,12 +69,10 @@ class WheelViewFragmentTest :
     @Mock
     lateinit var mockedTextName: TextView
 
-    @Mock
-    lateinit var mockedWheelScanner: WheelScanner
-
     @Before
     fun before() {
         fragment.parmWheelId = ID
+        fragment.wheel = WHEEL
 
         mockField(R.id.button_connect, mockedButtonConnect)
         mockField(R.id.button_delete, mockedButtonDelete)
@@ -101,9 +99,9 @@ class WheelViewFragmentTest :
     @Test
     fun onViewCreated() {
         // Given
-        val wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.wheel = null
         given(mockedDb.getWheel(ID))
-            .willReturn(wheel)
+            .willReturn(WHEEL)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -111,7 +109,7 @@ class WheelViewFragmentTest :
         // Then
         verify(mockedDb).getWheel(ID)
 
-        assertThat(fragment.wheel, equalTo(wheel))
+        assertThat(fragment.wheel, equalTo(WHEEL))
 
         assertThat(fragment.textName, equalTo(mockedTextName))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
@@ -156,18 +154,14 @@ class WheelViewFragmentTest :
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verify(mockedWheelScanner).scan()
-
-        // FIXME-1 Remove this when we can actually connect
-        verify(mockedTextBtName).setText("KS-14SMD2107")
-        verify(mockedTextMileage).setText("655")
+        verifyNavigatedTo(
+            R.id.action_WheelViewFragment_to_WheelScanFragment,
+            Pair(PARAMETER_WHEEL_ID, ID)
+        )
     }
 
     @Test
     fun onDelete() {
-        // Given
-        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-
         // When
         fragment.onDelete().invoke(mockedView)
 
@@ -180,9 +174,6 @@ class WheelViewFragmentTest :
 
     @Test
     fun onEdit() {
-        // Given
-        fragment.wheel = WheelEntity(ID, NAME, 0, 0f, 0f)
-
         // When
         fragment.onEdit().invoke(mockedView)
 
@@ -196,7 +187,6 @@ class WheelViewFragmentTest :
     @Test
     fun onUpdateVoltage() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         fragment.textBattery = mockedTextBattery
 
         given(mockedCalculatorService.percentage(fragment.wheel, VOLTAGE))
@@ -213,7 +203,6 @@ class WheelViewFragmentTest :
     @Test
     fun onUpdateVoltage_whenBlank_noDisplay() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         fragment.textBattery = mockedTextBattery
 
         // When
@@ -227,7 +216,6 @@ class WheelViewFragmentTest :
     @Test
     fun onUpdateVoltage_whenOverTheTop_noDisplay() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         fragment.textBattery = mockedTextBattery
 
         given(mockedCalculatorService.percentage(fragment.wheel, 200f))
@@ -246,16 +234,8 @@ class WheelViewFragmentTest :
             test.connectDb(this, function)
         }
 
-//        override fun navigateBack() {
-//            test.navigateBack()
-//        }
-
         override fun navigateTo(id: Int, param: Pair<String, Any>) {
             test.navigateTo(id, param)
         }
-
-//        override fun runDb(function: () -> Unit) {
-//            test.runDb(function)
-//        }
     }
 }

@@ -7,6 +7,7 @@
     <string name="button_edit">Edit</string>
     <string name="button_save">Save</string>
     <string name="button_scan">Scan</string>
+    <string name="fragment_label_bluetooth">Bluetooth</string>
     <string name="fragment_label_device">Device</string>
     <string name="fragment_label_scan">Devices</string>
     <string name="fragment_label_total_mileage">Total</string>

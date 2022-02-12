@@ -31,7 +31,9 @@ import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
 import org.hamcrest.Matchers.hasItem
+import org.hamcrest.Matchers.hasToString
 import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.startsWith
 import quebec.virtualite.unirider.views.MainActivity
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
@@ -142,9 +144,17 @@ object StepsUtils {
         element(id)?.perform(longClick())
     }
 
+    fun selectListViewItem(id: Int, value: String) {
+        onData(hasToString(startsWith(value)))
+            .inAdapterView(withId(id))
+            .atPosition(0)
+            .perform(click())
+    }
+
     fun selectListViewItem(id: Int, fieldName: String, value: Any) {
         onData(hasEntry(equalTo(fieldName), `is`(value)))
-            .inAdapterView(withId(id)).perform(click())
+            .inAdapterView(withId(id))
+            .perform(click())
     }
 
     fun selectSpinnerItem(id: Int, entry: String) {

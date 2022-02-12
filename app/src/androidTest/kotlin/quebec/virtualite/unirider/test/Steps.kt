@@ -92,7 +92,7 @@ class Steps {
     }
 
     @Then("^the mileage is updated to (.*?)$")
-    fun mileageUpdatedToMoreThan(expectedMileage: Int) {
+    fun mileageUpdatedTo(expectedMileage: Int) {
         assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
@@ -313,9 +313,10 @@ class Steps {
         assertThat(wheel, equalTo(updatedWheel))
     }
 
-    @When("I connect to the wheel")
-    fun whenConnectToWheel() {
+    @When("^I connect to the (.*?)$")
+    fun whenConnectTo(deviceName: String) {
         click(R.id.button_connect)
+        selectListViewItem(R.id.devices, deviceName)
     }
 
     @When("^I enter a voltage of (.*?)V$")

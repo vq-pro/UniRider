@@ -89,7 +89,7 @@ class MainFragmentTest :
 
         verify(mockedLVWheels).isEnabled = true
         verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
-        verifyOnSelectItem(mockedLVWheels, "onSelectWheel")
+        verifyOnItemClick(mockedLVWheels, "onSelectWheel")
 
         verify(mockedTextTotalMileage).text = (MILEAGE_A + MILEAGE_B + MILEAGE_C).toString()
     }

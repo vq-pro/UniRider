@@ -35,6 +35,11 @@
                 android:id="@+id/action_WheelViewFragment_to_WheelDeleteConfirmationFragment"
                 app:destination="@+id/WheelDeleteConfirmationFragment"
         />
+
+        <action
+                android:id="@+id/action_WheelViewFragment_to_WheelScanFragment"
+                app:destination="@+id/WheelScanFragment"
+        />
     </fragment>
 
     <fragment
@@ -47,5 +52,11 @@
             android:id="@+id/WheelDeleteConfirmationFragment"
             android:name="quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment"
             tools:layout="@layout/wheel_delete_confirmation_fragment">
+    </fragment>
+
+    <fragment
+            android:id="@+id/WheelScanFragment"
+            android:name="quebec.virtualite.unirider.views.WheelScanFragment"
+            tools:layout="@layout/wheel_scan_fragment">
     </fragment>
 </navigation>

@@ -12,7 +12,6 @@ import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.services.WheelScanner
 import java.lang.Float.parseFloat
 import java.util.Locale.ENGLISH
 
@@ -36,7 +35,6 @@ open class WheelViewFragment : BaseFragment() {
     internal var parmWheelId: Long? = 0
 
     private var calculatorService = CalculatorService()
-    private var wheelScanner = WheelScanner()
     private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -72,24 +70,18 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onConnect() = { _: View ->
-        wheelScanner.scan()
+        goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
+
         textBtName.setText("KS-14SMD2107")
         textMileage.setText("655")
     }
 
     fun onDelete() = { _: View ->
-        navigateTo(
-            R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment,
-            Pair(PARAMETER_WHEEL_ID, wheel!!.id)
-        )
-        true
+        goto(R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment)
     }
 
     fun onEdit() = { _: View ->
-        navigateTo(
-            R.id.action_WheelViewFragment_to_WheelEditFragment,
-            Pair(PARAMETER_WHEEL_ID, wheel!!.id)
-        )
+        goto(R.id.action_WheelViewFragment_to_WheelEditFragment)
     }
 
     fun onUpdateVoltage() = { voltageParm: String ->
@@ -104,5 +96,9 @@ open class WheelViewFragment : BaseFragment() {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }
+    }
+
+    private fun goto(id: Int) {
+        navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
     }
 }

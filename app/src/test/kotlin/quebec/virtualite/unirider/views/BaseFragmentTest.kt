@@ -51,10 +51,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     private lateinit var lambdaOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnLongClick: ArgumentCaptor<(View) -> Boolean>
-
-    @Captor
-    private lateinit var lambdaOnSelect: ArgumentCaptor<(View, Int) -> Unit>
+    private lateinit var lambdaOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
 
     @Captor
     private lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
@@ -107,19 +104,23 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         assertThat(lambdaOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
-    fun verifyOnLongClick(mockedField: View, methodName: String) {
-        verify(mockedWidgets).setOnLongClickListener(eq(mockedField), lambdaOnLongClick.capture())
-        assertThat(lambdaOnLongClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    fun verifyOnItemClick(mockedField: ListView, methodName: String) {
+        verify(mockedWidgets).setOnItemClickListener(eq(mockedField), lambdaOnItemClick.capture())
+        assertThat(lambdaOnItemClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
-    fun verifyOnSelectItem(mockedField: ListView, methodName: String) {
-        verify(mockedWidgets).setOnItemClickListener(eq(mockedField), lambdaOnSelect.capture())
-        assertThat(lambdaOnSelect.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    fun verifyOnLongClick(mockedField: View, methodName: String) {
+        verify(mockedWidgets).setOnLongClickListener(eq(mockedField), lambdaOnClick.capture())
+        assertThat(lambdaOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyOnUpdateText(mockedField: EditText, methodName: String) {
         verify(mockedWidgets).addTextChangedListener(eq(mockedField), lambdaOnUpdateText.capture())
         assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    }
+
+    fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {
+        verify(mockedWidgets).stringListAdapter(mockedField, mockedView, expectedData)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -134,10 +135,10 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun verifyNavigatedBack(nb: Int = 1) {
-        assertThat(navigatedBack, equalTo(nb))
+        assertThat("Didn't navigate back $nb times as expected", navigatedBack, equalTo(nb))
     }
 
     fun verifyNavigatedTo(id: Int, param: Pair<String, Any>) {
-        assertThat(navigatedTo, equalTo(NavigatedTo(id, param)))
+        assertThat("Didn't navigate to where we expected to", navigatedTo, equalTo(NavigatedTo(id, param)))
     }
 }
