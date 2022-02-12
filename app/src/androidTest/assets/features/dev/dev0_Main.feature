@@ -1,4 +1,4 @@
-@Integration
+@Dev
 Feature: Main Screen
 
   Background:

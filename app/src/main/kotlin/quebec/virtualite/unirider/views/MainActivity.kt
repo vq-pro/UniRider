@@ -5,9 +5,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
-import quebec.virtualite.unirider.services.WheelScanner
 
 class MainActivity : AppCompatActivity() {
 

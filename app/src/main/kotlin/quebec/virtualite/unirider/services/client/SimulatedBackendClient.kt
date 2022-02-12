@@ -9,10 +9,8 @@ import quebec.virtualite.unirider.services.SimulatedBackend
 const val TEST_USER = "joe_user"
 const val TEST_PASSWORD = "123456"
 
-class SimulatedBackendClient : SimulatedBackend, BaseBackendClient()
-{
-    override fun greet(name: String?, onSuccess: ((GreetingResponse) -> Unit)?)
-    {
+class SimulatedBackendClient : SimulatedBackend, BaseBackendClient() {
+    override fun greet(name: String?, onSuccess: ((GreetingResponse) -> Unit)?) {
         val token = BasicAuthentication.token(TEST_USER, TEST_PASSWORD)
 
         api(SERVER_BASE_URL, SimulatedBackendApi::class.java)

@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.ListView
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.services.Device
-import quebec.virtualite.unirider.services.WheelScanner
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
 open class WheelScanFragment : BaseFragment() {
@@ -54,7 +54,7 @@ open class WheelScanFragment : BaseFragment() {
 
         runDb {
             // FIXME-1 Add BT name
-            db.saveWheel(WheelEntity(wheel!!.id, wheel!!.name, 655, wheel!!.voltageMin, wheel!!.voltageMax))
+            db.saveWheel(WheelEntity(wheel!!.id, wheel!!.name, 695, wheel!!.voltageMin, wheel!!.voltageMax))
         }
 
         navigateBack()

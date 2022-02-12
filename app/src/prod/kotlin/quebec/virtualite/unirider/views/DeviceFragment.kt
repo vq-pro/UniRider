@@ -8,10 +8,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.services.Device
-import quebec.virtualite.unirider.services.DeviceConnector
-import quebec.virtualite.unirider.services.WheelData
-import quebec.virtualite.unirider.services.WheelViewModel
+import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.unirider.bluetooth.WheelViewModel
 
 class DeviceFragment : Fragment() {
 

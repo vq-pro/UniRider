@@ -1,4 +1,4 @@
-#@Integration
+#@Dev
 @Ignore
 Feature: Bluetooth Connection
 

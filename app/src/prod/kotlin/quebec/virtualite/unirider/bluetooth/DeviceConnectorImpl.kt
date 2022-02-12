@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.services
+package quebec.virtualite.unirider.bluetooth
 
 import android.app.Activity
 import android.bluetooth.*

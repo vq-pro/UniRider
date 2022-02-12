@@ -1,4 +1,4 @@
-@Integration
+@Dev
 Feature: Wheel Editing & Adding
 
   Background:

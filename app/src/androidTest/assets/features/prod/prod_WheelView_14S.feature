@@ -1,4 +1,4 @@
-@E2E
+@Prod
 Feature: Wheel Viewing - KingSong 14S
 
   Background:
@@ -7,9 +7,10 @@ Feature: Wheel Viewing - KingSong 14S
       | KingSong 14S | 48.0V       | 67.2V       | 650     |
     And I start the app
 
-  Scenario: Connecting to the wheel to update its mileage
+  @WIP
+  Scenario: Connecting to the 14S to update its mileage
     Given I select the KingSong 14S
     When I connect to the KS-14SMD2107
-    Then the mileage is updated to 655
-#  FIXME-0 Implement this
+    Then the mileage is updated to 695
+#  FIXME-1 Implement this
 #    And the wheel's Bluetooth name is updated to KS-14SMD2107

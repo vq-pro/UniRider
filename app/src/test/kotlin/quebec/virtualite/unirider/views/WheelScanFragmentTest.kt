@@ -13,9 +13,9 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.services.Device
-import quebec.virtualite.unirider.services.WheelScanner
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelScanFragmentTest :
@@ -89,7 +89,7 @@ class WheelScanFragmentTest :
         fragment.onSelectDevice().invoke(mockedView, 1)
 
         // Then
-        verify(mockedDb).saveWheel(WheelEntity(ID, NAME, 655, VOLTAGE_MIN, VOLTAGE_MAX))
+        verify(mockedDb).saveWheel(WheelEntity(ID, NAME, 695, VOLTAGE_MIN, VOLTAGE_MAX))
         verifyNavigatedBack()
     }
 

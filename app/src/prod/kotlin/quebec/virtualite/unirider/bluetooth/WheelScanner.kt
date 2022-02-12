@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.services
+package quebec.virtualite.unirider.bluetooth
 
 import quebec.virtualite.unirider.views.MainActivity
 import java.util.function.Consumer
