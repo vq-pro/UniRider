@@ -61,6 +61,9 @@ class WheelViewFragmentTest :
     lateinit var mockedTextBattery: TextView
 
     @Mock
+    lateinit var mockedTextBtName: TextView
+
+    @Mock
     lateinit var mockedTextMileage: TextView
 
     @Mock
@@ -77,6 +80,7 @@ class WheelViewFragmentTest :
         mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.view_name, mockedTextName)
+        mockField(R.id.view_bt_name, mockedTextBtName)
         mockField(R.id.view_mileage, mockedTextMileage)
         mockField(R.id.edit_voltage, mockedEditVoltage)
         mockField(R.id.view_battery, mockedTextBattery)
@@ -110,6 +114,7 @@ class WheelViewFragmentTest :
         assertThat(fragment.wheel, equalTo(wheel))
 
         assertThat(fragment.textName, equalTo(mockedTextName))
+        assertThat(fragment.textBtName, equalTo(mockedTextBtName))
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
         assertThat(fragment.editVoltage, equalTo(mockedEditVoltage))
         assertThat(fragment.textBattery, equalTo(mockedTextBattery))
@@ -144,6 +149,7 @@ class WheelViewFragmentTest :
     @Test
     fun onConnect() {
         // Given
+        fragment.textBtName = mockedTextBtName
         fragment.textMileage = mockedTextMileage
 
         // When
@@ -153,6 +159,7 @@ class WheelViewFragmentTest :
         verify(mockedWheelScanner).scan()
 
         // FIXME-1 Remove this when we can actually connect
+        verify(mockedTextBtName).setText("KS-14SMD2107")
         verify(mockedTextMileage).setText("655")
     }
 

@@ -198,7 +198,7 @@ class Steps {
 
     @Then("^the wheel's Bluetooth name is updated to (.*?)$")
     fun bluetoothNameUpdatedTo(expectedBTName: String) {
-        // FIXME-0 Implement
+        assertThat(R.id.view_bt_name, hasText(expectedBTName))
     }
 
     @Then("I can enter the details for that wheel")

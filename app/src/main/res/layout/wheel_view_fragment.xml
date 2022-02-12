@@ -22,6 +22,34 @@
                 android:textStyle="bold"
         />
 
+        <!-- Bluetooth Name -->
+        <LinearLayout
+                android:id="@+id/group_bt_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:layout_below="@+id/view_name"
+        >
+            <TextView
+                    android:id="@+id/view_bt_name_label"
+                    android:labelFor="@+id/view_bt_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="@string/label_bt_name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+
+            <TextView
+                    android:id="@+id/view_bt_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+        </LinearLayout>
+
         <!-- Mileage-->
         <LinearLayout
                 android:id="@+id/group_mileage"
@@ -29,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="40dp"
-                android:layout_below="@+id/view_name"
+                android:layout_below="@+id/group_bt_name"
         >
             <TextView
                     android:id="@+id/view_mileage_label"

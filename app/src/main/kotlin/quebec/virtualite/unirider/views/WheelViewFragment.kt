@@ -26,6 +26,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
     internal lateinit var textBattery: TextView
+    internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
     internal lateinit var textName: TextView
     internal lateinit var editVoltage: EditText
@@ -47,6 +48,7 @@ open class WheelViewFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         textName = view.findViewById(R.id.view_name)
+        textBtName = view.findViewById(R.id.view_bt_name)
         textMileage = view.findViewById(R.id.view_mileage)
         editVoltage = view.findViewById(R.id.edit_voltage)
         textBattery = view.findViewById(R.id.view_battery)
@@ -71,6 +73,7 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onConnect() = { _: View ->
         wheelScanner.scan()
+        textBtName.setText("KS-14SMD2107")
         textMileage.setText("655")
     }
 
