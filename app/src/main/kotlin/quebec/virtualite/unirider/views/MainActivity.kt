@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.WheelScanner
+import quebec.virtualite.unirider.bluetooth.WheelScannerImpl
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
 
         db = WheelDbImpl(applicationContext)
-        scanner = WheelScanner(this)
+        scanner = WheelScannerImpl(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

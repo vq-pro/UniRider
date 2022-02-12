@@ -1,9 +1,8 @@
 package quebec.virtualite.unirider.bluetooth
 
 import quebec.virtualite.unirider.views.MainActivity
-import java.util.function.Consumer
 
-open class WheelScanner(mainActivity: MainActivity) {
+open class WheelScannerImpl(mainActivity: MainActivity) : WheelScanner {
 
     private val connector: DeviceConnector = DeviceConnectorImpl()
     private val scanner: DeviceScanner = DeviceScannerImpl()
@@ -13,7 +12,7 @@ open class WheelScanner(mainActivity: MainActivity) {
         scanner.init(mainActivity)
     }
 
-    open fun scan(function: Consumer<Device>?) {
-        scanner.scan(function)
+    override fun scan(found: ((Device) -> Unit)?) {
+        scanner.scan(found)
     }
 }
