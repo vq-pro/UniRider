@@ -114,7 +114,6 @@ class WheelScanFragmentTest :
         fragment.onSelectDevice().invoke(mockedView, 1)
 
         // Then
-        // FIXME-0 Store the DEVICE_ADDR as well
         // FIXME-1 Get the actual value from the wheel instead of 695
         verify(mockedDb).saveWheel(WheelEntity(ID, NAME, DEVICE_NAME2, DEVICE_ADDR2, 695, VOLTAGE_MIN, VOLTAGE_MAX))
         verifyNavigatedBack()

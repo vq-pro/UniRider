@@ -10,7 +10,6 @@ import android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import androidx.appcompat.app.AppCompatActivity
-import quebec.virtualite.unirider.bluetooth.Device
 import java.util.*
 
 class DeviceConnectorImpl : DeviceConnector {
@@ -139,15 +138,14 @@ class DeviceConnectorImpl : DeviceConnector {
         }
     }
 
-    // FIXME-1 Change from device to deviceAddr, don't need the name here
-    override fun connect(device: Device, callback: (WheelData) -> Unit) {
+    override fun connect(deviceAddress: String, callback: (WheelData) -> Unit) {
 
         this.callback = callback
 
         val bluetoothManager = activity.getSystemService(AppCompatActivity.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
 
-        val bluetoothDevice = bluetoothAdapter.getRemoteDevice(device.address)
+        val bluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress)
         if (bluetoothDevice == null) {
             throw AssertionError("Impossible to connect to device")
         }
