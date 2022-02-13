@@ -56,21 +56,16 @@ open class WheelScanFragment : BaseFragment() {
 
         val device = devices[pos]
 
-        runDb {
-            db.saveWheel(
-                WheelEntity(
-                    wheel!!.id,
-                    wheel!!.name,
-                    device.name,
-                    device.address,
-                    695,
-                    wheel!!.voltageMin,
-                    wheel!!.voltageMax
-                )
+        scanner.getDeviceInfo(device.address) { info ->
+            val updatedWheel = WheelEntity(
+                wheel!!.id, wheel!!.name, device.name, device.address,
+                info.mileage, wheel!!.voltageMin, wheel!!.voltageMax
             )
-        }
 
-        navigateBack()
+            runDb { db.saveWheel(updatedWheel) }
+
+            navigateBack()
+        }
     }
 
     internal open fun connectScanner() {

@@ -14,6 +14,7 @@ import org.hamcrest.Matchers.not
 import org.junit.Rule
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.bluetooth.simulation.WheelScannerSimulation
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
@@ -55,6 +56,7 @@ class Steps {
 
     private lateinit var mainActivity: MainActivity
 
+    private var expectedMileage: Int = 0
     private lateinit var selectedWheel: WheelEntity
     private lateinit var updatedWheel: WheelEntity
 
@@ -89,6 +91,11 @@ class Steps {
     fun itShowsTheUpdatedNameAndMileageOnTheMainView() {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, updatedWheel.mileage)))
+    }
+
+    @Then("the mileage is updated")
+    fun mileageUpdated() {
+        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
     @Then("^the mileage is updated to (.*?)$")
@@ -330,6 +337,13 @@ class Steps {
     fun whenSelect(wheelName: String) {
         selectedWheel = db.findWheel(wheelName)!!
         selectListViewItem(R.id.wheels, "name", wheelName)
+    }
+
+    @Given("^I simulate a mileage of (.*?)$")
+    fun whenSimulatingMileage(simulatedMileage: Int) {
+        WheelScannerSimulation.setMileage(simulatedMileage)
+
+        expectedMileage = simulatedMileage
     }
 
     private fun calculateTotalMileage(): Int {
