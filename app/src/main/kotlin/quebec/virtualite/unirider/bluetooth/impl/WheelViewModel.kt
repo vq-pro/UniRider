@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.bluetooth
+package quebec.virtualite.unirider.bluetooth.impl
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

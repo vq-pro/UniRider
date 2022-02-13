@@ -1,5 +1,7 @@
-package quebec.virtualite.unirider.bluetooth
+package quebec.virtualite.unirider.bluetooth.impl
 
+import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.views.MainActivity
 
 open class WheelScannerImpl(mainActivity: MainActivity) : WheelScanner {

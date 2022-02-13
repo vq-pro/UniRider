@@ -14,7 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.Device
-import quebec.virtualite.unirider.bluetooth.WheelScannerImpl
+import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
@@ -40,7 +40,7 @@ class WheelScanFragmentTest :
     lateinit var mockedLvWheels: ListView
 
     @Mock
-    lateinit var mockedScanner: WheelScannerImpl
+    lateinit var mockedScanner: WheelScanner
 
     @Before
     fun before() {

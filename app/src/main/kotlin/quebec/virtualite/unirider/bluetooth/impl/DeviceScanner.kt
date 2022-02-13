@@ -1,6 +1,7 @@
-package quebec.virtualite.unirider.bluetooth
+package quebec.virtualite.unirider.bluetooth.impl
 
 import android.app.Activity
+import quebec.virtualite.unirider.bluetooth.Device
 import java.util.function.Consumer
 
 interface DeviceScanner {

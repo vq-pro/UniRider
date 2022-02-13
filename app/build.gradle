@@ -52,21 +52,25 @@ android {
     }
 
     productFlavors {
-        dev {
-            buildConfigField 'String', 'SCENARIOS', '"~@Prod"'
+        integration {
+            buildConfigField 'String', 'SCENARIOS', '"~@End2End"'
+
+            buildConfigField 'Boolean', 'BLUETOOTH_ACTUAL', 'false'
 
             // Backend is mocked
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
-            buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
+            buildConfigField 'Boolean', 'SERVER_ACTUAL', 'false'
         }
 
-        prod {
-            buildConfigField 'String', 'SCENARIOS', '"~@Dev"'
+        end2end {
+            buildConfigField 'String', 'SCENARIOS', '"~@Integration"'
+
+            buildConfigField 'Boolean', 'BLUETOOTH_ACTUAL', 'true'
 
             // Calls the backend
             // Equivalent to localhost, which doesn't work with unmocked Retrofit2 request
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2:8080"'
-            buildConfigField 'Boolean', 'SERVER_MOCKED', 'false'
+            buildConfigField 'Boolean', 'SERVER_ACTUAL', 'true'
         }
     }
 
@@ -76,16 +80,12 @@ android {
             java.srcDirs = ['src/androidTest/kotlin']
         }
 
+        main {
+            java.srcDirs = ['src/main/kotlin']
+        }
+
         test {
             java.srcDirs = ['src/test/kotlin']
-        }
-
-        prod {
-            java.srcDirs = ['src/main/kotlin', 'src/prod/kotlin']
-        }
-
-        dev {
-            java.srcDirs = ['src/main/kotlin', 'src/dev/kotlin']
         }
     }
 }

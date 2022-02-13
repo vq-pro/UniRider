@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.bluetooth
+package quebec.virtualite.unirider.bluetooth.impl
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
+import quebec.virtualite.unirider.bluetooth.Device
 import java.util.function.Consumer
 
 class DeviceScannerImpl : DeviceScanner {
