@@ -21,6 +21,7 @@ import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 class WheelDeleteConfirmationFragmentTest :
     BaseFragmentTest(WheelDeleteConfirmationFragment::class.java) {
 
+    private val BT_ADDR = "AA:BB:CC:DD:EE:FF"
     private val BT_NAME = "LK2000"
     private val ID = 1111L
     private val MILEAGE = 2222
@@ -64,7 +65,7 @@ class WheelDeleteConfirmationFragmentTest :
     @Test
     fun onViewCreated() {
         // Given
-        val wheel = WheelEntity(ID, NAME, BT_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        val wheel = WheelEntity(ID, NAME, BT_NAME, BT_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         given(mockedDb.getWheel(ID))
             .willReturn(wheel)
 
@@ -111,7 +112,7 @@ class WheelDeleteConfirmationFragmentTest :
     @Test
     fun onDelete() {
         // Given
-        fragment.wheel = WheelEntity(ID, NAME, BT_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.wheel = WheelEntity(ID, NAME, BT_NAME, BT_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
 
         // When
         fragment.onDelete().invoke(mockedView)

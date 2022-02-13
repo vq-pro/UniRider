@@ -11,6 +11,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 @RunWith(MockitoJUnitRunner::class)
 class SaveComparatorTest {
 
+    private val BT_ADDR = "AA:BB:CC:DD:EE:FF"
     private val BT_NAME = "LK2000"
     private val ID = 1111L
     private val MILEAGE = 2222
@@ -44,8 +45,8 @@ class SaveComparatorTest {
 
     private fun canSave(name: String, mileage: Int, voltageMin: Float, voltageMax: Float, expectedCanSave: Boolean) {
         // Given
-        val initial = WheelEntity(ID, NAME, BT_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-        val updated = WheelEntity(ID, name.trim(), BT_NAME, mileage, voltageMin, voltageMax)
+        val initial = WheelEntity(ID, NAME, BT_NAME, BT_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        val updated = WheelEntity(ID, name.trim(), BT_NAME, BT_ADDR, mileage, voltageMin, voltageMax)
 
         // When
         val result = comparator.canSave(updated, initial)

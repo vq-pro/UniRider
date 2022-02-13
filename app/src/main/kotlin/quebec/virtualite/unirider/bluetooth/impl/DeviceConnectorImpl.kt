@@ -139,6 +139,7 @@ class DeviceConnectorImpl : DeviceConnector {
         }
     }
 
+    // FIXME-1 Change from device to deviceAddr, don't need the name here
     override fun connect(device: Device, callback: (WheelData) -> Unit) {
 
         this.callback = callback

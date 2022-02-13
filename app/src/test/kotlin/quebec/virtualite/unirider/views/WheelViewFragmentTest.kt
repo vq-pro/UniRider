@@ -28,6 +28,7 @@ import java.lang.Float.parseFloat
 class WheelViewFragmentTest :
     BaseFragmentTest(WheelViewFragment::class.java) {
 
+    private val BT_ADDR = "AA:BB:CC:DD:EE:FF"
     private val BT_NAME = "LK2000"
     private val ID = 1111L
     private val MILEAGE = 2222
@@ -38,7 +39,7 @@ class WheelViewFragmentTest :
     private val VOLTAGE_MAX = 100.8f
     private val VOLTAGE_MIN = 75.6f
     private val VOLTAGE = parseFloat(VOLTAGE_S)
-    private val WHEEL = WheelEntity(ID, NAME, BT_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+    private val WHEEL = WheelEntity(ID, NAME, BT_NAME, BT_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
 
     @InjectMocks
     val fragment: WheelViewFragment = TestableWheelViewFragment(this)
