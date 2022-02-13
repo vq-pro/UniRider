@@ -1,4 +1,3 @@
-@Integration
 Feature: Wheel Editing & Adding
 
   Background:

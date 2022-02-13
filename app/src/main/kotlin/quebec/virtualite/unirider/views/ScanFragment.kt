@@ -8,9 +8,8 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.services.Device
+import quebec.virtualite.unirider.bluetooth.Device
 
 class ScanFragment : Fragment() {
 

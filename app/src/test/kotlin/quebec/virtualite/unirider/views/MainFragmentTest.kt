@@ -63,9 +63,9 @@ class MainFragmentTest :
         given(mockedDb.getWheels())
             .willReturn(
                 listOf(
-                    WheelEntity(ID_C, WHEEL_C, MILEAGE_C, 0f, 0f),
-                    WheelEntity(ID_B, WHEEL_B, MILEAGE_B, 0f, 0f),
-                    WheelEntity(ID_A, WHEEL_A, MILEAGE_A, 0f, 0f),
+                    WheelEntity(ID_C, WHEEL_C, "", MILEAGE_C, 0f, 0f),
+                    WheelEntity(ID_B, WHEEL_B, "", MILEAGE_B, 0f, 0f),
+                    WheelEntity(ID_A, WHEEL_A, "", MILEAGE_A, 0f, 0f),
                 )
             )
 
@@ -89,7 +89,7 @@ class MainFragmentTest :
 
         verify(mockedLVWheels).isEnabled = true
         verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
-        verifyOnSelectItem(mockedLVWheels, "onSelectWheel")
+        verifyOnItemClick(mockedLVWheels, "onSelectWheel")
 
         verify(mockedTextTotalMileage).text = (MILEAGE_A + MILEAGE_B + MILEAGE_C).toString()
     }

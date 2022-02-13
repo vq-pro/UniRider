@@ -28,6 +28,7 @@ import java.lang.Float.parseFloat
 class WheelViewFragmentTest :
     BaseFragmentTest(WheelViewFragment::class.java) {
 
+    private val BT_NAME = "LK2000"
     private val ID = 1111L
     private val MILEAGE = 2222
     private val NAME = "Sherman"
@@ -37,9 +38,13 @@ class WheelViewFragmentTest :
     private val VOLTAGE_MAX = 100.8f
     private val VOLTAGE_MIN = 75.6f
     private val VOLTAGE = parseFloat(VOLTAGE_S)
+    private val WHEEL = WheelEntity(ID, NAME, BT_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
 
     @InjectMocks
     val fragment: WheelViewFragment = TestableWheelViewFragment(this)
+
+    @Mock
+    lateinit var mockedButtonConnect: Button
 
     @Mock
     lateinit var mockedButtonDelete: Button
@@ -57,6 +62,9 @@ class WheelViewFragmentTest :
     lateinit var mockedTextBattery: TextView
 
     @Mock
+    lateinit var mockedTextBtName: TextView
+
+    @Mock
     lateinit var mockedTextMileage: TextView
 
     @Mock
@@ -65,10 +73,13 @@ class WheelViewFragmentTest :
     @Before
     fun before() {
         fragment.parmWheelId = ID
+        fragment.wheel = WHEEL
 
+        mockField(R.id.button_connect, mockedButtonConnect)
         mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.view_name, mockedTextName)
+        mockField(R.id.view_bt_name, mockedTextBtName)
         mockField(R.id.view_mileage, mockedTextMileage)
         mockField(R.id.edit_voltage, mockedEditVoltage)
         mockField(R.id.view_battery, mockedTextBattery)
@@ -89,9 +100,9 @@ class WheelViewFragmentTest :
     @Test
     fun onViewCreated() {
         // Given
-        val wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.wheel = null
         given(mockedDb.getWheel(ID))
-            .willReturn(wheel)
+            .willReturn(WHEEL)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -99,19 +110,23 @@ class WheelViewFragmentTest :
         // Then
         verify(mockedDb).getWheel(ID)
 
-        assertThat(fragment.wheel, equalTo(wheel))
+        assertThat(fragment.wheel, equalTo(WHEEL))
 
         assertThat(fragment.textName, equalTo(mockedTextName))
+        assertThat(fragment.textBtName, equalTo(mockedTextBtName))
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
         assertThat(fragment.editVoltage, equalTo(mockedEditVoltage))
         assertThat(fragment.textBattery, equalTo(mockedTextBattery))
+        assertThat(fragment.buttonConnect, equalTo(mockedButtonConnect))
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
         assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
         verify(mockedTextName).setText(NAME)
+        verify(mockedTextBtName).setText(BT_NAME)
         verify(mockedTextMileage).setText("$MILEAGE")
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
+        verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
         verifyOnLongClick(mockedButtonDelete, "onDelete")
     }
@@ -128,14 +143,28 @@ class WheelViewFragmentTest :
         // Then
         verifyNoInteractions(mockedWidgets)
         verify(mockedTextName, never()).setText(anyString())
+        verify(mockedTextBtName, never()).setText(anyString())
         verify(mockedTextMileage, never()).setText(anyString())
     }
 
     @Test
-    fun onDelete() {
+    fun onConnect() {
         // Given
-        fragment.wheel = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.textBtName = mockedTextBtName
+        fragment.textMileage = mockedTextMileage
 
+        // When
+        fragment.onConnect().invoke(mockedView)
+
+        // Then
+        verifyNavigatedTo(
+            R.id.action_WheelViewFragment_to_WheelScanFragment,
+            Pair(PARAMETER_WHEEL_ID, ID)
+        )
+    }
+
+    @Test
+    fun onDelete() {
         // When
         fragment.onDelete().invoke(mockedView)
 
@@ -148,9 +177,6 @@ class WheelViewFragmentTest :
 
     @Test
     fun onEdit() {
-        // Given
-        fragment.wheel = WheelEntity(ID, NAME, 0, 0f, 0f)
-
         // When
         fragment.onEdit().invoke(mockedView)
 
@@ -164,7 +190,6 @@ class WheelViewFragmentTest :
     @Test
     fun onUpdateVoltage() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         fragment.textBattery = mockedTextBattery
 
         given(mockedCalculatorService.percentage(fragment.wheel, VOLTAGE))
@@ -181,7 +206,6 @@ class WheelViewFragmentTest :
     @Test
     fun onUpdateVoltage_whenBlank_noDisplay() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         fragment.textBattery = mockedTextBattery
 
         // When
@@ -195,7 +219,6 @@ class WheelViewFragmentTest :
     @Test
     fun onUpdateVoltage_whenOverTheTop_noDisplay() {
         // Given
-        fragment.wheel = WheelEntity(0, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         fragment.textBattery = mockedTextBattery
 
         given(mockedCalculatorService.percentage(fragment.wheel, 200f))
@@ -214,16 +237,8 @@ class WheelViewFragmentTest :
             test.connectDb(this, function)
         }
 
-//        override fun navigateBack() {
-//            test.navigateBack()
-//        }
-
         override fun navigateTo(id: Int, param: Pair<String, Any>) {
             test.navigateTo(id, param)
         }
-
-//        override fun runDb(function: () -> Unit) {
-//            test.runDb(function)
-//        }
     }
 }

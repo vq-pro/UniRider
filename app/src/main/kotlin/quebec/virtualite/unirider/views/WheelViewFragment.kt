@@ -21,9 +21,11 @@ open class WheelViewFragment : BaseFragment() {
         const val PARAMETER_WHEEL_ID = "wheelID"
     }
 
+    internal lateinit var buttonConnect: Button
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
     internal lateinit var textBattery: TextView
+    internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
     internal lateinit var textName: TextView
     internal lateinit var editVoltage: EditText
@@ -44,9 +46,11 @@ open class WheelViewFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         textName = view.findViewById(R.id.view_name)
+        textBtName = view.findViewById(R.id.view_bt_name)
         textMileage = view.findViewById(R.id.view_mileage)
         editVoltage = view.findViewById(R.id.edit_voltage)
         textBattery = view.findViewById(R.id.view_battery)
+        buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
 
@@ -55,28 +59,30 @@ open class WheelViewFragment : BaseFragment() {
 
             if (wheel != null) {
                 widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
+                widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
                 widgets.setOnLongClickListener(buttonDelete, onDelete())
 
                 textName.setText(wheel!!.name)
+                textBtName.setText(wheel!!.btName)
                 textMileage.setText("${wheel!!.mileage}")
             }
         }
     }
 
+    fun onConnect() = { _: View ->
+        goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
+
+        textBtName.setText("KS-14SMD2107")
+        textMileage.setText("655")
+    }
+
     fun onDelete() = { _: View ->
-        navigateTo(
-            R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment,
-            Pair(PARAMETER_WHEEL_ID, wheel!!.id)
-        )
-        true
+        goto(R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment)
     }
 
     fun onEdit() = { _: View ->
-        navigateTo(
-            R.id.action_WheelViewFragment_to_WheelEditFragment,
-            Pair(PARAMETER_WHEEL_ID, wheel!!.id)
-        )
+        goto(R.id.action_WheelViewFragment_to_WheelEditFragment)
     }
 
     fun onUpdateVoltage() = { voltageParm: String ->
@@ -91,5 +97,9 @@ open class WheelViewFragment : BaseFragment() {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }
+    }
+
+    private fun goto(id: Int) {
+        navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
     }
 }

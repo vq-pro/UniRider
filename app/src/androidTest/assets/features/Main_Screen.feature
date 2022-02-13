@@ -1,4 +1,3 @@
-@Integration
 Feature: Main Screen
 
   Background:

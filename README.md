@@ -38,6 +38,12 @@
   * Gradle-aware Make
   * Run 'Gradle Unit Tests'
 
+## Cucumber (WIP)
+
+* Same thing as previous
+* Add an instrumentation argument:
+  tags = @WIP
+
 ## To choose between E2E (global) and App (smaller operations)
 
 * Menu Build

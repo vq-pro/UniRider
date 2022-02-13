@@ -1,13 +1,13 @@
-package quebec.virtualite.unirider.services;
+package quebec.virtualite.unirider.bluetooth.impl;
 
-import static quebec.virtualite.unirider.services.InMotionAdapter.Model.Glide3;
-import static quebec.virtualite.unirider.services.InMotionAdapter.Model.L6;
-import static quebec.virtualite.unirider.services.InMotionAdapter.Model.R0;
-import static quebec.virtualite.unirider.services.InMotionAdapter.Model.V10;
-import static quebec.virtualite.unirider.services.InMotionAdapter.Model.V10F;
-import static quebec.virtualite.unirider.services.InMotionAdapter.Model.V10F_test;
-import static quebec.virtualite.unirider.services.InMotionAdapter.Model.V10_test;
-import static quebec.virtualite.unirider.services.InMotionAdapter.Model.V8;
+import static quebec.virtualite.unirider.bluetooth.impl.InMotionAdapter.Model.Glide3;
+import static quebec.virtualite.unirider.bluetooth.impl.InMotionAdapter.Model.L6;
+import static quebec.virtualite.unirider.bluetooth.impl.InMotionAdapter.Model.R0;
+import static quebec.virtualite.unirider.bluetooth.impl.InMotionAdapter.Model.V10;
+import static quebec.virtualite.unirider.bluetooth.impl.InMotionAdapter.Model.V10F;
+import static quebec.virtualite.unirider.bluetooth.impl.InMotionAdapter.Model.V10F_test;
+import static quebec.virtualite.unirider.bluetooth.impl.InMotionAdapter.Model.V10_test;
+import static quebec.virtualite.unirider.bluetooth.impl.InMotionAdapter.Model.V8;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -31,16 +31,12 @@ android {
     }
 
     buildTypes {
-        debug {
-            buildConfigField 'Integer', 'SERVER_PORT', '8080'
-            testCoverageEnabled true
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField 'Integer', 'SERVER_PORT', '8080'
-            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
+        }
+        debug {
+            testCoverageEnabled true
         }
     }
 
@@ -56,35 +52,25 @@ android {
     }
 
     productFlavors {
-        e2e {
+        integration {
+            buildConfigField 'String', 'SCENARIOS', '"~@End2End"'
+
+            buildConfigField 'Boolean', 'BLUETOOTH_ACTUAL', 'false'
+
+            // Backend is mocked
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
+            buildConfigField 'Boolean', 'SERVER_ACTUAL', 'false'
+        }
+
+        end2end {
+            buildConfigField 'String', 'SCENARIOS', '"~@Integration"'
+
+            buildConfigField 'Boolean', 'BLUETOOTH_ACTUAL', 'true'
+
             // Calls the backend
-            buildConfigField 'String', 'SCENARIOS', '"@E2E"'
-
-            buildConfigField 'Boolean', 'BLUETOOTH_MOCKED', 'false'
-
             // Equivalent to localhost, which doesn't work with unmocked Retrofit2 request
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2:8080"'
-            buildConfigField 'Boolean', 'SERVER_MOCKED', 'false'
-        }
-
-        integration {
-            // Backend is mocked
-            buildConfigField 'String', 'SCENARIOS', '"@Integration"'
-
-            buildConfigField 'Boolean', 'BLUETOOTH_MOCKED', 'true'
-
-            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
-            buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
-        }
-
-        // Like integration, but just those @WIP
-        wip {
-            buildConfigField 'String', 'SCENARIOS', '"@WIP"'
-
-            buildConfigField 'Boolean', 'BLUETOOTH_MOCKED', 'true'
-
-            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
-            buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
+            buildConfigField 'Boolean', 'SERVER_ACTUAL', 'true'
         }
     }
 
@@ -93,9 +79,11 @@ android {
             assets.srcDirs = ['src/androidTest/assets']
             java.srcDirs = ['src/androidTest/kotlin']
         }
+
         main {
             java.srcDirs = ['src/main/kotlin']
         }
+
         test {
             java.srcDirs = ['src/test/kotlin']
         }
@@ -108,8 +96,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
 
     // Database
     def room_version = "2.4.1"

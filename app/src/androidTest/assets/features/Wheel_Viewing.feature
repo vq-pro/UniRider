@@ -1,4 +1,3 @@
-@Integration
 Feature: Wheel Viewing
 
   Background:
@@ -15,6 +14,13 @@ Feature: Wheel Viewing
   Scenario: Viewing a wheel's details in full
     When I select the KingSong S20
     Then the details view shows the correct name and a mileage of that wheel
+
+  @Integration
+  Scenario: Connecting to a wheel to update its mileage
+    Given I select the KingSong 14S
+    When I connect to the KS-14Sxx9999
+    Then the mileage is updated to 695
+    And the wheel's Bluetooth name is updated to KS-14Sxx9999
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I select the <Wheel>

@@ -70,7 +70,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", 0, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", 0, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -89,6 +89,11 @@ class Steps {
     fun itShowsTheUpdatedNameAndMileageOnTheMainView() {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, updatedWheel.mileage)))
+    }
+
+    @Then("^the mileage is updated to (.*?)$")
+    fun mileageUpdatedTo(expectedMileage: Int) {
+        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
     @When("^I reuse the name (.*?)$")
@@ -146,6 +151,7 @@ class Steps {
         updatedWheel = WheelEntity(
             selectedWheel.id,
             mapEntity["Name"]!!,
+            "",
             parseInt(mapEntity["Mileage"]!!),
             parseFloat(mapEntity["Voltage Min"]!!),
             parseFloat(mapEntity["Voltage Max"]!!)
@@ -189,6 +195,11 @@ class Steps {
     @When("I blank the minimum voltage")
     fun blankWheelMinimumVoltage() {
         setText(R.id.edit_voltage_min, " ")
+    }
+
+    @Then("^the wheel's Bluetooth name is updated to (.*?)$")
+    fun bluetoothNameUpdatedTo(expectedBTName: String) {
+        assertThat(R.id.view_bt_name, hasText(expectedBTName))
     }
 
     @Then("I can enter the details for that wheel")
@@ -261,7 +272,7 @@ class Steps {
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
-                WheelEntity(0, row[0], parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
+                WheelEntity(0, row[0], "", parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
             }
             .collect(toList())
 
@@ -301,6 +312,12 @@ class Steps {
     fun wheelWasUpdated() {
         val wheel = db.getWheel(selectedWheel.id)
         assertThat(wheel, equalTo(updatedWheel))
+    }
+
+    @When("^I connect to the (.*?)$")
+    fun whenConnectTo(deviceName: String) {
+        click(R.id.button_connect)
+        selectListViewItem(R.id.devices, deviceName)
     }
 
     @When("^I enter a voltage of (.*?)V$")

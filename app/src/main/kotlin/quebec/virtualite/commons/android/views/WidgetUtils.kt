@@ -1,5 +1,6 @@
 package quebec.virtualite.commons.android.views
 
+import android.R
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -43,8 +44,8 @@ open class WidgetUtils {
         listView!!.adapter = CustomListAdapter(view!!.context, id!!, items!!, display!!)
     }
 
-    open fun listAdapter(listView: ListView, view: View?, id: Int?, contents: List<String>?) {
-        listView.adapter = arrayAdapter(view!!, id!!, contents!!) as ListAdapter
+    open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {
+        listView.adapter = arrayAdapter(view!!, R.layout.simple_list_item_1, contents!!) as ListAdapter
     }
 
     open fun onItemSelectedListener(callback: (index: Int) -> Unit): AdapterView.OnItemSelectedListener {
@@ -60,7 +61,7 @@ open class WidgetUtils {
     }
 
     open fun setOnClickListener(widget: View?, callback: ((View) -> Unit)?) {
-        widget!!.setOnClickListener({ view -> callback!!(view) })
+        widget!!.setOnClickListener { view -> callback!!(view) }
     }
 
     open fun setOnItemClickListener(listView: ListView?, callback: ((View, Int) -> Unit)?) {
@@ -70,8 +71,11 @@ open class WidgetUtils {
         }
     }
 
-    open fun setOnLongClickListener(widget: View?, callback: ((View) -> Boolean)?) {
-        widget!!.setOnLongClickListener({ view -> callback!!(view) })
+    open fun setOnLongClickListener(widget: View?, callback: ((View) -> Unit)?) {
+        widget!!.setOnLongClickListener { view ->
+            callback!!(view)
+            true
+        }
     }
 
     fun spinnerAdapter(view: View?, id: Int?, contents: List<String>?): SpinnerAdapter {

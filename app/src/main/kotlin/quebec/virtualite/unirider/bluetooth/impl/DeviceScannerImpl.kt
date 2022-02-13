@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.services
+package quebec.virtualite.unirider.bluetooth.impl
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
+import quebec.virtualite.unirider.bluetooth.Device
 import java.util.function.Consumer
 
 class DeviceScannerImpl : DeviceScanner {
@@ -27,7 +28,7 @@ class DeviceScannerImpl : DeviceScanner {
         return !bluetoothAdapter.isDiscovering
     }
 
-    override fun scan(whenDetecting: Consumer<Device>) {
+    override fun scan(whenDetecting: Consumer<Device>?) {
 
         val broadcastReceiver = object : BroadcastReceiver() {
 
@@ -41,7 +42,7 @@ class DeviceScannerImpl : DeviceScanner {
                             return
                         }
 
-                        whenDetecting.accept(Device(device.name, device.address))
+                        whenDetecting!!.accept(Device(device.name, device.address))
                     }
                 }
             }

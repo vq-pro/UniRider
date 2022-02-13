@@ -1,9 +1,16 @@
-package quebec.virtualite.unirider.services
+package quebec.virtualite.unirider.bluetooth.impl
 
 import android.app.Activity
-import android.bluetooth.*
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothProfile
 import androidx.appcompat.app.AppCompatActivity
+import quebec.virtualite.unirider.bluetooth.Device
 import java.util.*
 
 class DeviceConnectorImpl : DeviceConnector {

@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.services;
+package quebec.virtualite.unirider.bluetooth.impl;
 
 import java.util.Calendar;
 
