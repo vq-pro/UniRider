@@ -52,6 +52,14 @@ android {
     }
 
     productFlavors {
+        dev {
+            buildConfigField 'String', 'SCENARIOS', '"@Dev"'
+
+            // Backend is mocked
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
+            buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
+        }
+
         prod {
             buildConfigField 'String', 'SCENARIOS', '"@Prod"'
 
@@ -60,14 +68,6 @@ android {
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2:8080"'
             buildConfigField 'Boolean', 'SERVER_MOCKED', 'false'
         }
-
-        dev {
-            buildConfigField 'String', 'SCENARIOS', '"@Dev"'
-
-            // Backend is mocked
-            buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
-            buildConfigField 'Boolean', 'SERVER_MOCKED', 'true'
-        }
     }
 
     sourceSets {
@@ -75,6 +75,7 @@ android {
             assets.srcDirs = ['src/androidTest/assets']
             java.srcDirs = ['src/androidTest/kotlin']
         }
+
         test {
             java.srcDirs = ['src/test/kotlin']
         }

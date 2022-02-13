@@ -21,8 +21,7 @@ Feature: Wheel Viewing
     Given I select the KingSong 14S
     When I connect to the KS-14Sxx9999
     Then the mileage is updated to 695
-#  FIXME-0 Implement this
-#    And the wheel's Bluetooth name is updated to KS-14SMD2107
+    And the wheel's Bluetooth name is updated to KS-14Sxx9999
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I select the <Wheel>

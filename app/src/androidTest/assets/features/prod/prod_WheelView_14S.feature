@@ -1,3 +1,4 @@
+#FIXME-1 Restructure features so that this is only seen in prod mode, no tags. The @Dev ones should go into the main directory, so it gets executed in both prod and dev builds
 @Prod
 Feature: Wheel Viewing - KingSong 14S
 
@@ -12,5 +13,4 @@ Feature: Wheel Viewing - KingSong 14S
     Given I select the KingSong 14S
     When I connect to the KS-14SMD2107
     Then the mileage is updated to 695
-#  FIXME-1 Implement this
-#    And the wheel's Bluetooth name is updated to KS-14SMD2107
+    And the wheel's Bluetooth name is updated to KS-14SMD2107

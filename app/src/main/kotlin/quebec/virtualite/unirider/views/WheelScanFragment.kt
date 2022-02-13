@@ -49,12 +49,18 @@ open class WheelScanFragment : BaseFragment() {
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
-        val deviceName = devices[pos]
-        val b = true
 
         runDb {
-            // FIXME-1 Add BT name
-            db.saveWheel(WheelEntity(wheel!!.id, wheel!!.name, 695, wheel!!.voltageMin, wheel!!.voltageMax))
+            db.saveWheel(
+                WheelEntity(
+                    wheel!!.id,
+                    wheel!!.name,
+                    devices[pos],
+                    695,
+                    wheel!!.voltageMin,
+                    wheel!!.voltageMax
+                )
+            )
         }
 
         navigateBack()

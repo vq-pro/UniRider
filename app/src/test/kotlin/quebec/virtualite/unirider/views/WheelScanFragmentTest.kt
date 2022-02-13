@@ -23,12 +23,13 @@ class WheelScanFragmentTest :
 
     private val DEVICE_ADDR = "ABCDEF"
     private val DEVICE_NAME = "LK2000"
+    private val DEVICE_NAME2 = "LK2002"
     private val ID = 1111L
     private val MILEAGE = 2222
     private val NAME = "Sherman"
     private val VOLTAGE_MAX = 100.8f
     private val VOLTAGE_MIN = 75.6f
-    private val WHEEL = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+    private val WHEEL = WheelEntity(ID, NAME, "", MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
 
     private val DEVICE = Device(DEVICE_NAME, DEVICE_ADDR)
 
@@ -83,13 +84,13 @@ class WheelScanFragmentTest :
     @Test
     fun onSelectDevice() {
         // Given
-        setList(fragment.devices, listOf("A", "B"))
+        setList(fragment.devices, listOf(DEVICE_NAME, DEVICE_NAME2))
 
         // When
         fragment.onSelectDevice().invoke(mockedView, 1)
 
         // Then
-        verify(mockedDb).saveWheel(WheelEntity(ID, NAME, 695, VOLTAGE_MIN, VOLTAGE_MAX))
+        verify(mockedDb).saveWheel(WheelEntity(ID, NAME, DEVICE_NAME2, 695, VOLTAGE_MIN, VOLTAGE_MAX))
         verifyNavigatedBack()
     }
 

@@ -28,6 +28,7 @@ import java.lang.Float.parseFloat
 class WheelViewFragmentTest :
     BaseFragmentTest(WheelViewFragment::class.java) {
 
+    private val BT_NAME = "LK2000"
     private val ID = 1111L
     private val MILEAGE = 2222
     private val NAME = "Sherman"
@@ -37,7 +38,7 @@ class WheelViewFragmentTest :
     private val VOLTAGE_MAX = 100.8f
     private val VOLTAGE_MIN = 75.6f
     private val VOLTAGE = parseFloat(VOLTAGE_S)
-    private val WHEEL = WheelEntity(ID, NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+    private val WHEEL = WheelEntity(ID, NAME, BT_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
 
     @InjectMocks
     val fragment: WheelViewFragment = TestableWheelViewFragment(this)
@@ -121,6 +122,7 @@ class WheelViewFragmentTest :
         assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
         verify(mockedTextName).setText(NAME)
+        verify(mockedTextBtName).setText(BT_NAME)
         verify(mockedTextMileage).setText("$MILEAGE")
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
@@ -141,6 +143,7 @@ class WheelViewFragmentTest :
         // Then
         verifyNoInteractions(mockedWidgets)
         verify(mockedTextName, never()).setText(anyString())
+        verify(mockedTextBtName, never()).setText(anyString())
         verify(mockedTextMileage, never()).setText(anyString())
     }
 

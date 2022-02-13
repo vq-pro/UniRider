@@ -64,6 +64,7 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnLongClickListener(buttonDelete, onDelete())
 
                 textName.setText(wheel!!.name)
+                textBtName.setText(wheel!!.btName)
                 textMileage.setText("${wheel!!.mileage}")
             }
         }
