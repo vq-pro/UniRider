@@ -1,4 +1,3 @@
-@Dev
 Feature: Wheel Viewing
 
   Background:
@@ -16,7 +15,7 @@ Feature: Wheel Viewing
     When I select the KingSong S20
     Then the details view shows the correct name and a mileage of that wheel
 
-  @WIP
+  @Dev
   Scenario: Connecting to a wheel to update its mileage
     Given I select the KingSong 14S
     When I connect to the KS-14Sxx9999

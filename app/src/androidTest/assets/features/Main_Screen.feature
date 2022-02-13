@@ -1,4 +1,3 @@
-@Dev
 Feature: Main Screen
 
   Background:
