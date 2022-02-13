@@ -1,8 +1,9 @@
 # Features
 
-* [Main Screen](app/src/androidTest/assets/features/integration/Int0_Main.feature)
-* [Wheel Viewing](app/src/androidTest/assets/features/integration/Int1_WheelView.feature)
-* [Wheel Editing & Adding](app/src/androidTest/assets/features/integration/Int2_WheelEdit.feature)
+* [Main Screen](app/src/androidTest/assets/features/Main_Screen.feature)
+* [Wheel Editing & Adding](app/src/androidTest/assets/features/Wheel_Editing_and_Adding.feature)
+* [Wheel Viewing](app/src/androidTest/assets/features/Wheel_Viewing.feature)
+* [Wheel Viewing - KingSong 14S](app/src/androidTest/assets/features/Wheel_Viewing_14S.feature)
 
 # Bluetooth
 
