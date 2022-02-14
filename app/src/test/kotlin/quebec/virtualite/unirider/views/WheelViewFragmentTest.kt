@@ -19,27 +19,20 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
+import quebec.virtualite.unirider.TestDomain.ID
+import quebec.virtualite.unirider.TestDomain.MILEAGE
+import quebec.virtualite.unirider.TestDomain.NAME
+import quebec.virtualite.unirider.TestDomain.PERCENTAGE
+import quebec.virtualite.unirider.TestDomain.PERCENTAGE_S
+import quebec.virtualite.unirider.TestDomain.S18_1
+import quebec.virtualite.unirider.TestDomain.VOLTAGE
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_S
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
-import java.lang.Float.parseFloat
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelViewFragmentTest :
-    BaseFragmentTest(WheelViewFragment::class.java) {
-
-    private val BT_ADDR = "AA:BB:CC:DD:EE:FF"
-    private val BT_NAME = "LK2000"
-    private val ID = 1111L
-    private val MILEAGE = 2222
-    private val NAME = "Sherman"
-    private val PERCENTAGE = 100.0f
-    private val PERCENTAGE_S = "100.0%"
-    private val VOLTAGE_S = "100.8"
-    private val VOLTAGE_MAX = 100.8f
-    private val VOLTAGE_MIN = 75.6f
-    private val VOLTAGE = parseFloat(VOLTAGE_S)
-    private val WHEEL = WheelEntity(ID, NAME, BT_NAME, BT_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     @InjectMocks
     val fragment: WheelViewFragment = TestableWheelViewFragment(this)
@@ -74,7 +67,7 @@ class WheelViewFragmentTest :
     @Before
     fun before() {
         fragment.parmWheelId = ID
-        fragment.wheel = WHEEL
+        fragment.wheel = S18_1
 
         mockField(R.id.button_connect, mockedButtonConnect)
         mockField(R.id.button_delete, mockedButtonDelete)
@@ -103,7 +96,7 @@ class WheelViewFragmentTest :
         // Given
         fragment.wheel = null
         given(mockedDb.getWheel(ID))
-            .willReturn(WHEEL)
+            .willReturn(S18_1)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -111,7 +104,7 @@ class WheelViewFragmentTest :
         // Then
         verify(mockedDb).getWheel(ID)
 
-        assertThat(fragment.wheel, equalTo(WHEEL))
+        assertThat(fragment.wheel, equalTo(S18_1))
 
         assertThat(fragment.textName, equalTo(mockedTextName))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
@@ -123,7 +116,7 @@ class WheelViewFragmentTest :
         assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
         verify(mockedTextName).setText(NAME)
-        verify(mockedTextBtName).setText(BT_NAME)
+        verify(mockedTextBtName).setText(DEVICE_NAME)
         verify(mockedTextMileage).setText("$MILEAGE")
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")

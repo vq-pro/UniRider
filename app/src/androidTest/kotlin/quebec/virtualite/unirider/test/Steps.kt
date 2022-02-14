@@ -56,6 +56,7 @@ class Steps {
 
     private lateinit var mainActivity: MainActivity
 
+    private var expectedDeviceName: String = ""
     private var expectedMileage: Int = 0
     private lateinit var selectedWheel: WheelEntity
     private lateinit var updatedWheel: WheelEntity
@@ -205,9 +206,9 @@ class Steps {
         setText(R.id.edit_voltage_min, " ")
     }
 
-    @Then("^the wheel's Bluetooth name is updated to (.*?)$")
-    fun bluetoothNameUpdatedTo(expectedBTName: String) {
-        assertThat(R.id.view_bt_name, hasText(expectedBTName))
+    @Then("^the wheel's Bluetooth name is updated$")
+    fun bluetoothNameUpdated() {
+        assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
     }
 
     @Then("I can enter the details for that wheel")
@@ -326,6 +327,8 @@ class Steps {
     fun whenConnectTo(deviceName: String) {
         click(R.id.button_connect)
         selectListViewItem(R.id.devices, deviceName)
+
+        expectedDeviceName = deviceName
     }
 
     @When("^I enter a voltage of (.*?)V$")

@@ -16,30 +16,30 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.DEVICE
+import quebec.virtualite.unirider.TestDomain.DEVICE2
+import quebec.virtualite.unirider.TestDomain.DEVICE3
+import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
+import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR2
+import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR3
+import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
+import quebec.virtualite.unirider.TestDomain.DEVICE_NAME2
+import quebec.virtualite.unirider.TestDomain.DEVICE_NAME3
+import quebec.virtualite.unirider.TestDomain.ID
+import quebec.virtualite.unirider.TestDomain.ID3
+import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
+import quebec.virtualite.unirider.TestDomain.NAME3
+import quebec.virtualite.unirider.TestDomain.S18_1
+import quebec.virtualite.unirider.TestDomain.SHERMAN_3
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelScanFragmentTest :
-    BaseFragmentTest(WheelScanFragment::class.java) {
-
-    // FIXME-1 Implement a "TestDomain" class with these values
-    private val DEVICE_ADDR = "ABCDEF"
-    private val DEVICE_ADDR2 = "FEDCBA"
-    private val DEVICE_NAME = "LK2000"
-    private val DEVICE_NAME2 = "LK2002"
-    private val ID = 1111L
-    private val MILEAGE = 2222
-    private val NAME = "Sherman"
-    private val NEW_MILEAGE = 3333
-    private val VOLTAGE_MAX = 100.8f
-    private val VOLTAGE_MIN = 75.6f
-    private val WHEEL = WheelEntity(ID, NAME, "", "", MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-
-    private val DEVICE = Device(DEVICE_NAME, DEVICE_ADDR)
-    private val DEVICE2 = Device(DEVICE_NAME2, DEVICE_ADDR2)
+class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
     @InjectMocks
     val fragment: WheelScanFragment = TestableWheelScanFragment(this)
@@ -58,7 +58,7 @@ class WheelScanFragmentTest :
 
     @Before
     fun before() {
-        fragment.wheel = WHEEL
+        fragment.wheel = S18_1
 
         mockField(R.id.devices, mockedLvWheels)
     }
@@ -79,7 +79,7 @@ class WheelScanFragmentTest :
         fragment.wheel = null
 
         given(mockedDb.getWheel(ID))
-            .willReturn(WHEEL)
+            .willReturn(SHERMAN_3)
 
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
@@ -90,7 +90,7 @@ class WheelScanFragmentTest :
         lambdaFoundDevice.value.invoke(Device(DEVICE_NAME, DEVICE_ADDR))
 
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
-        assertThat(fragment.wheel, equalTo(WHEEL))
+        assertThat(fragment.wheel, equalTo(SHERMAN_3))
 
         verify(mockedLvWheels).isEnabled = true
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
@@ -115,17 +115,19 @@ class WheelScanFragmentTest :
     @Test
     fun onSelectDevice() {
         // Given
-        setList(fragment.devices, listOf(DEVICE, DEVICE2))
-        val selectedDevice = 1
+        setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
+        val selectedDevice = 2
+
+        fragment.wheel = SHERMAN_3
         val expectedWheel =
-            WheelEntity(ID, NAME, DEVICE_NAME2, DEVICE_ADDR2, NEW_MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+            WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
 
         // When
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
         // Then
-        verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR2), lambdaGotDeviceInfo.capture())
-        lambdaGotDeviceInfo.value.invoke(DeviceInfo(NEW_MILEAGE))
+        verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR3), lambdaGotDeviceInfo.capture())
+        lambdaGotDeviceInfo.value.invoke(DeviceInfo(MILEAGE_NEW))
 
         verify(mockedDb).saveWheel(expectedWheel)
         verifyNavigatedBack()
