@@ -7,6 +7,7 @@ Feature: Wheel Viewing - KingSong 14S
     And I start the app
 
   @End2End
+  @WIP
   Scenario: Connecting to the 14S to update its mileage
     Given I select the KingSong 14S
     When I connect to the KS-14SMD2107

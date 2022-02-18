@@ -16,7 +16,6 @@ Feature: Wheel Viewing
     Then the details view shows the correct name and a mileage of that wheel
 
   @IntegrationOnly
-  @WIP
   Scenario: Connecting to a wheel to update its mileage
     Given I simulate a mileage of 705
     And I select the KingSong 14S

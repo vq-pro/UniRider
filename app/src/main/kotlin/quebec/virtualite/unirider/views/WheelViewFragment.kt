@@ -72,10 +72,6 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onConnect() = { _: View ->
         goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
-
-        // FIXME-0 Cleanup
-//        textBtName.setText("KS-14SMD2107")
-//        textMileage.setText("655")
     }
 
     fun onDelete() = { _: View ->
