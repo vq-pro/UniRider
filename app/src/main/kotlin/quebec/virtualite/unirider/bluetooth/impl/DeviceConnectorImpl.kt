@@ -16,32 +16,6 @@ import java.util.*
 
 class DeviceConnectorImpl : DeviceConnector {
 
-    private val GOTWAY_SERVICES: List<String> = listOf(
-        "00001800-0000-1000-8000-00805f9b34fb",
-        "00001801-0000-1000-8000-00805f9b34fb",
-        "0000180a-0000-1000-8000-00805f9b34fb",
-        "0000ffe0-0000-1000-8000-00805f9b34fb"
-    )
-    private val GOTWAY_READ_CHARACTER: UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
-    private val GOTWAY_SERVICE: UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
-
-    private val INMOTION_DESCRIPTOR: UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
-    private val INMOTION_READ_CHARACTER: UUID = UUID.fromString("0000ffe4-0000-1000-8000-00805f9b34fb")
-    private val INMOTION_SERVICE: UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
-    private val INMOTION_SERVICES: List<String> = listOf(
-        "0000180a-0000-1000-8000-00805f9b34fb",
-        "0000180f-0000-1000-8000-00805f9b34fb",
-        "0000ffe0-0000-1000-8000-00805f9b34fb",
-        "0000ffe5-0000-1000-8000-00805f9b34fb",
-        "0000fff0-0000-1000-8000-00805f9b34fb",
-        "0000ffd0-0000-1000-8000-00805f9b34fb",
-        "0000ffc0-0000-1000-8000-00805f9b34fb",
-        "0000ffb0-0000-1000-8000-00805f9b34fb",
-        "0000ffa0-0000-1000-8000-00805f9b34fb",
-        "0000ff90-0000-1000-8000-00805f9b34fb",
-        "0000fc60-0000-1000-8000-00805f9b34fb",
-        "0000fe00-0000-1000-8000-00805f9b34fb"
-    )
     private val KINGSONG_SERVICES: List<String> = listOf(
         "00001800-0000-1000-8000-00805f9b34fb",
         "00001801-0000-1000-8000-00805f9b34fb",
@@ -49,14 +23,11 @@ class DeviceConnectorImpl : DeviceConnector {
         "0000fff0-0000-1000-8000-00805f9b34fb",
         "0000ffe0-0000-1000-8000-00805f9b34fb"
     )
-    private val KINGSONG_DESCRIPTOR_UUID1: UUID = UUID.fromString("00002901-0000-1000-8000-00805f9b34fb")
-    private val KINGSONG_DESCRIPTOR_UUID2: UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
+    private val KINGSONG_DESCRIPTOR_UUID: UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
     private val KINGSONG_READ_CHARACTER: UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
     private val KINGSONG_SERVICE_UUID: UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
 
     private val AUTOCONNECT = false
-
-    private var disconnected = false
 
     private var mVoltage: Int = 0
     private var mTotalDistance: Long = 0
@@ -158,118 +129,20 @@ class DeviceConnectorImpl : DeviceConnector {
 
                 val detected = detectWheel(gatt)
 
-
-//                val service1 = bluetoothGatt.getService(UUID.fromString("00001801-0000-1000-8000-00805f9b34fb"))
-//                val notifyCharacteristic1 = service1.getCharacteristic(UUID.fromString("00002a05-0000-1000-8000-00805f9b34fb"))
-//                val succes1 = bluetoothGatt.setCharacteristicNotification(notifyCharacteristic1, true)
-
-//                val descriptor1 =
-//                    notifyCharacteristic1.getDescriptor(KINGSONG_DESCRIPTOR_UUID2)
-//                descriptor1.value = ENABLE_NOTIFICATION_VALUE
-//                val succesb1 = gatt.writeDescriptor(descriptor1)
-
-//                val service2 = bluetoothGatt.getService(UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb"))
-//                val notifyCharacteristic2 = service2.getCharacteristic(UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb"))
-//                val succes2 = bluetoothGatt.setCharacteristicNotification(notifyCharacteristic2, true)
-
-//                val descriptor2 =
-//                    notifyCharacteristic2.getDescriptor(KINGSONG_DESCRIPTOR_UUID2)
-//                descriptor2.value = ENABLE_NOTIFICATION_VALUE
-//                val succesb2 = gatt.writeDescriptor(descriptor2)
-
                 val service = gatt.getService(KINGSONG_SERVICE_UUID)
                 val notifyCharacteristic = service.getCharacteristic(KINGSONG_READ_CHARACTER)
 
                 val succes = gatt.setCharacteristicNotification(notifyCharacteristic, true)
 
                 val descriptor =
-                    notifyCharacteristic.getDescriptor(KINGSONG_DESCRIPTOR_UUID2)
+                    notifyCharacteristic.getDescriptor(KINGSONG_DESCRIPTOR_UUID)
                 descriptor.setValue(ENABLE_NOTIFICATION_VALUE)
                 val succesb = gatt.writeDescriptor(descriptor)
 
                 Log.i("onServicesDiscovered", "")
-//                gatt.readCharacteristic(notifyCharacteristic)
-
-
-//                val descriptor1 =
-//                    notifyCharacteristic.getDescriptor(KINGSONG_DESCRIPTOR_UUID1)
-//                descriptor1.value = ENABLE_INDICATION_VALUE
-//                val succes1 = bluetoothGatt.writeDescriptor(descriptor1)
-
-//                requestKingSongSerialData()
-//                requestKingSongHorn()
-
-//                val theServices = bluetoothGatt.services
-//                val theServicesIds: List<String> = theServices.map { service -> "${service.uuid}" }
-//
-//                if (KINGSONG_SERVICES.equals(theServicesIds)) {
-//                    val bluetoothGattService = bluetoothGatt.getService(KINGSONG_SERVICE)
-//                    val notifyCharacteristic0 =
-//                        bluetoothGattService.getCharacteristic(UUID.fromString(KINGSONG_SERVICES[0]))
-//                    val notifyCharacteristic1 =
-//                        bluetoothGattService.getCharacteristic(UUID.fromString(KINGSONG_SERVICES[1]))
-//                    val notifyCharacteristic2 =
-//                        bluetoothGattService.getCharacteristic(UUID.fromString(KINGSONG_SERVICES[2]))
-//                    val notifyCharacteristic3 =
-//                        bluetoothGattService.getCharacteristic(UUID.fromString(KINGSONG_SERVICES[3]))
-//                    val notifyCharacteristic4 =
-//                        bluetoothGattService.getCharacteristic(UUID.fromString(KINGSONG_SERVICES[4]))
-//
-//                    val notifyCharacteristic =
-//                        bluetoothGattService.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"))
-//                    bluetoothGatt.setCharacteristicNotification(notifyCharacteristic, true)
-//
-////                    val targetService: BluetoothGattService = mBluetoothLeService.getGattService(
-////                        UUID.fromString(Constants.KINGSONG_SERVICE_UUID)
-////                    )
-////                    val notifyCharacteristic =
-////                        targetService.getCharacteristic(UUID.fromString(Constants.KINGSONG_READ_CHARACTER_UUID))
-////                    mBluetoothLeService.setCharacteristicNotification(notifyCharacteristic, true)
-//                    val descriptor =
-//                        notifyCharacteristic.getDescriptor(UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"))
-//                    descriptor.value = ENABLE_NOTIFICATION_VALUE
-//                    bluetoothGatt.writeDescriptor(descriptor)
-//
-//                    var b = true
-//
-//                } else if (GOTWAY_SERVICES.equals(theServicesIds)) {
-//                    isGotway = true
-//
-//                    val bluetoothGattService = bluetoothGatt.getService(GOTWAY_SERVICE)
-//                    val notifyCharacteristic = bluetoothGattService.getCharacteristic(GOTWAY_READ_CHARACTER)
-//                    bluetoothGatt.setCharacteristicNotification(notifyCharacteristic, true)
-//
-//                    var b = true
-//
-//                } else if (INMOTION_SERVICES.equals(theServicesIds)) {
-//                    isInmotion = true
-//
-//                    val bluetoothGattService = bluetoothGatt.getService(INMOTION_SERVICE)
-//                    val notifyCharacteristic = bluetoothGattService.getCharacteristic(INMOTION_READ_CHARACTER)
-//                    bluetoothGatt.setCharacteristicNotification(notifyCharacteristic, true)
-//
-//                    val descriptor = notifyCharacteristic.getDescriptor(INMOTION_DESCRIPTOR)
-//                    descriptor.value = ENABLE_NOTIFICATION_VALUE
-//                    bluetoothGatt.writeDescriptor(descriptor)
-//
-//                    var b = true
-//                    b = false
-//                }
             }
         }
 
-        //
-//        private fun requestKingSongSerialData() {
-//            val data = ByteArray(20)
-//            data[0] = (-86).toByte()
-//            data[1] = 85.toByte()
-//            data[16] = 99.toByte()
-//            data[17] = 20.toByte()
-//            data[18] = 90.toByte()
-//            data[19] = 90.toByte()
-//            writeBluetoothGattCharacteristic(data)
-//        }
-//
         override fun onCharacteristicRead(
             gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int
         ) {
@@ -292,17 +165,8 @@ class DeviceConnectorImpl : DeviceConnector {
             if (characteristic.uuid.equals(KINGSONG_READ_CHARACTER)) {
 
                 val wheelData = decodeKingSong(gatt, data)
-//                if (wheelData != null) {
-//                    callback(wheelData)
-//                }
 
                 var b = true
-                b = false
-            } else if (characteristic.uuid.equals(INMOTION_READ_CHARACTER)) {
-                val statuses: List<InMotionAdapter.Status> = InMotionAdapter.getInstance().charUpdated(data)
-
-                var b = true
-                b = false
             }
         }
 
@@ -332,21 +196,9 @@ class DeviceConnectorImpl : DeviceConnector {
             AUTOCONNECT,
             mGattCallback,
             TRANSPORT_LE
-//            PHY_LE_1M,
-//            null
         )
 
         bluetoothGatt.requestMtu(517)
-
-//            .connectGatt(
-//                Context context,
-//                boolean autoConnect,
-//                BluetoothGattCallback callback,
-//                int transport,
-//                boolean opportunistic,
-//                int phy,
-//                Handler handler
-//            )
     }
 
     override fun init(activity: Activity) {
@@ -378,12 +230,6 @@ class DeviceConnectorImpl : DeviceConnector {
 
     private fun requestKingSongNameData(gatt: BluetoothGatt) {
         val data = ByteArray(20)
-//            data[0] = (-86).toByte()
-//            data[1] = 85.toByte()
-//            data[16] = (-101).toByte()
-//            data[17] = 20.toByte()
-//            data[18] = 90.toByte()
-//            data[19] = 90.toByte()
         data[0] = 0xAA.toByte()
         data[1] = 0x55.toByte()
         data[16] = 0x9B.toByte()
