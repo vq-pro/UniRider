@@ -187,7 +187,7 @@ class DeviceConnectorImpl : DeviceConnector {
                 descriptor.setValue(ENABLE_NOTIFICATION_VALUE)
                 val succesb = gatt.writeDescriptor(descriptor)
 
-
+                Log.i("onServicesDiscovered", "")
 //                gatt.readCharacteristic(notifyCharacteristic)
 
 
@@ -198,8 +198,6 @@ class DeviceConnectorImpl : DeviceConnector {
 
 //                requestKingSongSerialData()
 //                requestKingSongHorn()
-
-                var b = true
 
 //                val theServices = bluetoothGatt.services
 //                val theServicesIds: List<String> = theServices.map { service -> "${service.uuid}" }

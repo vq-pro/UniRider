@@ -11,5 +11,5 @@ Feature: Wheel Viewing - KingSong 14S
   Scenario: Connecting to the 14S to update its mileage
     Given I select the KingSong 14S
     When I connect to the KS-14SMD2107
-    Then the mileage is updated to 748.346
+    Then the mileage is updated to 758.678
     And the wheel's Bluetooth name is updated
