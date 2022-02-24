@@ -12,6 +12,7 @@ import android.bluetooth.BluetoothProfile
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
+import java.util.stream.Collectors.toList
 
 class DeviceConnectorImpl : DeviceConnector {
 
@@ -90,7 +91,10 @@ class DeviceConnectorImpl : DeviceConnector {
                 if (services.size != KINGSONG_SERVICES.size)
                     return false
 
-                return true
+                val serviceUUIDs = services.stream()
+                    .map { service -> "${service.uuid}" }
+                    .collect(toList())
+                return serviceUUIDs.equals(KINGSONG_SERVICES)
             }
 
             override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
@@ -174,12 +178,18 @@ class DeviceConnectorImpl : DeviceConnector {
         return string.toString()
     }
 
+    private var disconnected = false
+    private var requestedKingSongNameData = false
+
     private fun decodeKingSong(gatt: BluetoothGatt, data: ByteArray): Boolean {
 
         Log.i("*** decodeKingSong - ", byteArrayToString(data))
 
         if (data.size < 20) {
-            writeBluetoothGattCharacteristic(gatt, KING_SONG_NAME_DATA)
+            if (!requestedKingSongNameData) {
+                writeBluetoothGattCharacteristic(gatt, KING_SONG_NAME_DATA)
+                requestedKingSongNameData = true
+            }
             return false
         }
 
@@ -196,7 +206,10 @@ class DeviceConnectorImpl : DeviceConnector {
                 wheelData = WheelData(mileage, 0.0f, 0.0f)
 
                 Log.i("*** decodeKingSong 2 - ", mileage.toString())
-                gatt.disconnect()
+                if (!disconnected) {
+                    gatt.disconnect()
+                    disconnected = true
+                }
             }
 
             DISTANCE_TIME_FAN_DATA -> {}
@@ -210,9 +223,9 @@ class DeviceConnectorImpl : DeviceConnector {
 
     private fun writeBluetoothGattCharacteristic(gatt: BluetoothGatt, cmd: ByteArray) {
         val service = gatt.getService(KINGSONG_SERVICE_UUID)
-        val ks_characteristic = service.getCharacteristic(KINGSONG_READ_CHARACTER)
-        ks_characteristic.setValue(cmd)
-        ks_characteristic.setWriteType(1)
-        gatt.writeCharacteristic(ks_characteristic)
+        val characteristic = service.getCharacteristic(KINGSONG_READ_CHARACTER)
+        characteristic.value = cmd
+        characteristic.writeType = 1
+        gatt.writeCharacteristic(characteristic)
     }
 }
