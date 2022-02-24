@@ -6,32 +6,40 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
+import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.DEVICE
+import quebec.virtualite.unirider.TestDomain.DEVICE2
+import quebec.virtualite.unirider.TestDomain.DEVICE3
+import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
+import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR2
+import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR3
+import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
+import quebec.virtualite.unirider.TestDomain.DEVICE_NAME2
+import quebec.virtualite.unirider.TestDomain.DEVICE_NAME3
+import quebec.virtualite.unirider.TestDomain.ID
+import quebec.virtualite.unirider.TestDomain.ID3
+import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
+import quebec.virtualite.unirider.TestDomain.NAME3
+import quebec.virtualite.unirider.TestDomain.S18_1
+import quebec.virtualite.unirider.TestDomain.SHERMAN_3
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
 import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelScanFragmentTest :
-    BaseFragmentTest(WheelScanFragment::class.java) {
-
-    private val DEVICE_ADDR = "ABCDEF"
-    private val DEVICE_NAME = "LK2000"
-    private val DEVICE_NAME2 = "LK2002"
-    private val ID = 1111L
-    private val MILEAGE = 2222
-    private val NAME = "Sherman"
-    private val VOLTAGE_MAX = 100.8f
-    private val VOLTAGE_MIN = 75.6f
-    private val WHEEL = WheelEntity(ID, NAME, "", MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-
-    private val DEVICE = Device(DEVICE_NAME, DEVICE_ADDR)
+class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
     @InjectMocks
     val fragment: WheelScanFragment = TestableWheelScanFragment(this)
@@ -42,9 +50,15 @@ class WheelScanFragmentTest :
     @Mock
     lateinit var mockedScanner: WheelScanner
 
+    @Captor
+    lateinit var lambdaGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
+
+    @Captor
+    lateinit var lambdaFoundDevice: ArgumentCaptor<(Device) -> Unit>
+
     @Before
     fun before() {
-        fragment.wheel = WHEEL
+        fragment.wheel = S18_1
 
         mockField(R.id.devices, mockedLvWheels)
     }
@@ -65,16 +79,18 @@ class WheelScanFragmentTest :
         fragment.wheel = null
 
         given(mockedDb.getWheel(ID))
-            .willReturn(WHEEL)
+            .willReturn(SHERMAN_3)
 
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
         verify(mockedDb).getWheel(ID)
+        verify(mockedScanner).scan(lambdaFoundDevice.capture())
+        lambdaFoundDevice.value.invoke(Device(DEVICE_NAME, DEVICE_ADDR))
 
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
-        assertThat(fragment.wheel, equalTo(WHEEL))
+        assertThat(fragment.wheel, equalTo(SHERMAN_3))
 
         verify(mockedLvWheels).isEnabled = true
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
@@ -82,18 +98,41 @@ class WheelScanFragmentTest :
     }
 
     @Test
-    fun onSelectDevice() {
+    fun onViewCreated_whenDiscovering2ndDevice() {
         // Given
-        setList(fragment.devices, listOf(DEVICE_NAME, DEVICE_NAME2))
+        setList(fragment.devices, listOf(DEVICE))
 
         // When
-        fragment.onSelectDevice().invoke(mockedView, 1)
+        fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        // FIXME-1 Get the actual value from the wheel instead of 695
-        verify(mockedDb).saveWheel(WheelEntity(ID, NAME, DEVICE_NAME2, 695, VOLTAGE_MIN, VOLTAGE_MAX))
-        verifyNavigatedBack()
+        verify(mockedScanner).scan(lambdaFoundDevice.capture())
+        lambdaFoundDevice.value.invoke(Device(DEVICE_NAME2, DEVICE_ADDR2))
+
+        verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
+
+//    FIXME-1 Disable the list when we click
+@Test
+fun onSelectDevice() {
+    // Given
+    setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
+    val selectedDevice = 2
+
+    fragment.wheel = SHERMAN_3
+    val expectedWheel =
+        WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
+
+    // When
+    fragment.onSelectDevice().invoke(mockedView, selectedDevice)
+
+    // Then
+    verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR3), lambdaGotDeviceInfo.capture())
+    lambdaGotDeviceInfo.value.invoke(DeviceInfo(MILEAGE_NEW))
+
+    verify(mockedDb).saveWheel(expectedWheel)
+    verifyNavigatedBack()
+}
 
     class TestableWheelScanFragment(val test: WheelScanFragmentTest) : WheelScanFragment() {
 
@@ -101,8 +140,7 @@ class WheelScanFragmentTest :
             test.connectDb(this, function)
         }
 
-        override fun connectScanner(function: (Device) -> Unit) {
-            function.invoke(test.DEVICE)
+        override fun connectScanner() {
         }
 
         override fun navigateBack(nb: Int) {
@@ -111,6 +149,10 @@ class WheelScanFragmentTest :
 
         override fun runDb(function: () -> Unit) {
             test.runDb(function)
+        }
+
+        override fun uiThread(function: () -> Unit) {
+            test.uiThread(function)
         }
     }
 }

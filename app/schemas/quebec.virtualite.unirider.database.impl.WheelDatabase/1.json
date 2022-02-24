@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a7f6e6417857202ff44f70ad27d5689d",
+    "identityHash": "42b1a0a827ece7f02b7235e366718e1d",
     "entities": [
       {
         "tableName": "wheel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `btName` TEXT NOT NULL, `mileage` INTEGER NOT NULL, `voltageMin` REAL NOT NULL, `voltageMax` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `btName` TEXT NOT NULL, `btAddr` TEXT NOT NULL, `mileage` REAL NOT NULL, `voltageMin` REAL NOT NULL, `voltageMax` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -27,9 +27,15 @@
             "notNull": true
           },
           {
+            "fieldPath": "btAddr",
+            "columnName": "btAddr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "mileage",
             "columnName": "mileage",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -58,7 +64,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a7f6e6417857202ff44f70ad27d5689d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '42b1a0a827ece7f02b7235e366718e1d')"
     ]
   }
 }

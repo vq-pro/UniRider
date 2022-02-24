@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import org.apache.http.util.TextUtils.isEmpty
+import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -63,18 +64,17 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonEdit, onEdit())
                 widgets.setOnLongClickListener(buttonDelete, onDelete())
 
+                val mileage = round(wheel!!.mileage, 1)
+
                 textName.setText(wheel!!.name)
                 textBtName.setText(wheel!!.btName)
-                textMileage.setText("${wheel!!.mileage}")
+                textMileage.setText("${mileage}")
             }
         }
     }
 
     fun onConnect() = { _: View ->
         goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
-
-        textBtName.setText("KS-14SMD2107")
-        textMileage.setText("655")
     }
 
     fun onDelete() = { _: View ->

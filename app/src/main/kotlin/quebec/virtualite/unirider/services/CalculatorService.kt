@@ -10,8 +10,15 @@ open class CalculatorService {
         }
 
         val range = wheel.voltageMax - wheel.voltageMin
-        val percentage: Float = (voltage!! - wheel.voltageMin) * 100f / range
+        return percentage(voltage!! - wheel.voltageMin, range)
+    }
 
-        return percentage
+    private fun percentage(value: Float, range: Float): Float {
+        return round(value * 100 / range, 1)
+    }
+
+    private fun round(value: Float, numDecimals: Int): Float {
+        val factor = Math.pow(10.0, numDecimals.toDouble())
+        return (Math.round(value * factor) / factor).toFloat()
     }
 }

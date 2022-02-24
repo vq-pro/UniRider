@@ -119,7 +119,7 @@ public class DecodeGotway {
             int currentTime = (int) (Calendar.getInstance().getTimeInMillis() - rideStartTime) / 1000;
             setCurrentTime(currentTime);
 
-            return new WheelData(mActualVoltage, battery2);
+            return new WheelData(mTotalDistance, mActualVoltage, battery2);
 
         } else if (data.length >= 10) {
             int a1 = data[0];

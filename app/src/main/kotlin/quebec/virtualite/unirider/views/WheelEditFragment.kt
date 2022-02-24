@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
-import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -16,7 +15,7 @@ import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WH
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", "", 0, 0f, 0f)
+    private val NEW_WHEEL = WheelEntity(0L, "", "", "", 0f, 0f, 0f)
 
     internal lateinit var buttonSave: Button
     internal lateinit var editMileage: EditText
@@ -89,7 +88,8 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.id,
             updatedWheel.name,
             updatedWheel.btName,
-            intOf(newMileage),
+            updatedWheel.btAddr,
+            floatOf(newMileage),
             updatedWheel.voltageMin,
             updatedWheel.voltageMax
         )
@@ -102,6 +102,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.id,
             newName.trim(),
             updatedWheel.btName,
+            updatedWheel.btAddr,
             updatedWheel.mileage,
             updatedWheel.voltageMin,
             updatedWheel.voltageMax
@@ -115,6 +116,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.id,
             updatedWheel.name,
             updatedWheel.btName,
+            updatedWheel.btAddr,
             updatedWheel.mileage,
             updatedWheel.voltageMin,
             floatOf(newVoltage)
@@ -128,6 +130,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.id,
             updatedWheel.name,
             updatedWheel.btName,
+            updatedWheel.btAddr,
             updatedWheel.mileage,
             floatOf(newVoltage),
             updatedWheel.voltageMax

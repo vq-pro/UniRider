@@ -11,16 +11,16 @@ import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
+import java.util.stream.Collectors.toList
 
 open class WheelScanFragment : BaseFragment() {
 
-    internal val devices = ArrayList<String>()
+    internal val devices = ArrayList<Device>()
 
     internal var parmWheelId: Long? = 0
     internal var wheel: WheelEntity? = null
 
-    internal lateinit var scanner: WheelScanner
-
+    private lateinit var scanner: WheelScanner
     private var widgets = WidgetUtils()
 
     internal lateinit var lvWheels: ListView
@@ -42,32 +42,33 @@ open class WheelScanFragment : BaseFragment() {
             wheel = db.getWheel(parmWheelId!!)
         }
 
-        connectScanner { device ->
-            devices.add(device.name)
-            widgets.stringListAdapter(lvWheels, view, devices)
+        connectScanner()
+        scanner.scan { device ->
+
+            devices.add(device)
+
+            val names = devices.stream().map(Device::name).collect(toList())
+            widgets.stringListAdapter(lvWheels, view, names)
         }
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
 
-        runDb {
-            db.saveWheel(
-                WheelEntity(
-                    wheel!!.id,
-                    wheel!!.name,
-                    devices[pos],
-                    695,
-                    wheel!!.voltageMin,
-                    wheel!!.voltageMax
-                )
-            )
-        }
+        val device = devices[pos]
 
-        navigateBack()
+        scanner.getDeviceInfo(device.address) { info ->
+            val updatedWheel = WheelEntity(
+                wheel!!.id, wheel!!.name, device.name, device.address,
+                info.mileage, wheel!!.voltageMin, wheel!!.voltageMax
+            )
+
+            runDb { db.saveWheel(updatedWheel) }
+
+            uiThread { navigateBack() }
+        }
     }
 
-    internal open fun connectScanner(function: (Device) -> Unit) {
+    internal open fun connectScanner() {
         scanner = MainActivity.scanner
-        scanner.scan(function)
     }
 }

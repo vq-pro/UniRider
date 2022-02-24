@@ -39,4 +39,8 @@ open class BaseFragment : Fragment() {
             function()
         }
     }
+
+    internal open fun uiThread(function: () -> Unit) {
+        activity?.runOnUiThread(function)
+    }
 }

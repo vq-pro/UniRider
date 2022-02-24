@@ -14,19 +14,13 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.TestDomain.ID
+import quebec.virtualite.unirider.TestDomain.NAME
+import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelDeleteConfirmationFragmentTest :
-    BaseFragmentTest(WheelDeleteConfirmationFragment::class.java) {
-
-    private val BT_NAME = "LK2000"
-    private val ID = 1111L
-    private val MILEAGE = 2222
-    private val NAME = "Sherman"
-    private val VOLTAGE_MAX = 100.8f
-    private val VOLTAGE_MIN = 75.6f
+class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirmationFragment::class.java) {
 
     @InjectMocks
     val fragment: WheelDeleteConfirmationFragment = TestableWheelDeleteConfirmationFragment(this)
@@ -64,7 +58,7 @@ class WheelDeleteConfirmationFragmentTest :
     @Test
     fun onViewCreated() {
         // Given
-        val wheel = WheelEntity(ID, NAME, BT_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        val wheel = S18_1
         given(mockedDb.getWheel(ID))
             .willReturn(wheel)
 
@@ -111,7 +105,7 @@ class WheelDeleteConfirmationFragmentTest :
     @Test
     fun onDelete() {
         // Given
-        fragment.wheel = WheelEntity(ID, NAME, BT_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.wheel = S18_1
 
         // When
         fragment.onDelete().invoke(mockedView)

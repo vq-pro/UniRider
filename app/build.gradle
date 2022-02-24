@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "quebec.virtualite.unirider"
-        minSdkVersion 24
+        minSdkVersion 28
         multiDexEnabled true
         targetSdkVersion 31
         versionCode 1

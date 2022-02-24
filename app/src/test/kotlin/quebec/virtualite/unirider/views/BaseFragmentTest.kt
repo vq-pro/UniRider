@@ -95,6 +95,14 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         function()
     }
 
+    fun subThread(function: () -> Unit) {
+        function()
+    }
+
+    fun uiThread(function: () -> Unit) {
+        function()
+    }
+
     fun verifyInflate(expectedId: Int) {
         verify(mockedInflater).inflate(expectedId, mockedContainer, DONT_ATTACH_TO_ROOT)
     }

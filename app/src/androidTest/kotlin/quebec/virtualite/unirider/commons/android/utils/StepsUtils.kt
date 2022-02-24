@@ -41,8 +41,8 @@ import java.lang.Thread.sleep
 
 object StepsUtils {
 
-    private const val INTERVAL = 100L
-    private const val TIMEOUT = 2000L
+    private const val INTERVAL = 250L
+    private const val TIMEOUT = 5000L
 
     fun assertThat(id: Int, assertion: Matcher<View>) {
         poll {

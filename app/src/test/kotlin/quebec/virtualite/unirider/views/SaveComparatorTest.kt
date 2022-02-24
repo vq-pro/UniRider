@@ -6,21 +6,21 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
+import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
+import quebec.virtualite.unirider.TestDomain.ID
+import quebec.virtualite.unirider.TestDomain.MILEAGE
+import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
+import quebec.virtualite.unirider.TestDomain.NAME
+import quebec.virtualite.unirider.TestDomain.NAME_NEW
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
 class SaveComparatorTest {
-
-    private val BT_NAME = "LK2000"
-    private val ID = 1111L
-    private val MILEAGE = 2222
-    private val NAME = "Sherman"
-    private val NEW_MILEAGE = 3333
-    private val NEW_NAME = "Sherman Max"
-    private val NEW_VOLTAGE_MAX = 100.9f
-    private val NEW_VOLTAGE_MIN = 74.5f
-    private val VOLTAGE_MAX = 100.8f
-    private val VOLTAGE_MIN = 75.6f
 
     @InjectMocks
     lateinit var comparator: SaveComparator
@@ -29,23 +29,23 @@ class SaveComparatorTest {
     fun canSave() {
         canSave(NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, false)
 
-        canSave(NEW_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, true)
-        canSave("", NEW_MILEAGE, NEW_VOLTAGE_MIN, NEW_VOLTAGE_MAX, false)
+        canSave(NAME_NEW, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, true)
+        canSave("", MILEAGE_NEW, VOLTAGE_MIN_NEW, VOLTAGE_MAX_NEW, false)
 
-        canSave(NAME, NEW_MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, true)
-        canSave(NEW_NAME, 0, NEW_VOLTAGE_MIN, NEW_VOLTAGE_MAX, true)
+        canSave(NAME, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX, true)
+        canSave(NAME_NEW, 0f, VOLTAGE_MIN_NEW, VOLTAGE_MAX_NEW, true)
 
-        canSave(NAME, MILEAGE, NEW_VOLTAGE_MIN, VOLTAGE_MAX, true)
-        canSave(NEW_NAME, NEW_MILEAGE, 0f, NEW_VOLTAGE_MAX, false)
+        canSave(NAME, MILEAGE, VOLTAGE_MIN_NEW, VOLTAGE_MAX, true)
+        canSave(NAME_NEW, MILEAGE_NEW, 0f, VOLTAGE_MAX_NEW, false)
 
-        canSave(NAME, MILEAGE, VOLTAGE_MIN, NEW_VOLTAGE_MAX, true)
-        canSave(NEW_NAME, NEW_MILEAGE, NEW_VOLTAGE_MIN, 0f, false)
+        canSave(NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX_NEW, true)
+        canSave(NAME_NEW, MILEAGE_NEW, VOLTAGE_MIN_NEW, 0f, false)
     }
 
-    private fun canSave(name: String, mileage: Int, voltageMin: Float, voltageMax: Float, expectedCanSave: Boolean) {
+    private fun canSave(name: String, mileage: Float, voltageMin: Float, voltageMax: Float, expectedCanSave: Boolean) {
         // Given
-        val initial = WheelEntity(ID, NAME, BT_NAME, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-        val updated = WheelEntity(ID, name.trim(), BT_NAME, mileage, voltageMin, voltageMax)
+        val initial = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        val updated = WheelEntity(ID, name.trim(), DEVICE_NAME, DEVICE_ADDR, mileage, voltageMin, voltageMax)
 
         // When
         val result = comparator.canSave(updated, initial)
