@@ -8,6 +8,7 @@ import android.widget.ListView
 import android.widget.TextView
 import quebec.virtualite.commons.android.utils.ArrayListUtils.addTo
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
+import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -43,7 +44,7 @@ open class MainFragment : BaseFragment() {
 
         connectDb {
             setList(wheelList, addTo(getSortedWheelItems(db.getWheels()), NEW_ROW))
-            wheelTotalMileage.text = calculateTotalMileage().toString()
+            wheelTotalMileage.setText("${calculateTotalMileage()}")
         }
     }
 
@@ -53,7 +54,7 @@ open class MainFragment : BaseFragment() {
         textName.text = item.name()
 
         val textMileage = view.findViewById<TextView?>(R.id.row_mileage)
-        textMileage.text = if (item.name() == NEW_ENTRY) "" else "${item.mileage()}"
+        textMileage.text = if (item.name() == NEW_ENTRY) "" else "${round(item.mileage(), 1)}"
     }
 
     fun onSelectWheel() = { _: View, index: Int ->
@@ -72,17 +73,17 @@ open class MainFragment : BaseFragment() {
 
     private fun calculateTotalMileage(): Float {
         var totalMileage = 0.0f
-        wheelList.forEach { wheel ->
-            totalMileage += wheel.mileage()
+        db.getWheels().forEach { wheel ->
+            totalMileage += wheel.mileage
         }
 
-        return totalMileage
+        return round(totalMileage, 1)
     }
 
     private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
         return wheelList
             .stream()
-            .map { wheel -> WheelRow(wheel.id, wheel.name, wheel.mileage) }
+            .map { wheel -> WheelRow(wheel.id, wheel.name, round(wheel.mileage, 1)) }
             .sorted(sortWheelsByMileageDescAndNameAsc())
             .collect(toList())
     }

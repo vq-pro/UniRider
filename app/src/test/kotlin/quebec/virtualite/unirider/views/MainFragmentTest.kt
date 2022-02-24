@@ -4,6 +4,7 @@ import android.widget.ListView
 import android.widget.TextView
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.BDDMockito.atLeastOnce
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -12,9 +13,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.ID2
-import quebec.virtualite.unirider.TestDomain.MILEAGE
-import quebec.virtualite.unirider.TestDomain.MILEAGE2
-import quebec.virtualite.unirider.TestDomain.MILEAGE3
+import quebec.virtualite.unirider.TestDomain.MILEAGE_DISPLAY
+import quebec.virtualite.unirider.TestDomain.MILEAGE_TOTAL_DISPLAY
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.NAME_NEW
 import quebec.virtualite.unirider.TestDomain.S18_1
@@ -81,13 +81,13 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
             WHEEL_ROW_NEW
         )
 
-        verify(mockedDb).getWheels()
+        verify(mockedDb, atLeastOnce()).getWheels()
 
         verify(mockedLVWheels).isEnabled = true
         verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
         verifyOnItemClick(mockedLVWheels, "onSelectWheel")
 
-        verify(mockedTextTotalMileage).text = (MILEAGE + MILEAGE2 + MILEAGE3).toString()
+        verify(mockedTextTotalMileage).setText("$MILEAGE_TOTAL_DISPLAY")
     }
 
     @Test
@@ -101,7 +101,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
         // Then
         verify(mockedTextName).setText(NAME)
-        verify(mockedTextMileage).setText(MILEAGE.toString())
+        verify(mockedTextMileage).setText("$MILEAGE_DISPLAY")
     }
 
     @Test

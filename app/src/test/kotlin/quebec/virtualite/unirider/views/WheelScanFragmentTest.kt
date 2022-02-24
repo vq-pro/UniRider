@@ -112,26 +112,27 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
 
-    @Test
-    fun onSelectDevice() {
-        // Given
-        setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
-        val selectedDevice = 2
+//    FIXME-1 Disable the list when we click
+@Test
+fun onSelectDevice() {
+    // Given
+    setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
+    val selectedDevice = 2
 
-        fragment.wheel = SHERMAN_3
-        val expectedWheel =
-            WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
+    fragment.wheel = SHERMAN_3
+    val expectedWheel =
+        WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
 
-        // When
-        fragment.onSelectDevice().invoke(mockedView, selectedDevice)
+    // When
+    fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
-        // Then
-        verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR3), lambdaGotDeviceInfo.capture())
-        lambdaGotDeviceInfo.value.invoke(DeviceInfo(MILEAGE_NEW))
+    // Then
+    verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR3), lambdaGotDeviceInfo.capture())
+    lambdaGotDeviceInfo.value.invoke(DeviceInfo(MILEAGE_NEW))
 
-        verify(mockedDb).saveWheel(expectedWheel)
-        verifyNavigatedBack()
-    }
+    verify(mockedDb).saveWheel(expectedWheel)
+    verifyNavigatedBack()
+}
 
     class TestableWheelScanFragment(val test: WheelScanFragmentTest) : WheelScanFragment() {
 

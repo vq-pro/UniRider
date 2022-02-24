@@ -21,7 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
-import quebec.virtualite.unirider.TestDomain.MILEAGE
+import quebec.virtualite.unirider.TestDomain.MILEAGE_DISPLAY
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE_S
@@ -117,7 +117,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         verify(mockedTextName).setText(NAME)
         verify(mockedTextBtName).setText(DEVICE_NAME)
-        verify(mockedTextMileage).setText("$MILEAGE")
+        verify(mockedTextMileage).setText("$MILEAGE_DISPLAY")
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
         verifyOnClick(mockedButtonConnect, "onConnect")

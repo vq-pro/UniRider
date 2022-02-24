@@ -13,6 +13,7 @@ import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.junit.Rule
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
+import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.simulation.WheelScannerSimulation
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
@@ -121,7 +122,7 @@ class Steps {
 
     @Then("I see the total mileage")
     fun seeTotalMileage() {
-        assertThat(R.id.total_mileage, hasText(calculateTotalMileage().toString()))
+        assertThat(R.id.total_mileage, hasText("${calculateTotalMileage()}"))
     }
 
     @Then("^the selected entry is (.*?)$")
@@ -342,10 +343,10 @@ class Steps {
 
     private fun calculateTotalMileage(): Float {
         var totalMileage = 0f
-        mapWheels.keys.stream()
-            .forEach { wheelName -> totalMileage += mapWheels[wheelName]!!.mileage }
+        db.getWheels().stream()
+            .forEach { wheel -> totalMileage += wheel.mileage }
 
-        return totalMileage
+        return round(totalMileage, 1)
     }
 
     private fun parseVoltage(value: String): Float {

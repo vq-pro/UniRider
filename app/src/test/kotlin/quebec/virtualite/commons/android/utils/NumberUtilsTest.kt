@@ -25,6 +25,16 @@ class NumberUtilsTest {
         intOf(" ", 0)
     }
 
+    @Test
+    fun round() {
+        round(1.123f, 1.1f)
+        round(2.001f, 2.0f)
+        round(2.549f, 2.5f)
+        round(2.550f, 2.6f)
+        round(2.551f, 2.6f)
+        round(24094.455f, 24094.5f)
+    }
+
     private fun floatOf(value: String, expectedResult: Float) {
         // When
         val result = NumberUtils.floatOf(value)
@@ -36,6 +46,14 @@ class NumberUtilsTest {
     private fun intOf(value: String, expectedResult: Int) {
         // When
         val result = NumberUtils.intOf(value)
+
+        // Then
+        assertThat(result, equalTo(expectedResult))
+    }
+
+    private fun round(value: Float, expectedResult: Float) {
+        // When
+        val result = NumberUtils.round(value, 1)
 
         // Then
         assertThat(result, equalTo(expectedResult))
