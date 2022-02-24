@@ -56,12 +56,15 @@ class DeviceConnectorImpl : DeviceConnector {
 
     private val AUTOCONNECT = false
 
+    private var disconnected = false
+
     private var mVoltage: Int = 0
     private var mTotalDistance: Long = 0
 
     private lateinit var activity: Activity
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var bluetoothGatt: BluetoothGatt
+    private lateinit var wheelData: WheelData
     private lateinit var callback: (WheelData) -> Unit
 
     private val mGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
@@ -70,11 +73,12 @@ class DeviceConnectorImpl : DeviceConnector {
 
             when (newState) {
                 BluetoothProfile.STATE_CONNECTED -> {
-
-                    bluetoothGatt.discoverServices()
+                    gatt.discoverServices()
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
-                    val b = true
+                    gatt.close()
+
+                    callback.invoke(wheelData)
                 }
             }
         }
@@ -424,9 +428,15 @@ class DeviceConnectorImpl : DeviceConnector {
 
         when (data[16]) {
             0xA9.toByte() -> {  // Live data
+
                 mVoltage = byteArrayInt2(data[2], data[3])
                 mTotalDistance = byteArrayInt4(data[6], data[7], data[8], data[9])
-                var b = true
+                val mileage = mTotalDistance / 1000.0f
+
+                wheelData = WheelData(mileage, 0.0f, 0.0f)
+
+                Log.i("*** decodeKingSong 2 - ", mileage.toString())
+                gatt.disconnect()
             }
 
             0xB9.toByte() -> {  // Distance, time, fan data

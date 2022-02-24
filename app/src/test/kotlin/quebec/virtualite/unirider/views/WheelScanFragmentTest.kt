@@ -149,5 +149,9 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         override fun runDb(function: () -> Unit) {
             test.runDb(function)
         }
+
+        override fun uiThread(function: () -> Unit) {
+            test.uiThread(function)
+        }
     }
 }

@@ -18,7 +18,7 @@ import java.util.stream.Collectors.toList
 open class MainFragment : BaseFragment() {
 
     private val NEW_ENTRY = "<New>"
-    private val NEW_ROW = WheelRow(0, NEW_ENTRY, 0)
+    private val NEW_ROW = WheelRow(0, NEW_ENTRY, 0.0f)
 
     internal val wheelList = ArrayList<WheelRow>()
 
@@ -70,8 +70,8 @@ open class MainFragment : BaseFragment() {
         )
     }
 
-    private fun calculateTotalMileage(): Int {
-        var totalMileage = 0
+    private fun calculateTotalMileage(): Float {
+        var totalMileage = 0.0f
         wheelList.forEach { wheel ->
             totalMileage += wheel.mileage()
         }

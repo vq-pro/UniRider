@@ -20,7 +20,7 @@ Feature: Wheel Viewing
     Given I simulate a mileage of 705
     And I select the KingSong 14S
     When I connect to the KS-14Sxx9999
-    Then the mileage is updated
+    Then the mileage is updated to 705
     And the wheel's Bluetooth name is updated
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]

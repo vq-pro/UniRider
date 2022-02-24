@@ -18,8 +18,7 @@ open class WheelScannerImpl(mainActivity: MainActivity) : WheelScanner {
     override fun getDeviceInfo(deviceAddress: String?, gotInfo: ((DeviceInfo) -> Unit)?) {
         scanner.stop()
         connector.connect(deviceAddress!!) { wheelData ->
-            // FIXME-1 Replace with actual value
-            gotInfo!!.invoke(DeviceInfo(695))
+            gotInfo!!.invoke(DeviceInfo(wheelData.mileage))
         }
     }
 

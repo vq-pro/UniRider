@@ -7,9 +7,9 @@ import quebec.virtualite.unirider.bluetooth.WheelScanner
 open class WheelScannerSimulation : WheelScanner {
 
     companion object {
-        private var simulatedMileage = 0
+        private var simulatedMileage = 0.0f
 
-        fun setMileage(simulatedMileage: Int) {
+        fun setMileage(simulatedMileage: Float) {
             WheelScannerSimulation.simulatedMileage = simulatedMileage
         }
     }

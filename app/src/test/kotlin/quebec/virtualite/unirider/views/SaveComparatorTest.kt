@@ -33,7 +33,7 @@ class SaveComparatorTest {
         canSave("", MILEAGE_NEW, VOLTAGE_MIN_NEW, VOLTAGE_MAX_NEW, false)
 
         canSave(NAME, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX, true)
-        canSave(NAME_NEW, 0, VOLTAGE_MIN_NEW, VOLTAGE_MAX_NEW, true)
+        canSave(NAME_NEW, 0f, VOLTAGE_MIN_NEW, VOLTAGE_MAX_NEW, true)
 
         canSave(NAME, MILEAGE, VOLTAGE_MIN_NEW, VOLTAGE_MAX, true)
         canSave(NAME_NEW, MILEAGE_NEW, 0f, VOLTAGE_MAX_NEW, false)
@@ -42,7 +42,7 @@ class SaveComparatorTest {
         canSave(NAME_NEW, MILEAGE_NEW, VOLTAGE_MIN_NEW, 0f, false)
     }
 
-    private fun canSave(name: String, mileage: Int, voltageMin: Float, voltageMax: Float, expectedCanSave: Boolean) {
+    private fun canSave(name: String, mileage: Float, voltageMin: Float, voltageMax: Float, expectedCanSave: Boolean) {
         // Given
         val initial = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         val updated = WheelEntity(ID, name.trim(), DEVICE_NAME, DEVICE_ADDR, mileage, voltageMin, voltageMax)

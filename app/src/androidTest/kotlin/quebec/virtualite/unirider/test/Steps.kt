@@ -12,7 +12,7 @@ import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.junit.Rule
-import quebec.virtualite.commons.android.utils.NumberUtils.intOf
+import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.simulation.WheelScannerSimulation
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
@@ -41,7 +41,6 @@ import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
 import java.lang.Float.parseFloat
-import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
 class Steps {
@@ -57,7 +56,6 @@ class Steps {
     private lateinit var mainActivity: MainActivity
 
     private var expectedDeviceName: String = ""
-    private var expectedMileage: Int = 0
     private lateinit var selectedWheel: WheelEntity
     private lateinit var updatedWheel: WheelEntity
 
@@ -73,7 +71,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0f, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -94,13 +92,8 @@ class Steps {
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, updatedWheel.mileage)))
     }
 
-    @Then("the mileage is updated")
-    fun mileageUpdated() {
-        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
-    }
-
     @Then("^the mileage is updated to (.*?)$")
-    fun mileageUpdatedTo(expectedMileage: Int) {
+    fun mileageUpdatedTo(expectedMileage: Float) {
         assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
@@ -116,7 +109,7 @@ class Steps {
             .stream()
             .map { row ->
                 val name = row[0]
-                val mileage = intOf(row[1])
+                val mileage = floatOf(row[1])
                 val id = if (name == NEW_WHEEL_ENTRY) 0 else mapWheels[name]!!.id
 
                 WheelRow(id, name, mileage)
@@ -161,7 +154,7 @@ class Steps {
             mapEntity["Name"]!!,
             "",
             "",
-            parseInt(mapEntity["Mileage"]!!),
+            parseFloat(mapEntity["Mileage"]!!),
             parseFloat(mapEntity["Voltage Min"]!!),
             parseFloat(mapEntity["Voltage Max"]!!)
         )
@@ -281,7 +274,7 @@ class Steps {
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
-                WheelEntity(0, row[0], "", "", parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
+                WheelEntity(0, row[0], "", "", parseFloat(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
             }
             .collect(toList())
 
@@ -343,14 +336,12 @@ class Steps {
     }
 
     @Given("^I simulate a mileage of (.*?)$")
-    fun whenSimulatingMileage(simulatedMileage: Int) {
+    fun whenSimulatingMileage(simulatedMileage: Float) {
         WheelScannerSimulation.setMileage(simulatedMileage)
-
-        expectedMileage = simulatedMileage
     }
 
-    private fun calculateTotalMileage(): Int {
-        var totalMileage = 0
+    private fun calculateTotalMileage(): Float {
+        var totalMileage = 0f
         mapWheels.keys.stream()
             .forEach { wheelName -> totalMileage += mapWheels[wheelName]!!.mileage }
 

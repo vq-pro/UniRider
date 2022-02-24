@@ -64,7 +64,7 @@ open class WheelScanFragment : BaseFragment() {
 
             runDb { db.saveWheel(updatedWheel) }
 
-            navigateBack()
+            uiThread { navigateBack() }
         }
     }
 

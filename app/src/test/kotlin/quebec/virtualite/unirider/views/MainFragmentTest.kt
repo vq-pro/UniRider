@@ -68,7 +68,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         mockField(R.id.wheels, mockedLVWheels)
         mockField(R.id.total_mileage, mockedTextTotalMileage)
 
-        setList(fragment.wheelList, listOf(WheelRow(999, "some previous content", 999)))
+        setList(fragment.wheelList, listOf(WheelRow(999, "some previous content", 999f)))
 
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
