@@ -20,6 +20,13 @@ class DeviceConnectorImpl : DeviceConnector {
     private val NAME_TYPE_DATA = 0xBB.toByte()
     private val SERIAL_NUMBER_DATA = 0xB3.toByte()
 
+    private val KING_SONG_NAME_DATA = byteArrayOf(
+        0xAA.toByte(), 0x55.toByte(),
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x9B.toByte(), 0x14.toByte(),
+        0x5A.toByte(), 0x5A.toByte()
+    )
+
     private val KINGSONG_SERVICES: List<String> = listOf(
         "00001800-0000-1000-8000-00805f9b34fb",
         "00001801-0000-1000-8000-00805f9b34fb",
@@ -172,7 +179,7 @@ class DeviceConnectorImpl : DeviceConnector {
         Log.i("*** decodeKingSong - ", byteArrayToString(data))
 
         if (data.size < 20) {
-            requestKingSongNameData(gatt)
+            writeBluetoothGattCharacteristic(gatt, KING_SONG_NAME_DATA)
             return false
         }
 
@@ -199,28 +206,6 @@ class DeviceConnectorImpl : DeviceConnector {
         }
 
         return true
-    }
-
-    private fun requestKingSongNameData(gatt: BluetoothGatt) {
-        val data = ByteArray(20)
-        data[0] = 0xAA.toByte()
-        data[1] = 0x55.toByte()
-        data[16] = 0x9B.toByte()
-        data[17] = 0x14.toByte()
-        data[18] = 0x5A.toByte()
-        data[19] = 0x5A.toByte()
-        writeBluetoothGattCharacteristic(gatt, data)
-    }
-
-    private fun requestKingSongHorn(gatt: BluetoothGatt) {
-        val data = ByteArray(20)
-        data[0] = 0xAA.toByte()
-        data[1] = 0x55.toByte()
-        data[16] = (-120).toByte()
-        data[17] = 20.toByte()
-        data[18] = 90.toByte()
-        data[19] = 90.toByte()
-        writeBluetoothGattCharacteristic(gatt, data)
     }
 
     private fun writeBluetoothGattCharacteristic(gatt: BluetoothGatt, cmd: ByteArray) {
