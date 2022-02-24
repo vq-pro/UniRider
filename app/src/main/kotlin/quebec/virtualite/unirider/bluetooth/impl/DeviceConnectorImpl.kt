@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
@@ -40,6 +39,9 @@ class DeviceConnectorImpl : DeviceConnector {
     private val KINGSONG_SERVICE_UUID: UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
 
     private val AUTOCONNECT = false
+
+    private var disconnected = false
+    private var requestedKingSongNameData = false
 
     private var mVoltage: Int = 0
     private var mTotalDistance: Long = 0
@@ -86,17 +88,6 @@ class DeviceConnectorImpl : DeviceConnector {
                 }
             }
 
-            private fun detectWheel(gatt: BluetoothGatt): Boolean {
-                val services = gatt.services
-                if (services.size != KINGSONG_SERVICES.size)
-                    return false
-
-                val serviceUUIDs = services.stream()
-                    .map { service -> "${service.uuid}" }
-                    .collect(toList())
-                return serviceUUIDs.equals(KINGSONG_SERVICES)
-            }
-
             override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
                 super.onServicesDiscovered(gatt, status)
 
@@ -118,39 +109,14 @@ class DeviceConnectorImpl : DeviceConnector {
                 }
             }
 
-            override fun onCharacteristicRead(
-                gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int
-            ) {
-                super.onCharacteristicRead(gatt, characteristic, status)
-
-                val data: ByteArray = characteristic.value
-
-                if (characteristic.uuid.equals(KINGSONG_READ_CHARACTER)) {
-
-                    val wheelData = decodeKingSong(gatt, data)
-                }
-                val b = true
-            }
-
             override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
                 super.onCharacteristicChanged(gatt, characteristic)
 
                 val data: ByteArray = characteristic.value
 
                 if (characteristic.uuid.equals(KINGSONG_READ_CHARACTER)) {
-
-                    val wheelData = decodeKingSong(gatt, data)
-
-                    var b = true
+                    decodeKingSong(gatt, data)
                 }
-            }
-
-            override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
-                super.onDescriptorWrite(gatt, descriptor, status)
-            }
-
-            override fun onDescriptorRead(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
-                super.onDescriptorRead(gatt, descriptor, status)
             }
         }
     }
@@ -177,9 +143,6 @@ class DeviceConnectorImpl : DeviceConnector {
 
         return string.toString()
     }
-
-    private var disconnected = false
-    private var requestedKingSongNameData = false
 
     private fun decodeKingSong(gatt: BluetoothGatt, data: ByteArray): Boolean {
 
@@ -219,6 +182,17 @@ class DeviceConnectorImpl : DeviceConnector {
         }
 
         return true
+    }
+
+    private fun detectWheel(gatt: BluetoothGatt): Boolean {
+        val services = gatt.services
+        if (services.size != KINGSONG_SERVICES.size)
+            return false
+
+        val serviceUUIDs = services.stream()
+            .map { service -> "${service.uuid}" }
+            .collect(toList())
+        return serviceUUIDs.equals(KINGSONG_SERVICES)
     }
 
     private fun writeBluetoothGattCharacteristic(gatt: BluetoothGatt, cmd: ByteArray) {
