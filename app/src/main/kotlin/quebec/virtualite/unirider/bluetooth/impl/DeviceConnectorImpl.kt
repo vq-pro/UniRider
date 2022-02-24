@@ -183,8 +183,6 @@ class DeviceConnectorImpl : DeviceConnector {
                 descriptor.setValue(ENABLE_NOTIFICATION_VALUE)
                 val succesb = gatt.writeDescriptor(descriptor)
 
-//                requestKingSongNameData()
-
 
 //                gatt.readCharacteristic(notifyCharacteristic)
 
@@ -258,7 +256,7 @@ class DeviceConnectorImpl : DeviceConnector {
             }
         }
 
-//
+        //
 //        private fun requestKingSongSerialData() {
 //            val data = ByteArray(20)
 //            data[0] = (-86).toByte()
@@ -270,17 +268,6 @@ class DeviceConnectorImpl : DeviceConnector {
 //            writeBluetoothGattCharacteristic(data)
 //        }
 //
-//        private fun requestKingSongHorn() {
-//            val data = ByteArray(20)
-//            data[0] = (-86).toByte()
-//            data[1] = 85.toByte()
-//            data[16] = (-120).toByte()
-//            data[17] = 20.toByte()
-//            data[18] = 90.toByte()
-//            data[19] = 90.toByte()
-//            writeBluetoothGattCharacteristic(data)
-//        }
-
         override fun onCharacteristicRead(
             gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int
         ) {
@@ -404,6 +391,17 @@ class DeviceConnectorImpl : DeviceConnector {
         writeBluetoothGattCharacteristic(gatt, data)
     }
 
+    private fun requestKingSongHorn(gatt: BluetoothGatt) {
+        val data = ByteArray(20)
+        data[0] = 0xAA.toByte()
+        data[1] = 0x55.toByte()
+        data[16] = (-120).toByte()
+        data[17] = 20.toByte()
+        data[18] = 90.toByte()
+        data[19] = 90.toByte()
+        writeBluetoothGattCharacteristic(gatt, data)
+    }
+
     private fun writeBluetoothGattCharacteristic(gatt: BluetoothGatt, cmd: ByteArray) {
         val service = gatt.getService(KINGSONG_SERVICE_UUID)
         val ks_characteristic = service.getCharacteristic(KINGSONG_READ_CHARACTER)
@@ -417,12 +415,7 @@ class DeviceConnectorImpl : DeviceConnector {
         Log.i("*** decodeKingSong - ", byteArrayToString(data))
 
         if (data.size < 20) {
-//            val service = gatt.getService(KINGSONG_SERVICE_UUID)
-//            val notifyCharacteristic = service.getCharacteristic(KINGSONG_READ_CHARACTER)
-//            gatt.readCharacteristic(notifyCharacteristic)
-
             requestKingSongNameData(gatt)
-
             return false
         }
 
