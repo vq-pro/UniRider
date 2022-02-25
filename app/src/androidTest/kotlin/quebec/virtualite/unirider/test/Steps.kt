@@ -14,6 +14,7 @@ import org.hamcrest.Matchers.not
 import org.junit.Rule
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.simulation.WheelScannerSimulation
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
@@ -336,9 +337,13 @@ class Steps {
         selectListViewItem(R.id.wheels, "name", wheelName)
     }
 
-    @Given("^I simulate a mileage of (.*?)$")
-    fun whenSimulatingMileage(simulatedMileage: Float) {
-        WheelScannerSimulation.setMileage(simulatedMileage)
+    @Given("I simulate this wheel:")
+    fun simulatingWheel(device: DataTable) {
+        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Mileage")))
+        val deviceFields = device.cells(1)[0]
+
+        WheelScannerSimulation.setDevice(Device(deviceFields[0], deviceFields[1]))
+        WheelScannerSimulation.setMileage(parseFloat(deviceFields[2]))
     }
 
     private fun calculateTotalMileage(): Int {

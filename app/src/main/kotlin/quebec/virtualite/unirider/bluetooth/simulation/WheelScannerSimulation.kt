@@ -7,20 +7,23 @@ import quebec.virtualite.unirider.bluetooth.WheelScanner
 open class WheelScannerSimulation : WheelScanner {
 
     companion object {
-        private var simulatedMileage = 0.0f
+        private var device = Device("Unknown", "XX:XX:XX:XX")
+        private var mileage = 0.0f
 
-        fun setMileage(simulatedMileage: Float) {
-            WheelScannerSimulation.simulatedMileage = simulatedMileage
+        fun setDevice(device: Device) {
+            WheelScannerSimulation.device = device
+        }
+
+        fun setMileage(mileage: Float) {
+            WheelScannerSimulation.mileage = mileage
         }
     }
 
-    private val SIMULATED_DEVICE = Device("KS-14Sxx9999", "AB:CD:EF:GH")
-
     override fun getDeviceInfo(deviceAddress: String?, gotInfo: ((DeviceInfo) -> Unit)?) {
-        gotInfo!!.invoke(DeviceInfo(simulatedMileage))
+        gotInfo!!.invoke(DeviceInfo(mileage))
     }
 
     override fun scan(found: ((Device) -> Unit)?) {
-        found!!.invoke(SIMULATED_DEVICE)
+        found!!.invoke(device)
     }
 }
