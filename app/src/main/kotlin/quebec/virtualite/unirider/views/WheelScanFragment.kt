@@ -55,6 +55,8 @@ open class WheelScanFragment : BaseFragment() {
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
 
+        lvWheels.isEnabled = false
+
         val device = devices[pos]
 
         scanner.getDeviceInfo(device.address) { info ->

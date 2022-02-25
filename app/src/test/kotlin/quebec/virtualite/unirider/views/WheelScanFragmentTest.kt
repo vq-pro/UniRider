@@ -113,7 +113,6 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
 
-    //    FIXME-1 Disable the list when we click
     @Test
     fun onSelectDevice() {
         // Given
@@ -125,9 +124,13 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         // When
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
+        val deviceInfoFromConnection = DeviceInfo(MILEAGE_NEW_FLOAT)
+
         // Then
+        verify(mockedLvWheels).setEnabled(false)
+
         verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR3), lambdaGotDeviceInfo.capture())
-        lambdaGotDeviceInfo.value.invoke(DeviceInfo(MILEAGE_NEW_FLOAT))
+        lambdaGotDeviceInfo.value.invoke(deviceInfoFromConnection)
 
         verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
