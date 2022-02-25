@@ -78,6 +78,8 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
+            buttonConnect.isEnabled = false
+
             connector.getDeviceInfo(wheel!!.btAddr) { info ->
                 val newMileage = info.mileage.roundToInt()
                 wheel = WheelEntity(
@@ -86,7 +88,10 @@ open class WheelViewFragment : BaseFragment() {
                 )
 
                 runDB { db.saveWheel(wheel) }
-                runUI { textMileage.text = "$newMileage" }
+                runUI {
+                    textMileage.text = "$newMileage"
+                    buttonConnect.isEnabled = true
+                }
             }
         }
     }

@@ -170,6 +170,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     @Test
     fun onConnect_whenNotFirstTime_connectAndUpdate() {
         // Given
+        fragment.buttonConnect = mockedButtonConnect
         fragment.textBtName = mockedTextBtName
         fragment.textMileage = mockedTextMileage
 
@@ -177,11 +178,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
+        verify(mockedButtonConnect).setEnabled(false)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_FLOAT))
         verify(mockedDb).saveWheel(
             WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
         )
         verify(mockedTextMileage).setText("$MILEAGE_NEW")
+        verify(mockedButtonConnect).setEnabled(true)
     }
 
     @Test
