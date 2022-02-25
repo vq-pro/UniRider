@@ -8,7 +8,6 @@ import android.widget.ListView
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.Device
-import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.util.stream.Collectors.toList
@@ -21,7 +20,6 @@ open class WheelScanFragment : BaseFragment() {
     internal var parmWheelId: Long? = 0
     internal var wheel: WheelEntity? = null
 
-    private lateinit var scanner: WheelScanner
     private var widgets = WidgetUtils()
 
     internal lateinit var lvWheels: ListView
@@ -69,9 +67,5 @@ open class WheelScanFragment : BaseFragment() {
 
             uiThread { navigateBack() }
         }
-    }
-
-    internal open fun connectScanner() {
-        scanner = MainActivity.scanner
     }
 }

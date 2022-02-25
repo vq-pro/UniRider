@@ -17,6 +17,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.commons.views.NavigatedTo
+import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.unirider.bluetooth.DeviceInfo
+import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelDb
 
 open class BaseFragmentTest(fragmentType: Class<*>) {
@@ -39,10 +42,19 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedInflater: LayoutInflater
 
     @Mock
+    lateinit var mockedScanner: WheelScanner
+
+    @Mock
     lateinit var mockedView: View
 
     @Mock
     lateinit var mockedWidgets: WidgetUtils
+
+    @Captor
+    lateinit var lambdaFoundDevice: ArgumentCaptor<(Device) -> Unit>
+
+    @Captor
+    lateinit var lambdaGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
 
     @Captor
     private lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>

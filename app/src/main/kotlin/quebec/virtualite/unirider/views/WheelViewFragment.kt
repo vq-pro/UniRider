@@ -14,6 +14,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
 import java.util.Locale.ENGLISH
+import kotlin.math.roundToInt
 
 open class WheelViewFragment : BaseFragment() {
 
@@ -30,6 +31,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textName: TextView
     internal lateinit var editVoltage: EditText
 
+    // FIXME-1 Make wheel non-nullable
     internal var wheel: WheelEntity? = null
 
     internal var parmWheelId: Long? = 0
@@ -68,10 +70,27 @@ open class WheelViewFragment : BaseFragment() {
                 textMileage.setText("${wheel!!.mileage}")
             }
         }
+
+        connectScanner()
     }
 
     fun onConnect() = { _: View ->
-        goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
+        if (wheel!!.btName == null) {
+            goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
+
+        } else {
+            scanner.getDeviceInfo(wheel!!.btAddr) { info ->
+                val newMileage = info.mileage.roundToInt()
+                wheel = WheelEntity(
+                    wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
+                    newMileage, wheel!!.voltageMin, wheel!!.voltageMax
+                )
+
+                runDb { db.saveWheel(wheel) }
+
+                uiThread { textMileage.text = "$newMileage" }
+            }
+        }
     }
 
     fun onDelete() = { _: View ->

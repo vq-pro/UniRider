@@ -19,15 +19,23 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.MILEAGE
+import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
+import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_FLOAT
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE_S
 import quebec.virtualite.unirider.TestDomain.S18_1
+import quebec.virtualite.unirider.TestDomain.S18_DISCONNECTED
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_S
+import quebec.virtualite.unirider.bluetooth.DeviceInfo
+import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
@@ -142,8 +150,10 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
-    fun onConnect() {
+    fun onConnect_whenFirstTime_gotoScanFragment() {
         // Given
+        fragment.wheel = S18_DISCONNECTED
+
         fragment.textBtName = mockedTextBtName
         fragment.textMileage = mockedTextMileage
 
@@ -155,6 +165,28 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             R.id.action_WheelViewFragment_to_WheelScanFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
+    }
+
+    @Test
+    fun onConnect_whenNotFirstTime_connectAndUpdate() {
+        // Given
+        fragment.textBtName = mockedTextBtName
+        fragment.textMileage = mockedTextMileage
+
+        // When
+        fragment.onConnect().invoke(mockedView)
+
+        val deviceInfoFromConnection = DeviceInfo(MILEAGE_NEW_FLOAT)
+
+        // Then
+        verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR), lambdaGotDeviceInfo.capture())
+        lambdaGotDeviceInfo.value.invoke(deviceInfoFromConnection)
+
+        verify(mockedDb).saveWheel(
+            WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
+        )
+
+        verify(mockedTextMileage).setText("$MILEAGE_NEW")
     }
 
     @Test
@@ -231,8 +263,19 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             test.connectDb(this, function)
         }
 
+        override fun connectScanner() {
+        }
+
         override fun navigateTo(id: Int, param: Pair<String, Any>) {
             test.navigateTo(id, param)
+        }
+
+        override fun runDb(function: () -> Unit) {
+            test.runDb(function)
+        }
+
+        override fun uiThread(function: () -> Unit) {
+            test.uiThread(function)
         }
     }
 }

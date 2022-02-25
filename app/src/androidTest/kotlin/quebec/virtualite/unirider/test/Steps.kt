@@ -154,8 +154,8 @@ class Steps {
         updatedWheel = WheelEntity(
             selectedWheel.id,
             mapEntity["Name"]!!,
-            "",
-            "",
+            null,
+            null,
             parseInt(mapEntity["Mileage"]!!),
             parseFloat(mapEntity["Voltage Min"]!!),
             parseFloat(mapEntity["Voltage Max"]!!)
@@ -265,6 +265,21 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
     }
 
+    @Given("this connected wheel:")
+    fun givenThisConnectedWheel(details: DataTable) {
+        assertThat(
+            details.topCells(),
+            equalTo(listOf("Name", "Bt Name", "Bt Address", "Voltage Min", "Voltage Max", "Mileage"))
+        )
+
+        val row = details.cells(1)[0]
+        val wheel = WheelEntity(0, row[0], row[1], row[2], parseInt(row[5]), parseVoltage(row[3]), parseVoltage(row[4]))
+
+        db.saveWheel(wheel)
+
+        mapWheels[wheel.name] = wheel
+    }
+
     @Given("this wheel:")
     fun givenThisWheel(wheel: DataTable) {
         givenTheseWheels(wheel)
@@ -276,7 +291,7 @@ class Steps {
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
-                WheelEntity(0, row[0], "", "", parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
+                WheelEntity(0, row[0], null, null, parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
             }
             .collect(toList())
 
@@ -324,6 +339,11 @@ class Steps {
         selectListViewItem(R.id.devices, deviceName)
 
         expectedDeviceName = deviceName
+    }
+
+    @When("I reconnect to the wheel")
+    fun whenReconnectToWheel() {
+        click(R.id.button_connect)
     }
 
     @When("^I enter a voltage of (.*?)V$")

@@ -6,10 +6,8 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
-import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
@@ -36,7 +34,6 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
-import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
@@ -47,15 +44,6 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
     @Mock
     lateinit var mockedLvWheels: ListView
-
-    @Mock
-    lateinit var mockedScanner: WheelScanner
-
-    @Captor
-    lateinit var lambdaGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
-
-    @Captor
-    lateinit var lambdaFoundDevice: ArgumentCaptor<(Device) -> Unit>
 
     @Before
     fun before() {
