@@ -27,7 +27,7 @@ class DeviceScannerImpl : DeviceScanner {
         return !bluetoothAdapter.isDiscovering
     }
 
-    override fun scan(whenDetecting: (Device) -> Unit) {
+    override fun scan(onDetected: (Device) -> Unit) {
 
         val broadcastReceiver = object : BroadcastReceiver() {
 
@@ -41,7 +41,7 @@ class DeviceScannerImpl : DeviceScanner {
                             return
                         }
 
-                        whenDetecting.invoke(Device(device.name, device.address))
+                        onDetected.invoke(Device(device.name, device.address))
                     }
                 }
             }

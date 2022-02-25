@@ -8,6 +8,6 @@ interface DeviceScanner {
     fun init(activity: Activity)
 
     fun isStopped(): Boolean
-    fun scan(whenDetecting: (Device) -> Unit)
+    fun scan(onDetected: (Device) -> Unit)
     fun stop()
 }
