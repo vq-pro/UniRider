@@ -28,6 +28,7 @@ import quebec.virtualite.unirider.TestDomain.DEVICE_NAME3
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.ID3
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
+import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_FLOAT
 import quebec.virtualite.unirider.TestDomain.NAME3
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.SHERMAN_3
@@ -112,27 +113,27 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
 
-//    FIXME-1 Disable the list when we click
-@Test
-fun onSelectDevice() {
-    // Given
-    setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
-    val selectedDevice = 2
+    //    FIXME-1 Disable the list when we click
+    @Test
+    fun onSelectDevice() {
+        // Given
+        setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
+        val selectedDevice = 2
 
-    fragment.wheel = SHERMAN_3
-    val expectedWheel =
-        WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
+        fragment.wheel = SHERMAN_3
 
-    // When
-    fragment.onSelectDevice().invoke(mockedView, selectedDevice)
+        // When
+        fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
-    // Then
-    verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR3), lambdaGotDeviceInfo.capture())
-    lambdaGotDeviceInfo.value.invoke(DeviceInfo(MILEAGE_NEW))
+        // Then
+        verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR3), lambdaGotDeviceInfo.capture())
+        lambdaGotDeviceInfo.value.invoke(DeviceInfo(MILEAGE_NEW_FLOAT))
 
-    verify(mockedDb).saveWheel(expectedWheel)
-    verifyNavigatedBack()
-}
+        verify(mockedDb).saveWheel(
+            WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
+        )
+        verifyNavigatedBack()
+    }
 
     class TestableWheelScanFragment(val test: WheelScanFragmentTest) : WheelScanFragment() {
 

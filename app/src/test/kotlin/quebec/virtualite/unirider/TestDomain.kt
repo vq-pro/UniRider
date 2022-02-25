@@ -15,14 +15,11 @@ object TestDomain {
     val ID = 1111L
     val ID2 = 1112L
     val ID3 = 1113L
-    val MILEAGE = 2222.123f
-    val MILEAGE2 = 2223.679f
-    val MILEAGE3 = 2223.600f
-    val MILEAGE_NEW = 2224.123f
-    val MILEAGE_DISPLAY = 2222.1f
-    val MILEAGE2_DISPLAY = 2223.7f
-    val MILEAGE3_DISPLAY = 2223.6f
-    val MILEAGE_TOTAL_DISPLAY = 6669.4f
+    val MILEAGE = 2222
+    val MILEAGE2 = 2223
+    val MILEAGE3 = 2223
+    val MILEAGE_NEW = 2224
+    val MILEAGE_NEW_FLOAT = 2223.617f
     val NAME = "S18"
     val NAME2 = "S20"
     val NAME3 = "Sherman"
@@ -39,10 +36,10 @@ object TestDomain {
     val VOLTAGE_MIN2 = 90.0f
     val VOLTAGE_MIN3 = 75.6f
     val VOLTAGE_MIN_NEW = 74.5f
-    val WHEEL_ROW_1_123 = WheelRow(ID, NAME, MILEAGE_DISPLAY)
-    val WHEEL_ROW_2_456 = WheelRow(ID2, NAME2, MILEAGE2_DISPLAY)
-    val WHEEL_ROW_3_123 = WheelRow(ID3, NAME3, MILEAGE3_DISPLAY)
-    val WHEEL_ROW_NEW = WheelRow(0, NAME_NEW, 0f)
+    val WHEEL_ROW_1_123 = WheelRow(ID, NAME, MILEAGE)
+    val WHEEL_ROW_2_456 = WheelRow(ID2, NAME2, MILEAGE2)
+    val WHEEL_ROW_3_123 = WheelRow(ID3, NAME3, MILEAGE3)
+    val WHEEL_ROW_NEW = WheelRow(0, NAME_NEW, 0)
 
     val DEVICE = Device(DEVICE_NAME, DEVICE_ADDR)
     val DEVICE2 = Device(DEVICE_NAME2, DEVICE_ADDR2)

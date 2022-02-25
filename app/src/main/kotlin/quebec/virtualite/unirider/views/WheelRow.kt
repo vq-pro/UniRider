@@ -1,6 +1,6 @@
 package quebec.virtualite.unirider.views
 
-class WheelRow(id: Long, name: String, mileage: Float) : HashMap<String, Any>() {
+class WheelRow(id: Long, name: String, mileage: Int) : HashMap<String, Any>() {
     init {
         put("id", id)
         put("name", name)
@@ -11,8 +11,8 @@ class WheelRow(id: Long, name: String, mileage: Float) : HashMap<String, Any>() 
         return get("id") as Long
     }
 
-    fun mileage(): Float {
-        return get("mileage") as Float
+    fun mileage(): Int {
+        return get("mileage") as Int
     }
 
     fun name(): String {

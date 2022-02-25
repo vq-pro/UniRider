@@ -73,7 +73,7 @@ class WheelDbImplTest {
             .willReturn(WheelEntity(ID2, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX))
 
         // When
-        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0f, 0f, 0f))
+        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0f, 0f))
 
         // Then
         verify(mockedDao).findWheel(NAME)
@@ -88,7 +88,7 @@ class WheelDbImplTest {
             .willReturn(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX))
 
         // When
-        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0f, 0f, 0f))
+        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0f, 0f))
 
         // Then
         verify(mockedDao).findWheel(NAME)
@@ -103,7 +103,7 @@ class WheelDbImplTest {
             .willReturn(null)
 
         // When
-        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0f, 0f, 0f))
+        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0f, 0f))
 
         // Then
         assertThat(result, equalTo(false))
@@ -112,7 +112,7 @@ class WheelDbImplTest {
     @Test
     fun findWheel() {
         // Given
-        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, 0f, 0f, 0f)
+        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0f, 0f)
         given(mockedDao.findWheel(NAME))
             .willReturn(wheel)
 
@@ -128,7 +128,7 @@ class WheelDbImplTest {
     @Test
     fun getWheel() {
         // Given
-        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0f, 0f, 0f)
+        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0f, 0f)
         given(mockedDao.getWheel(ID))
             .willReturn(wheel)
 

@@ -12,6 +12,7 @@ import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.util.stream.Collectors.toList
+import kotlin.math.roundToInt
 
 open class WheelScanFragment : BaseFragment() {
 
@@ -59,7 +60,7 @@ open class WheelScanFragment : BaseFragment() {
         scanner.getDeviceInfo(device.address) { info ->
             val updatedWheel = WheelEntity(
                 wheel!!.id, wheel!!.name, device.name, device.address,
-                info.mileage, wheel!!.voltageMin, wheel!!.voltageMax
+                info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
             )
 
             runDb { db.saveWheel(updatedWheel) }
