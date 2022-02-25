@@ -2,13 +2,13 @@ Feature: Wheel Viewing
 
   Background:
     Given these wheels:
-      | Name            | Voltage Min | Voltage Max | Mileage |
-      | Veteran Sherman | 75.6V       | 100.8V      | 17622   |
-      | Veteran Abrams  | 74.5V       | 100.8V      | 0       |
-      | KingSong S20    | 90.0V       | 126.0V      | 0       |
-      | KingSong 14S    | 48.0V       | 67.2V       | 694     |
-      | Gotway Nikola+  | 78.0V       | 100.8V      | 2927    |
-      | KingSong S18    | 60.0V       | 84.0V       | 2850    |
+      | Name            | Mileage | Voltage Min | Voltage Max |
+      | Veteran Sherman | 17622   | 75.6V       | 100.8V      |
+      | Veteran Abrams  | 0       | 74.5V       | 100.8V      |
+      | KingSong S20    | 0       | 90.0V       | 126.0V      |
+      | KingSong 14S    | 694     | 48.0V       | 67.2V       |
+      | Gotway Nikola+  | 2927    | 78.0V       | 100.8V      |
+      | KingSong S18    | 2850    | 60.0V       | 84.0V       |
     And I start the app
 
   Scenario: Viewing a wheel's details in full

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import org.apache.http.util.TextUtils.isEmpty
+import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -81,17 +82,13 @@ open class WheelViewFragment : BaseFragment() {
             widgets.disable(buttonConnect)
 
             connector.getDeviceInfo(wheel!!.btAddr) { info ->
-                val newMileage = info.mileage.roundToInt()
-                wheel = WheelEntity(
-                    wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
-                    newMileage, wheel!!.voltageMin, wheel!!.voltageMax
-                )
 
-                runDB { db.saveWheel(wheel) }
-                runUI {
-                    textMileage.text = "$newMileage"
-                    widgets.enable(buttonConnect)
-                }
+                val newMileage = info.mileage.roundToInt()
+                val newVoltage = round(info.voltage, 1)
+
+                updateWheel(newMileage, newVoltage)
+
+                runUI { widgets.enable(buttonConnect) }
             }
         }
     }
@@ -120,5 +117,19 @@ open class WheelViewFragment : BaseFragment() {
 
     private fun goto(id: Int) {
         navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
+    }
+
+    private fun updateWheel(newMileage: Int, newVoltage: Float) {
+
+        wheel = WheelEntity(
+            wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
+            newMileage, wheel!!.voltageMin, wheel!!.voltageMax
+        )
+
+        runDB { db.saveWheel(wheel) }
+        runUI {
+            textMileage.text = "$newMileage"
+            editVoltage.setText("$newVoltage")
+        }
     }
 }

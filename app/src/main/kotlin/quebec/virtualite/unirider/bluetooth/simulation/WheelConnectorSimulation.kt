@@ -8,7 +8,8 @@ open class WheelConnectorSimulation : WheelConnector {
 
     companion object {
         private var device = Device("Unknown", "XX:XX:XX:XX")
-        private var mileage = 0.0f
+        private var mileage = 123f
+        private var voltage = 61.2f
 
         fun setDevice(device: Device) {
             WheelConnectorSimulation.device = device
@@ -17,11 +18,14 @@ open class WheelConnectorSimulation : WheelConnector {
         fun setMileage(mileage: Float) {
             WheelConnectorSimulation.mileage = mileage
         }
+
+        fun setVoltage(voltage: Float) {
+            WheelConnectorSimulation.voltage = voltage
+        }
     }
 
     override fun getDeviceInfo(deviceAddress: String?, function: ((DeviceInfo) -> Unit)?) {
-        if (deviceAddress.equals(device.address))
-            function!!.invoke(DeviceInfo(mileage))
+        function!!.invoke(DeviceInfo(mileage, voltage))
     }
 
     override fun scan(found: ((Device) -> Unit)?) {
