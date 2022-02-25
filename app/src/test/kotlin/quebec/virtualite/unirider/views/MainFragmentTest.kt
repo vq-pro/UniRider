@@ -4,7 +4,6 @@ import android.widget.ListView
 import android.widget.TextView
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.BDDMockito.atLeastOnce
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -82,13 +81,13 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
             WHEEL_ROW_NEW
         )
 
-        verify(mockedDb, atLeastOnce()).getWheels()
+        verify(mockedDb).getWheels()
 
-        verify(mockedLVWheels).isEnabled = true
+        verify(mockedWidgets).enable(mockedLVWheels)
         verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
         verifyOnItemClick(mockedLVWheels, "onSelectWheel")
 
-        verify(mockedTextTotalMileage).setText("${MILEAGE + MILEAGE2 + MILEAGE3}")
+        verify(mockedTextTotalMileage).text = "${MILEAGE + MILEAGE2 + MILEAGE3}"
     }
 
     @Test
@@ -101,8 +100,8 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         fragment.onDisplayWheel().invoke(mockedView, WHEEL_ROW_1_123)
 
         // Then
-        verify(mockedTextName).setText(NAME)
-        verify(mockedTextMileage).setText("$MILEAGE")
+        verify(mockedTextName).text = NAME
+        verify(mockedTextMileage).text = "$MILEAGE"
     }
 
     @Test
@@ -151,8 +150,8 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
     class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateTo(id: Int, param: Pair<String, Any>) {

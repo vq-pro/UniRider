@@ -6,10 +6,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
-import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
@@ -36,7 +33,6 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
-import quebec.virtualite.unirider.bluetooth.WheelScanner
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
@@ -47,15 +43,6 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
     @Mock
     lateinit var mockedLvWheels: ListView
-
-    @Mock
-    lateinit var mockedScanner: WheelScanner
-
-    @Captor
-    lateinit var lambdaGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
-
-    @Captor
-    lateinit var lambdaFoundDevice: ArgumentCaptor<(Device) -> Unit>
 
     @Before
     fun before() {
@@ -87,13 +74,12 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         // Then
         verify(mockedDb).getWheel(ID)
-        verify(mockedScanner).scan(lambdaFoundDevice.capture())
-        lambdaFoundDevice.value.invoke(Device(DEVICE_NAME, DEVICE_ADDR))
+        verifyConnectorScan(Device(DEVICE_NAME, DEVICE_ADDR))
 
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(SHERMAN_3))
 
-        verify(mockedLvWheels).isEnabled = true
+        verify(mockedWidgets).enable(mockedLvWheels)
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
         verifyOnItemClick(mockedLvWheels, "onSelectDevice")
     }
@@ -107,9 +93,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        verify(mockedScanner).scan(lambdaFoundDevice.capture())
-        lambdaFoundDevice.value.invoke(Device(DEVICE_NAME2, DEVICE_ADDR2))
-
+        verifyConnectorScan(Device(DEVICE_NAME2, DEVICE_ADDR2))
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
 
@@ -124,14 +108,9 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         // When
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
-        val deviceInfoFromConnection = DeviceInfo(MILEAGE_NEW_FLOAT)
-
         // Then
-        verify(mockedLvWheels).setEnabled(false)
-
-        verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR3), lambdaGotDeviceInfo.capture())
-        lambdaGotDeviceInfo.value.invoke(deviceInfoFromConnection)
-
+        verify(mockedWidgets).disable(mockedLvWheels)
+        verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_FLOAT))
         verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
         )
@@ -140,23 +119,23 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
     class TestableWheelScanFragment(val test: WheelScanFragmentTest) : WheelScanFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initConnector() {
         }
 
-        override fun connectScanner() {
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateBack(nb: Int) {
             test.navigateBack(nb)
         }
 
-        override fun runDb(function: () -> Unit) {
-            test.runDb(function)
+        override fun runDB(function: () -> Unit) {
+            test.runDB(function)
         }
 
-        override fun uiThread(function: () -> Unit) {
-            test.uiThread(function)
+        override fun runUI(function: () -> Unit) {
+            test.runUI(function)
         }
     }
 }

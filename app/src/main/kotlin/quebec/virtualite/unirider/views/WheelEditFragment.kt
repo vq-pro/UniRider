@@ -52,7 +52,7 @@ open class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
         widgets.setOnClickListener(buttonSave, onSave())
 
-        connectDb {
+        initDB {
             initialWheel = if (parmWheelId == 0L) NEW_WHEEL
             else db.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
 
@@ -69,7 +69,7 @@ open class WheelEditFragment : BaseFragment() {
 
     fun enableSaveIfChanged() {
         if (saveComparator.canSave(updatedWheel, initialWheel)) {
-            runDb {
+            runDB {
                 if (!db.findDuplicate(updatedWheel))
                     widgets.enable(buttonSave)
                 else
@@ -80,7 +80,7 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onSave() = { _: View ->
-        runDb { db.saveWheel(updatedWheel) }
+        runDB { db.saveWheel(updatedWheel) }
         navigateBack()
     }
 

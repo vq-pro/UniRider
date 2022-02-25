@@ -140,15 +140,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(
-            WheelEntity(
-                ID,
-                NAME,
-                DEVICE_NAME,
-                DEVICE_ADDR,
-                MILEAGE,
-                VOLTAGE_MIN,
-                VOLTAGE_MAX
-            )
+            WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         )
         verify(mockedWidgets).enable(mockedButtonSave)
     }
@@ -166,15 +158,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(
-            WheelEntity(
-                ID,
-                NAME,
-                DEVICE_NAME,
-                DEVICE_ADDR,
-                MILEAGE,
-                VOLTAGE_MIN,
-                VOLTAGE_MAX
-            )
+            WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         )
         verify(mockedWidgets).disable(mockedButtonSave)
     }
@@ -354,16 +338,16 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
     class TestableWheelEditFragment(val test: WheelEditFragmentTest) : WheelEditFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateBack(nb: Int) {
             test.navigateBack(nb)
         }
 
-        override fun runDb(function: () -> Unit) {
-            test.runDb(function)
+        override fun runDB(function: () -> Unit) {
+            test.runDB(function)
         }
     }
 }

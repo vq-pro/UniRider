@@ -14,6 +14,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
 import java.util.Locale.ENGLISH
+import kotlin.math.roundToInt
 
 open class WheelViewFragment : BaseFragment() {
 
@@ -54,7 +55,7 @@ open class WheelViewFragment : BaseFragment() {
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
 
-        connectDb {
+        initDB {
             wheel = db.getWheel(parmWheelId!!)
 
             if (wheel != null) {
@@ -63,15 +64,36 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonEdit, onEdit())
                 widgets.setOnLongClickListener(buttonDelete, onDelete())
 
-                textName.setText(wheel!!.name)
-                textBtName.setText(wheel!!.btName)
-                textMileage.setText("${wheel!!.mileage}")
+                textName.text = wheel!!.name
+                textBtName.text = wheel!!.btName
+                textMileage.text = "${wheel!!.mileage}"
             }
         }
+
+        initConnector()
     }
 
     fun onConnect() = { _: View ->
-        goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
+        if (wheel!!.btName == null) {
+            goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
+
+        } else {
+            widgets.disable(buttonConnect)
+
+            connector.getDeviceInfo(wheel!!.btAddr) { info ->
+                val newMileage = info.mileage.roundToInt()
+                wheel = WheelEntity(
+                    wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
+                    newMileage, wheel!!.voltageMin, wheel!!.voltageMax
+                )
+
+                runDB { db.saveWheel(wheel) }
+                runUI {
+                    textMileage.text = "$newMileage"
+                    widgets.enable(buttonConnect)
+                }
+            }
+        }
     }
 
     fun onDelete() = { _: View ->

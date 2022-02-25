@@ -2,10 +2,10 @@ package quebec.virtualite.unirider.bluetooth.impl
 
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
-import quebec.virtualite.unirider.bluetooth.WheelScanner
+import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.views.MainActivity
 
-open class WheelScannerImpl(mainActivity: MainActivity) : WheelScanner {
+open class WheelConnectorImpl(mainActivity: MainActivity) : WheelConnector {
 
     private val connector: DeviceConnector = DeviceConnectorImpl()
     private val scanner: DeviceScanner = DeviceScannerImpl()
@@ -15,10 +15,10 @@ open class WheelScannerImpl(mainActivity: MainActivity) : WheelScanner {
         scanner.init(mainActivity)
     }
 
-    override fun getDeviceInfo(deviceAddress: String?, gotInfo: ((DeviceInfo) -> Unit)?) {
+    override fun getDeviceInfo(deviceAddress: String?, function: ((DeviceInfo) -> Unit)?) {
         scanner.stop()
         connector.connect(deviceAddress!!) { wheelData ->
-            gotInfo!!.invoke(DeviceInfo(wheelData.mileage))
+            function!!.invoke(DeviceInfo(wheelData.mileage))
         }
     }
 

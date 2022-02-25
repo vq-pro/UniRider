@@ -24,8 +24,8 @@ open class MainFragment : BaseFragment() {
 
     private var widgets = WidgetUtils()
 
-    private lateinit var wheelTotalMileage: TextView
-    private lateinit var wheels: ListView
+    private lateinit var lvWheels: ListView
+    private lateinit var textTotalMileage: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.main_fragment, container, false)
@@ -34,16 +34,16 @@ open class MainFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        wheels = view.findViewById(R.id.wheels) as ListView
-        wheelTotalMileage = view.findViewById(R.id.total_mileage)
+        lvWheels = view.findViewById(R.id.wheels) as ListView
+        textTotalMileage = view.findViewById(R.id.total_mileage)
 
-        wheels.isEnabled = true
-        widgets.multifieldListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
-        widgets.setOnItemClickListener(wheels, onSelectWheel())
+        widgets.enable(lvWheels)
+        widgets.multifieldListAdapter(lvWheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
+        widgets.setOnItemClickListener(lvWheels, onSelectWheel())
 
-        connectDb {
+        initDB {
             setList(wheelList, addTo(getSortedWheelItems(db.getWheels()), NEW_ROW))
-            wheelTotalMileage.setText("${calculateTotalMileage()}")
+            textTotalMileage.text = "${calculateTotalMileage()}"
         }
     }
 
@@ -57,8 +57,8 @@ open class MainFragment : BaseFragment() {
     }
 
     fun onSelectWheel() = { _: View, index: Int ->
-        when {
-            wheelList[index].name() == NEW_ENTRY -> addWheel()
+        when (wheelList[index].name()) {
+            NEW_ENTRY -> addWheel()
             else -> viewWheel(wheelList[index])
         }
     }
@@ -89,7 +89,10 @@ open class MainFragment : BaseFragment() {
 
     private fun sortWheelsByMileageDescAndNameAsc() = { rowA: WheelRow, rowB: WheelRow ->
         val byMileage = rowB.mileage().compareTo(rowA.mileage())
-        if (byMileage != 0) byMileage else rowA.name().compareTo(rowB.name())
+        if (byMileage != 0)
+            byMileage
+        else
+            rowA.name().compareTo(rowB.name())
     }
 
     private fun viewWheel(wheel: WheelRow) {

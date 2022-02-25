@@ -17,6 +17,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.commons.views.NavigatedTo
+import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.unirider.bluetooth.DeviceInfo
+import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.database.WheelDb
 
 open class BaseFragmentTest(fragmentType: Class<*>) {
@@ -44,6 +47,15 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     @Mock
     lateinit var mockedWidgets: WidgetUtils
 
+    @Mock
+    private lateinit var mockedConnector: WheelConnector
+
+    @Captor
+    private lateinit var lambdaFoundDevice: ArgumentCaptor<(Device) -> Unit>
+
+    @Captor
+    private lateinit var lambdaGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
+
     @Captor
     private lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>
 
@@ -59,7 +71,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     private var navigatedBack: Int = 0
     private var navigatedTo: NavigatedTo? = null
 
-    fun connectDb(fragment: BaseFragment, function: () -> Unit) {
+    fun initDB(fragment: BaseFragment, function: () -> Unit) {
         fragment.db = mockedDb
         function()
     }
@@ -91,16 +103,26 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         navigatedTo = NavigatedTo(id, parms)
     }
 
-    fun runDb(function: () -> Unit) {
+    fun runBackground(function: () -> Unit) {
         function()
     }
 
-    fun subThread(function: () -> Unit) {
+    fun runDB(function: () -> Unit) {
         function()
     }
 
-    fun uiThread(function: () -> Unit) {
+    fun runUI(function: () -> Unit) {
         function()
+    }
+
+    fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, deviceInfo: DeviceInfo) {
+        verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), lambdaGotDeviceInfo.capture())
+        lambdaGotDeviceInfo.value.invoke(deviceInfo)
+    }
+
+    fun verifyConnectorScan(device: Device) {
+        verify(mockedConnector).scan(lambdaFoundDevice.capture())
+        lambdaFoundDevice.value.invoke(device)
     }
 
     fun verifyInflate(expectedId: Int) {

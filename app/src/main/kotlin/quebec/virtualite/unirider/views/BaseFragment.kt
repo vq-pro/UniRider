@@ -6,15 +6,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.database.WheelDb
 
 open class BaseFragment : Fragment() {
 
-    lateinit var db: WheelDb
+    internal lateinit var connector: WheelConnector
+    internal lateinit var db: WheelDb
 
-    internal open fun connectDb(function: () -> Unit) {
+    internal open fun initConnector() {
+        connector = MainActivity.connector
+    }
+
+    internal open fun initDB(function: () -> Unit) {
         db = MainActivity.db
-        subThread(function)
+        runDB(function)
     }
 
     internal open fun navigateBack(nb: Int = 1) {
@@ -30,17 +36,17 @@ open class BaseFragment : Fragment() {
         findNavController().navigate(id, bundleOf(param.first to param.second))
     }
 
-    internal open fun runDb(function: () -> Unit) {
-        subThread(function)
-    }
-
-    internal open fun subThread(function: () -> Unit) {
+    internal open fun runBackground(function: () -> Unit) {
         lifecycleScope.launch(Dispatchers.IO) {
             function()
         }
     }
 
-    internal open fun uiThread(function: () -> Unit) {
+    internal open fun runDB(function: () -> Unit) {
+        runBackground(function)
+    }
+
+    internal open fun runUI(function: () -> Unit) {
         activity?.runOnUiThread(function)
     }
 }

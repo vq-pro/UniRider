@@ -19,15 +19,23 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.MILEAGE
+import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
+import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_FLOAT
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE_S
 import quebec.virtualite.unirider.TestDomain.S18_1
+import quebec.virtualite.unirider.TestDomain.S18_DISCONNECTED
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_S
+import quebec.virtualite.unirider.bluetooth.DeviceInfo
+import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
@@ -115,9 +123,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
         assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
-        verify(mockedTextName).setText(NAME)
-        verify(mockedTextBtName).setText(DEVICE_NAME)
-        verify(mockedTextMileage).setText("$MILEAGE")
+        verify(mockedTextName).text = NAME
+        verify(mockedTextBtName).text = DEVICE_NAME
+        verify(mockedTextMileage).text = "$MILEAGE"
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
         verifyOnClick(mockedButtonConnect, "onConnect")
@@ -136,14 +144,16 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyNoInteractions(mockedWidgets)
-        verify(mockedTextName, never()).setText(anyString())
-        verify(mockedTextBtName, never()).setText(anyString())
-        verify(mockedTextMileage, never()).setText(anyString())
+        verify(mockedTextName, never()).text = anyString()
+        verify(mockedTextBtName, never()).text = anyString()
+        verify(mockedTextMileage, never()).text = anyString()
     }
 
     @Test
-    fun onConnect() {
+    fun onConnect_whenFirstTime_gotoScanFragment() {
         // Given
+        fragment.wheel = S18_DISCONNECTED
+
         fragment.textBtName = mockedTextBtName
         fragment.textMileage = mockedTextMileage
 
@@ -155,6 +165,26 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             R.id.action_WheelViewFragment_to_WheelScanFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
+    }
+
+    @Test
+    fun onConnect_whenNotFirstTime_connectAndUpdate() {
+        // Given
+        fragment.buttonConnect = mockedButtonConnect
+        fragment.textBtName = mockedTextBtName
+        fragment.textMileage = mockedTextMileage
+
+        // When
+        fragment.onConnect().invoke(mockedView)
+
+        // Then
+        verify(mockedWidgets).disable(mockedButtonConnect)
+        verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_FLOAT))
+        verify(mockedDb).saveWheel(
+            WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
+        )
+        verify(mockedTextMileage).text = "$MILEAGE_NEW"
+        verify(mockedWidgets).enable(mockedButtonConnect)
     }
 
     @Test
@@ -227,12 +257,23 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     class TestableWheelViewFragment(val test: WheelViewFragmentTest) : WheelViewFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initConnector() {
+        }
+
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateTo(id: Int, param: Pair<String, Any>) {
             test.navigateTo(id, param)
+        }
+
+        override fun runDB(function: () -> Unit) {
+            test.runDB(function)
+        }
+
+        override fun runUI(function: () -> Unit) {
+            test.runUI(function)
         }
     }
 }

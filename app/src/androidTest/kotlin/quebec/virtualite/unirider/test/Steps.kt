@@ -14,7 +14,8 @@ import org.hamcrest.Matchers.not
 import org.junit.Rule
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.bluetooth.simulation.WheelScannerSimulation
+import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.unirider.bluetooth.simulation.WheelConnectorSimulation
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
@@ -153,8 +154,8 @@ class Steps {
         updatedWheel = WheelEntity(
             selectedWheel.id,
             mapEntity["Name"]!!,
-            "",
-            "",
+            null,
+            null,
             parseInt(mapEntity["Mileage"]!!),
             parseFloat(mapEntity["Voltage Min"]!!),
             parseFloat(mapEntity["Voltage Max"]!!)
@@ -264,6 +265,42 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
     }
 
+    @Given("this connected wheel:")
+    fun givenThisConnectedWheel(details: DataTable) {
+        assertThat(
+            details.topCells(),
+            equalTo(listOf("Name", "Bt Name", "Bt Address", "Mileage"))
+        )
+
+        val row = details.cells(1)[0]
+        val name = row[0]
+        val btName = row[1]
+        val btAddress = row[2]
+        val mileage = parseInt(row[3])
+        val wheel = WheelEntity(0, name, btName, btAddress, mileage, 0f, 0f)
+
+        db.saveWheel(wheel)
+
+        mapWheels[wheel.name] = wheel
+    }
+
+    @Given("this disconnected wheel:")
+    fun givenThisDisconnectedWheel(details: DataTable) {
+        assertThat(
+            details.topCells(),
+            equalTo(listOf("Name", "Mileage"))
+        )
+
+        val row = details.cells(1)[0]
+        val name = row[0]
+        val mileage = parseInt(row[1])
+        val wheel = WheelEntity(0, name, null, null, mileage, 0f, 0f)
+
+        db.saveWheel(wheel)
+
+        mapWheels[wheel.name] = wheel
+    }
+
     @Given("this wheel:")
     fun givenThisWheel(wheel: DataTable) {
         givenTheseWheels(wheel)
@@ -275,7 +312,7 @@ class Steps {
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
-                WheelEntity(0, row[0], "", "", parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
+                WheelEntity(0, row[0], null, null, parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
             }
             .collect(toList())
 
@@ -325,6 +362,11 @@ class Steps {
         expectedDeviceName = deviceName
     }
 
+    @When("I reconnect to the wheel")
+    fun whenReconnectToWheel() {
+        click(R.id.button_connect)
+    }
+
     @When("^I enter a voltage of (.*?)V$")
     fun whenEnterVoltage(voltage: Float) {
         enter(R.id.edit_voltage, voltage.toString())
@@ -336,9 +378,13 @@ class Steps {
         selectListViewItem(R.id.wheels, "name", wheelName)
     }
 
-    @Given("^I simulate a mileage of (.*?)$")
-    fun whenSimulatingMileage(simulatedMileage: Float) {
-        WheelScannerSimulation.setMileage(simulatedMileage)
+    @Given("this simulated device:")
+    fun simulatedDevice(device: DataTable) {
+        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Mileage")))
+        val deviceFields = device.cells(1)[0]
+
+        WheelConnectorSimulation.setDevice(Device(deviceFields[0], deviceFields[1]))
+        WheelConnectorSimulation.setMileage(parseFloat(deviceFields[2]))
     }
 
     private fun calculateTotalMileage(): Int {

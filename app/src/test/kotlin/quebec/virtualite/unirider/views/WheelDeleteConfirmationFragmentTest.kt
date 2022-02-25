@@ -74,7 +74,7 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
         assertThat(fragment.buttonDeleteConfirmation, equalTo(mockedButtonDeleteConfirmation))
         assertThat(fragment.buttonDeleteCancel, equalTo(mockedButtonDeleteCancel))
 
-        verify(fragment.textName).setText(NAME)
+        verify(fragment.textName).text = NAME
 
         verifyOnClick(mockedButtonDeleteConfirmation, "onDelete")
         verifyOnClick(mockedButtonDeleteCancel, "onCancel")
@@ -118,16 +118,16 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
     class TestableWheelDeleteConfirmationFragment(val test: WheelDeleteConfirmationFragmentTest) :
         WheelDeleteConfirmationFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateBack(nb: Int) {
             test.navigateBack(nb)
         }
 
-        override fun runDb(function: () -> Unit) {
-            test.runDb(function)
+        override fun runDB(function: () -> Unit) {
+            test.runDB(function)
         }
     }
 }
