@@ -151,8 +151,8 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
     class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateTo(id: Int, param: Pair<String, Any>) {

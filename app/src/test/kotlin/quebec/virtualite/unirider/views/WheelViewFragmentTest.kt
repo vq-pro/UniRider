@@ -177,7 +177,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verifyScannerGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_FLOAT))
+        verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_FLOAT))
         verify(mockedDb).saveWheel(
             WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
         )
@@ -254,11 +254,11 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     class TestableWheelViewFragment(val test: WheelViewFragmentTest) : WheelViewFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initConnector() {
         }
 
-        override fun connectScanner() {
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateTo(id: Int, param: Pair<String, Any>) {

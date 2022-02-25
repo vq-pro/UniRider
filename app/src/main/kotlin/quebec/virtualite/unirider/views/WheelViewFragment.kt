@@ -31,7 +31,6 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textName: TextView
     internal lateinit var editVoltage: EditText
 
-    // FIXME-1 Make wheel non-nullable
     internal var wheel: WheelEntity? = null
 
     internal var parmWheelId: Long? = 0
@@ -56,7 +55,7 @@ open class WheelViewFragment : BaseFragment() {
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
 
-        connectDb {
+        initDB {
             wheel = db.getWheel(parmWheelId!!)
 
             if (wheel != null) {
@@ -71,7 +70,7 @@ open class WheelViewFragment : BaseFragment() {
             }
         }
 
-        connectScanner()
+        initConnector()
     }
 
     fun onConnect() = { _: View ->
@@ -79,7 +78,7 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
-            scanner.getDeviceInfo(wheel!!.btAddr) { info ->
+            connector.getDeviceInfo(wheel!!.btAddr) { info ->
                 val newMileage = info.mileage.roundToInt()
                 wheel = WheelEntity(
                     wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,

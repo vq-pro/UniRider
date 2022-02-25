@@ -41,7 +41,7 @@ open class MainFragment : BaseFragment() {
         widgets.multifieldListAdapter(wheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(wheels, onSelectWheel())
 
-        connectDb {
+        initDB {
             setList(wheelList, addTo(getSortedWheelItems(db.getWheels()), NEW_ROW))
             wheelTotalMileage.setText("${calculateTotalMileage()}")
         }

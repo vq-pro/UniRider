@@ -354,8 +354,8 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
     class TestableWheelEditFragment(val test: WheelEditFragmentTest) : WheelEditFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateBack(nb: Int) {

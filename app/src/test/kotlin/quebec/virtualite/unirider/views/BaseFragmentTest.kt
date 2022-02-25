@@ -19,7 +19,7 @@ import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.commons.views.NavigatedTo
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
-import quebec.virtualite.unirider.bluetooth.WheelScanner
+import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.database.WheelDb
 
 open class BaseFragmentTest(fragmentType: Class<*>) {
@@ -48,7 +48,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedWidgets: WidgetUtils
 
     @Mock
-    private lateinit var mockedScanner: WheelScanner
+    private lateinit var mockedConnector: WheelConnector
 
     @Captor
     private lateinit var lambdaFoundDevice: ArgumentCaptor<(Device) -> Unit>
@@ -71,7 +71,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     private var navigatedBack: Int = 0
     private var navigatedTo: NavigatedTo? = null
 
-    fun connectDb(fragment: BaseFragment, function: () -> Unit) {
+    fun initDB(fragment: BaseFragment, function: () -> Unit) {
         fragment.db = mockedDb
         function()
     }
@@ -115,6 +115,16 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         function()
     }
 
+    fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, deviceInfo: DeviceInfo) {
+        verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), lambdaGotDeviceInfo.capture())
+        lambdaGotDeviceInfo.value.invoke(deviceInfo)
+    }
+
+    fun verifyConnectorScan(device: Device) {
+        verify(mockedConnector).scan(lambdaFoundDevice.capture())
+        lambdaFoundDevice.value.invoke(device)
+    }
+
     fun verifyInflate(expectedId: Int) {
         verify(mockedInflater).inflate(expectedId, mockedContainer, DONT_ATTACH_TO_ROOT)
     }
@@ -137,16 +147,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     fun verifyOnUpdateText(mockedField: EditText, methodName: String) {
         verify(mockedWidgets).addTextChangedListener(eq(mockedField), lambdaOnUpdateText.capture())
         assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
-    }
-
-    fun verifyScannerGetDeviceInfo(expectedDeviceAddress: String, deviceInfo: DeviceInfo) {
-        verify(mockedScanner).getDeviceInfo(eq(expectedDeviceAddress), lambdaGotDeviceInfo.capture())
-        lambdaGotDeviceInfo.value.invoke(deviceInfo)
-    }
-
-    fun verifyScannerScan(device: Device) {
-        verify(mockedScanner).scan(lambdaFoundDevice.capture())
-        lambdaFoundDevice.value.invoke(device)
     }
 
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {

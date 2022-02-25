@@ -118,8 +118,8 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
     class TestableWheelDeleteConfirmationFragment(val test: WheelDeleteConfirmationFragmentTest) :
         WheelDeleteConfirmationFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateBack(nb: Int) {

@@ -5,22 +5,22 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.bluetooth.WheelScanner
-import quebec.virtualite.unirider.bluetooth.WheelScannerFactory
+import quebec.virtualite.unirider.bluetooth.WheelConnector
+import quebec.virtualite.unirider.bluetooth.WheelConnectorFactory
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
+        lateinit var connector: WheelConnector
         lateinit var db: WheelDb
-        lateinit var scanner: WheelScanner
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
 
         db = WheelDbImpl(applicationContext)
-        scanner = WheelScannerFactory.getScannerImpl(this)
+        connector = WheelConnectorFactory.getConnector(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

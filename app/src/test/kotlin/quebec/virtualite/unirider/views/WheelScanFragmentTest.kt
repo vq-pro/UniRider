@@ -74,7 +74,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         // Then
         verify(mockedDb).getWheel(ID)
-        verifyScannerScan(Device(DEVICE_NAME, DEVICE_ADDR))
+        verifyConnectorScan(Device(DEVICE_NAME, DEVICE_ADDR))
 
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(SHERMAN_3))
@@ -93,7 +93,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        verifyScannerScan(Device(DEVICE_NAME2, DEVICE_ADDR2))
+        verifyConnectorScan(Device(DEVICE_NAME2, DEVICE_ADDR2))
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
 
@@ -110,7 +110,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         // Then
         verify(mockedLvWheels).setEnabled(false)
-        verifyScannerGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_FLOAT))
+        verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_FLOAT))
         verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
         )
@@ -119,11 +119,11 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
     class TestableWheelScanFragment(val test: WheelScanFragmentTest) : WheelScanFragment() {
 
-        override fun connectDb(function: () -> Unit) {
-            test.connectDb(this, function)
+        override fun initConnector() {
         }
 
-        override fun connectScanner() {
+        override fun initDB(function: () -> Unit) {
+            test.initDB(this, function)
         }
 
         override fun navigateBack(nb: Int) {

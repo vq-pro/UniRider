@@ -6,21 +6,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import quebec.virtualite.unirider.bluetooth.WheelScanner
+import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.database.WheelDb
 
 open class BaseFragment : Fragment() {
 
+    internal lateinit var connector: WheelConnector
     internal lateinit var db: WheelDb
-    internal lateinit var scanner: WheelScanner
 
-    internal open fun connectDb(function: () -> Unit) {
-        db = MainActivity.db
-        runDB(function)
+    internal open fun initConnector() {
+        connector = MainActivity.connector
     }
 
-    internal open fun connectScanner() {
-        scanner = MainActivity.scanner
+    internal open fun initDB(function: () -> Unit) {
+        db = MainActivity.db
+        runDB(function)
     }
 
     internal open fun navigateBack(nb: Int = 1) {

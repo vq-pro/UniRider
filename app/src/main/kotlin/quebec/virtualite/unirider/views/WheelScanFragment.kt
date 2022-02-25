@@ -37,12 +37,12 @@ open class WheelScanFragment : BaseFragment() {
         lvWheels.isEnabled = true
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
-        connectDb {
+        initDB {
             wheel = db.getWheel(parmWheelId!!)
         }
 
-        connectScanner()
-        scanner.scan { device ->
+        initConnector()
+        connector.scan { device ->
 
             devices.add(device)
 
@@ -57,7 +57,7 @@ open class WheelScanFragment : BaseFragment() {
 
         val device = devices[pos]
 
-        scanner.getDeviceInfo(device.address) { info ->
+        connector.getDeviceInfo(device.address) { info ->
             val updatedWheel = WheelEntity(
                 wheel!!.id, wheel!!.name, device.name, device.address,
                 info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
