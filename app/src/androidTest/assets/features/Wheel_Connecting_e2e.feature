@@ -2,9 +2,9 @@
 Feature: Wheel Connecting - End-2-End
 
   Scenario: Connecting to the 14S to update its mileage for the first time
-    Given this wheel:
-      | Name         | Voltage Min | Voltage Max | Mileage |
-      | KingSong 14S | 48.0V       | 67.2V       | 694     |
+    Given this disconnected wheel:
+      | Name         | Mileage |
+      | KingSong 14S | 694     |
     And I start the app
     And I select the KingSong 14S
     When I connect to the KS-14SMD2107
@@ -13,8 +13,8 @@ Feature: Wheel Connecting - End-2-End
 
   Scenario: Connecting to the previously connected 14S to update its mileage
     Given this connected wheel:
-      | Name         | Bt Name      | Bt Address        | Voltage Min | Voltage Max | Mileage |
-      | KingSong 14S | KS-14SMD2107 | FC:69:47:68:79:8A | 48.0V       | 67.2V       | 694     |
+      | Name         | Bt Name      | Bt Address        | Mileage |
+      | KingSong 14S | KS-14SMD2107 | FC:69:47:68:79:8A | 694     |
     And I start the app
     And I select the KingSong 14S
     When I reconnect to the wheel

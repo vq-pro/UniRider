@@ -269,11 +269,32 @@ class Steps {
     fun givenThisConnectedWheel(details: DataTable) {
         assertThat(
             details.topCells(),
-            equalTo(listOf("Name", "Bt Name", "Bt Address", "Voltage Min", "Voltage Max", "Mileage"))
+            equalTo(listOf("Name", "Bt Name", "Bt Address", "Mileage"))
         )
 
         val row = details.cells(1)[0]
-        val wheel = WheelEntity(0, row[0], row[1], row[2], parseInt(row[5]), parseVoltage(row[3]), parseVoltage(row[4]))
+        val name = row[0]
+        val btName = row[1]
+        val btAddress = row[2]
+        val mileage = parseInt(row[3])
+        val wheel = WheelEntity(0, name, btName, btAddress, mileage, 0f, 0f)
+
+        db.saveWheel(wheel)
+
+        mapWheels[wheel.name] = wheel
+    }
+
+    @Given("this disconnected wheel:")
+    fun givenThisDisconnectedWheel(details: DataTable) {
+        assertThat(
+            details.topCells(),
+            equalTo(listOf("Name", "Mileage"))
+        )
+
+        val row = details.cells(1)[0]
+        val name = row[0]
+        val mileage = parseInt(row[1])
+        val wheel = WheelEntity(0, name, null, null, mileage, 0f, 0f)
 
         db.saveWheel(wheel)
 

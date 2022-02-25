@@ -7,9 +7,9 @@ Feature: Wheel Connecting - Integration
       | KS-14Sxx9999 | AB:CD:EF:GH:IJ:KL | 705.615 |
 
   Scenario: Connecting to a wheel to update its mileage for the first time
-    Given this wheel:
-      | Name         | Voltage Min | Voltage Max | Mileage |
-      | KingSong 14S | 48.0V       | 67.2V       | 694     |
+    Given this disconnected wheel:
+      | Name         | Mileage |
+      | KingSong 14S | 694     |
     And I start the app
     And I select the KingSong 14S
     When I connect to the KS-14Sxx9999
@@ -18,8 +18,8 @@ Feature: Wheel Connecting - Integration
 
   Scenario: Connecting to a previously connected wheel to update its mileage
     Given this connected wheel:
-      | Name         | Bt Name      | Bt Address        | Voltage Min | Voltage Max | Mileage |
-      | KingSong 14S | KS-14Sxx9999 | AB:CD:EF:GH:IJ:KL | 48.0V       | 67.2V       | 694     |
+      | Name         | Bt Name      | Bt Address        | Mileage |
+      | KingSong 14S | KS-14Sxx9999 | AB:CD:EF:GH:IJ:KL | 694     |
     And I start the app
     And I select the KingSong 14S
     When I reconnect to the wheel
