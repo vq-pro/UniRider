@@ -11,7 +11,7 @@ data class WheelEntity(
     val name: String,
     val btName: String,
     val btAddr: String,
-    val mileage: Float,
+    val mileage: Int,
     val voltageMin: Float,
     val voltageMax: Float
 )

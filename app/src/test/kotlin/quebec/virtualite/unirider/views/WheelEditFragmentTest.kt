@@ -117,7 +117,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         // Given
         fragment.parmWheelId = 0L
 
-        val newWheel = WheelEntity(0L, "", "", "", 0f, 0f, 0f)
+        val newWheel = WheelEntity(0L, "", "", "", 0, 0f, 0f)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -239,7 +239,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         assertThat(
             fragment.updatedWheel, equalTo(
-                WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0f, VOLTAGE_MIN, VOLTAGE_MAX)
+                WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, VOLTAGE_MIN, VOLTAGE_MAX)
             )
         )
     }

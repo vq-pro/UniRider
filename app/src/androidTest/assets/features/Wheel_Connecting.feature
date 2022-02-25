@@ -8,15 +8,15 @@ Feature: Wheel Connecting
 
   @IntegrationOnly
   Scenario: Connecting to a wheel to update its mileage
-    Given I simulate a mileage of 705.415
+    Given I simulate a mileage of 705.615
     And I select the KingSong 14S
     When I connect to the KS-14Sxx9999
-    Then the mileage is updated to 705.4
+    Then the mileage is updated to 706
     And the wheel's Bluetooth name is updated
 
   @End2End
   Scenario: Connecting to the 14S to update its mileage
     Given I select the KingSong 14S
     When I connect to the KS-14SMD2107
-    Then the mileage is updated to 758.8
+    Then the mileage is updated to 759
     And the wheel's Bluetooth name is updated

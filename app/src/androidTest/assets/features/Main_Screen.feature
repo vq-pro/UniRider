@@ -10,7 +10,6 @@ Feature: Main Screen
       | Gotway Nikola+  | 78.0V       | 100.8V      | 2927    |
       | KingSong S18    | 60.0V       | 84.0V       | 2850    |
 
-  @WIP
   Scenario: On entering, we see a list of registered wheels and their mileage
     When I start the app
     Then I see my wheels and their mileage:
