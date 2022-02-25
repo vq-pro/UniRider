@@ -86,9 +86,8 @@ open class WheelViewFragment : BaseFragment() {
                     newMileage, wheel!!.voltageMin, wheel!!.voltageMax
                 )
 
-                runDb { db.saveWheel(wheel) }
-
-                uiThread { textMileage.text = "$newMileage" }
+                runDB { db.saveWheel(wheel) }
+                runUI { textMileage.text = "$newMileage" }
             }
         }
     }

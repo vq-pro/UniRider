@@ -16,7 +16,7 @@ open class BaseFragment : Fragment() {
 
     internal open fun connectDb(function: () -> Unit) {
         db = MainActivity.db
-        subThread(function)
+        runDB(function)
     }
 
     internal open fun connectScanner() {
@@ -36,19 +36,17 @@ open class BaseFragment : Fragment() {
         findNavController().navigate(id, bundleOf(param.first to param.second))
     }
 
-    // FIXME-0 Rename to runBackground
-    internal open fun subThread(function: () -> Unit) {
+    internal open fun runBackground(function: () -> Unit) {
         lifecycleScope.launch(Dispatchers.IO) {
             function()
         }
     }
 
-    internal open fun runDb(function: () -> Unit) {
-        subThread(function)
+    internal open fun runDB(function: () -> Unit) {
+        runBackground(function)
     }
 
-    // FIXME-0 Rename to runUI
-    internal open fun uiThread(function: () -> Unit) {
+    internal open fun runUI(function: () -> Unit) {
         activity?.runOnUiThread(function)
     }
 }

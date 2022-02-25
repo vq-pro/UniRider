@@ -176,16 +176,11 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // When
         fragment.onConnect().invoke(mockedView)
 
-        val deviceInfoFromConnection = DeviceInfo(MILEAGE_NEW_FLOAT)
-
         // Then
-        verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR), lambdaGotDeviceInfo.capture())
-        lambdaGotDeviceInfo.value.invoke(deviceInfoFromConnection)
-
+        verifyScannerGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_FLOAT))
         verify(mockedDb).saveWheel(
             WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
         )
-
         verify(mockedTextMileage).setText("$MILEAGE_NEW")
     }
 
@@ -270,12 +265,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             test.navigateTo(id, param)
         }
 
-        override fun runDb(function: () -> Unit) {
-            test.runDb(function)
+        override fun runDB(function: () -> Unit) {
+            test.runDB(function)
         }
 
-        override fun uiThread(function: () -> Unit) {
-            test.uiThread(function)
+        override fun runUI(function: () -> Unit) {
+            test.runUI(function)
         }
     }
 }

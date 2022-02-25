@@ -42,19 +42,19 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedInflater: LayoutInflater
 
     @Mock
-    lateinit var mockedScanner: WheelScanner
-
-    @Mock
     lateinit var mockedView: View
 
     @Mock
     lateinit var mockedWidgets: WidgetUtils
 
-    @Captor
-    lateinit var lambdaFoundDevice: ArgumentCaptor<(Device) -> Unit>
+    @Mock
+    private lateinit var mockedScanner: WheelScanner
 
     @Captor
-    lateinit var lambdaGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
+    private lateinit var lambdaFoundDevice: ArgumentCaptor<(Device) -> Unit>
+
+    @Captor
+    private lateinit var lambdaGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
 
     @Captor
     private lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>
@@ -103,15 +103,15 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         navigatedTo = NavigatedTo(id, parms)
     }
 
-    fun runDb(function: () -> Unit) {
+    fun runBackground(function: () -> Unit) {
         function()
     }
 
-    fun subThread(function: () -> Unit) {
+    fun runDB(function: () -> Unit) {
         function()
     }
 
-    fun uiThread(function: () -> Unit) {
+    fun runUI(function: () -> Unit) {
         function()
     }
 
@@ -137,6 +137,16 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     fun verifyOnUpdateText(mockedField: EditText, methodName: String) {
         verify(mockedWidgets).addTextChangedListener(eq(mockedField), lambdaOnUpdateText.capture())
         assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    }
+
+    fun verifyScannerGetDeviceInfo(expectedDeviceAddress: String, deviceInfo: DeviceInfo) {
+        verify(mockedScanner).getDeviceInfo(eq(expectedDeviceAddress), lambdaGotDeviceInfo.capture())
+        lambdaGotDeviceInfo.value.invoke(deviceInfo)
+    }
+
+    fun verifyScannerScan(device: Device) {
+        verify(mockedScanner).scan(lambdaFoundDevice.capture())
+        lambdaFoundDevice.value.invoke(device)
     }
 
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {

@@ -52,7 +52,7 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
     }
 
     fun onDelete() = { _: View ->
-        runDb { db.deleteWheel(wheel.id) }
+        runDB { db.deleteWheel(wheel.id) }
         navigateBack(2)
     }
 }

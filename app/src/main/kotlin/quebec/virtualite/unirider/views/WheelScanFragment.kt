@@ -63,9 +63,8 @@ open class WheelScanFragment : BaseFragment() {
                 info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
             )
 
-            runDb { db.saveWheel(updatedWheel) }
-
-            uiThread { navigateBack() }
+            runDB { db.saveWheel(updatedWheel) }
+            runUI { navigateBack() }
         }
     }
 }

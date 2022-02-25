@@ -6,7 +6,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -75,8 +74,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         // Then
         verify(mockedDb).getWheel(ID)
-        verify(mockedScanner).scan(lambdaFoundDevice.capture())
-        lambdaFoundDevice.value.invoke(Device(DEVICE_NAME, DEVICE_ADDR))
+        verifyScannerScan(Device(DEVICE_NAME, DEVICE_ADDR))
 
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(SHERMAN_3))
@@ -95,9 +93,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        verify(mockedScanner).scan(lambdaFoundDevice.capture())
-        lambdaFoundDevice.value.invoke(Device(DEVICE_NAME2, DEVICE_ADDR2))
-
+        verifyScannerScan(Device(DEVICE_NAME2, DEVICE_ADDR2))
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
 
@@ -112,14 +108,9 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         // When
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
-        val deviceInfoFromConnection = DeviceInfo(MILEAGE_NEW_FLOAT)
-
         // Then
         verify(mockedLvWheels).setEnabled(false)
-
-        verify(mockedScanner).getDeviceInfo(eq(DEVICE_ADDR3), lambdaGotDeviceInfo.capture())
-        lambdaGotDeviceInfo.value.invoke(deviceInfoFromConnection)
-
+        verifyScannerGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_FLOAT))
         verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
         )
@@ -139,12 +130,12 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
             test.navigateBack(nb)
         }
 
-        override fun runDb(function: () -> Unit) {
-            test.runDb(function)
+        override fun runDB(function: () -> Unit) {
+            test.runDB(function)
         }
 
-        override fun uiThread(function: () -> Unit) {
-            test.uiThread(function)
+        override fun runUI(function: () -> Unit) {
+            test.runUI(function)
         }
     }
 }

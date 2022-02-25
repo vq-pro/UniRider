@@ -126,8 +126,8 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
             test.navigateBack(nb)
         }
 
-        override fun runDb(function: () -> Unit) {
-            test.runDb(function)
+        override fun runDB(function: () -> Unit) {
+            test.runDB(function)
         }
     }
 }

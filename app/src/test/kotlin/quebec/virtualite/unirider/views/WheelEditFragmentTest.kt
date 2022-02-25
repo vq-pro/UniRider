@@ -362,8 +362,8 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
             test.navigateBack(nb)
         }
 
-        override fun runDb(function: () -> Unit) {
-            test.runDb(function)
+        override fun runDB(function: () -> Unit) {
+            test.runDB(function)
         }
     }
 }
