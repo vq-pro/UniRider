@@ -123,9 +123,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
         assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
-        verify(mockedTextName).setText(NAME)
-        verify(mockedTextBtName).setText(DEVICE_NAME)
-        verify(mockedTextMileage).setText("$MILEAGE")
+        verify(mockedTextName).text = NAME
+        verify(mockedTextBtName).text = DEVICE_NAME
+        verify(mockedTextMileage).text = "$MILEAGE"
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
         verifyOnClick(mockedButtonConnect, "onConnect")
@@ -144,9 +144,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyNoInteractions(mockedWidgets)
-        verify(mockedTextName, never()).setText(anyString())
-        verify(mockedTextBtName, never()).setText(anyString())
-        verify(mockedTextMileage, never()).setText(anyString())
+        verify(mockedTextName, never()).text = anyString()
+        verify(mockedTextBtName, never()).text = anyString()
+        verify(mockedTextMileage, never()).text = anyString()
     }
 
     @Test
@@ -178,13 +178,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verify(mockedButtonConnect).setEnabled(false)
+        verify(mockedWidgets).disable(mockedButtonConnect)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_FLOAT))
         verify(mockedDb).saveWheel(
             WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
         )
-        verify(mockedTextMileage).setText("$MILEAGE_NEW")
-        verify(mockedButtonConnect).setEnabled(true)
+        verify(mockedTextMileage).text = "$MILEAGE_NEW"
+        verify(mockedWidgets).enable(mockedButtonConnect)
     }
 
     @Test

@@ -43,7 +43,7 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
             wheel = db.getWheel(parmWheelId!!)
                 ?: throw WheelNotFoundException()
 
-            textName.setText(wheel.name)
+            textName.text = wheel.name
         }
     }
 

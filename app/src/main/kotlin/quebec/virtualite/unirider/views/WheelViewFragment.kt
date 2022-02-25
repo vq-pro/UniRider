@@ -64,9 +64,9 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonEdit, onEdit())
                 widgets.setOnLongClickListener(buttonDelete, onDelete())
 
-                textName.setText(wheel!!.name)
-                textBtName.setText(wheel!!.btName)
-                textMileage.setText("${wheel!!.mileage}")
+                textName.text = wheel!!.name
+                textBtName.text = wheel!!.btName
+                textMileage.text = "${wheel!!.mileage}"
             }
         }
 
@@ -78,7 +78,7 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
-            buttonConnect.isEnabled = false
+            widgets.disable(buttonConnect)
 
             connector.getDeviceInfo(wheel!!.btAddr) { info ->
                 val newMileage = info.mileage.roundToInt()
@@ -90,7 +90,7 @@ open class WheelViewFragment : BaseFragment() {
                 runDB { db.saveWheel(wheel) }
                 runUI {
                     textMileage.text = "$newMileage"
-                    buttonConnect.isEnabled = true
+                    widgets.enable(buttonConnect)
                 }
             }
         }

@@ -74,7 +74,7 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
         assertThat(fragment.buttonDeleteConfirmation, equalTo(mockedButtonDeleteConfirmation))
         assertThat(fragment.buttonDeleteCancel, equalTo(mockedButtonDeleteCancel))
 
-        verify(fragment.textName).setText(NAME)
+        verify(fragment.textName).text = NAME
 
         verifyOnClick(mockedButtonDeleteConfirmation, "onDelete")
         verifyOnClick(mockedButtonDeleteCancel, "onCancel")

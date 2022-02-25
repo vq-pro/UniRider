@@ -140,15 +140,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(
-            WheelEntity(
-                ID,
-                NAME,
-                DEVICE_NAME,
-                DEVICE_ADDR,
-                MILEAGE,
-                VOLTAGE_MIN,
-                VOLTAGE_MAX
-            )
+            WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         )
         verify(mockedWidgets).enable(mockedButtonSave)
     }
@@ -166,15 +158,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(
-            WheelEntity(
-                ID,
-                NAME,
-                DEVICE_NAME,
-                DEVICE_ADDR,
-                MILEAGE,
-                VOLTAGE_MIN,
-                VOLTAGE_MAX
-            )
+            WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
         )
         verify(mockedWidgets).disable(mockedButtonSave)
     }

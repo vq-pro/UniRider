@@ -79,7 +79,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(SHERMAN_3))
 
-        verify(mockedLvWheels).isEnabled = true
+        verify(mockedWidgets).enable(mockedLvWheels)
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
         verifyOnItemClick(mockedLvWheels, "onSelectDevice")
     }
@@ -109,7 +109,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
         // Then
-        verify(mockedLvWheels).setEnabled(false)
+        verify(mockedWidgets).disable(mockedLvWheels)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_FLOAT))
         verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)

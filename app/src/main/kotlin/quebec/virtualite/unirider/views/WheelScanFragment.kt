@@ -34,7 +34,7 @@ open class WheelScanFragment : BaseFragment() {
 
         lvWheels = view.findViewById(R.id.devices)
 
-        lvWheels.isEnabled = true
+        widgets.enable(lvWheels)
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
         initDB {
@@ -53,7 +53,7 @@ open class WheelScanFragment : BaseFragment() {
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
 
-        lvWheels.isEnabled = false
+        widgets.disable(lvWheels)
 
         val device = devices[pos]
 
