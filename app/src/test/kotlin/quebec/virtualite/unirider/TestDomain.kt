@@ -19,7 +19,7 @@ object TestDomain {
     val MILEAGE2 = 2223
     val MILEAGE3 = 2223
     val MILEAGE_NEW = 2224
-    val MILEAGE_NEW_FLOAT = 2223.617f
+    val MILEAGE_NEW_RAW = 2223.617f
     val NAME = "S18"
     val NAME2 = "S20"
     val NAME3 = "Sherman"
@@ -32,6 +32,8 @@ object TestDomain {
     val VOLTAGE_MAX2 = 126.0f
     val VOLTAGE_MAX3 = 100.8f
     val VOLTAGE_MAX_NEW = 100.9f
+    val VOLTAGE_NEW = 72.6f
+    val VOLTAGE_NEW_RAW = 72.56f
     val VOLTAGE_MIN = 60.0f
     val VOLTAGE_MIN2 = 90.0f
     val VOLTAGE_MIN3 = 75.6f

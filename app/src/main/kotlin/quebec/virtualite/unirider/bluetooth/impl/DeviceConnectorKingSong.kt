@@ -4,7 +4,8 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.util.Log
-import quebec.virtualite.commons.android.utils.ByteArrayUtils
+import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt2
+import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt4
 import java.util.*
 
 class DeviceConnectorKingSong(val gatt: BluetoothGatt) : DeviceConnectorWheel() {
@@ -64,13 +65,15 @@ class DeviceConnectorKingSong(val gatt: BluetoothGatt) : DeviceConnectorWheel() 
         when (data[16]) {
             NOTIFICATION_LIVE -> {
 
-                val voltage = ByteArrayUtils.byteArrayInt2(data[2], data[3])
-                val totalDistance = ByteArrayUtils.byteArrayInt4(data[6], data[7], data[8], data[9])
-                val mileage = totalDistance / 1000.0f
+                val voltage = byteArrayInt2(data[2], data[3])
+//                val speed = byteArrayInt2(data[4], data[5])
+                val totalDistance = byteArrayInt4(data[6], data[7], data[8], data[9])
+//                val current = data[10] and (0xFF + data[11] * 256).toByte()
+//                val temperature = byteArrayInt2(data[12], data[13])
 
-                wheelData = WheelData(mileage, 0.0f, 0.0f)
+                wheelData = WheelData(totalDistance / 1000f, voltage / 100f, 0f)
 
-                Log.i("*** BLE ***", mileage.toString())
+                Log.i("*** BLE ***", "${wheelData.mileage}")
                 if (!disconnected) {
                     gatt.disconnect()
                     disconnected = true

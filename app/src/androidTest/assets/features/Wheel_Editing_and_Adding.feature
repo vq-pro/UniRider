@@ -2,9 +2,9 @@ Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
-      | Name            | Voltage Min | Voltage Max | Mileage |
-      | Veteran Sherman | 75.6V       | 100.8V      | 17622   |
-      | KingSong S18    | 60.0V       | 84.0V       | 2850    |
+      | Name            | Mileage | Voltage Min | Voltage Max |
+      | Veteran Sherman | 17622   | 75.6V       | 100.8V      |
+      | KingSong S18    | 2850    | 60.0V       | 84.0V       |
     And I start the app
 
   Scenario: Adding a wheel in full

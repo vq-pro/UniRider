@@ -99,6 +99,12 @@ class Steps {
         assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
+    @Then("^the voltage is set to (.*?)V and battery to (.*?)%$")
+    fun voltageAndBatteryTo(expectedVoltage: Float, expectedBattery: Float) {
+        assertThat(R.id.edit_voltage, hasText("$expectedVoltage"))
+        assertThat(R.id.view_battery, hasText("$expectedBattery%"))
+    }
+
     @When("^I reuse the name (.*?)$")
     fun reuseTheWheelName(newName: String) {
         setText(R.id.edit_name, newName)
@@ -269,7 +275,7 @@ class Steps {
     fun givenThisConnectedWheel(details: DataTable) {
         assertThat(
             details.topCells(),
-            equalTo(listOf("Name", "Bt Name", "Bt Address", "Mileage"))
+            equalTo(listOf("Name", "Bt Name", "Bt Address", "Mileage", "Voltage Min", "Voltage Max"))
         )
 
         val row = details.cells(1)[0]
@@ -277,7 +283,9 @@ class Steps {
         val btName = row[1]
         val btAddress = row[2]
         val mileage = parseInt(row[3])
-        val wheel = WheelEntity(0, name, btName, btAddress, mileage, 0f, 0f)
+        val voltageMin = parseVoltage(row[4])
+        val voltageMax = parseVoltage(row[5])
+        val wheel = WheelEntity(0, name, btName, btAddress, mileage, voltageMin, voltageMax)
 
         db.saveWheel(wheel)
 
@@ -288,13 +296,15 @@ class Steps {
     fun givenThisDisconnectedWheel(details: DataTable) {
         assertThat(
             details.topCells(),
-            equalTo(listOf("Name", "Mileage"))
+            equalTo(listOf("Name", "Mileage", "Voltage Min", "Voltage Max"))
         )
 
         val row = details.cells(1)[0]
         val name = row[0]
         val mileage = parseInt(row[1])
-        val wheel = WheelEntity(0, name, null, null, mileage, 0f, 0f)
+        val voltageMin = parseVoltage(row[2])
+        val voltageMax = parseVoltage(row[3])
+        val wheel = WheelEntity(0, name, null, null, mileage, voltageMin, voltageMax)
 
         db.saveWheel(wheel)
 
@@ -308,11 +318,15 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Voltage Min", "Voltage Max", "Mileage")))
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Voltage Min", "Voltage Max")))
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
-                WheelEntity(0, row[0], null, null, parseInt(row[3]), parseVoltage(row[1]), parseVoltage(row[2]))
+                val name = row[0]
+                val mileage = parseInt(row[1])
+                val voltageMin = parseVoltage(row[2])
+                val voltageMax = parseVoltage(row[3])
+                WheelEntity(0, name, null, null, mileage, voltageMin, voltageMax)
             }
             .collect(toList())
 
@@ -380,11 +394,12 @@ class Steps {
 
     @Given("this simulated device:")
     fun simulatedDevice(device: DataTable) {
-        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Mileage")))
+        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Mileage", "Voltage")))
         val deviceFields = device.cells(1)[0]
 
         WheelConnectorSimulation.setDevice(Device(deviceFields[0], deviceFields[1]))
         WheelConnectorSimulation.setMileage(parseFloat(deviceFields[2]))
+        WheelConnectorSimulation.setVoltage(parseVoltage(deviceFields[3]))
     }
 
     private fun calculateTotalMileage(): Int {
