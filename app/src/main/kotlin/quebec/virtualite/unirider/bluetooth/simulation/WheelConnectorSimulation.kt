@@ -20,7 +20,8 @@ open class WheelConnectorSimulation : WheelConnector {
     }
 
     override fun getDeviceInfo(deviceAddress: String?, function: ((DeviceInfo) -> Unit)?) {
-        function!!.invoke(DeviceInfo(mileage))
+        if (deviceAddress.equals(device.address))
+            function!!.invoke(DeviceInfo(mileage))
     }
 
     override fun scan(found: ((Device) -> Unit)?) {

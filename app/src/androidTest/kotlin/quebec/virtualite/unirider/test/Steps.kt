@@ -357,8 +357,8 @@ class Steps {
         selectListViewItem(R.id.wheels, "name", wheelName)
     }
 
-    @Given("I simulate this wheel:")
-    fun simulatingWheel(device: DataTable) {
+    @Given("this simulated device:")
+    fun simulatedDevice(device: DataTable) {
         assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Mileage")))
         val deviceFields = device.cells(1)[0]
 

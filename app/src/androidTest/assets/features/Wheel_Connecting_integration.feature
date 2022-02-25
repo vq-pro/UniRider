@@ -2,9 +2,9 @@
 Feature: Wheel Connecting - Integration
 
   Background:
-    Given I simulate this wheel:
-      | Bt Name      | Bt Address     | Mileage |
-      | KS-14Sxx9999 | AB:CD:EF:GH:IJ | 705.615 |
+    Given this simulated device:
+      | Bt Name      | Bt Address        | Mileage |
+      | KS-14Sxx9999 | AB:CD:EF:GH:IJ:KL | 705.615 |
 
   Scenario: Connecting to a wheel to update its mileage for the first time
     Given this wheel:
@@ -18,8 +18,8 @@ Feature: Wheel Connecting - Integration
 
   Scenario: Connecting to a previously connected wheel to update its mileage
     Given this connected wheel:
-      | Name         | Bt Name      | Bt Address     | Voltage Min | Voltage Max | Mileage |
-      | KingSong 14S | KS-14Sxx9999 | AB:CD:EF:GH:IJ | 48.0V       | 67.2V       | 694     |
+      | Name         | Bt Name      | Bt Address        | Voltage Min | Voltage Max | Mileage |
+      | KingSong 14S | KS-14Sxx9999 | AB:CD:EF:GH:IJ:KL | 48.0V       | 67.2V       | 694     |
     And I start the app
     And I select the KingSong 14S
     When I reconnect to the wheel
