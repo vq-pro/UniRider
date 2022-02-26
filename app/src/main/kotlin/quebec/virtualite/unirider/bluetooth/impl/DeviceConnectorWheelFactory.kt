@@ -1,9 +1,16 @@
 package quebec.virtualite.unirider.bluetooth.impl
 
 import android.bluetooth.BluetoothGatt
-import java.util.stream.Collectors
+import java.util.stream.Collectors.toList
 
 object DeviceConnectorWheelFactory {
+
+    private val VETERAN_SERVICES: List<String> = listOf(
+        "00001800-0000-1000-8000-00805f9b34fb",
+        "00001801-0000-1000-8000-00805f9b34fb",
+        "0000180a-0000-1000-8000-00805f9b34fb",
+        "0000ffe0-0000-1000-8000-00805f9b34fb"
+    )
 
     private val KINGSONG_SERVICES: List<String> = listOf(
         "00001800-0000-1000-8000-00805f9b34fb",
@@ -15,17 +22,19 @@ object DeviceConnectorWheelFactory {
 
     fun detectWheel(gatt: BluetoothGatt): DeviceConnectorWheel {
 
-        val services = gatt.services
-        if (services.size != KINGSONG_SERVICES.size)
-            throw AssertionError("Not a KingSong wheel!")
-
         val serviceUUIDs = gatt.services.stream()
             .map { service -> "${service.uuid}" }
-            .collect(Collectors.toList())
+            .collect(toList())
 
-        if (!serviceUUIDs.equals(KINGSONG_SERVICES))
-            throw AssertionError("Not a KingSong wheel!")
+        when (serviceUUIDs) {
+            KINGSONG_SERVICES -> {
+                return DeviceConnectorKingSong(gatt)
+            }
+            VETERAN_SERVICES -> {
+                return DeviceConnectorVeteran(gatt)
+            }
+        }
 
-        return DeviceConnectorKingSong(gatt)
+        throw AssertionError("Unknown wheel!")
     }
 }

@@ -1,16 +1,12 @@
 package quebec.virtualite.unirider.bluetooth.impl
 
 import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
-import android.util.Log
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt2
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt4
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
-import java.util.*
 import kotlin.experimental.and
 
-class DeviceConnectorKingSong(val gatt: BluetoothGatt) : DeviceConnectorWheel() {
+class DeviceConnectorKingSong(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
 
     private val NOTIFICATION_CHARGE_CPU = 0xF5.toByte()
     private val NOTIFICATION_DISTANCE_TIME_FAN = 0xB9.toByte()
@@ -33,34 +29,9 @@ class DeviceConnectorKingSong(val gatt: BluetoothGatt) : DeviceConnectorWheel() 
         0x5A.toByte(), 0x5A.toByte()
     )
 
-    private val UUID_DESCRIPTOR: UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
-    private val UUID_READ_CHARACTER: UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
-    private val UUID_SERVICE: UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
-
-    private var disconnected = false
     private var requestedKingSongNameData = false
 
-    override fun enableNotifications() {
-
-        val service = gatt.getService(UUID_SERVICE)
-        val notifyCharacteristic = service.getCharacteristic(UUID_READ_CHARACTER)
-        if (!gatt.setCharacteristicNotification(notifyCharacteristic, true))
-            throw RuntimeException("Cannot request local notifications")
-
-        val descriptor = notifyCharacteristic.getDescriptor(UUID_DESCRIPTOR)
-        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
-        if (!gatt.writeDescriptor(descriptor))
-            throw RuntimeException("Cannot request remote notifications")
-    }
-
-    override fun onCharacteristicChanged(characteristic: BluetoothGattCharacteristic) {
-
-        if (characteristic.uuid.equals(UUID_READ_CHARACTER)) {
-            decode(characteristic.value)
-        }
-    }
-
-    private fun decode(data: ByteArray): Boolean {
+    override fun decode(data: ByteArray): Boolean {
 
         if (data.size < 20) {
             if (!requestedKingSongNameData) {
@@ -77,32 +48,26 @@ class DeviceConnectorKingSong(val gatt: BluetoothGatt) : DeviceConnectorWheel() 
 
         when (data[16]) {
             NOTIFICATION_LIVE -> {
-                val voltage = byteArrayInt2(data[2], data[3]) / 100f
-                val speed = byteArrayInt2(data[4], data[5])
-                val mileage = byteArrayInt4(data[6], data[7], data[8], data[9]) / 1000f
+                val voltage = byteArrayInt2(data[3], data[2]) / 100f
+                val speed = byteArrayInt2(data[5], data[4])
+                val mileage = byteArrayInt4(data[7], data[6], data[9], data[8]) / 1000f
                 val current = data[10] and (0xFF + data[11] * 256).toByte()
-                val temperature = byteArrayInt2(data[12], data[13]) / 100f
+                val temperature = byteArrayInt2(data[13], data[12]) / 100f
                 val pedalMode = PedalModeType.valueFrom(data[14])
 
-                wheelData = WheelData(mileage, temperature, voltage)
-
-                Log.i("*** BLE ***", "${wheelData.mileage}")
-                if (!disconnected) {
-                    gatt.disconnect()
-                    disconnected = true
-                }
+                done(WheelData(mileage, temperature, voltage))
             }
             NOTIFICATION_DISTANCE_TIME_FAN -> {
-                val distance = byteArrayInt4(data[2], data[3], data[4], data[5]) / 1000f
-                val elapsedSecondsDeviceIsOn = byteArrayInt2(data[6], data[7])
-                val topSpeed = byteArrayInt2(data[8], data[9]) / 100f
+                val distance = byteArrayInt4(data[3], data[2], data[5], data[4]) / 1000f
+                val elapsedSecondsDeviceIsOn = byteArrayInt2(data[7], data[6])
+                val topSpeed = byteArrayInt2(data[9], data[8]) / 100f
                 val fanStatus = data[12]
             }
             NOTIFICATION_CHARGE_CPU -> {
-                val chargeCPU = byteArrayInt2(data[14], data[15])
+                val chargeCPU = byteArrayInt2(data[15], data[14])
             }
             NOTIFICATION_TOP_SPEED -> {
-                val absoluteSpeedLimitOnThisWheel = byteArrayInt2(data[2], data[3]) / 100f
+                val absoluteSpeedLimitOnThisWheel = byteArrayInt2(data[3], data[2]) / 100f
             }
             NOTIFICATION_NAME_TYPE -> {}
             NOTIFICATION_SERIAL_NUMBER -> {}
@@ -126,13 +91,5 @@ class DeviceConnectorKingSong(val gatt: BluetoothGatt) : DeviceConnectorWheel() 
                 return null
             }
         }
-    }
-
-    private fun writeBluetoothGattCharacteristic(gatt: BluetoothGatt, cmd: ByteArray) {
-        val service = gatt.getService(UUID_SERVICE)
-        val characteristic = service.getCharacteristic(UUID_READ_CHARACTER)
-        characteristic.value = cmd
-        characteristic.writeType = 1
-        gatt.writeCharacteristic(characteristic)
     }
 }

@@ -19,3 +19,22 @@ Feature: Wheel Connecting - End-2-End
     And I select the KingSong 14S
     When I reconnect to the wheel
     Then the mileage is updated to 759
+
+  Scenario: Connecting to the Sherman to update its mileage for the first time
+    Given this disconnected wheel:
+      | Name    | Mileage | Voltage Min | Voltage Max |
+      | Sherman | 10000   | 75.6V       | 100.8V      |
+    And I start the app
+    And I select the Sherman
+    When I connect to the LK1149
+    Then the mileage is updated to 14590
+    And the wheel's Bluetooth name is updated
+
+  Scenario: Connecting to the previously connected Sherman to update its mileage
+    Given this connected wheel:
+      | Name    | Bt Name | Bt Address        | Mileage | Voltage Min | Voltage Max |
+      | Sherman | LK1149  | 88:25:83:F1:C9:8B | 10000   | 75.6V       | 100.8V      |
+    And I start the app
+    And I select the Sherman
+    When I reconnect to the wheel
+    Then the mileage is updated to 14590

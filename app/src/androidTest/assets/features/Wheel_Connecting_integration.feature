@@ -1,5 +1,5 @@
 @IntegrationOnly
-Feature: Wheel Connecting - Integration
+Feature: Wheel Connecting
 
   Background:
     Given this simulated device:
