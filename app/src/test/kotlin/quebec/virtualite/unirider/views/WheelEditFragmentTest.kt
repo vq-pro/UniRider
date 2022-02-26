@@ -117,7 +117,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         // Given
         fragment.parmWheelId = 0L
 
-        val newWheel = WheelEntity(0L, "", "", "", 0, 0f, 0f)
+        val newWheel = WheelEntity(0L, "", null, null, 0, 0f, 0f)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)

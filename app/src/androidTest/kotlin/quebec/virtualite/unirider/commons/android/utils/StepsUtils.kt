@@ -41,7 +41,7 @@ import java.lang.Thread.sleep
 
 object StepsUtils {
 
-    private const val INTERVAL = 500L
+    private const val INTERVAL = 100L
     private const val TIMEOUT = 10000L
 
     fun assertThat(id: Int, assertion: Matcher<View>) {
@@ -145,16 +145,30 @@ object StepsUtils {
     }
 
     fun selectListViewItem(id: Int, value: String) {
-        onData(hasToString(startsWith(value)))
-            .inAdapterView(withId(id))
-            .atPosition(0)
-            .perform(click())
+        poll {
+            try {
+                onData(hasToString(startsWith(value)))
+                    .inAdapterView(withId(id))
+                    .atPosition(0)
+                    .perform(click())
+
+            } catch (e: Exception) {
+                throw AssertionError(e)
+            }
+        }
     }
 
     fun selectListViewItem(id: Int, fieldName: String, value: Any) {
-        onData(hasEntry(equalTo(fieldName), `is`(value)))
-            .inAdapterView(withId(id))
-            .perform(click())
+        poll {
+            try {
+                onData(hasEntry(equalTo(fieldName), `is`(value)))
+                    .inAdapterView(withId(id))
+                    .perform(click())
+
+            } catch (e: Exception) {
+                throw AssertionError(e)
+            }
+        }
     }
 
     fun selectSpinnerItem(id: Int, entry: String) {

@@ -16,7 +16,7 @@ import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WH
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", "", "", 0, 0f, 0f)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0f, 0f)
 
     internal lateinit var buttonSave: Button
     internal lateinit var editMileage: EditText
@@ -53,8 +53,10 @@ open class WheelEditFragment : BaseFragment() {
         widgets.setOnClickListener(buttonSave, onSave())
 
         initDB {
-            initialWheel = if (parmWheelId == 0L) NEW_WHEEL
-            else db.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
+            initialWheel = if (parmWheelId == 0L)
+                NEW_WHEEL
+            else
+                db.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
 
             updatedWheel = initialWheel
 

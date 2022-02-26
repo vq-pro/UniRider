@@ -15,7 +15,7 @@ class ByteArrayUtilsTest {
     @Test
     fun byteArrayInt2() {
         // When
-        val result = utils.byteArrayInt2(0xCD.toByte(), 0xAB.toByte())
+        val result = utils.byteArrayInt2(0xAB.toByte(), 0xCD.toByte())
 
         // Then
         MatcherAssert.assertThat(result.toUInt(), equalTo(0xABCDu))
@@ -24,7 +24,7 @@ class ByteArrayUtilsTest {
     @Test
     fun byteArrayInt4() {
         // When
-        val result = utils.byteArrayInt4(0xCD.toByte(), 0xAB.toByte(), 0x00.toByte(), 0xEF.toByte())
+        val result = utils.byteArrayInt4(0xAB.toByte(), 0xCD.toByte(), 0xEF.toByte(), 0x00.toByte())
 
         // Then
         MatcherAssert.assertThat(result.toULong(), equalTo(0xABCDEF00u))

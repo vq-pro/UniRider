@@ -52,6 +52,17 @@ android {
     }
 
     productFlavors {
+        end2end {
+            buildConfigField 'String', 'SCENARIOS', '"@End2End"'
+
+            buildConfigField 'Boolean', 'BLUETOOTH_ACTUAL', 'true'
+
+            // Calls the backend
+            // Equivalent to localhost, which doesn't work with unmocked Retrofit2 request
+            buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2:8080"'
+            buildConfigField 'Boolean', 'SERVER_ACTUAL', 'true'
+        }
+
         integration {
             buildConfigField 'String', 'SCENARIOS', '"~@End2End"'
 
@@ -60,17 +71,6 @@ android {
             // Backend is mocked
             buildConfigField 'String', 'SERVER_BASE_URL', '"http://localhost:8080"'
             buildConfigField 'Boolean', 'SERVER_ACTUAL', 'false'
-        }
-
-        end2end {
-            buildConfigField 'String', 'SCENARIOS', '"~@IntegrationOnly"'
-
-            buildConfigField 'Boolean', 'BLUETOOTH_ACTUAL', 'true'
-
-            // Calls the backend
-            // Equivalent to localhost, which doesn't work with unmocked Retrofit2 request
-            buildConfigField 'String', 'SERVER_BASE_URL', '"http://10.0.2.2:8080"'
-            buildConfigField 'Boolean', 'SERVER_ACTUAL', 'true'
         }
     }
 

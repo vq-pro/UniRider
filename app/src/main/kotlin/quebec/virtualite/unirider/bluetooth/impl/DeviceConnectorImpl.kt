@@ -14,9 +14,10 @@ class DeviceConnectorImpl : DeviceConnector {
 
     private val AUTOCONNECT = false
 
+    private var wheel: DeviceConnectorWheel? = null
+
     private lateinit var activity: Activity
     private lateinit var callback: (WheelData) -> Unit
-    private lateinit var wheel: DeviceConnectorWheel
 
     override fun connect(deviceAddress: String, callback: (WheelData) -> Unit) {
 
@@ -45,7 +46,7 @@ class DeviceConnectorImpl : DeviceConnector {
                     }
                     BluetoothProfile.STATE_DISCONNECTED -> {
                         gatt.close()
-                        callback.invoke(wheel.wheelData)
+                        wheel?.let { callback.invoke(it.wheelData) }
                     }
                 }
             }
@@ -58,7 +59,7 @@ class DeviceConnectorImpl : DeviceConnector {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
 
                     wheel = DeviceConnectorWheelFactory.detectWheel(gatt)
-                    wheel.enableNotifications()
+                    wheel!!.enableNotifications()
                 }
             }
 
@@ -67,7 +68,7 @@ class DeviceConnectorImpl : DeviceConnector {
 
                 Log.i("*** BLE ***", "onCharacteristicChanged - " + byteArrayToString(characteristic.value))
 
-                wheel.onCharacteristicChanged(characteristic)
+                wheel!!.onCharacteristicChanged(characteristic)
             }
         }
     }
