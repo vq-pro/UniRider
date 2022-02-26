@@ -16,6 +16,7 @@ Feature: Wheel Editing & Adding
       | Voltage Max | 100.9               |
     Then the wheel was added
     And it shows the updated name and mileage on the main view
+    And the wheel's Bluetooth name is undefined
 
   Scenario: Editing a wheel in full
     Given I select the Veteran Sherman
