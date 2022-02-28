@@ -120,7 +120,7 @@ open class WheelViewFragment : BaseFragment() {
         )
 
         runDB { db.saveWheel(wheel) }
-        runUI {
+        services.runUI {
             textMileage.text = "$newMileage"
             editVoltage.setText("$newVoltage")
         }

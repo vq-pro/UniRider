@@ -87,6 +87,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.view_mileage, mockedTextMileage)
         mockField(R.id.edit_voltage, mockedEditVoltage)
         mockField(R.id.view_battery, mockedTextBattery)
+
+        mockServices()
     }
 
     @Test
@@ -276,10 +278,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         override fun runDB(function: () -> Unit) {
             test.runDB(function)
-        }
-
-        override fun runUI(function: () -> Unit) {
-            test.runUI(function)
         }
     }
 }

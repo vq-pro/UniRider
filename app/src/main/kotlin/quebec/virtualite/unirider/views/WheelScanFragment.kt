@@ -57,7 +57,7 @@ open class WheelScanFragment : BaseFragment() {
             )
 
             runDB { db.saveWheel(updatedWheel) }
-            runUI { services.navigateBack() }
+            services.runUI { services.navigateBack() }
         }
     }
 
@@ -66,7 +66,7 @@ open class WheelScanFragment : BaseFragment() {
             devices.add(device)
             val names = devices.stream().map(Device::name).collect(toList())
 
-            runUI { widgets.stringListAdapter(lvWheels, view, names) }
+            services.runUI { widgets.stringListAdapter(lvWheels, view, names) }
         }
     }
 }

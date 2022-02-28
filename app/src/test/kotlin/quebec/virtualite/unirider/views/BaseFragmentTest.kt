@@ -10,7 +10,9 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.eq
+import org.mockito.BDDMockito.doAnswer
 import org.mockito.BDDMockito.given
 import org.mockito.Captor
 import org.mockito.Mock
@@ -102,8 +104,10 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
             .willReturn(mockedField)
     }
 
-    fun navigateBack(nb: Int) {
-        navigatedBack += nb
+    @Suppress("UNCHECKED_CAST")
+    fun mockServices() {
+        doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
+            .`when`(mockedServices).runUI(any())
     }
 
     fun navigateTo(id: Int, parms: Pair<String, Any>) {
@@ -115,10 +119,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun runDB(function: () -> Unit) {
-        function()
-    }
-
-    fun runUI(function: () -> Unit) {
         function()
     }
 

@@ -39,7 +39,7 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
         waitDialog(BACK_ON_CANCEL, function!!)
     }
 
-    open fun runUI(function: () -> Unit) {
+    open fun runUI(function: (() -> Unit)?) {
         fragment.activity!!.runOnUiThread(function)
     }
 

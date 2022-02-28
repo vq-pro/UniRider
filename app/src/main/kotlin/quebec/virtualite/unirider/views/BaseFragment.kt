@@ -42,8 +42,4 @@ open class BaseFragment : Fragment() {
     internal open fun runDB(function: () -> Unit) {
         runBackground(function)
     }
-
-    internal open fun runUI(function: () -> Unit) {
-        activity?.runOnUiThread(function)
-    }
 }

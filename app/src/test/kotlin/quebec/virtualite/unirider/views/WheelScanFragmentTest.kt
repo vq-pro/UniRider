@@ -50,6 +50,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.wheel = S18_1
 
         mockField(R.id.devices, mockedLvWheels)
+        mockServices()
     }
 
     @Test
@@ -135,10 +136,6 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         override fun runDB(function: () -> Unit) {
             test.runDB(function)
-        }
-
-        override fun runUI(function: () -> Unit) {
-            test.runUI(function)
         }
     }
 }
