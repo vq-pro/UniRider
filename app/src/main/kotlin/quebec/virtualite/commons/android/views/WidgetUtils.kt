@@ -1,6 +1,5 @@
 package quebec.virtualite.commons.android.views
 
-import android.R
 import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
@@ -15,6 +14,7 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.SpinnerAdapter
 import androidx.core.view.isVisible
+import quebec.virtualite.unirider.R
 
 open class WidgetUtils {
 
@@ -88,7 +88,7 @@ open class WidgetUtils {
 
     open fun showWaitDialog(activity: Activity?): Dialog {
         val dialog = ProgressDialog(activity)
-        dialog.setMessage("Please wait...")
+        dialog.setMessage(activity!!.applicationContext.getString(R.string.dialog_wait))
         dialog.setCancelable(false)
         dialog.show()
 
@@ -96,7 +96,7 @@ open class WidgetUtils {
     }
 
     open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {
-        listView.adapter = arrayAdapter(view!!, R.layout.simple_list_item_1, contents!!) as ListAdapter
+        listView.adapter = arrayAdapter(view!!, android.R.layout.simple_list_item_1, contents!!) as ListAdapter
     }
 
     private fun <T> arrayAdapter(view: View, id: Int, contents: List<T>): Adapter {

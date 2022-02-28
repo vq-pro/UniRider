@@ -31,7 +31,6 @@ open class WheelScanFragment : BaseFragment() {
 
         lvWheels = view.findViewById(R.id.devices)
 
-        widgets.enable(lvWheels)
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
         val waitDialog = widgets.showWaitDialog(activity)
@@ -48,11 +47,9 @@ open class WheelScanFragment : BaseFragment() {
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
 
         val waitDialog = widgets.showWaitDialog(activity)
-        widgets.disable(lvWheels)
-
-        val device = devices[pos]
 
         runBackground {
+            val device = devices[pos]
             connectWithWheel(device, waitDialog)
         }
     }

@@ -78,7 +78,6 @@ open class WheelViewFragment : BaseFragment() {
 
         } else {
             val waitDialog = widgets.showWaitDialog(activity)
-            widgets.disable(buttonConnect)
 
             runBackground {
                 connector.getDeviceInfo(wheel!!.btAddr) { info ->
@@ -89,7 +88,6 @@ open class WheelViewFragment : BaseFragment() {
                     updateWheel(newMileage, newVoltage)
 
                     runUI {
-                        widgets.enable(buttonConnect)
                         waitDialog.hide()
                     }
                 }

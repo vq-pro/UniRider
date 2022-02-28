@@ -86,7 +86,6 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(SHERMAN_3))
 
-        verify(mockedWidgets).enable(mockedLvWheels)
         verifyOnItemClick(mockedLvWheels, "onSelectDevice")
 
         verify(mockedWidgets).showWaitDialog(any())
@@ -124,7 +123,6 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         // Then
         val ordered = inOrder(mockedWidgets, mockedWaitDialog, mockedDb)
         ordered.verify(mockedWidgets).showWaitDialog(any())
-        ordered.verify(mockedWidgets).disable(mockedLvWheels)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
         ordered.verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)

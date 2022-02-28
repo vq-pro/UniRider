@@ -191,14 +191,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         val ordered = inOrder(mockedWidgets, mockedDb, mockedTextMileage, mockedEditVoltage, mockedWaitDialog)
         ordered.verify(mockedWidgets).showWaitDialog(any())
-        ordered.verify(mockedWidgets).disable(mockedButtonConnect)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
         ordered.verify(mockedDb).saveWheel(
             WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
         )
         ordered.verify(mockedTextMileage).text = "$MILEAGE_NEW"
         ordered.verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
-        ordered.verify(mockedWidgets).enable(mockedButtonConnect)
         ordered.verify(mockedWaitDialog).hide()
     }
 
