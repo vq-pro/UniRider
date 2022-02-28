@@ -16,7 +16,7 @@ open class BaseFragment : Fragment() {
     internal lateinit var connector: WheelConnector
     internal lateinit var db: WheelDb
 
-    internal var services = FragmentServices()
+    internal var services = FragmentServices(this)
     internal var widgets = WidgetUtils()
 
     internal open fun initConnector() {

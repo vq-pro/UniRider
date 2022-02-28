@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.views
 
-import android.app.Dialog
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -74,9 +73,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     @Mock
     lateinit var mockedTextName: TextView
-
-    @Mock
-    lateinit var mockedWaitDialog: Dialog
 
     @Before
     fun before() {
@@ -184,7 +180,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verifyRunWithWaitDialog(fragment)
+        verifyRunWithWaitDialog()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
 
         verify(mockedDb)

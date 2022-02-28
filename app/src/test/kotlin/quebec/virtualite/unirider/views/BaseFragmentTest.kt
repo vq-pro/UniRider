@@ -156,8 +156,8 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
-    fun verifyRunWithWaitDialog(fragment: BaseFragment) {
-        verify(mockedServices).runWithWaitDialog(eq(fragment), lambdaRunWithWaitDialog.capture())
+    fun verifyRunWithWaitDialog() {
+        verify(mockedServices).runWithWaitDialog(lambdaRunWithWaitDialog.capture())
         lambdaRunWithWaitDialog.value.invoke()
     }
 
