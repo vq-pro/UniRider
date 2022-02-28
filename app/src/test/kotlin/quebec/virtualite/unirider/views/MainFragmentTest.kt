@@ -81,12 +81,11 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
             WHEEL_ROW_NEW
         )
 
-        verify(mockedDb).getWheels()
-
         verify(mockedWidgets).enable(mockedLVWheels)
         verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
         verifyOnItemClick(mockedLVWheels, "onSelectWheel")
 
+        verify(mockedDb).getWheels()
         verify(mockedTextTotalMileage).text = "${MILEAGE + MILEAGE2 + MILEAGE3}"
     }
 

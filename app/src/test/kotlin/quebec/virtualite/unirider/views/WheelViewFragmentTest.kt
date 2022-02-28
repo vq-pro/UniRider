@@ -16,7 +16,6 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
@@ -185,18 +184,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        val ordered = inOrder(mockedServices, mockedConnector, mockedDb, mockedTextMileage, mockedEditVoltage)
+        verifyRunWithWaitDialog(fragment)
+        verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
 
-        ordered.verify(mockedServices).runWithWaitDialog(eq(fragment), lambdaRunWithWaitDialog.capture())
-        lambdaRunWithWaitDialog.value.invoke()
-
-        ordered.verify(mockedConnector).getDeviceInfo(eq(DEVICE_ADDR), lambdaOnGotDeviceInfo.capture())
-        lambdaOnGotDeviceInfo.value.invoke(DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-
-        ordered.verify(mockedDb)
+        verify(mockedDb)
             .saveWheel(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX))
-        ordered.verify(mockedTextMileage).text = "$MILEAGE_NEW"
-        ordered.verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
+        verify(mockedTextMileage).text = "$MILEAGE_NEW"
+        verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
     }
 
     @Test

@@ -10,7 +10,6 @@ import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
@@ -120,13 +119,12 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
         // Then
-        val ordered = inOrder(mockedWidgets, mockedWaitDialog, mockedDb)
-        ordered.verify(mockedWidgets).waitOrNavigateBack(fragment)
+        verify(mockedWidgets).waitOrNavigateBack(fragment)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-        ordered.verify(mockedDb).saveWheel(
+        verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
         )
-        ordered.verify(mockedWaitDialog).hide()
+        verify(mockedWaitDialog).hide()
         verifyNavigatedBack()
     }
 

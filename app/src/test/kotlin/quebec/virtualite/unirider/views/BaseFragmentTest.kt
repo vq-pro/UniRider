@@ -55,25 +55,25 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedWidgets: WidgetUtils
 
     @Captor
-    lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>
+    private lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>
 
     @Captor
-    lateinit var lambdaOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
+    private lateinit var lambdaOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
 
     @Captor
-    lateinit var lambdaOnFoundDevice: ArgumentCaptor<(Device) -> Unit>
+    private lateinit var lambdaOnFoundDevice: ArgumentCaptor<(Device) -> Unit>
 
     @Captor
-    lateinit var lambdaOnGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
+    private lateinit var lambdaOnGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
 
     @Captor
-    lateinit var lambdaOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
+    private lateinit var lambdaOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
 
     @Captor
-    lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
+    private lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
 
     @Captor
-    lateinit var lambdaRunWithWaitDialog: ArgumentCaptor<() -> Unit>
+    private lateinit var lambdaRunWithWaitDialog: ArgumentCaptor<() -> Unit>
 
     private var navigatedBack: Int = 0
     private var navigatedTo: NavigatedTo? = null
@@ -154,6 +154,11 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     fun verifyOnUpdateText(mockedField: EditText, methodName: String) {
         verify(mockedWidgets).addTextChangedListener(eq(mockedField), lambdaOnUpdateText.capture())
         assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    }
+
+    fun verifyRunWithWaitDialog(fragment: BaseFragment) {
+        verify(mockedServices).runWithWaitDialog(eq(fragment), lambdaRunWithWaitDialog.capture())
+        lambdaRunWithWaitDialog.value.invoke()
     }
 
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {
