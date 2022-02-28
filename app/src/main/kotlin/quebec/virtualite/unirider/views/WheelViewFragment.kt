@@ -110,7 +110,7 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun goto(id: Int) {
-        navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
+        services.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
     }
 
     private fun updateWheel(newMileage: Int, newVoltage: Float) {

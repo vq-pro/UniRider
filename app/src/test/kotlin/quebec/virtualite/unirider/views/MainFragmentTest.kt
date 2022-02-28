@@ -126,7 +126,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        verifyNavigatedTo(
+        verify(mockedServices).navigateTo(
             R.id.action_MainFragment_to_WheelViewFragment,
             Pair(PARAMETER_WHEEL_ID, ID2)
         )
@@ -141,7 +141,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         fragment.onSelectWheel().invoke(mockedView, 2)
 
         // Then
-        verifyNavigatedTo(
+        verify(mockedServices).navigateTo(
             R.id.action_MainFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, 0L)
         )
@@ -151,10 +151,6 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
         override fun initDB(function: () -> Unit) {
             test.initDB(this, function)
-        }
-
-        override fun navigateTo(id: Int, param: Pair<String, Any>) {
-            test.navigateTo(id, param)
         }
     }
 }

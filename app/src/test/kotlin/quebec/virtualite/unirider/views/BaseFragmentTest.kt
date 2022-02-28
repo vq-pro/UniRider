@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ListView
-import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
 import org.mockito.ArgumentCaptor
@@ -19,7 +18,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.commons.views.FragmentServices
-import quebec.virtualite.commons.views.NavigatedTo
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelConnector
@@ -77,9 +75,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     @Captor
     private lateinit var lambdaRunWithWaitDialog: ArgumentCaptor<() -> Unit>
 
-    private var navigatedBack: Int = 0
-    private var navigatedTo: NavigatedTo? = null
-
     fun initDB(fragment: BaseFragment, function: () -> Unit) {
         fragment.db = mockedDb
         function()
@@ -114,10 +109,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
             .`when`(mockedServices).runUI(any())
-    }
-
-    fun navigateTo(id: Int, parms: Pair<String, Any>) {
-        navigatedTo = NavigatedTo(id, parms)
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, deviceInfo: DeviceInfo) {
@@ -177,9 +168,5 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
             (lambdaOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
         )
         assertThat(lambdaOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
-    }
-
-    fun verifyNavigatedTo(id: Int, param: Pair<String, Any>) {
-        assertThat("Didn't navigate to where we expected to", navigatedTo, equalTo(NavigatedTo(id, param)))
     }
 }

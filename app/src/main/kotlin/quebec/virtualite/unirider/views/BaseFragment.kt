@@ -1,8 +1,6 @@
 package quebec.virtualite.unirider.views
 
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.commons.views.FragmentServices
 import quebec.virtualite.unirider.R
@@ -24,9 +22,5 @@ open class BaseFragment : Fragment() {
     internal open fun initDB(function: () -> Unit) {
         db = MainActivity.db
         services.runDB(function)
-    }
-
-    internal open fun navigateTo(id: Int, param: Pair<String, Any>) {
-        findNavController().navigate(id, bundleOf(param.first to param.second))
     }
 }

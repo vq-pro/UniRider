@@ -165,7 +165,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verifyNavigatedTo(
+        verify(mockedServices).navigateTo(
             R.id.action_WheelViewFragment_to_WheelScanFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
@@ -197,7 +197,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onDelete().invoke(mockedView)
 
         // Then
-        verifyNavigatedTo(
+        verify(mockedServices).navigateTo(
             R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
@@ -209,7 +209,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onEdit().invoke(mockedView)
 
         // Then
-        verifyNavigatedTo(
+        verify(mockedServices).navigateTo(
             R.id.action_WheelViewFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
@@ -266,10 +266,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         override fun initDB(function: () -> Unit) {
             test.initDB(this, function)
-        }
-
-        override fun navigateTo(id: Int, param: Pair<String, Any>) {
-            test.navigateTo(id, param)
         }
     }
 }

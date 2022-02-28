@@ -61,7 +61,7 @@ open class MainFragment : BaseFragment() {
     }
 
     private fun addWheel() {
-        navigateTo(
+        services.navigateTo(
             R.id.action_MainFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, 0L)
         )
@@ -93,7 +93,7 @@ open class MainFragment : BaseFragment() {
     }
 
     private fun viewWheel(wheel: WheelRow) {
-        navigateTo(
+        services.navigateTo(
             R.id.action_MainFragment_to_WheelViewFragment,
             Pair(PARAMETER_WHEEL_ID, wheel.id())
         )

@@ -1,6 +1,7 @@
 package quebec.virtualite.commons.views
 
 import android.app.ProgressDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,10 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
         var i = nb
         while (i-- > 0)
             fragment.findNavController().popBackStack()
+    }
+
+    open fun navigateTo(id: Int, param: Pair<String, Any>) {
+        fragment.findNavController().navigate(id, bundleOf(param.first to param.second))
     }
 
     open fun runBackground(function: (() -> Unit)?) {
