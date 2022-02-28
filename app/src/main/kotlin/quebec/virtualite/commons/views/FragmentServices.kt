@@ -7,13 +7,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-// FIXME-1 Get rid of these two dependencies
-import quebec.virtualite.unirider.R
 
-open class FragmentServices(val fragment: Fragment) {
+open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int) {
 
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
+
+    open fun getString(id: Int): String {
+        return fragment.activity!!.applicationContext.getString(id)
+    }
 
     internal open fun navigateBack(nb: Int = 1) {
         if (nb < 1)
@@ -49,7 +51,7 @@ open class FragmentServices(val fragment: Fragment) {
 
     private fun showWaitDialog(backOnCancel: Boolean): Dialog {
         val dialog = ProgressDialog(fragment.activity)
-        dialog.setMessage(fragment.activity!!.applicationContext.getString(R.string.dialog_wait))
+        dialog.setMessage(getString(idStringPleaseWait))
         if (backOnCancel)
             dialog.setOnCancelListener {
                 navigateBack()
