@@ -146,12 +146,12 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun verifyRunWithWaitDialog() {
-        verify(mockedServices).runWithWaitDialog(lambdaRunWithWaitDialog.capture())
+        verify(mockedServices).runWithWait(lambdaRunWithWaitDialog.capture())
         lambdaRunWithWaitDialog.value.invoke()
     }
 
     fun verifyRunWithWaitDialogAndBack() {
-        verify(mockedServices).runWithWaitDialogAndBack(lambdaRunWithWaitDialog.capture())
+        verify(mockedServices).runWithWaitAndBack(lambdaRunWithWaitDialog.capture())
         lambdaRunWithWaitDialog.value.invoke()
     }
 

@@ -33,4 +33,4 @@ Feature: Main Screen
     When I add a new wheel
     Then I can enter the details for that wheel
 
-  #  FIXME-2 Icon principal
+  #  FIXME-1 Icon principal
