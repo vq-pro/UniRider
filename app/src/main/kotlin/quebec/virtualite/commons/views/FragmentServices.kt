@@ -19,8 +19,8 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
         runUI { waitDialog?.hide() }
     }
 
-    open fun getString(id: Int): String {
-        return fragment.activity!!.applicationContext.getString(id)
+    open fun getString(id: Int): String? {
+        return fragment.activity?.applicationContext?.getString(id)
     }
 
     internal open fun navigateBack(nb: Int = 1) {
@@ -57,7 +57,7 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
     }
 
     open fun runUI(function: (() -> Unit)?) {
-        fragment.activity!!.runOnUiThread(function)
+        fragment.activity?.runOnUiThread(function)
     }
 
     private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {
