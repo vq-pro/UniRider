@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -52,6 +53,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedView: View
 
     @Mock
+    lateinit var mockedWaitDialog: Dialog
+
+    @Mock
     lateinit var mockedWidgets: WidgetUtils
 
     @Captor
@@ -73,7 +77,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     private lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
 
     @Captor
-    private lateinit var lambdaRunWithWaitDialog: ArgumentCaptor<() -> Unit>
+    private lateinit var lambdaRunWithWaitDialog: ArgumentCaptor<(Dialog) -> Unit>
 
     fun initDB(fragment: BaseFragment, function: () -> Unit) {
         fragment.db = mockedDb
@@ -147,12 +151,12 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
     fun verifyRunWithWaitDialog() {
         verify(mockedServices).runWithWaitDialog(lambdaRunWithWaitDialog.capture())
-        lambdaRunWithWaitDialog.value.invoke()
+        lambdaRunWithWaitDialog.value.invoke(mockedWaitDialog)
     }
 
     fun verifyRunWithWaitDialogAndBack() {
         verify(mockedServices).runWithWaitDialogAndBack(lambdaRunWithWaitDialog.capture())
-        lambdaRunWithWaitDialog.value.invoke()
+        lambdaRunWithWaitDialog.value.invoke(mockedWaitDialog)
     }
 
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {

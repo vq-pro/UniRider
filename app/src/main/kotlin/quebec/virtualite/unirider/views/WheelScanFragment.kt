@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,6 @@ open class WheelScanFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         lvWheels = view.findViewById(R.id.devices)
-
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
         initDB {
@@ -39,34 +39,42 @@ open class WheelScanFragment : BaseFragment() {
         initConnector()
 
         services.runWithWaitDialogAndBack {
-            scanForDevices(view)
+            scanForDevices(view, it)
         }
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
         services.runWithWaitDialogAndBack {
-            connectWithWheel(devices[pos])
+            connectWithWheel(devices[pos], it)
         }
     }
 
-    private fun connectWithWheel(device: Device) {
+    private fun connectWithWheel(device: Device, waitDialog: Dialog) {
         connector.getDeviceInfo(device.address) { info ->
             val updatedWheel = WheelEntity(
                 wheel!!.id, wheel!!.name, device.name, device.address,
                 info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
             )
 
-            services.runDB { db.saveWheel(updatedWheel) }
-            services.runUI { services.navigateBack() }
+            services.runDB {
+                db.saveWheel(updatedWheel)
+            }
+            services.runUI {
+                services.navigateBack()
+                waitDialog.hide()
+            }
         }
     }
 
-    private fun scanForDevices(view: View) {
+    private fun scanForDevices(view: View, waitDialog: Dialog) {
         connector.scan { device ->
             devices.add(device)
             val names = devices.stream().map(Device::name).collect(toList())
 
-            services.runUI { widgets.stringListAdapter(lvWheels, view, names) }
+            services.runUI {
+                widgets.stringListAdapter(lvWheels, view, names)
+                waitDialog.hide()
+            }
         }
     }
 }
