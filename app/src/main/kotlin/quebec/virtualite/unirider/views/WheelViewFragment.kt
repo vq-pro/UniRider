@@ -77,16 +77,22 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
+            val waitDialog = widgets.showWaitDialog(activity)
             widgets.disable(buttonConnect)
 
-            connector.getDeviceInfo(wheel!!.btAddr) { info ->
+            runBackground {
+                connector.getDeviceInfo(wheel!!.btAddr) { info ->
 
-                val newMileage = info.mileage.roundToInt()
-                val newVoltage = round(info.voltage, 1)
+                    val newMileage = info.mileage.roundToInt()
+                    val newVoltage = round(info.voltage, 1)
 
-                updateWheel(newMileage, newVoltage)
+                    updateWheel(newMileage, newVoltage)
 
-                runUI { widgets.enable(buttonConnect) }
+                    runUI {
+                        widgets.enable(buttonConnect)
+                        waitDialog.hide()
+                    }
+                }
             }
         }
     }
@@ -105,7 +111,6 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun getPercentage(voltage: String): String {
-
         val percentage = calculatorService.percentage(wheel, parseFloat(voltage))
         return when (percentage) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
@@ -118,7 +123,6 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateWheel(newMileage: Int, newVoltage: Float) {
-
         wheel = WheelEntity(
             wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
             newMileage, wheel!!.voltageMin, wheel!!.voltageMax

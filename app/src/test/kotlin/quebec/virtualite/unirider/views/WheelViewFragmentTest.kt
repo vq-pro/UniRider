@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.app.Dialog
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -8,6 +9,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
@@ -15,6 +17,7 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
@@ -74,6 +77,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     @Mock
     lateinit var mockedTextName: TextView
 
+    @Mock
+    lateinit var mockedWaitDialog: Dialog
+
     @Before
     fun before() {
         fragment.parmWheelId = ID
@@ -87,6 +93,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.view_mileage, mockedTextMileage)
         mockField(R.id.edit_voltage, mockedEditVoltage)
         mockField(R.id.view_battery, mockedTextBattery)
+
+        given(mockedWidgets.showWaitDialog(any()))
+            .willReturn(mockedWaitDialog)
     }
 
     @Test
@@ -180,14 +189,17 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verify(mockedWidgets).disable(mockedButtonConnect)
+        val ordered = inOrder(mockedWidgets, mockedDb, mockedTextMileage, mockedEditVoltage, mockedWaitDialog)
+        ordered.verify(mockedWidgets).showWaitDialog(any())
+        ordered.verify(mockedWidgets).disable(mockedButtonConnect)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-        verify(mockedDb).saveWheel(
+        ordered.verify(mockedDb).saveWheel(
             WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
         )
-        verify(mockedTextMileage).text = "$MILEAGE_NEW"
-        verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
-        verify(mockedWidgets).enable(mockedButtonConnect)
+        ordered.verify(mockedTextMileage).text = "$MILEAGE_NEW"
+        ordered.verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
+        ordered.verify(mockedWidgets).enable(mockedButtonConnect)
+        ordered.verify(mockedWaitDialog).hide()
     }
 
     @Test
@@ -269,6 +281,10 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         override fun navigateTo(id: Int, param: Pair<String, Any>) {
             test.navigateTo(id, param)
+        }
+
+        override fun runBackground(function: () -> Unit) {
+            test.runBackground(function)
         }
 
         override fun runDB(function: () -> Unit) {
