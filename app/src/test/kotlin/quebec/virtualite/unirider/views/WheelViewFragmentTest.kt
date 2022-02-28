@@ -191,7 +191,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             .saveWheel(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX))
         ordered.verify(mockedTextMileage).text = "$MILEAGE_NEW"
         ordered.verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
-        ordered.verify(mockedServices).dismissWaitDialog()
+        ordered.verify(mockedServices).dismissWait()
     }
 
     @Test

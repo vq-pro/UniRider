@@ -37,13 +37,13 @@ open class WheelScanFragment : BaseFragment() {
 
         initConnector()
 
-        services.runWithWaitDialogAndBack {
+        services.runWithWaitAndBack {
             scanForDevices(view)
         }
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
-        services.runWithWaitDialogAndBack {
+        services.runWithWaitAndBack {
             connectWithWheel(devices[pos])
         }
     }
@@ -59,7 +59,7 @@ open class WheelScanFragment : BaseFragment() {
                 )
             }
 
-            services.dismissWaitDialog()
+            services.dismissWait()
             services.navigateBack()
         }
     }
@@ -70,7 +70,7 @@ open class WheelScanFragment : BaseFragment() {
             val names = devices.stream().map(Device::name).collect(toList())
 
             services.runUI { widgets.stringListAdapter(lvWheels, view, names) }
-            services.dismissWaitDialog()
+            services.dismissWait()
         }
     }
 }

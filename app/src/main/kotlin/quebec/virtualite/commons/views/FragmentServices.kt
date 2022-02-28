@@ -15,8 +15,11 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
 
     private var waitDialog: ProgressDialog? = null
 
-    open fun dismissWaitDialog() {
-        runUI { waitDialog?.hide() }
+    open fun dismissWait() {
+        runUI {
+            waitDialog?.hide()
+            waitDialog = null
+        }
     }
 
     open fun getString(id: Int): String? {
@@ -45,14 +48,16 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
     }
 
     open fun runDB(function: (() -> Unit)?) {
-        runBackground(function)
+        if (waitDialog == null || waitDialog!!.isShowing) {
+            runBackground(function)
+        }
     }
 
-    open fun runWithWaitDialog(function: (() -> Unit)?) {
+    open fun runWithWait(function: (() -> Unit)?) {
         waitDialog(STAY_IN_FRAGMENT, function!!)
     }
 
-    open fun runWithWaitDialogAndBack(function: (() -> Unit)?) {
+    open fun runWithWaitAndBack(function: (() -> Unit)?) {
         waitDialog(BACK_ON_CANCEL, function!!)
     }
 

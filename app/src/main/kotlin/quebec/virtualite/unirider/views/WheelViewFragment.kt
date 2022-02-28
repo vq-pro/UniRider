@@ -77,14 +77,14 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
-            services.runWithWaitDialog {
+            services.runWithWait {
                 connector.getDeviceInfo(wheel!!.btAddr) { info ->
                     val newMileage = info.mileage.roundToInt()
                     val newVoltage = round(info.voltage, 1)
 
                     updateWheel(newMileage, newVoltage)
 
-                    services.dismissWaitDialog()
+                    services.dismissWait()
                 }
             }
         }
