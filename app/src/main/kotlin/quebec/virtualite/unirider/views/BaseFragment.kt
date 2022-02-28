@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.database.WheelDb
 
@@ -13,6 +14,8 @@ open class BaseFragment : Fragment() {
 
     internal lateinit var connector: WheelConnector
     internal lateinit var db: WheelDb
+
+    internal var widgets = WidgetUtils()
 
     internal open fun initConnector() {
         connector = MainActivity.connector

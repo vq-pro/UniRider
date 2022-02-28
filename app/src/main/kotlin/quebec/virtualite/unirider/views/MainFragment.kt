@@ -8,7 +8,6 @@ import android.widget.ListView
 import android.widget.TextView
 import quebec.virtualite.commons.android.utils.ArrayListUtils.addTo
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
-import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
@@ -21,8 +20,6 @@ open class MainFragment : BaseFragment() {
     private val NEW_ROW = WheelRow(0, NEW_ENTRY, 0)
 
     internal val wheelList = ArrayList<WheelRow>()
-
-    private var widgets = WidgetUtils()
 
     private lateinit var lvWheels: ListView
     private lateinit var textTotalMileage: TextView

@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.TextView
 import org.apache.http.util.TextUtils.isEmpty
 import quebec.virtualite.commons.android.utils.NumberUtils.round
-import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
@@ -37,7 +36,6 @@ open class WheelViewFragment : BaseFragment() {
     internal var parmWheelId: Long? = 0
 
     private var calculatorService = CalculatorService()
-    private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
