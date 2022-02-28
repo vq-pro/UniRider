@@ -9,6 +9,7 @@ import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
@@ -85,6 +86,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verifyRunWithWaitDialogAndBack()
         verifyConnectorScanWith(Device(DEVICE_NAME, DEVICE_ADDR))
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
+        verify(mockedServices).dismissWaitDialog()
     }
 
     @Test
@@ -115,10 +117,13 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         // Then
         verifyRunWithWaitDialogAndBack()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-        verify(mockedDb).saveWheel(
+
+        val ordered = inOrder(mockedDb, mockedServices)
+        ordered.verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
         )
-        verify(mockedServices).navigateBack()
+        ordered.verify(mockedServices).dismissWaitDialog()
+        ordered.verify(mockedServices).navigateBack()
     }
 
     class TestableWheelScanFragment(val test: WheelScanFragmentTest) : WheelScanFragment() {

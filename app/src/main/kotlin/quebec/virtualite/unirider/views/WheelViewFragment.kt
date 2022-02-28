@@ -83,6 +83,8 @@ open class WheelViewFragment : BaseFragment() {
                     val newVoltage = round(info.voltage, 1)
 
                     updateWheel(newMileage, newVoltage)
+
+                    services.dismissWaitDialog()
                 }
             }
         }
@@ -102,8 +104,7 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun getPercentage(voltage: String): String {
-        val percentage = calculatorService.percentage(wheel, parseFloat(voltage))
-        return when (percentage) {
+        return when (val percentage = calculatorService.percentage(wheel, parseFloat(voltage))) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }

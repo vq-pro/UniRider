@@ -13,21 +13,29 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
 
-    open fun getString(id: Int): String {
-        return fragment.activity!!.applicationContext.getString(id)
+    private var waitDialog: ProgressDialog? = null
+
+    open fun dismissWaitDialog() {
+        runUI { waitDialog?.hide() }
+    }
+
+    open fun getString(id: Int): String? {
+        return fragment.activity?.applicationContext?.getString(id)
     }
 
     internal open fun navigateBack(nb: Int = 1) {
-        if (nb < 1)
-            throw RuntimeException("Cannot go back $nb times")
+        runUI {
+            if (nb < 1)
+                throw RuntimeException("Cannot go back $nb times")
 
-        var i = nb
-        while (i-- > 0)
-            fragment.findNavController().popBackStack()
+            var i = nb
+            while (i-- > 0)
+                fragment.findNavController().popBackStack()
+        }
     }
 
     open fun navigateTo(id: Int, param: Pair<String, Any>) {
-        fragment.findNavController().navigate(id, bundleOf(param.first to param.second))
+        runUI { fragment.findNavController().navigate(id, bundleOf(param.first to param.second)) }
     }
 
     open fun runBackground(function: (() -> Unit)?) {
@@ -49,27 +57,22 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
     }
 
     open fun runUI(function: (() -> Unit)?) {
-        fragment.activity!!.runOnUiThread(function)
+        fragment.activity?.runOnUiThread(function)
     }
 
     private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {
 
-        val waitDialog = ProgressDialog(fragment.activity)
-
-        waitDialog.setMessage(getString(idStringPleaseWait))
+        waitDialog = ProgressDialog(fragment.activity)
+        waitDialog!!.setMessage(getString(idStringPleaseWait))
         if (backOnCancel)
-            waitDialog.setOnCancelListener {
+            waitDialog!!.setOnCancelListener {
                 navigateBack()
             }
 
-        waitDialog.show()
+        waitDialog!!.show()
 
         runBackground {
             function()
-
-            runUI {
-                waitDialog.hide()
-            }
         }
     }
 }

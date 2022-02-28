@@ -29,7 +29,6 @@ open class WheelScanFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         lvWheels = view.findViewById(R.id.devices)
-
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
         initDB {
@@ -51,13 +50,17 @@ open class WheelScanFragment : BaseFragment() {
 
     private fun connectWithWheel(device: Device) {
         connector.getDeviceInfo(device.address) { info ->
-            val updatedWheel = WheelEntity(
-                wheel!!.id, wheel!!.name, device.name, device.address,
-                info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
-            )
+            services.runDB {
+                db.saveWheel(
+                    WheelEntity(
+                        wheel!!.id, wheel!!.name, device.name, device.address,
+                        info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
+                    )
+                )
+            }
 
-            services.runDB { db.saveWheel(updatedWheel) }
-            services.runUI { services.navigateBack() }
+            services.dismissWaitDialog()
+            services.navigateBack()
         }
     }
 
@@ -67,6 +70,7 @@ open class WheelScanFragment : BaseFragment() {
             val names = devices.stream().map(Device::name).collect(toList())
 
             services.runUI { widgets.stringListAdapter(lvWheels, view, names) }
+            services.dismissWaitDialog()
         }
     }
 }
