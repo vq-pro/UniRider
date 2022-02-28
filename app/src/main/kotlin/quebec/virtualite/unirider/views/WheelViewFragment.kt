@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.views
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -78,9 +77,13 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
-            val waitDialog = widgets.waitOrStayInFragment(this)
-            runBackground {
-                connectWithWheel(waitDialog)
+            services.runWithWaitDialog(this) {
+                connector.getDeviceInfo(wheel!!.btAddr) { info ->
+                    val newMileage = info.mileage.roundToInt()
+                    val newVoltage = round(info.voltage, 1)
+
+                    updateWheel(newMileage, newVoltage)
+                }
             }
         }
     }
@@ -96,20 +99,6 @@ open class WheelViewFragment : BaseFragment() {
     fun onUpdateVoltage() = { voltageParm: String ->
         val voltage = voltageParm.trim()
         textBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
-    }
-
-    private fun connectWithWheel(waitDialog: Dialog) {
-        connector.getDeviceInfo(wheel!!.btAddr) { info ->
-
-            val newMileage = info.mileage.roundToInt()
-            val newVoltage = round(info.voltage, 1)
-
-            updateWheel(newMileage, newVoltage)
-
-            runUI {
-                waitDialog.hide()
-            }
-        }
     }
 
     private fun getPercentage(voltage: String): String {

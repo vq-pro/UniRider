@@ -88,12 +88,9 @@ open class WidgetUtils {
         widget.isVisible = true
     }
 
+    // FIXME-0 Replace into FragmentServices
     open fun waitOrNavigateBack(fragment: BaseFragment): Dialog {
         return showWaitDialog(fragment, BACK_ON_CANCEL)
-    }
-
-    open fun waitOrStayInFragment(fragment: BaseFragment): Dialog {
-        return showWaitDialog(fragment, STAY_IN_FRAGMENT)
     }
 
     open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {

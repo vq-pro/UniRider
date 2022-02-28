@@ -16,6 +16,7 @@ import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import quebec.virtualite.commons.android.views.WidgetUtils
+import quebec.virtualite.commons.views.FragmentServices
 import quebec.virtualite.commons.views.NavigatedTo
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
@@ -33,6 +34,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedBundle: Bundle
 
     @Mock
+    lateinit var mockedConnector: WheelConnector
+
+    @Mock
     lateinit var mockedContainer: ViewGroup
 
     @Mock
@@ -42,31 +46,34 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedInflater: LayoutInflater
 
     @Mock
+    lateinit var mockedServices: FragmentServices
+
+    @Mock
     lateinit var mockedView: View
 
     @Mock
     lateinit var mockedWidgets: WidgetUtils
 
-    @Mock
-    private lateinit var mockedConnector: WheelConnector
+    @Captor
+    lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>
 
     @Captor
-    private lateinit var lambdaFoundDevice: ArgumentCaptor<(Device) -> Unit>
+    lateinit var lambdaOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
 
     @Captor
-    private lateinit var lambdaGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
+    lateinit var lambdaOnFoundDevice: ArgumentCaptor<(Device) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>
+    lateinit var lambdaOnGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
+    lateinit var lambdaOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
+    lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
+    lateinit var lambdaRunWithWaitDialog: ArgumentCaptor<() -> Unit>
 
     private var navigatedBack: Int = 0
     private var navigatedTo: NavigatedTo? = null
@@ -116,13 +123,13 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, deviceInfo: DeviceInfo) {
-        verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), lambdaGotDeviceInfo.capture())
-        lambdaGotDeviceInfo.value.invoke(deviceInfo)
+        verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), lambdaOnGotDeviceInfo.capture())
+        lambdaOnGotDeviceInfo.value.invoke(deviceInfo)
     }
 
     fun verifyConnectorScanWith(device: Device) {
-        verify(mockedConnector).scan(lambdaFoundDevice.capture())
-        lambdaFoundDevice.value.invoke(device)
+        verify(mockedConnector).scan(lambdaOnFoundDevice.capture())
+        lambdaOnFoundDevice.value.invoke(device)
     }
 
     fun verifyInflate(expectedId: Int) {

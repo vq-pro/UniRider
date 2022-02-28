@@ -92,9 +92,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.view_mileage, mockedTextMileage)
         mockField(R.id.edit_voltage, mockedEditVoltage)
         mockField(R.id.view_battery, mockedTextBattery)
-
-        given(mockedWidgets.waitOrStayInFragment(fragment))
-            .willReturn(mockedWaitDialog)
     }
 
     @Test
@@ -188,15 +185,18 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        val ordered = inOrder(mockedWidgets, mockedDb, mockedTextMileage, mockedEditVoltage, mockedWaitDialog)
-        ordered.verify(mockedWidgets).waitOrStayInFragment(fragment)
-        verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-        ordered.verify(mockedDb).saveWheel(
-            WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
-        )
+        val ordered = inOrder(mockedServices, mockedConnector, mockedDb, mockedTextMileage, mockedEditVoltage)
+
+        ordered.verify(mockedServices).runWithWaitDialog(eq(fragment), lambdaRunWithWaitDialog.capture())
+        lambdaRunWithWaitDialog.value.invoke()
+
+        ordered.verify(mockedConnector).getDeviceInfo(eq(DEVICE_ADDR), lambdaOnGotDeviceInfo.capture())
+        lambdaOnGotDeviceInfo.value.invoke(DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
+
+        ordered.verify(mockedDb)
+            .saveWheel(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX))
         ordered.verify(mockedTextMileage).text = "$MILEAGE_NEW"
         ordered.verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
-        ordered.verify(mockedWaitDialog).hide()
     }
 
     @Test
