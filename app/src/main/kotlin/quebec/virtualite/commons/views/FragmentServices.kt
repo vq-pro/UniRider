@@ -25,10 +25,14 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
             fragment.findNavController().popBackStack()
     }
 
-    open fun runBackground(function: () -> Unit) {
+    open fun runBackground(function: (() -> Unit)?) {
         fragment.lifecycleScope.launch(Dispatchers.IO) {
-            function()
+            function!!()
         }
+    }
+
+    open fun runDB(function: (() -> Unit)?) {
+        runBackground(function)
     }
 
     open fun runWithWaitDialog(function: (() -> Unit)?) {

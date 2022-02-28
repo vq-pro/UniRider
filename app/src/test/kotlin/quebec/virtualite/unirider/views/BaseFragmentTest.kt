@@ -12,8 +12,8 @@ import org.hamcrest.core.StringContains.containsString
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.eq
-import org.mockito.BDDMockito.doAnswer
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.lenient
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.verify
@@ -106,20 +106,18 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
     @Suppress("UNCHECKED_CAST")
     fun mockServices() {
-        doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
+        lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
+            .`when`(mockedServices).runBackground(any())
+
+        lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
+            .`when`(mockedServices).runDB(any())
+
+        lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
             .`when`(mockedServices).runUI(any())
     }
 
     fun navigateTo(id: Int, parms: Pair<String, Any>) {
         navigatedTo = NavigatedTo(id, parms)
-    }
-
-    fun runBackground(function: () -> Unit) {
-        function()
-    }
-
-    fun runDB(function: () -> Unit) {
-        function()
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, deviceInfo: DeviceInfo) {

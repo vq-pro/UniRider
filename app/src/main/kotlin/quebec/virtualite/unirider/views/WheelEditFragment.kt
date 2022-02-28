@@ -69,7 +69,7 @@ open class WheelEditFragment : BaseFragment() {
 
     fun enableSaveIfChanged() {
         if (saveComparator.canSave(updatedWheel, initialWheel)) {
-            runDB {
+            services.runDB {
                 if (!db.findDuplicate(updatedWheel))
                     widgets.enable(buttonSave)
                 else
@@ -80,7 +80,7 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onSave() = { _: View ->
-        runDB { db.saveWheel(updatedWheel) }
+        services.runDB { db.saveWheel(updatedWheel) }
         services.navigateBack()
     }
 

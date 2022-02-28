@@ -129,13 +129,5 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         override fun initDB(function: () -> Unit) {
             test.initDB(this, function)
         }
-
-        override fun runBackground(function: () -> Unit) {
-            test.runBackground(function)
-        }
-
-        override fun runDB(function: () -> Unit) {
-            test.runDB(function)
-        }
     }
 }

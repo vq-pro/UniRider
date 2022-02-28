@@ -271,13 +271,5 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         override fun navigateTo(id: Int, param: Pair<String, Any>) {
             test.navigateTo(id, param)
         }
-
-        override fun runBackground(function: () -> Unit) {
-            test.runBackground(function)
-        }
-
-        override fun runDB(function: () -> Unit) {
-            test.runDB(function)
-        }
     }
 }

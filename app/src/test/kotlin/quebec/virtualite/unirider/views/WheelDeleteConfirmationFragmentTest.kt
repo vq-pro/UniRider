@@ -41,6 +41,8 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
         mockField(R.id.button_delete_confirmation, mockedButtonDeleteConfirmation)
         mockField(R.id.button_delete_cancel, mockedButtonDeleteCancel)
         mockField(R.id.view_name, mockedTextName)
+
+        mockServices()
     }
 
     @Test
@@ -120,10 +122,6 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
 
         override fun initDB(function: () -> Unit) {
             test.initDB(this, function)
-        }
-
-        override fun runDB(function: () -> Unit) {
-            test.runDB(function)
         }
     }
 }
