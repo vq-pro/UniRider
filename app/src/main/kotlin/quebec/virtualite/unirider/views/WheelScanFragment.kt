@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.views
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,20 +37,19 @@ open class WheelScanFragment : BaseFragment() {
         }
 
         initConnector()
-        val waitDialog = widgets.waitOrNavigateBack(this)
-        runBackground {
-            scanForDevices(view, waitDialog)
+
+        services.runWithWaitDialogAndBack {
+            scanForDevices(view)
         }
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
-        val waitDialog = widgets.waitOrNavigateBack(this)
-        runBackground {
-            connectWithWheel(devices[pos], waitDialog)
+        services.runWithWaitDialogAndBack {
+            connectWithWheel(devices[pos])
         }
     }
 
-    private fun connectWithWheel(device: Device, waitDialog: Dialog) {
+    private fun connectWithWheel(device: Device) {
         connector.getDeviceInfo(device.address) { info ->
             val updatedWheel = WheelEntity(
                 wheel!!.id, wheel!!.name, device.name, device.address,
@@ -59,23 +57,16 @@ open class WheelScanFragment : BaseFragment() {
             )
 
             runDB { db.saveWheel(updatedWheel) }
-
-            runUI {
-                waitDialog.hide()
-                navigateBack()
-            }
+            runUI { navigateBack() }
         }
     }
 
-    private fun scanForDevices(view: View, waitDialog: Dialog) {
+    private fun scanForDevices(view: View) {
         connector.scan { device ->
             devices.add(device)
             val names = devices.stream().map(Device::name).collect(toList())
 
-            runUI {
-                widgets.stringListAdapter(lvWheels, view, names)
-                waitDialog.hide()
-            }
+            runUI { widgets.stringListAdapter(lvWheels, view, names) }
         }
     }
 }

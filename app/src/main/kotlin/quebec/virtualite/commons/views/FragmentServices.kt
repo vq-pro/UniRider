@@ -1,6 +1,5 @@
 package quebec.virtualite.commons.views
 
-import android.app.Dialog
 import android.app.ProgressDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -33,31 +32,35 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
     }
 
     open fun runWithWaitDialog(function: (() -> Unit)?) {
+        waitDialog(STAY_IN_FRAGMENT, function!!)
+    }
 
-        val waitDialog = showWaitDialog(STAY_IN_FRAGMENT)
-
-        runBackground {
-            function!!()
-
-            runUI {
-                waitDialog.hide()
-            }
-        }
+    open fun runWithWaitDialogAndBack(function: (() -> Unit)?) {
+        waitDialog(BACK_ON_CANCEL, function!!)
     }
 
     open fun runUI(function: () -> Unit) {
         fragment.activity!!.runOnUiThread(function)
     }
 
-    private fun showWaitDialog(backOnCancel: Boolean): Dialog {
-        val dialog = ProgressDialog(fragment.activity)
-        dialog.setMessage(getString(idStringPleaseWait))
+    private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {
+
+        val waitDialog = ProgressDialog(fragment.activity)
+
+        waitDialog.setMessage(getString(idStringPleaseWait))
         if (backOnCancel)
-            dialog.setOnCancelListener {
+            waitDialog.setOnCancelListener {
                 navigateBack()
             }
-        dialog.show()
 
-        return dialog
+        waitDialog.show()
+
+        runBackground {
+            function()
+
+            runUI {
+                waitDialog.hide()
+            }
+        }
     }
 }

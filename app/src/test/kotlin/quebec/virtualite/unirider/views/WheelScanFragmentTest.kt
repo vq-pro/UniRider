@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.views
 
-import android.app.Dialog
 import android.widget.ListView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -46,17 +45,11 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
     @Mock
     lateinit var mockedLvWheels: ListView
 
-    @Mock
-    lateinit var mockedWaitDialog: Dialog
-
     @Before
     fun before() {
         fragment.wheel = S18_1
 
         mockField(R.id.devices, mockedLvWheels)
-
-        given(mockedWidgets.waitOrNavigateBack(fragment))
-            .willReturn(mockedWaitDialog)
     }
 
     @Test
@@ -86,12 +79,11 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         verifyOnItemClick(mockedLvWheels, "onSelectDevice")
 
-        verify(mockedWidgets).waitOrNavigateBack(fragment)
         verify(mockedDb).getWheel(ID)
-        verifyConnectorScanWith(Device(DEVICE_NAME, DEVICE_ADDR))
 
+        verifyRunWithWaitDialogAndBack()
+        verifyConnectorScanWith(Device(DEVICE_NAME, DEVICE_ADDR))
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
-        verify(mockedWaitDialog).hide()
     }
 
     @Test
@@ -103,6 +95,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
+        verifyRunWithWaitDialogAndBack()
         verifyConnectorScanWith(Device(DEVICE_NAME2, DEVICE_ADDR2))
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
@@ -119,12 +112,11 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
         // Then
-        verify(mockedWidgets).waitOrNavigateBack(fragment)
+        verifyRunWithWaitDialogAndBack()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
         verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
         )
-        verify(mockedWaitDialog).hide()
         verifyNavigatedBack()
     }
 

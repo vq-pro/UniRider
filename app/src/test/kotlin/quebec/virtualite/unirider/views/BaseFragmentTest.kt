@@ -161,6 +161,11 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         lambdaRunWithWaitDialog.value.invoke()
     }
 
+    fun verifyRunWithWaitDialogAndBack() {
+        verify(mockedServices).runWithWaitDialogAndBack(lambdaRunWithWaitDialog.capture())
+        lambdaRunWithWaitDialog.value.invoke()
+    }
+
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {
         verify(mockedWidgets).stringListAdapter(mockedField, mockedView, expectedData)
     }
