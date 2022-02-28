@@ -1,11 +1,11 @@
 package quebec.virtualite.unirider.views
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.database.WheelEntity
@@ -15,14 +15,11 @@ import kotlin.math.roundToInt
 
 open class WheelScanFragment : BaseFragment() {
 
-    internal val devices = ArrayList<Device>()
+    internal lateinit var lvWheels: ListView
 
+    internal val devices = ArrayList<Device>()
     internal var parmWheelId: Long? = 0
     internal var wheel: WheelEntity? = null
-
-    private var widgets = WidgetUtils()
-
-    internal lateinit var lvWheels: ListView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
@@ -37,26 +34,30 @@ open class WheelScanFragment : BaseFragment() {
         widgets.enable(lvWheels)
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
+        val waitDialog = widgets.showWaitDialog(activity)
         initDB {
             wheel = db.getWheel(parmWheelId!!)
         }
 
         initConnector()
-        connector.scan { device ->
-
-            devices.add(device)
-
-            val names = devices.stream().map(Device::name).collect(toList())
-            widgets.stringListAdapter(lvWheels, view, names)
+        runBackground {
+            scanForDevices(view, waitDialog)
         }
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
 
+        val waitDialog = widgets.showWaitDialog(activity)
         widgets.disable(lvWheels)
 
         val device = devices[pos]
 
+        runBackground {
+            connectWithWheel(device, waitDialog)
+        }
+    }
+
+    private fun connectWithWheel(device: Device, waitDialog: Dialog) {
         connector.getDeviceInfo(device.address) { info ->
             val updatedWheel = WheelEntity(
                 wheel!!.id, wheel!!.name, device.name, device.address,
@@ -64,7 +65,23 @@ open class WheelScanFragment : BaseFragment() {
             )
 
             runDB { db.saveWheel(updatedWheel) }
-            runUI { navigateBack() }
+
+            runUI {
+                waitDialog.hide()
+                navigateBack()
+            }
+        }
+    }
+
+    private fun scanForDevices(view: View, waitDialog: Dialog) {
+        connector.scan { device ->
+            devices.add(device)
+            val names = devices.stream().map(Device::name).collect(toList())
+
+            runUI {
+                widgets.stringListAdapter(lvWheels, view, names)
+                waitDialog.hide()
+            }
         }
     }
 }

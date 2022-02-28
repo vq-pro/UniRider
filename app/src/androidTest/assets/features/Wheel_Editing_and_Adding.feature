@@ -47,3 +47,5 @@ Feature: Wheel Editing & Adding
       | cannot        | blank the minimum voltage   |
       | cannot        | change nothing              |
       | cannot        | reuse the name KingSong S18 |
+
+    #  FIXME-1 Previous mileage, before firmware update
