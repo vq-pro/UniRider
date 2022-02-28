@@ -77,19 +77,12 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
-            val waitDialog = widgets.showWaitDialog(activity)
-
-            runBackground {
+            services.runWithWaitDialog {
                 connector.getDeviceInfo(wheel!!.btAddr) { info ->
-
                     val newMileage = info.mileage.roundToInt()
                     val newVoltage = round(info.voltage, 1)
 
                     updateWheel(newMileage, newVoltage)
-
-                    runUI {
-                        waitDialog.hide()
-                    }
                 }
             }
         }
@@ -117,7 +110,7 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun goto(id: Int) {
-        navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
+        services.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
     }
 
     private fun updateWheel(newMileage: Int, newVoltage: Float) {
@@ -126,8 +119,8 @@ open class WheelViewFragment : BaseFragment() {
             newMileage, wheel!!.voltageMin, wheel!!.voltageMax
         )
 
-        runDB { db.saveWheel(wheel) }
-        runUI {
+        services.runDB { db.saveWheel(wheel) }
+        services.runUI {
             textMileage.text = "$newMileage"
             editVoltage.setText("$newVoltage")
         }

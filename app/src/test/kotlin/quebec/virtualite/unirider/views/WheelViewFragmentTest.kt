@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.views
 
-import android.app.Dialog
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -9,7 +8,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
@@ -17,7 +15,6 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
@@ -77,9 +74,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     @Mock
     lateinit var mockedTextName: TextView
 
-    @Mock
-    lateinit var mockedWaitDialog: Dialog
-
     @Before
     fun before() {
         fragment.parmWheelId = ID
@@ -94,8 +88,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.edit_voltage, mockedEditVoltage)
         mockField(R.id.view_battery, mockedTextBattery)
 
-        given(mockedWidgets.showWaitDialog(any()))
-            .willReturn(mockedWaitDialog)
+        mockServices()
     }
 
     @Test
@@ -172,7 +165,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verifyNavigatedTo(
+        verify(mockedServices).navigateTo(
             R.id.action_WheelViewFragment_to_WheelScanFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
@@ -189,15 +182,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        val ordered = inOrder(mockedWidgets, mockedDb, mockedTextMileage, mockedEditVoltage, mockedWaitDialog)
-        ordered.verify(mockedWidgets).showWaitDialog(any())
+        verifyRunWithWaitDialog()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-        ordered.verify(mockedDb).saveWheel(
-            WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)
-        )
-        ordered.verify(mockedTextMileage).text = "$MILEAGE_NEW"
-        ordered.verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
-        ordered.verify(mockedWaitDialog).hide()
+
+        verify(mockedDb)
+            .saveWheel(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX))
+        verify(mockedTextMileage).text = "$MILEAGE_NEW"
+        verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
     }
 
     @Test
@@ -206,7 +197,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onDelete().invoke(mockedView)
 
         // Then
-        verifyNavigatedTo(
+        verify(mockedServices).navigateTo(
             R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
@@ -218,7 +209,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onEdit().invoke(mockedView)
 
         // Then
-        verifyNavigatedTo(
+        verify(mockedServices).navigateTo(
             R.id.action_WheelViewFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
@@ -275,22 +266,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         override fun initDB(function: () -> Unit) {
             test.initDB(this, function)
-        }
-
-        override fun navigateTo(id: Int, param: Pair<String, Any>) {
-            test.navigateTo(id, param)
-        }
-
-        override fun runBackground(function: () -> Unit) {
-            test.runBackground(function)
-        }
-
-        override fun runDB(function: () -> Unit) {
-            test.runDB(function)
-        }
-
-        override fun runUI(function: () -> Unit) {
-            test.runUI(function)
         }
     }
 }

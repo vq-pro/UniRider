@@ -16,8 +16,8 @@ Feature: Wheel Connecting - End-2-End
     And the wheel's Bluetooth name is updated
     Examples:
       | wheel           | bt name      | mileage |
-      | KingSong 14S    | KS-14SMD2107 | 759     |
-      | KingSong S18    | KS-S18-1410  | 2892    |
+#      | KingSong 14S    | KS-14SMD2107 | 759     |
+#      | KingSong S18    | KS-S18-1410  | 2892    |
       | Veteran Sherman | LK1149       | 14590   |
 
   Scenario Outline: Connecting to a previously connected wheel - <wheel>
@@ -32,8 +32,8 @@ Feature: Wheel Connecting - End-2-End
     Then the mileage is updated to <mileage>
     Examples:
       | wheel           | mileage |
-      | KingSong 14S    | 759     |
-      | KingSong S18    | 2892    |
+#      | KingSong 14S    | 759     |
+#      | KingSong S18    | 2892    |
       | Veteran Sherman | 14590   |
 
-#  FIXME-1 Inmotion
+#  FIXME-2 Inmotion
