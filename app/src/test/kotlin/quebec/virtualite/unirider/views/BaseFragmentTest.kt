@@ -181,10 +181,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         assertThat(lambdaOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
-    fun verifyNavigatedBack(nb: Int = 1) {
-        assertThat("Didn't navigate back $nb times as expected", navigatedBack, equalTo(nb))
-    }
-
     fun verifyNavigatedTo(id: Int, param: Pair<String, Any>) {
         assertThat("Didn't navigate to where we expected to", navigatedTo, equalTo(NavigatedTo(id, param)))
     }

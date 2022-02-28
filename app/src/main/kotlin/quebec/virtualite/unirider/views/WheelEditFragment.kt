@@ -81,7 +81,7 @@ open class WheelEditFragment : BaseFragment() {
 
     fun onSave() = { _: View ->
         runDB { db.saveWheel(updatedWheel) }
-        navigateBack()
+        services.navigateBack()
     }
 
     fun onUpdateMileage() = { newMileage: String ->

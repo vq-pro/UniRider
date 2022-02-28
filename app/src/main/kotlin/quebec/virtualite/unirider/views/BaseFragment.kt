@@ -29,15 +29,6 @@ open class BaseFragment : Fragment() {
         runDB(function)
     }
 
-    internal open fun navigateBack(nb: Int = 1) {
-        if (nb < 1)
-            throw RuntimeException("Cannot go back $nb times")
-
-        var i = nb
-        while (i-- > 0)
-            findNavController().popBackStack()
-    }
-
     internal open fun navigateTo(id: Int, param: Pair<String, Any>) {
         findNavController().navigate(id, bundleOf(param.first to param.second))
     }

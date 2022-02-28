@@ -186,7 +186,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).saveWheel(fragment.updatedWheel)
-        verifyNavigatedBack()
+        verify(mockedServices).navigateBack()
     }
 
     @Test
@@ -340,10 +340,6 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         override fun initDB(function: () -> Unit) {
             test.initDB(this, function)
-        }
-
-        override fun navigateBack(nb: Int) {
-            test.navigateBack(nb)
         }
 
         override fun runDB(function: () -> Unit) {

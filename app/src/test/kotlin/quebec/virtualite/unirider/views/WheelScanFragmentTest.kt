@@ -117,7 +117,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
         )
-        verifyNavigatedBack()
+        verify(mockedServices).navigateBack()
     }
 
     class TestableWheelScanFragment(val test: WheelScanFragmentTest) : WheelScanFragment() {
@@ -127,10 +127,6 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         override fun initDB(function: () -> Unit) {
             test.initDB(this, function)
-        }
-
-        override fun navigateBack(nb: Int) {
-            test.navigateBack(nb)
         }
 
         override fun runBackground(function: () -> Unit) {

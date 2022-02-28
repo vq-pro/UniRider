@@ -57,7 +57,7 @@ open class WheelScanFragment : BaseFragment() {
             )
 
             runDB { db.saveWheel(updatedWheel) }
-            runUI { navigateBack() }
+            runUI { services.navigateBack() }
         }
     }
 

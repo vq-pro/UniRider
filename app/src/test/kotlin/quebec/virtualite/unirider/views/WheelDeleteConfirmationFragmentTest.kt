@@ -99,7 +99,7 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
         fragment.onCancel().invoke(mockedView)
 
         // Then
-        verifyNavigatedBack()
+        verify(mockedServices).navigateBack()
     }
 
     @Test
@@ -112,7 +112,7 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
 
         // Then
         verify(mockedDb).deleteWheel(ID)
-        verifyNavigatedBack(2)
+        verify(mockedServices).navigateBack(2)
     }
 
     class TestableWheelDeleteConfirmationFragment(val test: WheelDeleteConfirmationFragmentTest) :
@@ -120,10 +120,6 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
 
         override fun initDB(function: () -> Unit) {
             test.initDB(this, function)
-        }
-
-        override fun navigateBack(nb: Int) {
-            test.navigateBack(nb)
         }
 
         override fun runDB(function: () -> Unit) {
