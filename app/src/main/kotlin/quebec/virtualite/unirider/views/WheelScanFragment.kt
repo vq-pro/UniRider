@@ -33,24 +33,21 @@ open class WheelScanFragment : BaseFragment() {
 
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
-        val waitDialog = widgets.showWaitDialog(activity)
         initDB {
             wheel = db.getWheel(parmWheelId!!)
         }
 
         initConnector()
+        val waitDialog = widgets.waitOrNavigateBack(this)
         runBackground {
             scanForDevices(view, waitDialog)
         }
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
-
-        val waitDialog = widgets.showWaitDialog(activity)
-
+        val waitDialog = widgets.waitOrNavigateBack(this)
         runBackground {
-            val device = devices[pos]
-            connectWithWheel(device, waitDialog)
+            connectWithWheel(devices[pos], waitDialog)
         }
     }
 

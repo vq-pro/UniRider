@@ -1,6 +1,5 @@
 package quebec.virtualite.commons.android.views
 
-import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.text.Editable
@@ -15,10 +14,13 @@ import android.widget.ListView
 import android.widget.SpinnerAdapter
 import androidx.core.view.isVisible
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.views.BaseFragment
 
 open class WidgetUtils {
 
+    private val BACK_ON_CANCEL = true
     private val POST_DELAY = 10L
+    private val STAY_IN_FRAGMENT = false
 
     open fun addTextChangedListener(widget: EditText?, callback: ((text: String) -> Unit)?) {
 
@@ -86,13 +88,12 @@ open class WidgetUtils {
         widget.isVisible = true
     }
 
-    open fun showWaitDialog(activity: Activity?): Dialog {
-        val dialog = ProgressDialog(activity)
-        dialog.setMessage(activity!!.applicationContext.getString(R.string.dialog_wait))
-        dialog.setCancelable(false)
-        dialog.show()
+    open fun waitOrNavigateBack(fragment: BaseFragment): Dialog {
+        return showWaitDialog(fragment, BACK_ON_CANCEL)
+    }
 
-        return dialog
+    open fun waitOrStayInFragment(fragment: BaseFragment): Dialog {
+        return showWaitDialog(fragment, STAY_IN_FRAGMENT)
     }
 
     open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {
@@ -105,5 +106,17 @@ open class WidgetUtils {
 
     private fun spinnerAdapter(view: View?, id: Int?, contents: List<String>?): SpinnerAdapter {
         return arrayAdapter(view!!, id!!, contents!!) as SpinnerAdapter
+    }
+
+    private fun showWaitDialog(fragment: BaseFragment, backOnCancel: Boolean): Dialog {
+        val dialog = ProgressDialog(fragment.activity)
+        dialog.setMessage(fragment.activity!!.applicationContext.getString(R.string.dialog_wait))
+        if (backOnCancel)
+            dialog.setOnCancelListener {
+                fragment.navigateBack()
+            }
+        dialog.show()
+
+        return dialog
     }
 }

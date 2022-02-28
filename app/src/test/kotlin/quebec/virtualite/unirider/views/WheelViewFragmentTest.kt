@@ -9,7 +9,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
@@ -94,7 +93,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.edit_voltage, mockedEditVoltage)
         mockField(R.id.view_battery, mockedTextBattery)
 
-        given(mockedWidgets.showWaitDialog(any()))
+        given(mockedWidgets.waitOrStayInFragment(fragment))
             .willReturn(mockedWaitDialog)
     }
 
@@ -190,7 +189,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         val ordered = inOrder(mockedWidgets, mockedDb, mockedTextMileage, mockedEditVoltage, mockedWaitDialog)
-        ordered.verify(mockedWidgets).showWaitDialog(any())
+        ordered.verify(mockedWidgets).waitOrStayInFragment(fragment)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
         ordered.verify(mockedDb).saveWheel(
             WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)

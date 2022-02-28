@@ -10,7 +10,6 @@ import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.any
 import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
@@ -57,7 +56,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         mockField(R.id.devices, mockedLvWheels)
 
-        given(mockedWidgets.showWaitDialog(any()))
+        given(mockedWidgets.waitOrNavigateBack(fragment))
             .willReturn(mockedWaitDialog)
     }
 
@@ -88,7 +87,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         verifyOnItemClick(mockedLvWheels, "onSelectDevice")
 
-        verify(mockedWidgets).showWaitDialog(any())
+        verify(mockedWidgets).waitOrNavigateBack(fragment)
         verify(mockedDb).getWheel(ID)
         verifyConnectorScanWith(Device(DEVICE_NAME, DEVICE_ADDR))
 
@@ -122,7 +121,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         // Then
         val ordered = inOrder(mockedWidgets, mockedWaitDialog, mockedDb)
-        ordered.verify(mockedWidgets).showWaitDialog(any())
+        ordered.verify(mockedWidgets).waitOrNavigateBack(fragment)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
         ordered.verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
