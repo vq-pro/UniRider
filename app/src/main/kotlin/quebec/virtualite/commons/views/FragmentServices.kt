@@ -1,6 +1,5 @@
 package quebec.virtualite.commons.views
 
-import android.app.Dialog
 import android.app.ProgressDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -14,21 +13,29 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
 
+    private var waitDialog: ProgressDialog? = null
+
+    open fun dismissWaitDialog() {
+        runUI { waitDialog?.hide() }
+    }
+
     open fun getString(id: Int): String {
         return fragment.activity!!.applicationContext.getString(id)
     }
 
     internal open fun navigateBack(nb: Int = 1) {
-        if (nb < 1)
-            throw RuntimeException("Cannot go back $nb times")
+        runUI {
+            if (nb < 1)
+                throw RuntimeException("Cannot go back $nb times")
 
-        var i = nb
-        while (i-- > 0)
-            fragment.findNavController().popBackStack()
+            var i = nb
+            while (i-- > 0)
+                fragment.findNavController().popBackStack()
+        }
     }
 
     open fun navigateTo(id: Int, param: Pair<String, Any>) {
-        fragment.findNavController().navigate(id, bundleOf(param.first to param.second))
+        runUI { fragment.findNavController().navigate(id, bundleOf(param.first to param.second)) }
     }
 
     open fun runBackground(function: (() -> Unit)?) {
@@ -41,11 +48,11 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
         runBackground(function)
     }
 
-    open fun runWithWaitDialog(function: ((Dialog) -> Unit)?) {
+    open fun runWithWaitDialog(function: (() -> Unit)?) {
         waitDialog(STAY_IN_FRAGMENT, function!!)
     }
 
-    open fun runWithWaitDialogAndBack(function: ((Dialog) -> Unit)?) {
+    open fun runWithWaitDialogAndBack(function: (() -> Unit)?) {
         waitDialog(BACK_ON_CANCEL, function!!)
     }
 
@@ -53,20 +60,19 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
         fragment.activity!!.runOnUiThread(function)
     }
 
-    private fun waitDialog(backOnCancel: Boolean, function: (Dialog) -> Unit) {
+    private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {
 
-        val waitDialog = ProgressDialog(fragment.activity)
-
-        waitDialog.setMessage(getString(idStringPleaseWait))
+        waitDialog = ProgressDialog(fragment.activity)
+        waitDialog!!.setMessage(getString(idStringPleaseWait))
         if (backOnCancel)
-            waitDialog.setOnCancelListener {
+            waitDialog!!.setOnCancelListener {
                 navigateBack()
             }
 
-        waitDialog.show()
+        waitDialog!!.show()
 
         runBackground {
-            function(waitDialog)
+            function()
         }
     }
 }

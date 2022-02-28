@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.views
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,42 +38,39 @@ open class WheelScanFragment : BaseFragment() {
         initConnector()
 
         services.runWithWaitDialogAndBack {
-            scanForDevices(view, it)
+            scanForDevices(view)
         }
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
         services.runWithWaitDialogAndBack {
-            connectWithWheel(devices[pos], it)
+            connectWithWheel(devices[pos])
         }
     }
 
-    private fun connectWithWheel(device: Device, waitDialog: Dialog) {
+    private fun connectWithWheel(device: Device) {
         connector.getDeviceInfo(device.address) { info ->
-            val updatedWheel = WheelEntity(
-                wheel!!.id, wheel!!.name, device.name, device.address,
-                info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
-            )
-
             services.runDB {
-                db.saveWheel(updatedWheel)
+                db.saveWheel(
+                    WheelEntity(
+                        wheel!!.id, wheel!!.name, device.name, device.address,
+                        info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
+                    )
+                )
             }
-            services.runUI {
-                services.navigateBack()
-                waitDialog.hide()
-            }
+
+            services.dismissWaitDialog()
+            services.navigateBack()
         }
     }
 
-    private fun scanForDevices(view: View, waitDialog: Dialog) {
+    private fun scanForDevices(view: View) {
         connector.scan { device ->
             devices.add(device)
             val names = devices.stream().map(Device::name).collect(toList())
 
-            services.runUI {
-                widgets.stringListAdapter(lvWheels, view, names)
-                waitDialog.hide()
-            }
+            services.runUI { widgets.stringListAdapter(lvWheels, view, names) }
+            services.dismissWaitDialog()
         }
     }
 }

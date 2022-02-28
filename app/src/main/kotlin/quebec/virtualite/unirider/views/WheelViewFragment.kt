@@ -77,15 +77,14 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
-            services.runWithWaitDialog { waitDialog ->
+            services.runWithWaitDialog {
                 connector.getDeviceInfo(wheel!!.btAddr) { info ->
                     val newMileage = info.mileage.roundToInt()
                     val newVoltage = round(info.voltage, 1)
 
                     updateWheel(newMileage, newVoltage)
 
-                    // FIXME-0 Change to "doneWaiting"?
-                    services.runUI { waitDialog.hide() }
+                    services.dismissWaitDialog()
                 }
             }
         }
@@ -105,8 +104,7 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun getPercentage(voltage: String): String {
-        val percentage = calculatorService.percentage(wheel, parseFloat(voltage))
-        return when (percentage) {
+        return when (val percentage = calculatorService.percentage(wheel, parseFloat(voltage))) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }
