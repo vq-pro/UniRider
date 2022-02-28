@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
@@ -21,8 +20,6 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
     internal lateinit var wheel: WheelEntity
 
     internal var parmWheelId: Long? = 0
-
-    private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)

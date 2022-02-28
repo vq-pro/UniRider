@@ -120,7 +120,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         lambdaGotDeviceInfo.value.invoke(deviceInfo)
     }
 
-    fun verifyConnectorScan(device: Device) {
+    fun verifyConnectorScanWith(device: Device) {
         verify(mockedConnector).scan(lambdaFoundDevice.capture())
         lambdaFoundDevice.value.invoke(device)
     }

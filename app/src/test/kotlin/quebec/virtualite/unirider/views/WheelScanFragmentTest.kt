@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.app.Dialog
 import android.widget.ListView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -9,6 +10,8 @@ import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.any
+import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
@@ -45,11 +48,17 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
     @Mock
     lateinit var mockedLvWheels: ListView
 
+    @Mock
+    lateinit var mockedWaitDialog: Dialog
+
     @Before
     fun before() {
         fragment.wheel = S18_1
 
         mockField(R.id.devices, mockedLvWheels)
+
+        given(mockedWidgets.showWaitDialog(any()))
+            .willReturn(mockedWaitDialog)
     }
 
     @Test
@@ -74,19 +83,21 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        verify(mockedDb).getWheel(ID)
-        verifyConnectorScan(Device(DEVICE_NAME, DEVICE_ADDR))
-
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(SHERMAN_3))
 
-        verify(mockedWidgets).enable(mockedLvWheels)
-        verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
         verifyOnItemClick(mockedLvWheels, "onSelectDevice")
+
+        verify(mockedWidgets).showWaitDialog(any())
+        verify(mockedDb).getWheel(ID)
+        verifyConnectorScanWith(Device(DEVICE_NAME, DEVICE_ADDR))
+
+        verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
+        verify(mockedWaitDialog).hide()
     }
 
     @Test
-    fun onViewCreated_whenDiscovering2ndDevice() {
+    fun onViewCreated_whenDiscovering2ndDevice_addItToTheDeviceList() {
         // Given
         setList(fragment.devices, listOf(DEVICE))
 
@@ -94,7 +105,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        verifyConnectorScan(Device(DEVICE_NAME2, DEVICE_ADDR2))
+        verifyConnectorScanWith(Device(DEVICE_NAME2, DEVICE_ADDR2))
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
 
@@ -110,11 +121,13 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
         // Then
-        verify(mockedWidgets).disable(mockedLvWheels)
+        val ordered = inOrder(mockedWidgets, mockedWaitDialog, mockedDb)
+        ordered.verify(mockedWidgets).showWaitDialog(any())
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-        verify(mockedDb).saveWheel(
+        ordered.verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
         )
+        ordered.verify(mockedWaitDialog).hide()
         verifyNavigatedBack()
     }
 
@@ -129,6 +142,10 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         override fun navigateBack(nb: Int) {
             test.navigateBack(nb)
+        }
+
+        override fun runBackground(function: () -> Unit) {
+            test.runBackground(function)
         }
 
         override fun runDB(function: () -> Unit) {

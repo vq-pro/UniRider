@@ -1,6 +1,8 @@
 package quebec.virtualite.commons.android.views
 
-import android.R
+import android.app.Activity
+import android.app.Dialog
+import android.app.ProgressDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -11,6 +13,8 @@ import android.widget.EditText
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.SpinnerAdapter
+import androidx.core.view.isVisible
+import quebec.virtualite.unirider.R
 
 open class WidgetUtils {
 
@@ -38,14 +42,14 @@ open class WidgetUtils {
         widget.postDelayed({ widget.isEnabled = true }, POST_DELAY)
     }
 
+    open fun hide(widget: View) {
+        widget.isVisible = false
+    }
+
     open fun <T> multifieldListAdapter(
         listView: ListView?, view: View?, id: Int?, items: List<T>?, display: ((View, T) -> Unit)?
     ) {
         listView!!.adapter = CustomListAdapter(view!!.context, id!!, items!!, display!!)
-    }
-
-    open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {
-        listView.adapter = arrayAdapter(view!!, R.layout.simple_list_item_1, contents!!) as ListAdapter
     }
 
     open fun onItemSelectedListener(callback: (index: Int) -> Unit): AdapterView.OnItemSelectedListener {
@@ -78,11 +82,28 @@ open class WidgetUtils {
         }
     }
 
-    fun spinnerAdapter(view: View?, id: Int?, contents: List<String>?): SpinnerAdapter {
-        return arrayAdapter(view!!, id!!, contents!!) as SpinnerAdapter
+    open fun show(widget: View) {
+        widget.isVisible = true
+    }
+
+    open fun showWaitDialog(activity: Activity?): Dialog {
+        val dialog = ProgressDialog(activity)
+        dialog.setMessage(activity!!.applicationContext.getString(R.string.dialog_wait))
+        dialog.setCancelable(false)
+        dialog.show()
+
+        return dialog
+    }
+
+    open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {
+        listView.adapter = arrayAdapter(view!!, android.R.layout.simple_list_item_1, contents!!) as ListAdapter
     }
 
     private fun <T> arrayAdapter(view: View, id: Int, contents: List<T>): Adapter {
         return ArrayAdapter(view.context, id, contents)
+    }
+
+    private fun spinnerAdapter(view: View?, id: Int?, contents: List<String>?): SpinnerAdapter {
+        return arrayAdapter(view!!, id!!, contents!!) as SpinnerAdapter
     }
 }

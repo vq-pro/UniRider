@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-
         db = WheelDbImpl(applicationContext)
         connector = WheelConnectorFactory.getConnector(this)
 

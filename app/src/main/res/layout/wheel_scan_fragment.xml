@@ -12,7 +12,6 @@
             android:layout_centerHorizontal="true"
             tools:ignore="MissingConstraints">
 
-
         <FrameLayout
                 android:id="@+id/header_scan"
                 android:layout_width="fill_parent"
@@ -29,6 +28,16 @@
                     android:text="@string/fragment_label_bluetooth"
             />
         </FrameLayout>
+
+        <!--        <ProgressBar-->
+        <!--                android:id="@+id/waitCircle"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_centerHorizontal="true"-->
+        <!--                android:indeterminateOnly="true"-->
+        <!--                android:keepScreenOn="true"-->
+        <!--                android:layout_below="@+id/header_scan"-->
+        <!--        />-->
 
         <ListView
                 android:id="@+id/devices"

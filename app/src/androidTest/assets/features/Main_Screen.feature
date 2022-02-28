@@ -32,3 +32,5 @@ Feature: Main Screen
     Given I start the app
     When I add a new wheel
     Then I can enter the details for that wheel
+
+  #  FIXME-1 Icon principal

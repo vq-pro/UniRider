@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.EditText
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
-import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
@@ -30,7 +29,6 @@ open class WheelEditFragment : BaseFragment() {
     internal var parmWheelId: Long? = 0
 
     private var saveComparator = SaveComparator()
-    private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)!!

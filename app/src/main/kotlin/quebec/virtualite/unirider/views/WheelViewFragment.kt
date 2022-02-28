@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.TextView
 import org.apache.http.util.TextUtils.isEmpty
 import quebec.virtualite.commons.android.utils.NumberUtils.round
-import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
@@ -37,7 +36,6 @@ open class WheelViewFragment : BaseFragment() {
     internal var parmWheelId: Long? = 0
 
     private var calculatorService = CalculatorService()
-    private var widgets = WidgetUtils()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
@@ -79,16 +77,20 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
-            widgets.disable(buttonConnect)
+            val waitDialog = widgets.showWaitDialog(activity)
 
-            connector.getDeviceInfo(wheel!!.btAddr) { info ->
+            runBackground {
+                connector.getDeviceInfo(wheel!!.btAddr) { info ->
 
-                val newMileage = info.mileage.roundToInt()
-                val newVoltage = round(info.voltage, 1)
+                    val newMileage = info.mileage.roundToInt()
+                    val newVoltage = round(info.voltage, 1)
 
-                updateWheel(newMileage, newVoltage)
+                    updateWheel(newMileage, newVoltage)
 
-                runUI { widgets.enable(buttonConnect) }
+                    runUI {
+                        waitDialog.hide()
+                    }
+                }
             }
         }
     }
@@ -107,7 +109,6 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun getPercentage(voltage: String): String {
-
         val percentage = calculatorService.percentage(wheel, parseFloat(voltage))
         return when (percentage) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
@@ -120,7 +121,6 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateWheel(newMileage: Int, newVoltage: Float) {
-
         wheel = WheelEntity(
             wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
             newMileage, wheel!!.voltageMin, wheel!!.voltageMax
