@@ -14,7 +14,7 @@ open class FragmentServices {
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
 
-    // FIXME-1 Pass fragment as constructor parameter instead?
+    // FIXME-0 Pass fragment as constructor parameter instead?
     open fun runWithWaitDialog(fragment: BaseFragment?, function: (() -> Unit)?) {
 
         val waitDialog = showWaitDialog(fragment!!, STAY_IN_FRAGMENT)

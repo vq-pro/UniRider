@@ -88,7 +88,7 @@ open class WidgetUtils {
         widget.isVisible = true
     }
 
-    // FIXME-0 Replace into FragmentServices
+    // FIXME-1 Replace into FragmentServices
     open fun waitOrNavigateBack(fragment: BaseFragment): Dialog {
         return showWaitDialog(fragment, BACK_ON_CANCEL)
     }

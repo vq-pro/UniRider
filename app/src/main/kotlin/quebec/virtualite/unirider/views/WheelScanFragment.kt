@@ -45,7 +45,6 @@ open class WheelScanFragment : BaseFragment() {
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
-        // FIXME-0 Any way to do a special "runBackground" with the wait dialog integrated?
         val waitDialog = widgets.waitOrNavigateBack(this)
         runBackground {
             connectWithWheel(devices[pos], waitDialog)
