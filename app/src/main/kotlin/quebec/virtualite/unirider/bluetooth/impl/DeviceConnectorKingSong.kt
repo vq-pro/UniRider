@@ -29,14 +29,14 @@ class DeviceConnectorKingSong(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) 
         0x5A.toByte(), 0x5A.toByte()
     )
 
-    private var requestedKingSongNameData = false
+    private var doneRequestingMoreNotifications = false
 
     override fun decode(data: ByteArray): Boolean {
 
         if (data.size < 20) {
-            if (!requestedKingSongNameData) {
+            if (!doneRequestingMoreNotifications) {
                 writeBluetoothGattCharacteristic(gatt, REQUEST_NAME_NOTIFICATION)
-                requestedKingSongNameData = true
+                doneRequestingMoreNotifications = true
             }
             return false
         }
