@@ -54,7 +54,7 @@ open class WheelEditFragment : BaseFragment() {
             initialWheel = if (parmWheelId == 0L)
                 NEW_WHEEL
             else
-                db.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
+                it.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
 
             updatedWheel = initialWheel
 
@@ -70,7 +70,7 @@ open class WheelEditFragment : BaseFragment() {
     fun enableSaveIfChanged() {
         if (saveComparator.canSave(updatedWheel, initialWheel)) {
             services.runDB {
-                if (!db.findDuplicate(updatedWheel))
+                if (!it.findDuplicate(updatedWheel))
                     widgets.enable(buttonSave)
                 else
                     widgets.disable(buttonSave)
@@ -79,8 +79,8 @@ open class WheelEditFragment : BaseFragment() {
             widgets.disable(buttonSave)
     }
 
-    fun onSave() = { _: View ->
-        services.runDB { db.saveWheel(updatedWheel) }
+    fun onSave(): (View) -> Unit = {
+        services.runDB { it.saveWheel(updatedWheel) }
         services.navigateBack()
     }
 

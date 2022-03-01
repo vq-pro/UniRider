@@ -111,7 +111,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
             .`when`(mockedServices).runBackground(any())
 
-        lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
+        lenient().doAnswer { (it.arguments[0] as ((WheelDb) -> Unit)).invoke(mockedDb) }
             .`when`(mockedServices).runDB(any())
 
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }

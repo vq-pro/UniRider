@@ -2,13 +2,14 @@ package quebec.virtualite.commons.views
 
 import android.app.ProgressDialog
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import quebec.virtualite.unirider.database.WheelDb
+import quebec.virtualite.unirider.views.BaseFragment
 
-open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int) {
+open class FragmentServices(val fragment: BaseFragment, val idStringPleaseWait: Int) {
 
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
@@ -42,16 +43,18 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
     }
 
     open fun runBackground(function: (() -> Unit)?) {
-        fragment.lifecycleScope.launch(Dispatchers.IO) {
+        internalRunBackground {
             function!!()
         }
     }
 
-    open fun runDB(function: (() -> Unit)?) {
+    open fun runDB(function: ((WheelDb) -> Unit)?) {
         if (waitDialogWasDismissed())
             return
 
-        runBackground(function)
+        internalRunBackground {
+            function!!(fragment.externalServices.db())
+        }
     }
 
     open fun runWithWait(function: (() -> Unit)?) {
@@ -64,6 +67,12 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
 
     open fun runUI(function: (() -> Unit)?) {
         fragment.activity?.runOnUiThread(function)
+    }
+
+    private fun internalRunBackground(function: () -> Unit) {
+        fragment.lifecycleScope.launch(Dispatchers.IO) {
+            function()
+        }
     }
 
     private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {

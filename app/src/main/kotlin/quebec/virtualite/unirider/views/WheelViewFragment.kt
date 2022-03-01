@@ -55,7 +55,7 @@ open class WheelViewFragment : BaseFragment() {
         buttonDelete = view.findViewById(R.id.button_delete)
 
         services.runDB {
-            wheel = db.getWheel(parmWheelId!!)
+            wheel = it.getWheel(parmWheelId!!)
 
             if (wheel != null) {
                 widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
@@ -118,7 +118,7 @@ open class WheelViewFragment : BaseFragment() {
             newMileage, wheel!!.voltageMin, wheel!!.voltageMax
         )
 
-        services.runDB { db.saveWheel(wheel) }
+        services.runDB { it.saveWheel(wheel) }
         services.runUI {
             textMileage.text = "$newMileage"
             editVoltage.setText("$newVoltage")

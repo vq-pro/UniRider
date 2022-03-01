@@ -37,19 +37,17 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
         widgets.setOnClickListener(buttonDeleteCancel, onCancel())
 
         services.runDB {
-            wheel = db.getWheel(parmWheelId!!)
-                ?: throw WheelNotFoundException()
-
+            wheel = it.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
             textName.text = wheel.name
         }
     }
 
-    fun onCancel() = { _: View ->
+    fun onCancel(): (View) -> Unit = {
         services.navigateBack()
     }
 
-    fun onDelete() = { _: View ->
-        services.runDB { db.deleteWheel(wheel.id) }
+    fun onDelete(): (View) -> Unit = {
+        services.runDB { it.deleteWheel(wheel.id) }
         services.navigateBack(2)
     }
 }

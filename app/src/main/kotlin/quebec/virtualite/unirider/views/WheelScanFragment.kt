@@ -31,7 +31,7 @@ open class WheelScanFragment : BaseFragment() {
         lvWheels = view.findViewById(R.id.devices)
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
-        services.runDB { wheel = db.getWheel(parmWheelId!!) }
+        services.runDB { wheel = it.getWheel(parmWheelId!!) }
         services.runWithWaitAndBack { scanForDevices(view) }
     }
 
@@ -40,12 +40,12 @@ open class WheelScanFragment : BaseFragment() {
     }
 
     private fun connectWithWheel(device: Device) {
-        externalServices.connector().getDeviceInfo(device.address) {
-            services.runDB {
+        externalServices.connector().getDeviceInfo(device.address) { info ->
+            services.runDB { db ->
                 db.saveWheel(
                     WheelEntity(
                         wheel!!.id, wheel!!.name, device.name, device.address,
-                        it.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
+                        info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
                     )
                 )
             }

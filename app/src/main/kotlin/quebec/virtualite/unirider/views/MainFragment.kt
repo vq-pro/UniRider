@@ -39,7 +39,7 @@ open class MainFragment : BaseFragment() {
         widgets.setOnItemClickListener(lvWheels, onSelectWheel())
 
         services.runDB {
-            setList(wheelList, addTo(getSortedWheelItems(db.getWheels()), NEW_ROW))
+            setList(wheelList, addTo(getSortedWheelItems(it.getWheels()), NEW_ROW))
             textTotalMileage.text = "${calculateTotalMileage()}"
         }
     }
