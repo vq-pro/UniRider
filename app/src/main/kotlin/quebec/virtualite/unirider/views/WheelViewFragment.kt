@@ -70,29 +70,29 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
-    fun onConnect() = { _: View ->
+    fun onConnect(): (View) -> Unit = {
         if (wheel!!.btName == null) {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
             fragments.runWithWait {
                 external.connector().getDeviceInfo(wheel!!.btAddr) {
-                    val newMileage = it.mileage.roundToInt()
-                    val newVoltage = round(it.voltage, 1)
+                    fragments.doneWaiting {
+                        val newMileage = it.mileage.roundToInt()
+                        val newVoltage = round(it.voltage, 1)
 
-                    updateWheel(newMileage, newVoltage)
-
-                    fragments.dismissWait()
+                        updateWheel(newMileage, newVoltage)
+                    }
                 }
             }
         }
     }
 
-    fun onDelete() = { _: View ->
+    fun onDelete(): (View) -> Unit = {
         goto(R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment)
     }
 
-    fun onEdit() = { _: View ->
+    fun onEdit(): (View) -> Unit = {
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment)
     }
 

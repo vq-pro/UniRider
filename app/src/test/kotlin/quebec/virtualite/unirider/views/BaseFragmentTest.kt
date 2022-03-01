@@ -129,6 +129,11 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         lambdaOnFoundDevice.value.invoke(device)
     }
 
+    fun verifyDoneWaiting() {
+        verify(mockedFragments).doneWaiting(lambdaRunWithWaitDialog.capture())
+        lambdaRunWithWaitDialog.value.invoke()
+    }
+
     fun verifyInflate(expectedId: Int) {
         verify(mockedInflater).inflate(expectedId, mockedContainer, DONT_ATTACH_TO_ROOT)
     }

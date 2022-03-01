@@ -15,7 +15,6 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
@@ -186,13 +185,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         verifyRunWithWaitDialog()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
+        verifyDoneWaiting()
 
-        val ordered = inOrder(mockedDb, mockedTextMileage, mockedEditVoltage, mockedFragments)
-        ordered.verify(mockedDb)
+        verify(mockedDb)
             .saveWheel(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX))
-        ordered.verify(mockedTextMileage).text = "$MILEAGE_NEW"
-        ordered.verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
-        ordered.verify(mockedFragments).dismissWait()
+        verify(mockedTextMileage).text = "$MILEAGE_NEW"
+        verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
     }
 
     @Test
