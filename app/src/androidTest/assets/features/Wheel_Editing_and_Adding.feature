@@ -48,4 +48,4 @@ Feature: Wheel Editing & Adding
       | cannot        | change nothing              |
       | cannot        | reuse the name KingSong S18 |
 
-    #  FIXME-2 Previous mileage, before firmware update
+    #  FIXME-1 Previous mileage, before firmware update
