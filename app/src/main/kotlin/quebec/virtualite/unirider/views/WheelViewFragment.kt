@@ -68,8 +68,6 @@ open class WheelViewFragment : BaseFragment() {
                 textMileage.text = "${wheel!!.mileage}"
             }
         }
-
-        initConnector()
     }
 
     fun onConnect() = { _: View ->

@@ -265,9 +265,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     class TestableWheelViewFragment(val test: WheelViewFragmentTest) : WheelViewFragment() {
 
-        override fun initConnector() {
-        }
-
         override fun initDB(function: () -> Unit) {
             test.initDB(this, function)
         }

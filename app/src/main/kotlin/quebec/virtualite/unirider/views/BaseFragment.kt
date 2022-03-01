@@ -12,6 +12,7 @@ import quebec.virtualite.unirider.services.ExternalServices
 
 open class BaseFragment : Fragment() {
 
+    // FIXME-0 Get rid of these
     internal lateinit var connector: WheelConnector
     internal lateinit var db: WheelDb
 
@@ -26,10 +27,6 @@ open class BaseFragment : Fragment() {
 
         connector = externalServices.connector()
         db = externalServices.db()
-    }
-
-    // FIXME-0 Cleanup
-    internal open fun initConnector() {
     }
 
     // FIXME-0 Cleanup

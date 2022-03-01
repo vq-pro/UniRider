@@ -35,8 +35,6 @@ open class WheelScanFragment : BaseFragment() {
             wheel = db.getWheel(parmWheelId!!)
         }
 
-        initConnector()
-
         services.runWithWaitAndBack {
             scanForDevices(view)
         }
