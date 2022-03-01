@@ -31,7 +31,7 @@ import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WH
 class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
     @InjectMocks
-    val fragment: MainFragment = TestableMainFragment(this)
+    lateinit var fragment: MainFragment
 
     @Mock
     lateinit var mockedLVWheels: ListView
@@ -152,12 +152,5 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
             R.id.action_MainFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, 0L)
         )
-    }
-
-    class TestableMainFragment(val test: MainFragmentTest) : MainFragment() {
-
-        override fun initDB(function: () -> Unit) {
-            test.initDB(this, function)
-        }
     }
 }

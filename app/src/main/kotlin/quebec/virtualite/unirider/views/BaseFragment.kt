@@ -28,9 +28,4 @@ open class BaseFragment : Fragment() {
         connector = externalServices.connector()
         db = externalServices.db()
     }
-
-    // FIXME-0 Cleanup
-    internal open fun initDB(function: () -> Unit) {
-        services.runDB(function)
-    }
 }

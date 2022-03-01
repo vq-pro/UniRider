@@ -41,7 +41,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
     @InjectMocks
-    val fragment: WheelScanFragment = TestableWheelScanFragment(this)
+    lateinit var fragment: WheelScanFragment
 
     @Mock
     lateinit var mockedLvWheels: ListView
@@ -126,12 +126,5 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         )
         ordered.verify(mockedServices).dismissWait()
         ordered.verify(mockedServices).navigateBack()
-    }
-
-    class TestableWheelScanFragment(val test: WheelScanFragmentTest) : WheelScanFragment() {
-
-        override fun initDB(function: () -> Unit) {
-            test.initDB(this, function)
-        }
     }
 }

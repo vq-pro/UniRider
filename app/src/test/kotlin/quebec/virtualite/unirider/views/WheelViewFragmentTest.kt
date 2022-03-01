@@ -46,7 +46,7 @@ import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WH
 class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     @InjectMocks
-    val fragment: WheelViewFragment = TestableWheelViewFragment(this)
+    lateinit var fragment: WheelViewFragment
 
     @Mock
     lateinit var mockedButtonConnect: Button
@@ -261,12 +261,5 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verify(mockedTextBattery).text = ""
-    }
-
-    class TestableWheelViewFragment(val test: WheelViewFragmentTest) : WheelViewFragment() {
-
-        override fun initDB(function: () -> Unit) {
-            test.initDB(this, function)
-        }
     }
 }

@@ -79,11 +79,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     @Captor
     private lateinit var lambdaRunWithWaitDialog: ArgumentCaptor<() -> Unit>
 
-    fun initDB(fragment: BaseFragment, function: () -> Unit) {
-        fragment.db = mockedDb
-        function()
-    }
-
     fun mockArgument(fragment: BaseFragment, param: String, value: Long) {
         given(mockedBundle.getLong(param))
             .willReturn(value)
