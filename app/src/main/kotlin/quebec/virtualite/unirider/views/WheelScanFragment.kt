@@ -41,27 +41,28 @@ open class WheelScanFragment : BaseFragment() {
 
     private fun connectWithWheel(device: Device) {
         external.connector().getDeviceInfo(device.address) { info ->
-            external.runDB { db ->
-                db.saveWheel(
-                    WheelEntity(
+            fragments.doneWaiting {
+                external.runDB { db ->
+                    val updatedWheel = WheelEntity(
                         wheel!!.id, wheel!!.name, device.name, device.address,
                         info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
                     )
-                )
-            }
+                    db.saveWheel(updatedWheel)
+                }
 
-            fragments.dismissWait()
-            fragments.navigateBack()
+                fragments.navigateBack()
+            }
         }
     }
 
     private fun scanForDevices(view: View) {
         external.connector().scan {
-            devices.add(it)
-            val names = devices.stream().map(Device::name).collect(toList())
+            fragments.doneWaiting {
+                devices.add(it)
+                val names = devices.stream().map(Device::name).collect(toList())
 
-            fragments.runUI { widgets.stringListAdapter(lvWheels, view, names) }
-            fragments.dismissWait()
+                fragments.runUI { widgets.stringListAdapter(lvWheels, view, names) }
+            }
         }
     }
 }
