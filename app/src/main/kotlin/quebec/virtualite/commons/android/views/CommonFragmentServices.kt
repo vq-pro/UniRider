@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-open class CommonFragmentServices(val fragment: CommonFragment<*>, val idStringPleaseWait: Int) {
+open class CommonFragmentServices(val fragment: CommonFragment<*>, private val idStringPleaseWait: Int) {
 
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
@@ -15,10 +15,10 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, val idStringP
     internal var waitDialog: ProgressDialog? = null
 
     open fun doneWaiting(function: (() -> Unit)?) {
+        if (waitDialogWasDismissed())
+            return
 
-        if (!waitDialogWasDismissed())
-            function!!.invoke()
-
+        function!!.invoke()
         hideWaitDialog()
     }
 
@@ -42,7 +42,7 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, val idStringP
     }
 
     open fun runBackground(function: (() -> Unit)?) {
-        internalRunBackground {
+        fragment.lifecycleScope.launch(Dispatchers.IO) {
             function!!()
         }
     }
@@ -59,26 +59,12 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, val idStringP
         fragment.activity?.runOnUiThread(function)
     }
 
-    // FIXME-0 Private?
-    open fun waitDialogWasDismissed(): Boolean {
-        synchronized(this) {
-            return (waitDialog != null) && !waitDialog!!.isShowing
-        }
-    }
-
     private fun hideWaitDialog() {
         runUI {
             synchronized(this) {
                 waitDialog?.hide()
                 waitDialog = null
             }
-        }
-    }
-
-    // FIXME-0 Still needed?
-    private fun internalRunBackground(function: () -> Unit) {
-        fragment.lifecycleScope.launch(Dispatchers.IO) {
-            function()
         }
     }
 
@@ -97,6 +83,12 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, val idStringP
 
         runBackground {
             function()
+        }
+    }
+
+    private fun waitDialogWasDismissed(): Boolean {
+        synchronized(this) {
+            return (waitDialog != null) && !waitDialog!!.isShowing
         }
     }
 }

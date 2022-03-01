@@ -31,9 +31,6 @@ open class ExternalServices(val fragment: CommonFragment<ExternalServices>) : Co
     }
 
     open fun runDB(function: ((WheelDb) -> Unit)?) {
-        if (fragment.fragments.waitDialogWasDismissed())
-            return
-
         fragment.fragments.runBackground {
             function!!(db!!)
         }
