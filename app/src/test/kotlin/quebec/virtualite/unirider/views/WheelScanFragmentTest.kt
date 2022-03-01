@@ -51,6 +51,8 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.wheel = S18_1
 
         mockField(R.id.devices, mockedLvWheels)
+
+        mockExternalServices()
         mockServices()
     }
 

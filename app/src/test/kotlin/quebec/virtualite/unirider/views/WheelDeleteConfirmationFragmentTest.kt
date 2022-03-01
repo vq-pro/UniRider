@@ -42,6 +42,7 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
         mockField(R.id.button_delete_cancel, mockedButtonDeleteCancel)
         mockField(R.id.view_name, mockedTextName)
 
+        mockExternalServices()
         mockServices()
     }
 

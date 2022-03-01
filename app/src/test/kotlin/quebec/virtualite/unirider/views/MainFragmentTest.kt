@@ -2,6 +2,7 @@ package quebec.virtualite.unirider.views
 
 import android.widget.ListView
 import android.widget.TextView
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
@@ -43,6 +44,11 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
     @Mock
     lateinit var mockedTextTotalMileage: TextView
+
+    @Before
+    fun before() {
+        mockExternalServices()
+    }
 
     @Test
     fun onCreateView() {

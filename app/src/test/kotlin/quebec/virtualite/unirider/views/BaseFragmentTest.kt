@@ -22,6 +22,7 @@ import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.database.WheelDb
+import quebec.virtualite.unirider.services.ExternalServices
 
 open class BaseFragmentTest(fragmentType: Class<*>) {
 
@@ -41,6 +42,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
     @Mock
     lateinit var mockedDb: WheelDb
+
+    @Mock
+    lateinit var mockedExternalServices: ExternalServices
 
     @Mock
     lateinit var mockedInflater: LayoutInflater
@@ -92,6 +96,14 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
             .willReturn(value)
 
         fragment.arguments = mockedBundle
+    }
+
+    fun mockExternalServices() {
+        given(mockedExternalServices.connector())
+            .willReturn(mockedConnector)
+
+        given(mockedExternalServices.db())
+            .willReturn(mockedDb)
     }
 
     fun mockField(id: Int, mockedField: View) {

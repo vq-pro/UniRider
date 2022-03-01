@@ -5,22 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.bluetooth.WheelConnector
-import quebec.virtualite.unirider.bluetooth.WheelConnectorFactory
-import quebec.virtualite.unirider.database.WheelDb
-import quebec.virtualite.unirider.database.impl.WheelDbImpl
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        lateinit var connector: WheelConnector
-        lateinit var db: WheelDb
-    }
-
     public override fun onCreate(savedInstanceState: Bundle?) {
-        db = WheelDbImpl(applicationContext)
-        connector = WheelConnectorFactory.getConnector(this)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
