@@ -4,13 +4,9 @@ import quebec.virtualite.commons.android.views.CommonFragment
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.ExternalServices
 
-open class BaseFragment : CommonFragment<ExternalServices>() {
+open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait) {
 
     override fun getExternalServices(): ExternalServices {
         return ExternalServices(this)
-    }
-
-    override fun getWaitMessageStringId(): Int {
-        return R.string.dialog_wait
     }
 }
