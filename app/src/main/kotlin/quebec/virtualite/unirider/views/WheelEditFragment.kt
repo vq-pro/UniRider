@@ -50,7 +50,7 @@ open class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
         widgets.setOnClickListener(buttonSave, onSave())
 
-        services.runDB {
+        external.runDB {
             initialWheel = if (parmWheelId == 0L)
                 NEW_WHEEL
             else
@@ -69,7 +69,7 @@ open class WheelEditFragment : BaseFragment() {
 
     fun enableSaveIfChanged() {
         if (saveComparator.canSave(updatedWheel, initialWheel)) {
-            services.runDB {
+            external.runDB {
                 if (!it.findDuplicate(updatedWheel))
                     widgets.enable(buttonSave)
                 else
@@ -80,8 +80,8 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onSave(): (View) -> Unit = {
-        services.runDB { it.saveWheel(updatedWheel) }
-        services.navigateBack()
+        external.runDB { it.saveWheel(updatedWheel) }
+        fragments.navigateBack()
     }
 
     fun onUpdateMileage() = { newMileage: String ->

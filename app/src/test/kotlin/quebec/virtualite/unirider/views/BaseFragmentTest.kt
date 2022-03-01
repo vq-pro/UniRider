@@ -16,8 +16,8 @@ import org.mockito.BDDMockito.lenient
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.verify
-import quebec.virtualite.commons.android.views.WidgetUtils
-import quebec.virtualite.commons.views.FragmentServices
+import quebec.virtualite.commons.android.views.CommonFragmentServices
+import quebec.virtualite.commons.android.views.CommonWidgetServices
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelConnector
@@ -44,19 +44,19 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedDb: WheelDb
 
     @Mock
-    lateinit var mockedExternalServices: ExternalServices
+    lateinit var mockedExternal: ExternalServices
+
+    @Mock
+    lateinit var mockedFragments: CommonFragmentServices
 
     @Mock
     lateinit var mockedInflater: LayoutInflater
 
     @Mock
-    lateinit var mockedServices: FragmentServices
-
-    @Mock
     lateinit var mockedView: View
 
     @Mock
-    lateinit var mockedWidgets: WidgetUtils
+    lateinit var mockedWidgets: CommonWidgetServices
 
     @Captor
     private lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>
@@ -93,12 +93,16 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         fragment.arguments = mockedBundle
     }
 
-    fun mockExternalServices() {
+    @Suppress("UNCHECKED_CAST")
+    fun mockExternal() {
         lenient().doReturn(mockedConnector)
-            .`when`(mockedExternalServices).connector()
+            .`when`(mockedExternal).connector()
 
         lenient().doReturn(mockedDb)
-            .`when`(mockedExternalServices).db()
+            .`when`(mockedExternal).db()
+
+        lenient().doAnswer { (it.arguments[0] as ((WheelDb) -> Unit)).invoke(mockedDb) }
+            .`when`(mockedExternal).runDB(any())
     }
 
     fun mockField(id: Int, mockedField: View) {
@@ -107,15 +111,12 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun mockServices() {
+    fun mockFragments() {
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
-            .`when`(mockedServices).runBackground(any())
-
-        lenient().doAnswer { (it.arguments[0] as ((WheelDb) -> Unit)).invoke(mockedDb) }
-            .`when`(mockedServices).runDB(any())
+            .`when`(mockedFragments).runBackground(any())
 
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
-            .`when`(mockedServices).runUI(any())
+            .`when`(mockedFragments).runUI(any())
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, deviceInfo: DeviceInfo) {
@@ -153,12 +154,12 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun verifyRunWithWaitDialog() {
-        verify(mockedServices).runWithWait(lambdaRunWithWaitDialog.capture())
+        verify(mockedFragments).runWithWait(lambdaRunWithWaitDialog.capture())
         lambdaRunWithWaitDialog.value.invoke()
     }
 
     fun verifyRunWithWaitDialogAndBack() {
-        verify(mockedServices).runWithWaitAndBack(lambdaRunWithWaitDialog.capture())
+        verify(mockedFragments).runWithWaitAndBack(lambdaRunWithWaitDialog.capture())
         lambdaRunWithWaitDialog.value.invoke()
     }
 

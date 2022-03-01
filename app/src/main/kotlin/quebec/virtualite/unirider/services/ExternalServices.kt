@@ -1,22 +1,20 @@
 package quebec.virtualite.unirider.services
 
+import quebec.virtualite.commons.android.external.CommonExternalServices
+import quebec.virtualite.commons.android.views.CommonFragment
 import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.bluetooth.WheelConnectorFactory
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
-import quebec.virtualite.unirider.views.BaseFragment
 
-open class ExternalServices(val fragment: BaseFragment) {
+open class ExternalServices(val fragment: CommonFragment<ExternalServices>) : CommonExternalServices() {
+
     companion object {
         private var connector: WheelConnector? = null
         private var db: WheelDb? = null
     }
 
-    open fun connector(): WheelConnector {
-        return connector!!
-    }
-
-    open fun init() {
+    override fun init() {
         if (connector == null)
             connector = WheelConnectorFactory.getConnector(fragment.activity!!)
 
@@ -24,7 +22,20 @@ open class ExternalServices(val fragment: BaseFragment) {
             db = WheelDbImpl(fragment.activity?.applicationContext!!)
     }
 
+    open fun connector(): WheelConnector {
+        return connector!!
+    }
+
     open fun db(): WheelDb {
         return db!!
+    }
+
+    open fun runDB(function: ((WheelDb) -> Unit)?) {
+        if (fragment.fragments.waitDialogWasDismissed())
+            return
+
+        fragment.fragments.runBackground {
+            function!!(db!!)
+        }
     }
 }

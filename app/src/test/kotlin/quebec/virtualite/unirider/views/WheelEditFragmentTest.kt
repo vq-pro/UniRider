@@ -64,8 +64,8 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         mockField(R.id.edit_voltage_max, mockedEditVoltageMax)
         mockField(R.id.edit_voltage_min, mockedEditVoltageMin)
 
-        mockExternalServices()
-        mockServices()
+        mockExternal()
+        mockFragments()
     }
 
     @Test
@@ -189,7 +189,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).saveWheel(fragment.updatedWheel)
-        verify(mockedServices).navigateBack()
+        verify(mockedFragments).navigateBack()
     }
 
     @Test

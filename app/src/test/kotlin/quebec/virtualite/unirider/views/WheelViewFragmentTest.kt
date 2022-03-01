@@ -89,8 +89,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.edit_voltage, mockedEditVoltage)
         mockField(R.id.view_battery, mockedTextBattery)
 
-        mockExternalServices()
-        mockServices()
+        mockExternal()
+        mockFragments()
     }
 
     @Test
@@ -167,7 +167,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verify(mockedServices).navigateTo(
+        verify(mockedFragments).navigateTo(
             R.id.action_WheelViewFragment_to_WheelScanFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
@@ -187,12 +187,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyRunWithWaitDialog()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
 
-        val ordered = inOrder(mockedDb, mockedTextMileage, mockedEditVoltage, mockedServices)
+        val ordered = inOrder(mockedDb, mockedTextMileage, mockedEditVoltage, mockedFragments)
         ordered.verify(mockedDb)
             .saveWheel(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX))
         ordered.verify(mockedTextMileage).text = "$MILEAGE_NEW"
         ordered.verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
-        ordered.verify(mockedServices).dismissWait()
+        ordered.verify(mockedFragments).dismissWait()
     }
 
     @Test
@@ -201,7 +201,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onDelete().invoke(mockedView)
 
         // Then
-        verify(mockedServices).navigateTo(
+        verify(mockedFragments).navigateTo(
             R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )
@@ -213,7 +213,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onEdit().invoke(mockedView)
 
         // Then
-        verify(mockedServices).navigateTo(
+        verify(mockedFragments).navigateTo(
             R.id.action_WheelViewFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
         )

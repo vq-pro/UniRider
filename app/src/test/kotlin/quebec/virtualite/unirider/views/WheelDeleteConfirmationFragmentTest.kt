@@ -42,8 +42,8 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
         mockField(R.id.button_delete_cancel, mockedButtonDeleteCancel)
         mockField(R.id.view_name, mockedTextName)
 
-        mockExternalServices()
-        mockServices()
+        mockExternal()
+        mockFragments()
     }
 
     @Test
@@ -102,7 +102,7 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
         fragment.onCancel().invoke(mockedView)
 
         // Then
-        verify(mockedServices).navigateBack()
+        verify(mockedFragments).navigateBack()
     }
 
     @Test
@@ -115,6 +115,6 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
 
         // Then
         verify(mockedDb).deleteWheel(ID)
-        verify(mockedServices).navigateBack(2)
+        verify(mockedFragments).navigateBack(2)
     }
 }

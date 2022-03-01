@@ -31,17 +31,17 @@ open class WheelScanFragment : BaseFragment() {
         lvWheels = view.findViewById(R.id.devices)
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
-        services.runDB { wheel = it.getWheel(parmWheelId!!) }
-        services.runWithWaitAndBack { scanForDevices(view) }
+        external.runDB { wheel = it.getWheel(parmWheelId!!) }
+        fragments.runWithWaitAndBack { scanForDevices(view) }
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
-        services.runWithWaitAndBack { connectWithWheel(devices[pos]) }
+        fragments.runWithWaitAndBack { connectWithWheel(devices[pos]) }
     }
 
     private fun connectWithWheel(device: Device) {
-        externalServices.connector().getDeviceInfo(device.address) { info ->
-            services.runDB { db ->
+        external.connector().getDeviceInfo(device.address) { info ->
+            external.runDB { db ->
                 db.saveWheel(
                     WheelEntity(
                         wheel!!.id, wheel!!.name, device.name, device.address,
@@ -50,18 +50,18 @@ open class WheelScanFragment : BaseFragment() {
                 )
             }
 
-            services.dismissWait()
-            services.navigateBack()
+            fragments.dismissWait()
+            fragments.navigateBack()
         }
     }
 
     private fun scanForDevices(view: View) {
-        externalServices.connector().scan {
+        external.connector().scan {
             devices.add(it)
             val names = devices.stream().map(Device::name).collect(toList())
 
-            services.runUI { widgets.stringListAdapter(lvWheels, view, names) }
-            services.dismissWait()
+            fragments.runUI { widgets.stringListAdapter(lvWheels, view, names) }
+            fragments.dismissWait()
         }
     }
 }
