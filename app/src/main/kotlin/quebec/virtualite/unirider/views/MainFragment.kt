@@ -38,7 +38,7 @@ open class MainFragment : BaseFragment() {
         widgets.multifieldListAdapter(lvWheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(lvWheels, onSelectWheel())
 
-        services.runDB {
+        external.runDB {
             setList(wheelList, addTo(getSortedWheelItems(it.getWheels()), NEW_ROW))
             textTotalMileage.text = "${calculateTotalMileage()}"
         }
@@ -61,7 +61,7 @@ open class MainFragment : BaseFragment() {
     }
 
     private fun addWheel() {
-        services.navigateTo(
+        fragments.navigateTo(
             R.id.action_MainFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, 0L)
         )
@@ -93,7 +93,7 @@ open class MainFragment : BaseFragment() {
     }
 
     private fun viewWheel(wheel: WheelRow) {
-        services.navigateTo(
+        fragments.navigateTo(
             R.id.action_MainFragment_to_WheelViewFragment,
             Pair(PARAMETER_WHEEL_ID, wheel.id())
         )

@@ -52,8 +52,8 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         mockField(R.id.devices, mockedLvWheels)
 
-        mockExternalServices()
-        mockServices()
+        mockExternal()
+        mockFragments()
     }
 
     @Test
@@ -88,7 +88,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verifyRunWithWaitDialogAndBack()
         verifyConnectorScanWith(Device(DEVICE_NAME, DEVICE_ADDR))
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
-        verify(mockedServices).dismissWait()
+        verify(mockedFragments).dismissWait()
     }
 
     @Test
@@ -120,11 +120,11 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verifyRunWithWaitDialogAndBack()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
 
-        val ordered = inOrder(mockedDb, mockedServices)
+        val ordered = inOrder(mockedDb, mockedFragments)
         ordered.verify(mockedDb).saveWheel(
             WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3)
         )
-        ordered.verify(mockedServices).dismissWait()
-        ordered.verify(mockedServices).navigateBack()
+        ordered.verify(mockedFragments).dismissWait()
+        ordered.verify(mockedFragments).navigateBack()
     }
 }

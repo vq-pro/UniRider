@@ -6,14 +6,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import quebec.virtualite.unirider.database.WheelDb
 
-open class CommonFragmentServices(val fragment: CommonFragment, val idStringPleaseWait: Int) {
+open class CommonFragmentServices(val fragment: CommonFragment<*>, val idStringPleaseWait: Int) {
 
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
 
-    private var waitDialog: ProgressDialog? = null
+    internal var waitDialog: ProgressDialog? = null
 
     open fun dismissWait() {
         runUI {
@@ -47,15 +46,6 @@ open class CommonFragmentServices(val fragment: CommonFragment, val idStringPlea
         }
     }
 
-    open fun runDB(function: ((WheelDb) -> Unit)?) {
-        if (waitDialogWasDismissed())
-            return
-
-        internalRunBackground {
-            function!!(fragment.externalServices.db())
-        }
-    }
-
     open fun runWithWait(function: (() -> Unit)?) {
         waitDialog(STAY_IN_FRAGMENT, function!!)
     }
@@ -67,6 +57,8 @@ open class CommonFragmentServices(val fragment: CommonFragment, val idStringPlea
     open fun runUI(function: (() -> Unit)?) {
         fragment.activity?.runOnUiThread(function)
     }
+
+    open fun waitDialogWasDismissed() = waitDialog != null && !waitDialog!!.isShowing
 
     private fun internalRunBackground(function: () -> Unit) {
         fragment.lifecycleScope.launch(Dispatchers.IO) {
@@ -89,6 +81,4 @@ open class CommonFragmentServices(val fragment: CommonFragment, val idStringPlea
             function()
         }
     }
-
-    private fun waitDialogWasDismissed() = waitDialog != null && !waitDialog!!.isShowing
 }

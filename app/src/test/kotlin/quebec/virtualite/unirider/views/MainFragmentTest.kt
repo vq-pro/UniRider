@@ -47,8 +47,8 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
     @Before
     fun before() {
-        mockExternalServices()
-        mockServices()
+        mockExternal()
+        mockFragments()
     }
 
     @Test
@@ -133,7 +133,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        verify(mockedServices).navigateTo(
+        verify(mockedFragments).navigateTo(
             R.id.action_MainFragment_to_WheelViewFragment,
             Pair(PARAMETER_WHEEL_ID, ID2)
         )
@@ -148,7 +148,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         fragment.onSelectWheel().invoke(mockedView, 2)
 
         // Then
-        verify(mockedServices).navigateTo(
+        verify(mockedFragments).navigateTo(
             R.id.action_MainFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, 0L)
         )

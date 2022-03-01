@@ -54,7 +54,7 @@ open class WheelViewFragment : BaseFragment() {
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
 
-        services.runDB {
+        external.runDB {
             wheel = it.getWheel(parmWheelId!!)
 
             if (wheel != null) {
@@ -75,14 +75,14 @@ open class WheelViewFragment : BaseFragment() {
             goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
-            services.runWithWait {
-                externalServices.connector().getDeviceInfo(wheel!!.btAddr) {
+            fragments.runWithWait {
+                external.connector().getDeviceInfo(wheel!!.btAddr) {
                     val newMileage = it.mileage.roundToInt()
                     val newVoltage = round(it.voltage, 1)
 
                     updateWheel(newMileage, newVoltage)
 
-                    services.dismissWait()
+                    fragments.dismissWait()
                 }
             }
         }
@@ -109,7 +109,7 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun goto(id: Int) {
-        services.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
+        fragments.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
     }
 
     private fun updateWheel(newMileage: Int, newVoltage: Float) {
@@ -118,8 +118,8 @@ open class WheelViewFragment : BaseFragment() {
             newMileage, wheel!!.voltageMin, wheel!!.voltageMax
         )
 
-        services.runDB { it.saveWheel(wheel) }
-        services.runUI {
+        external.runDB { it.saveWheel(wheel) }
+        fragments.runUI {
             textMileage.text = "$newMileage"
             editVoltage.setText("$newVoltage")
         }
