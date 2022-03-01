@@ -6,14 +6,12 @@ import androidx.fragment.app.Fragment
 import quebec.virtualite.commons.android.views.WidgetUtils
 import quebec.virtualite.commons.views.FragmentServices
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.services.ExternalServices
 
 open class BaseFragment : Fragment() {
 
     // FIXME-0 Get rid of these
-    internal lateinit var connector: WheelConnector
     internal lateinit var db: WheelDb
 
     internal var externalServices = ExternalServices(this)
@@ -25,7 +23,6 @@ open class BaseFragment : Fragment() {
 
         externalServices.init()
 
-        connector = externalServices.connector()
         db = externalServices.db()
     }
 }

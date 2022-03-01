@@ -94,11 +94,11 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun mockExternalServices() {
-        given(mockedExternalServices.connector())
-            .willReturn(mockedConnector)
+        lenient().doReturn(mockedConnector)
+            .`when`(mockedExternalServices).connector()
 
-        given(mockedExternalServices.db())
-            .willReturn(mockedDb)
+        lenient().doReturn(mockedDb)
+            .`when`(mockedExternalServices).db()
     }
 
     fun mockField(id: Int, mockedField: View) {

@@ -40,7 +40,7 @@ open class WheelScanFragment : BaseFragment() {
     }
 
     private fun connectWithWheel(device: Device) {
-        connector.getDeviceInfo(device.address) {
+        externalServices.connector().getDeviceInfo(device.address) {
             services.runDB {
                 db.saveWheel(
                     WheelEntity(
@@ -56,7 +56,7 @@ open class WheelScanFragment : BaseFragment() {
     }
 
     private fun scanForDevices(view: View) {
-        connector.scan {
+        externalServices.connector().scan {
             devices.add(it)
             val names = devices.stream().map(Device::name).collect(toList())
 
