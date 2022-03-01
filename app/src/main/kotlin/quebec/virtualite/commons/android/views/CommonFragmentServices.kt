@@ -16,8 +16,10 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, val idStringP
 
     open fun dismissWait() {
         runUI {
-            waitDialog?.hide()
-            waitDialog = null
+            synchronized(this) {
+                waitDialog?.hide()
+                waitDialog = null
+            }
         }
     }
 
@@ -58,7 +60,11 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, val idStringP
         fragment.activity?.runOnUiThread(function)
     }
 
-    open fun waitDialogWasDismissed() = waitDialog != null && !waitDialog!!.isShowing
+    open fun waitDialogWasDismissed(): Boolean {
+        synchronized(this) {
+            return (waitDialog != null) && !waitDialog!!.isShowing
+        }
+    }
 
     private fun internalRunBackground(function: () -> Unit) {
         fragment.lifecycleScope.launch(Dispatchers.IO) {
@@ -68,14 +74,16 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, val idStringP
 
     private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {
 
-        waitDialog = ProgressDialog(fragment.activity)
-        waitDialog!!.setMessage(getString(idStringPleaseWait))
-        if (backOnCancel)
-            waitDialog!!.setOnCancelListener {
-                navigateBack()
-            }
+        synchronized(this) {
+            waitDialog = ProgressDialog(fragment.activity)
+            waitDialog!!.setMessage(getString(idStringPleaseWait))
+            if (backOnCancel)
+                waitDialog!!.setOnCancelListener {
+                    navigateBack()
+                }
 
-        waitDialog!!.show()
+            waitDialog!!.show()
+        }
 
         runBackground {
             function()
