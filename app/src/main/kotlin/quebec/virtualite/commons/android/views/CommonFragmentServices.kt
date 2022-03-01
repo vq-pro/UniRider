@@ -12,7 +12,7 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
 
-    internal var waitDialog: ProgressDialog? = null
+    private var waitDialog: ProgressDialog? = null
 
     open fun doneWaiting(function: (() -> Unit)?) {
         if (waitDialogWasDismissed())
