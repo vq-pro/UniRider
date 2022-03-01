@@ -36,7 +36,7 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
         widgets.setOnClickListener(buttonDeleteConfirmation, onDelete())
         widgets.setOnClickListener(buttonDeleteCancel, onCancel())
 
-        initDB {
+        services.runDB {
             wheel = db.getWheel(parmWheelId!!)
                 ?: throw WheelNotFoundException()
 

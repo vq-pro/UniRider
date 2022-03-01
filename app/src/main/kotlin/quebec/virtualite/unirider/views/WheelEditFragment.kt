@@ -50,7 +50,7 @@ open class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
         widgets.setOnClickListener(buttonSave, onSave())
 
-        initDB {
+        services.runDB {
             initialWheel = if (parmWheelId == 0L)
                 NEW_WHEEL
             else

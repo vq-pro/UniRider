@@ -54,7 +54,7 @@ open class WheelViewFragment : BaseFragment() {
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
 
-        initDB {
+        services.runDB {
             wheel = db.getWheel(parmWheelId!!)
 
             if (wheel != null) {

@@ -48,6 +48,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     @Before
     fun before() {
         mockExternalServices()
+        mockServices()
     }
 
     @Test
