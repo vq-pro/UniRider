@@ -22,6 +22,7 @@ import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.database.WheelDb
+import quebec.virtualite.unirider.services.ExternalServices
 
 open class BaseFragmentTest(fragmentType: Class<*>) {
 
@@ -41,6 +42,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
     @Mock
     lateinit var mockedDb: WheelDb
+
+    @Mock
+    lateinit var mockedExternalServices: ExternalServices
 
     @Mock
     lateinit var mockedInflater: LayoutInflater
@@ -75,11 +79,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     @Captor
     private lateinit var lambdaRunWithWaitDialog: ArgumentCaptor<() -> Unit>
 
-    fun initDB(fragment: BaseFragment, function: () -> Unit) {
-        fragment.db = mockedDb
-        function()
-    }
-
     fun mockArgument(fragment: BaseFragment, param: String, value: Long) {
         given(mockedBundle.getLong(param))
             .willReturn(value)
@@ -94,6 +93,14 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         fragment.arguments = mockedBundle
     }
 
+    fun mockExternalServices() {
+        lenient().doReturn(mockedConnector)
+            .`when`(mockedExternalServices).connector()
+
+        lenient().doReturn(mockedDb)
+            .`when`(mockedExternalServices).db()
+    }
+
     fun mockField(id: Int, mockedField: View) {
         given<Any>(mockedView.findViewById(id))
             .willReturn(mockedField)
@@ -104,7 +111,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
             .`when`(mockedServices).runBackground(any())
 
-        lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
+        lenient().doAnswer { (it.arguments[0] as ((WheelDb) -> Unit)).invoke(mockedDb) }
             .`when`(mockedServices).runDB(any())
 
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }

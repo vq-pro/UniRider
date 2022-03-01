@@ -54,8 +54,8 @@ open class WheelViewFragment : BaseFragment() {
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
 
-        initDB {
-            wheel = db.getWheel(parmWheelId!!)
+        services.runDB {
+            wheel = it.getWheel(parmWheelId!!)
 
             if (wheel != null) {
                 widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
@@ -68,8 +68,6 @@ open class WheelViewFragment : BaseFragment() {
                 textMileage.text = "${wheel!!.mileage}"
             }
         }
-
-        initConnector()
     }
 
     fun onConnect() = { _: View ->
@@ -78,9 +76,9 @@ open class WheelViewFragment : BaseFragment() {
 
         } else {
             services.runWithWait {
-                connector.getDeviceInfo(wheel!!.btAddr) { info ->
-                    val newMileage = info.mileage.roundToInt()
-                    val newVoltage = round(info.voltage, 1)
+                externalServices.connector().getDeviceInfo(wheel!!.btAddr) {
+                    val newMileage = it.mileage.roundToInt()
+                    val newVoltage = round(it.voltage, 1)
 
                     updateWheel(newMileage, newVoltage)
 
@@ -120,7 +118,7 @@ open class WheelViewFragment : BaseFragment() {
             newMileage, wheel!!.voltageMin, wheel!!.voltageMax
         )
 
-        services.runDB { db.saveWheel(wheel) }
+        services.runDB { it.saveWheel(wheel) }
         services.runUI {
             textMileage.text = "$newMileage"
             editVoltage.setText("$newVoltage")

@@ -38,8 +38,8 @@ open class MainFragment : BaseFragment() {
         widgets.multifieldListAdapter(lvWheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(lvWheels, onSelectWheel())
 
-        initDB {
-            setList(wheelList, addTo(getSortedWheelItems(db.getWheels()), NEW_ROW))
+        services.runDB {
+            setList(wheelList, addTo(getSortedWheelItems(it.getWheels()), NEW_ROW))
             textTotalMileage.text = "${calculateTotalMileage()}"
         }
     }

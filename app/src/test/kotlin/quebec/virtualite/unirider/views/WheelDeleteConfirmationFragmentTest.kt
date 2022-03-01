@@ -23,7 +23,7 @@ import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirmationFragment::class.java) {
 
     @InjectMocks
-    val fragment: WheelDeleteConfirmationFragment = TestableWheelDeleteConfirmationFragment(this)
+    lateinit var fragment: WheelDeleteConfirmationFragment
 
     @Mock
     lateinit var mockedButtonDeleteConfirmation: Button
@@ -42,6 +42,7 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
         mockField(R.id.button_delete_cancel, mockedButtonDeleteCancel)
         mockField(R.id.view_name, mockedTextName)
 
+        mockExternalServices()
         mockServices()
     }
 
@@ -115,13 +116,5 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
         // Then
         verify(mockedDb).deleteWheel(ID)
         verify(mockedServices).navigateBack(2)
-    }
-
-    class TestableWheelDeleteConfirmationFragment(val test: WheelDeleteConfirmationFragmentTest) :
-        WheelDeleteConfirmationFragment() {
-
-        override fun initDB(function: () -> Unit) {
-            test.initDB(this, function)
-        }
     }
 }

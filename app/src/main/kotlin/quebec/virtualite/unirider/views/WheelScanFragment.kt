@@ -31,26 +31,17 @@ open class WheelScanFragment : BaseFragment() {
         lvWheels = view.findViewById(R.id.devices)
         widgets.setOnItemClickListener(lvWheels, onSelectDevice())
 
-        initDB {
-            wheel = db.getWheel(parmWheelId!!)
-        }
-
-        initConnector()
-
-        services.runWithWaitAndBack {
-            scanForDevices(view)
-        }
+        services.runDB { wheel = it.getWheel(parmWheelId!!) }
+        services.runWithWaitAndBack { scanForDevices(view) }
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
-        services.runWithWaitAndBack {
-            connectWithWheel(devices[pos])
-        }
+        services.runWithWaitAndBack { connectWithWheel(devices[pos]) }
     }
 
     private fun connectWithWheel(device: Device) {
-        connector.getDeviceInfo(device.address) { info ->
-            services.runDB {
+        externalServices.connector().getDeviceInfo(device.address) { info ->
+            services.runDB { db ->
                 db.saveWheel(
                     WheelEntity(
                         wheel!!.id, wheel!!.name, device.name, device.address,
@@ -65,8 +56,8 @@ open class WheelScanFragment : BaseFragment() {
     }
 
     private fun scanForDevices(view: View) {
-        connector.scan { device ->
-            devices.add(device)
+        externalServices.connector().scan {
+            devices.add(it)
             val names = devices.stream().map(Device::name).collect(toList())
 
             services.runUI { widgets.stringListAdapter(lvWheels, view, names) }

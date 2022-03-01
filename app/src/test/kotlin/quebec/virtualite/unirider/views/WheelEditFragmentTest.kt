@@ -34,7 +34,7 @@ import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WH
 class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
     @InjectMocks
-    val fragment: WheelEditFragment = TestableWheelEditFragment(this)
+    lateinit var fragment: WheelEditFragment
 
     @Mock
     lateinit var mockedButtonSave: Button
@@ -64,6 +64,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         mockField(R.id.edit_voltage_max, mockedEditVoltageMax)
         mockField(R.id.edit_voltage_min, mockedEditVoltageMin)
 
+        mockExternalServices()
         mockServices()
     }
 
@@ -336,12 +337,5 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         given(mockedSaveComparator.canSave(any(), any()))
             .willReturn(canSave)
-    }
-
-    class TestableWheelEditFragment(val test: WheelEditFragmentTest) : WheelEditFragment() {
-
-        override fun initDB(function: () -> Unit) {
-            test.initDB(this, function)
-        }
     }
 }
