@@ -48,9 +48,10 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
     }
 
     open fun runDB(function: (() -> Unit)?) {
-        if (waitDialog == null || waitDialog!!.isShowing) {
-            runBackground(function)
-        }
+        if (waitDialogWasDismissed())
+            return
+
+        runBackground(function)
     }
 
     open fun runWithWait(function: (() -> Unit)?) {
@@ -80,4 +81,6 @@ open class FragmentServices(val fragment: Fragment, val idStringPleaseWait: Int)
             function()
         }
     }
+
+    private fun waitDialogWasDismissed() = waitDialog != null && !waitDialog!!.isShowing
 }
