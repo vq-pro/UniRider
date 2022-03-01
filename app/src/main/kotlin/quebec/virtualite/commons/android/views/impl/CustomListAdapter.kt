@@ -1,4 +1,4 @@
-package quebec.virtualite.commons.android.views
+package quebec.virtualite.commons.android.views.impl
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -16,8 +16,8 @@ import org.mockito.BDDMockito.lenient
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.verify
-import quebec.virtualite.commons.android.views.WidgetUtils
-import quebec.virtualite.commons.views.FragmentServices
+import quebec.virtualite.commons.android.views.CommonFragmentServices
+import quebec.virtualite.commons.android.views.CommonWidgetServices
 import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelConnector
@@ -50,13 +50,13 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedInflater: LayoutInflater
 
     @Mock
-    lateinit var mockedServices: FragmentServices
+    lateinit var mockedServices: CommonFragmentServices
 
     @Mock
     lateinit var mockedView: View
 
     @Mock
-    lateinit var mockedWidgets: WidgetUtils
+    lateinit var mockedWidgets: CommonWidgetServices
 
     @Captor
     private lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>

@@ -1,4 +1,4 @@
-package quebec.virtualite.commons.views
+package quebec.virtualite.commons.android.views
 
 import android.app.ProgressDialog
 import androidx.core.os.bundleOf
@@ -7,9 +7,8 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import quebec.virtualite.unirider.database.WheelDb
-import quebec.virtualite.unirider.views.BaseFragment
 
-open class FragmentServices(val fragment: BaseFragment, val idStringPleaseWait: Int) {
+open class CommonFragmentServices(val fragment: CommonFragment, val idStringPleaseWait: Int) {
 
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false

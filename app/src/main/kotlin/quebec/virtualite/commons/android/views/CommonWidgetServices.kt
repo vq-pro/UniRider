@@ -11,8 +11,9 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.SpinnerAdapter
 import androidx.core.view.isVisible
+import quebec.virtualite.commons.android.views.impl.CustomListAdapter
 
-open class WidgetUtils {
+open class CommonWidgetServices {
 
     private val POST_DELAY = 10L
 
