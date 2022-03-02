@@ -50,7 +50,7 @@ class DeviceConnectorImpl : DeviceConnector {
                         val disconnectedDeviceAddress = gatt.device.address
                         gatt.close()
 
-                        if (deviceAddress == disconnectedDeviceAddress && deviceConnector != null) {
+                        if (deviceConnector != null && deviceAddress.equals(disconnectedDeviceAddress)) {
                             val payload = deviceConnector!!.wheelData
                             deviceConnector = null
 
