@@ -15,15 +15,20 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
     private var waitDialog: DialogWithInstance? = null
     private var waitDialogInstance = 0
 
-    open fun doneWaiting(function: (() -> Unit)?) {
+    open fun doneWaitingOnce(function: (() -> Unit)?) {
         if (waitDialogWasDismissed())
             return
 
-        if (waitDialog?.instance != waitDialogInstance)
-            return
+        synchronized(this) {
+            if (waitDialog?.instance != waitDialogInstance)
+                return
+        }
 
-        hideWaitDialog()
-        function!!.invoke()
+        doneWaiting(function)
+    }
+
+    open fun doneWaitingRepeatedly(function: (() -> Unit)?) {
+        doneWaiting(function)
     }
 
     open fun getString(id: Int): String? {
@@ -63,10 +68,15 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         fragment.activity?.runOnUiThread(function)
     }
 
+    private fun doneWaiting(function: (() -> Unit)?) {
+        hideWaitDialog()
+        function!!.invoke()
+    }
+
     private fun hideWaitDialog() {
         runUI {
             synchronized(this) {
-                waitDialog?.dialog!!.hide()
+                waitDialog?.dialog?.hide()
                 waitDialog = null
             }
         }

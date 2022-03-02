@@ -186,7 +186,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         verifyRunWithWaitDialog()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-        verifyDoneWaiting()
+        verifyDoneWaitingOnce()
 
         verify(mockedDb).saveWheel(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX))
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
