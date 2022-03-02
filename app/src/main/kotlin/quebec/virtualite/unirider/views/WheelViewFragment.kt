@@ -22,6 +22,8 @@ open class WheelViewFragment : BaseFragment() {
         const val PARAMETER_WHEEL_ID = "wheelID"
     }
 
+    private val NB_DECIMALS = 1
+
     internal lateinit var buttonConnect: Button
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
@@ -77,9 +79,9 @@ open class WheelViewFragment : BaseFragment() {
         } else {
             fragments.runWithWait {
                 external.connector().getDeviceInfo(wheel!!.btAddr) {
-                    fragments.doneWaitingOnce {
-                        val newMileage = it.mileage.roundToInt()
-                        val newVoltage = round(it.voltage, 1)
+                    fragments.doneWaiting(it) {
+                        val newMileage = it!!.mileage.roundToInt()
+                        val newVoltage = round(it.voltage, NB_DECIMALS)
 
                         updateWheel(newMileage, newVoltage)
                     }

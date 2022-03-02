@@ -15,10 +15,10 @@ open class WheelConnectorImpl(activity: Activity) : WheelConnector {
         scanner.init(activity)
     }
 
-    override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((DeviceInfo) -> Unit)?) {
+    override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((DeviceInfo?) -> Unit)?) {
         scanner.stop()
         connector.connect(deviceAddress!!) { wheelData ->
-            onGotInfo!!.invoke(DeviceInfo(wheelData.mileage, wheelData.voltage))
+            onGotInfo!!.invoke(wheelData?.let { DeviceInfo(wheelData.mileage, wheelData.voltage) })
         }
     }
 

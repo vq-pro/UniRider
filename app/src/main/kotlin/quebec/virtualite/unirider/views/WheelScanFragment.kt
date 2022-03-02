@@ -41,11 +41,11 @@ open class WheelScanFragment : BaseFragment() {
 
     private fun connectWithWheel(device: Device) {
         external.connector().getDeviceInfo(device.address) { info ->
-            fragments.doneWaitingOnce {
+            fragments.doneWaiting(info) {
                 external.runDB { db ->
                     val updatedWheel = WheelEntity(
                         wheel!!.id, wheel!!.name, device.name, device.address,
-                        wheel!!.premileage, info.mileage.roundToInt(),
+                        wheel!!.premileage, info!!.mileage.roundToInt(),
                         wheel!!.voltageMin, wheel!!.voltageMax
                     )
                     db.saveWheel(updatedWheel)
@@ -58,7 +58,7 @@ open class WheelScanFragment : BaseFragment() {
 
     private fun scanForDevices(view: View) {
         external.connector().scan {
-            fragments.doneWaitingRepeatedly {
+            fragments.doneWaiting(it) {
                 devices.add(it)
                 val names = devices.stream().map(Device::name).collect(toList())
 

@@ -68,7 +68,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     private lateinit var lambdaOnFoundDevice: ArgumentCaptor<(Device) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnGotDeviceInfo: ArgumentCaptor<(DeviceInfo) -> Unit>
+    private lateinit var lambdaOnGotDeviceInfo: ArgumentCaptor<(DeviceInfo?) -> Unit>
 
     @Captor
     private lateinit var lambdaOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
@@ -129,13 +129,8 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         lambdaOnFoundDevice.value.invoke(device)
     }
 
-    fun verifyDoneWaitingOnce() {
-        verify(mockedFragments).doneWaitingOnce(lambdaRunWithWaitDialog.capture())
-        lambdaRunWithWaitDialog.value.invoke()
-    }
-
-    fun verifyDoneWaitingRepeatedly() {
-        verify(mockedFragments).doneWaitingRepeatedly(lambdaRunWithWaitDialog.capture())
+    fun verifyDoneWaiting(connectionPayload: Any) {
+        verify(mockedFragments).doneWaiting(eq(connectionPayload), lambdaRunWithWaitDialog.capture())
         lambdaRunWithWaitDialog.value.invoke()
     }
 

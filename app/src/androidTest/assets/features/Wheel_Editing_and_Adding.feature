@@ -29,7 +29,7 @@ Feature: Wheel Editing & Adding
       | Voltage Min      | 74.5                |
       | Voltage Max      | 100.9               |
     Then the wheel was updated
-    And we go back to the main view
+    And I go back to the main view
     And it shows the updated name and a mileage of 200 on the main view
 
   Scenario Outline: Wheel <can or cannot> be saved if we <do something>

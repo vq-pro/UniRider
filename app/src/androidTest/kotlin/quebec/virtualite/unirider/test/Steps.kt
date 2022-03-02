@@ -231,6 +231,11 @@ class Steps {
         assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
     }
 
+    @When("I cancel the scan and go back")
+    fun cancelScan() {
+        back(2)
+    }
+
     @Then("I can enter the details for that wheel")
     fun canEnterDetailsForNewWheel() {
         assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
@@ -347,9 +352,9 @@ class Steps {
         givenTheseWheelsAreConnected(wheel)
     }
 
-    @Then("we go back to the main view")
-    fun weGoBackToMainView() {
-        back(R.id.view_name)
+    @When("I go back to the main view")
+    fun goBackToMainView() {
+        back()
     }
 
     @Then("the wheel can be saved")
@@ -394,14 +399,14 @@ class Steps {
         expectedDeviceName = deviceName
     }
 
-    @When("I reconnect to the wheel")
-    fun whenReconnectToWheel() {
-        click(R.id.button_connect)
-    }
-
     @When("^I enter a voltage of (.*?)V$")
     fun whenEnterVoltage(voltage: Float) {
         enter(R.id.edit_voltage, voltage.toString())
+    }
+
+    @When("I reconnect to the wheel")
+    fun whenReconnectToWheel() {
+        click(R.id.button_connect)
     }
 
     @When("^I select the (.*?)$")

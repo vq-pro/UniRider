@@ -24,7 +24,7 @@ open class WheelConnectorSimulation : WheelConnector {
         }
     }
 
-    override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((DeviceInfo) -> Unit)?) {
+    override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((DeviceInfo?) -> Unit)?) {
         Thread.sleep(1000)
         onGotInfo!!.invoke(DeviceInfo(mileage, voltage))
     }
