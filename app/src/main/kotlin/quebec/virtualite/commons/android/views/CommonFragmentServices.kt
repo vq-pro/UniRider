@@ -18,8 +18,8 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         if (waitDialogWasDismissed())
             return
 
-        function!!.invoke()
         hideWaitDialog()
+        function!!.invoke()
     }
 
     open fun getString(id: Int): String? {
