@@ -12,23 +12,25 @@ import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
 
 class DeviceConnectorImpl : DeviceConnector {
 
-    private val AUTOCONNECT = false
+    private val DONT_AUTOCONNECT = false
 
-    private var wheel: DeviceConnectorWheel? = null
+    private var deviceAddress: String? = null
+    private var deviceConnector: DeviceConnectorWheel? = null
 
     private lateinit var activity: Activity
-    private lateinit var callback: (WheelData) -> Unit
+    private lateinit var onDone: (WheelData?) -> Unit
 
-    override fun connect(deviceAddress: String, callback: (WheelData) -> Unit) {
+    override fun connect(deviceAddress: String, onDone: (WheelData?) -> Unit) {
 
-        this.callback = callback
+        this.deviceAddress = deviceAddress
+        this.onDone = onDone
 
         val bluetoothManager = activity.getSystemService(AppCompatActivity.BLUETOOTH_SERVICE) as BluetoothManager
         val bluetoothAdapter = bluetoothManager.adapter
         val bluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress)
             ?: throw AssertionError("Impossible to connect to device")
 
-        bluetoothDevice.connectGatt(activity.baseContext, AUTOCONNECT, connectionCallback())
+        bluetoothDevice.connectGatt(activity.baseContext, DONT_AUTOCONNECT, connectionCallback())
     }
 
     override fun init(activity: Activity) {
@@ -45,8 +47,16 @@ class DeviceConnectorImpl : DeviceConnector {
                         gatt.discoverServices()
                     }
                     BluetoothProfile.STATE_DISCONNECTED -> {
+                        val disconnectedDeviceAddress = gatt.device.address
                         gatt.close()
-                        wheel?.let { callback.invoke(it.wheelData) }
+
+                        if (deviceAddress == disconnectedDeviceAddress && deviceConnector != null) {
+                            deviceConnector = null
+                            onDone.invoke(deviceConnector?.wheelData)
+                        } else {
+                            // Timeout while trying to establish a connection
+                            onDone.invoke(null)
+                        }
                     }
                 }
             }
@@ -58,8 +68,8 @@ class DeviceConnectorImpl : DeviceConnector {
 
                 if (status == BluetoothGatt.GATT_SUCCESS) {
 
-                    wheel = DeviceConnectorWheelFactory.detectWheel(gatt)
-                    wheel!!.enableNotifications()
+                    deviceConnector = DeviceConnectorWheelFactory.detectWheel(gatt)
+                    deviceConnector!!.enableNotifications()
                 }
             }
 
@@ -68,7 +78,7 @@ class DeviceConnectorImpl : DeviceConnector {
 
                 Log.i("*** BLE ***", "onCharacteristicChanged - " + byteArrayToString(characteristic.value))
 
-                wheel!!.onCharacteristicChanged(characteristic)
+                deviceConnector!!.onCharacteristicChanged(characteristic)
             }
         }
     }

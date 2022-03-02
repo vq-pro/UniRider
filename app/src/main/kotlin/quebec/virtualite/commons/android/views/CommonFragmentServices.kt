@@ -12,17 +12,12 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
 
-    private var waitDialog: DialogWithInstance? = null
-    private var waitDialogInstance = 0
+    private var waitDialog: ProgressDialog? = null
 
+    // FIXME-1 Get rid of the distinction between doneWaitingOnce and Repeatedly
     open fun doneWaitingOnce(function: (() -> Unit)?) {
         if (waitDialogWasDismissed())
             return
-
-        synchronized(this) {
-            if (waitDialog?.instance != waitDialogInstance)
-                return
-        }
 
         doneWaiting(function)
     }
@@ -76,7 +71,7 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
     private fun hideWaitDialog() {
         runUI {
             synchronized(this) {
-                waitDialog?.dialog?.hide()
+                waitDialog?.hide()
                 waitDialog = null
             }
         }
@@ -84,18 +79,18 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
 
     private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {
         synchronized(this) {
-            waitDialog = DialogWithInstance(
-                ProgressDialog(fragment.activity),
-                ++waitDialogInstance
-            )
+            waitDialog = ProgressDialog(fragment.activity)
 
-            waitDialog!!.dialog.setMessage(getString(idStringPleaseWait))
-            if (backOnCancel)
-                waitDialog!!.dialog.setOnCancelListener {
-                    navigateBack()
+            waitDialog!!.setMessage(getString(idStringPleaseWait))
+            waitDialog!!.setOnCancelListener {
+                synchronized(this) {
+                    waitDialog = null
                 }
+                if (backOnCancel)
+                    navigateBack()
+            }
 
-            waitDialog?.dialog!!.show()
+            waitDialog?.show()
         }
 
         runBackground {
@@ -105,12 +100,7 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
 
     private fun waitDialogWasDismissed(): Boolean {
         synchronized(this) {
-            return (waitDialog != null) && !waitDialog!!.dialog.isShowing
+            return (waitDialog != null) && !waitDialog!!.isShowing
         }
     }
-
-    private data class DialogWithInstance(
-        val dialog: ProgressDialog,
-        val instance: Int
-    )
 }

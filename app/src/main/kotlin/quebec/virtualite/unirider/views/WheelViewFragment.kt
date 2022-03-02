@@ -22,6 +22,8 @@ open class WheelViewFragment : BaseFragment() {
         const val PARAMETER_WHEEL_ID = "wheelID"
     }
 
+    private val NB_DECIMALS = 1
+
     internal lateinit var buttonConnect: Button
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
@@ -78,8 +80,12 @@ open class WheelViewFragment : BaseFragment() {
             fragments.runWithWait {
                 external.connector().getDeviceInfo(wheel!!.btAddr) {
                     fragments.doneWaitingOnce {
+                        // FIXME-0 Can this be put into doneWaiting?
+                        if (it == null)
+                            return@doneWaitingOnce
+
                         val newMileage = it.mileage.roundToInt()
-                        val newVoltage = round(it.voltage, 1)
+                        val newVoltage = round(it.voltage, NB_DECIMALS)
 
                         updateWheel(newMileage, newVoltage)
                     }

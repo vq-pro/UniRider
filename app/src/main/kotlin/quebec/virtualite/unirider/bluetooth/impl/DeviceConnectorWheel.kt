@@ -19,13 +19,23 @@ abstract class DeviceConnectorWheel(val gatt: BluetoothGatt) {
     abstract fun decode(data: ByteArray): Boolean
 
     fun done(wheelData: WheelData) {
-        this.wheelData = wheelData
 
         Log.i("*** BLE ***", "${wheelData.mileage}")
+
+        this.wheelData = wheelData
+
         if (!disconnected) {
+            disableNotifications()
             gatt.disconnect()
             disconnected = true
         }
+    }
+
+    fun disableNotifications() {
+        val service = gatt.getService(UUID_SERVICE)
+        val notifyCharacteristic = service.getCharacteristic(UUID_READ_CHARACTER)
+        if (!gatt.setCharacteristicNotification(notifyCharacteristic, false))
+            throw RuntimeException("Cannot request notifications")
     }
 
     fun enableNotifications() {
