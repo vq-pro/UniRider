@@ -14,7 +14,7 @@ Feature: Wheel Connecting - End-2-End
     And I start the app
 
   Scenario Outline: Connecting to a wheel for the first time - <wheel>
-    And I select the <wheel>
+    Given I select the <wheel>
     When I connect to the <bt name>
     Then the mileage is updated to <mileage>
     And the wheel's Bluetooth name is updated
@@ -40,5 +40,16 @@ Feature: Wheel Connecting - End-2-End
 #      | KingSong S18    | 2892    |
       | Veteran Sherman | 18190   |
 
-#  FIXME-0 Scenario with a wheel that won't connect and then a wheel that will connect properly
+  Scenario: Connection following failure to connect - long since we need to wait for the natural timeout for the first connection
+    Given these wheels are connected:
+      | Name            | Bt Name | Bt Address        |
+      | Gotway Nikola+  | GOTWAY  | 00:00:00:00:00:00 |
+      | Veteran Sherman | LK1149  | 88:25:83:F1:C9:8B |
+    And I select the Gotway Nikola+
+    And I reconnect to the wheel
+    And I cancel the scan and go back
+    And I select the Veteran Sherman
+    When I reconnect to the wheel
+    Then the mileage is updated to 14590
+
 #  FIXME-2 Inmotion

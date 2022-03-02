@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBackUnconditionally
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
-import androidx.test.espresso.action.ViewActions.pressBack
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -42,7 +42,7 @@ import java.lang.Thread.sleep
 object StepsUtils {
 
     private const val INTERVAL = 250L
-    private const val TIMEOUT = 15000L
+    private const val TIMEOUT = 30000L
 
     fun assertThat(id: Int, assertion: Matcher<View>) {
         poll {
@@ -58,8 +58,11 @@ object StepsUtils {
         org.hamcrest.MatcherAssert.assertThat(actual, matcher)
     }
 
-    fun back(id: Int) {
-        element(id)?.perform(pressBack())
+    fun back(nb: Int = 1) {
+        var i = nb
+        while (i-- > 0) {
+            pressBackUnconditionally()
+        }
     }
 
     fun click(id: Int) {
