@@ -45,7 +45,8 @@ open class WheelScanFragment : BaseFragment() {
                 external.runDB { db ->
                     val updatedWheel = WheelEntity(
                         wheel!!.id, wheel!!.name, device.name, device.address,
-                        info.mileage.roundToInt(), wheel!!.voltageMin, wheel!!.voltageMax
+                        wheel!!.premileage, info.mileage.roundToInt(),
+                        wheel!!.voltageMin, wheel!!.voltageMax
                     )
                     db.saveWheel(updatedWheel)
                 }

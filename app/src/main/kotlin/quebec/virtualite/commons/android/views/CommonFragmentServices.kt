@@ -12,10 +12,14 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
 
-    private var waitDialog: ProgressDialog? = null
+    private var waitDialog: DialogWithInstance? = null
+    private var waitDialogInstance = 0
 
     open fun doneWaiting(function: (() -> Unit)?) {
         if (waitDialogWasDismissed())
+            return
+
+        if (waitDialog?.instance != waitDialogInstance)
             return
 
         hideWaitDialog()
@@ -62,23 +66,26 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
     private fun hideWaitDialog() {
         runUI {
             synchronized(this) {
-                waitDialog?.hide()
+                waitDialog?.dialog!!.hide()
                 waitDialog = null
             }
         }
     }
 
     private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {
-
         synchronized(this) {
-            waitDialog = ProgressDialog(fragment.activity)
-            waitDialog!!.setMessage(getString(idStringPleaseWait))
+            waitDialog = DialogWithInstance(
+                ProgressDialog(fragment.activity),
+                ++waitDialogInstance
+            )
+
+            waitDialog!!.dialog.setMessage(getString(idStringPleaseWait))
             if (backOnCancel)
-                waitDialog!!.setOnCancelListener {
+                waitDialog!!.dialog.setOnCancelListener {
                     navigateBack()
                 }
 
-            waitDialog?.show()
+            waitDialog?.dialog!!.show()
         }
 
         runBackground {
@@ -88,7 +95,12 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
 
     private fun waitDialogWasDismissed(): Boolean {
         synchronized(this) {
-            return (waitDialog != null) && !waitDialog!!.isShowing
+            return (waitDialog != null) && !waitDialog!!.dialog.isShowing
         }
     }
+
+    private data class DialogWithInstance(
+        val dialog: ProgressDialog,
+        val instance: Int
+    )
 }

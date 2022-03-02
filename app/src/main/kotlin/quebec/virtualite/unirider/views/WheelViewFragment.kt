@@ -65,7 +65,7 @@ open class WheelViewFragment : BaseFragment() {
 
                 textName.text = wheel!!.name
                 textBtName.text = wheel!!.btName
-                textMileage.text = "${wheel!!.mileage}"
+                textMileage.text = "${wheel!!.totalMileage()}"
             }
         }
     }
@@ -115,12 +115,13 @@ open class WheelViewFragment : BaseFragment() {
     private fun updateWheel(newMileage: Int, newVoltage: Float) {
         wheel = WheelEntity(
             wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
-            newMileage, wheel!!.voltageMin, wheel!!.voltageMax
+            wheel!!.premileage, newMileage,
+            wheel!!.voltageMin, wheel!!.voltageMax
         )
 
         external.runDB { it.saveWheel(wheel) }
         fragments.runUI {
-            textMileage.text = "$newMileage"
+            textMileage.text = "${wheel!!.totalMileage()}"
             editVoltage.setText("$newVoltage")
         }
     }

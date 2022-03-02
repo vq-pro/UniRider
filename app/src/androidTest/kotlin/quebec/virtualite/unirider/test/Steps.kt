@@ -73,7 +73,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -88,10 +88,13 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
     }
 
-    @Then("it shows the updated name and mileage on the main view")
-    fun itShowsTheUpdatedNameAndMileageOnTheMainView() {
+    @Then("^it shows the updated name and a mileage of (.*?) on the main view$")
+    fun itShowsTheUpdatedNameAndMileageOnTheMainView(expectedMileage: Int) {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
-        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, updatedWheel.mileage)))
+        assertThat(
+            R.id.wheels,
+            hasRow(WheelRow(selectedWheel.id, updatedWheel.name, expectedMileage))
+        )
     }
 
     @Then("^the mileage is updated to (.*?)$")
@@ -129,7 +132,10 @@ class Steps {
 
     @Then("I see the total mileage")
     fun seeTotalMileage() {
-        assertThat(R.id.total_mileage, hasText("${calculateTotalMileage()}"))
+        var totalMileage = 0
+        mapWheels.forEach { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
+
+        assertThat(R.id.total_mileage, hasText("$totalMileage"))
     }
 
     @Then("^the selected entry is (.*?)$")
@@ -142,6 +148,7 @@ class Steps {
 
         val mapDetailToId = mapOf(
             Pair("Name", R.id.edit_name),
+            Pair("Previous Mileage", R.id.edit_premileage),
             Pair("Mileage", R.id.edit_mileage),
             Pair("Voltage Min", R.id.edit_voltage_min),
             Pair("Voltage Max", R.id.edit_voltage_max)
@@ -162,6 +169,7 @@ class Steps {
             mapEntity["Name"]!!,
             null,
             null,
+            parseInt(mapEntity["Previous Mileage"]!!),
             parseInt(mapEntity["Mileage"]!!),
             parseFloat(mapEntity["Voltage Min"]!!),
             parseFloat(mapEntity["Voltage Max"]!!)
@@ -207,6 +215,11 @@ class Steps {
         setText(R.id.edit_voltage_min, " ")
     }
 
+    @When("I blank the previous mileage")
+    fun blankWheelPreMileage() {
+        setText(R.id.edit_premileage, " ")
+    }
+
     @Then("^the wheel's Bluetooth name is undefined$")
     fun bluetoothNameUndefined() {
         assertThat(selectedWheel.btName, equalTo(null))
@@ -247,6 +260,11 @@ class Steps {
         setText(R.id.edit_name, "Toto")
     }
 
+    @When("I change the previous mileage")
+    fun changeWheelPreMileage() {
+        setText(R.id.edit_premileage, "123")
+    }
+
     @When("I confirm the deletion")
     fun confirmDelete() {
         assertThat(currentFragment(mainActivity), equalTo(WheelDeleteConfirmationFragment::class.java))
@@ -258,12 +276,10 @@ class Steps {
         longClick(R.id.button_delete)
     }
 
-    @Then("the details view shows the correct name and a mileage of that wheel")
-    fun detailsViewShowsNameAndMileage() {
-        assertThat(R.id.view_name, hasText(selectedWheel.name))
-
-        val selectedWheelMileage = mapWheels[selectedWheel.name]!!.mileage
-        assertThat(R.id.view_mileage, hasText("$selectedWheelMileage"))
+    @Then("^the details view shows the (.*?) with a mileage of (.*?)$")
+    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: Int) {
+        assertThat(R.id.view_name, hasText(expectedName))
+        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
     @Then("^it displays a percentage of (.*?)$")
@@ -279,39 +295,7 @@ class Steps {
 
     @Given("this connected wheel:")
     fun givenThisConnectedWheel(wheel: DataTable) {
-        givenTheseConnectedWheels(wheel)
-    }
-
-    @Given("these connected wheels:")
-    fun givenTheseConnectedWheels(wheels: DataTable) {
-        assertThat(
-            wheels.topCells(),
-            equalTo(listOf("Name", "Bt Name", "Bt Address", "Mileage", "Voltage Min", "Voltage Max"))
-        )
-
-        val wheelEntities = wheels.cells(1)
-            .stream()
-            .map { row ->
-                val name = row[0]
-                val btName = row[1]
-                val btAddress = row[2]
-                val mileage = parseInt(row[3])
-                val voltageMin = parseVoltage(row[4])
-                val voltageMax = parseVoltage(row[5])
-                WheelEntity(0, name, btName, btAddress, mileage, voltageMin, voltageMax)
-            }
-            .collect(toList())
-
-        db.saveWheels(wheelEntities)
-
-        db.getWheels().forEach { wheel ->
-            mapWheels[wheel.name] = wheel
-        }
-    }
-
-    @Given("this wheel:")
-    fun givenThisWheel(wheel: DataTable) {
-        givenTheseWheels(wheel)
+        givenTheseWheelsAreConnected(wheel)
     }
 
     @Given("these wheels:")
@@ -325,15 +309,42 @@ class Steps {
                 val mileage = parseInt(row[1])
                 val voltageMin = parseVoltage(row[2])
                 val voltageMax = parseVoltage(row[3])
-                WheelEntity(0, name, null, null, mileage, voltageMin, voltageMax)
+
+                WheelEntity(0, name, null, null, 0, mileage, voltageMin, voltageMax)
             }
             .collect(toList())
 
         db.saveWheels(wheelEntities)
 
-        db.getWheels().forEach { wheel ->
-            mapWheels[wheel.name] = wheel
-        }
+        updateMapWheels()
+    }
+
+    @Given("these wheels are connected:")
+    fun givenTheseWheelsAreConnected(wheels: DataTable) {
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Bt Name", "Bt Address")))
+
+        wheels.cells(1)
+            .forEach { row ->
+                val name = row[0]
+                val btName = row[1]
+                val btAddress = row[2]
+
+                db.findWheel(name)?.let {
+                    db.saveWheel(WheelEntity(it.id, name, btName, btAddress, it.premileage, it.mileage, it.voltageMin, it.voltageMax))
+                }
+            }
+
+        updateMapWheels()
+    }
+
+    @Given("this wheel:")
+    fun givenThisWheel(wheel: DataTable) {
+        givenTheseWheels(wheel)
+    }
+
+    @Given("this wheel is connected:")
+    fun givenThisWheelIsConnected(wheel: DataTable) {
+        givenTheseWheelsAreConnected(wheel)
     }
 
     @Then("we go back to the main view")
@@ -349,6 +360,14 @@ class Steps {
     @Then("the wheel cannot be saved")
     fun wheelCannotBeSaved() {
         assertThat(R.id.button_save, isDisabled())
+    }
+
+    @Given("^the (.*?) has a previous mileage of (.*?)$")
+    fun wheelHasPreviousMileage(name: String, premileage: Int) {
+        db.findWheel(name)?.let {
+            db.saveWheel(WheelEntity(it.id, it.name, it.btName, it.btAddr, premileage, it.mileage, it.voltageMin, it.voltageMax))
+            updateMapWheels()
+        }
     }
 
     @Then("the wheel was added")
@@ -401,17 +420,14 @@ class Steps {
         WheelConnectorSimulation.setVoltage(parseVoltage(deviceFields[3]))
     }
 
-    private fun calculateTotalMileage(): Int {
-        var totalMileage = 0
-        mapWheels.forEach { (_, wheel) ->
-            totalMileage += wheel.mileage
-        }
-
-        return totalMileage
-    }
-
     private fun parseVoltage(value: String): Float {
         assertThat(value, endsWith("V"))
         return parseFloat(value.substring(0, value.length - 1))
+    }
+
+    private fun updateMapWheels() {
+        db.getWheels().forEach { wheel ->
+            mapWheels[wheel.name] = wheel
+        }
     }
 }

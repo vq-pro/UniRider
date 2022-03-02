@@ -18,6 +18,9 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE2
 import quebec.virtualite.unirider.TestDomain.MILEAGE3
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.NAME_NEW
+import quebec.virtualite.unirider.TestDomain.PREMILEAGE
+import quebec.virtualite.unirider.TestDomain.PREMILEAGE2
+import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.S20_2
 import quebec.virtualite.unirider.TestDomain.SHERMAN_3
@@ -93,7 +96,8 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         verifyOnItemClick(mockedLVWheels, "onSelectWheel")
 
         verify(mockedDb).getWheels()
-        verify(mockedTextTotalMileage).text = "${MILEAGE + MILEAGE2 + MILEAGE3}"
+        verify(mockedTextTotalMileage).text =
+            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + MILEAGE + MILEAGE2 + MILEAGE3}"
     }
 
     @Test
@@ -107,7 +111,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
         // Then
         verify(mockedTextName).text = NAME
-        verify(mockedTextMileage).text = "$MILEAGE"
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
     }
 
     @Test
