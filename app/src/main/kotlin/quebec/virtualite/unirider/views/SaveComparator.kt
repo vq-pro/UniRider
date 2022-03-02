@@ -14,6 +14,7 @@ open class SaveComparator {
             return false
 
         return (updatedWheel.name != initialWheel!!.name) ||
+                (updatedWheel.premileage != initialWheel.premileage) ||
                 (updatedWheel.mileage != initialWheel.mileage) ||
                 (updatedWheel.voltageMax != initialWheel.voltageMax) ||
                 (updatedWheel.voltageMin != initialWheel.voltageMin)

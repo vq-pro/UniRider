@@ -115,7 +115,8 @@ open class WheelViewFragment : BaseFragment() {
     private fun updateWheel(newMileage: Int, newVoltage: Float) {
         wheel = WheelEntity(
             wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
-            newMileage, wheel!!.voltageMin, wheel!!.voltageMax
+            wheel!!.premileage, newMileage,
+            wheel!!.voltageMin, wheel!!.voltageMax
         )
 
         external.runDB { it.saveWheel(wheel) }
