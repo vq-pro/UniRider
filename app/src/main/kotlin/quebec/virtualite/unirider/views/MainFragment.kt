@@ -79,7 +79,7 @@ open class MainFragment : BaseFragment() {
     private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
         return wheelList
             .stream()
-            .map { wheel -> WheelRow(wheel.id, wheel.name, wheel.premileage + wheel.mileage) }
+            .map { wheel -> WheelRow(wheel.id, wheel.name, wheel.totalMileage()) }
             .sorted(sortWheelsByMileageDescAndNameAsc())
             .collect(toList())
     }

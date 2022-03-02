@@ -131,7 +131,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         verify(mockedTextName).text = NAME
         verify(mockedTextBtName).text = DEVICE_NAME
-        verify(mockedTextMileage).text = "$MILEAGE"
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
 
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
         verifyOnClick(mockedButtonConnect, "onConnect")
@@ -189,7 +189,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyDoneWaiting()
 
         verify(mockedDb).saveWheel(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX))
-        verify(mockedTextMileage).text = "$MILEAGE_NEW"
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
     }
 

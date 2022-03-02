@@ -10,12 +10,12 @@ Feature: Main Screen
       | Gotway Nikola+  | 2927    | 78.0V       | 100.8V      |
       | KingSong S18    | 2850    | 60.0V       | 84.0V       |
 
-#    FIXME-0 Set a premileage of 3600 for tha Sherman
   Scenario: On entering, we see a list of registered wheels and their mileage
+    Given the Veteran Sherman has a previous mileage of 3600
     When I start the app
     Then I see my wheels and their mileage:
       | Name            | Mileage |
-      | Veteran Sherman | 17622   |
+      | Veteran Sherman | 21222   |
       | Gotway Nikola+  | 2927    |
       | KingSong S18    | 2850    |
       | KingSong 14S    | 694     |

@@ -11,9 +11,14 @@ Feature: Wheel Viewing
       | KingSong S18    | 2850    | 60.0V       | 84.0V       |
     And I start the app
 
-  Scenario: Viewing a wheel's details in full
-    When I select the KingSong S20
-    Then the details view shows the correct name and a mileage of that wheel
+  Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
+    Given the <wheel> has a previous mileage of <previous mileage>
+    When I select the <wheel>
+    Then the details view shows the <wheel> with a mileage of <expected mileage>
+    Examples:
+      | wheel           | previous mileage | expected mileage |
+      | Veteran Sherman | 0                | 17622            |
+      | Veteran Sherman | 10000            | 27622            |
 
   Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
     Given I select the <Wheel>

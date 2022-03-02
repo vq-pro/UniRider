@@ -132,7 +132,10 @@ class Steps {
 
     @Then("I see the total mileage")
     fun seeTotalMileage() {
-        assertThat(R.id.total_mileage, hasText("${calculateTotalMileage()}"))
+        var totalMileage = 0
+        mapWheels.forEach { (_, wheel) -> totalMileage += (wheel.premileage + wheel.mileage) }
+
+        assertThat(R.id.total_mileage, hasText("$totalMileage"))
     }
 
     @Then("^the selected entry is (.*?)$")
@@ -273,12 +276,10 @@ class Steps {
         longClick(R.id.button_delete)
     }
 
-    @Then("the details view shows the correct name and a mileage of that wheel")
-    fun detailsViewShowsNameAndMileage() {
-        assertThat(R.id.view_name, hasText(selectedWheel.name))
-
-        val selectedWheelMileage = mapWheels[selectedWheel.name]!!.mileage
-        assertThat(R.id.view_mileage, hasText("$selectedWheelMileage"))
+    @Then("^the details view shows the (.*?) with a mileage of (.*?)$")
+    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: Int) {
+        assertThat(R.id.view_name, hasText(expectedName))
+        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
     @Then("^it displays a percentage of (.*?)$")
@@ -365,6 +366,7 @@ class Steps {
     fun wheelHasPreviousMileage(name: String, premileage: Int) {
         db.findWheel(name)?.let {
             db.saveWheel(WheelEntity(it.id, it.name, it.btName, it.btAddr, premileage, it.mileage, it.voltageMin, it.voltageMax))
+            updateMapWheels()
         }
     }
 
@@ -416,15 +418,6 @@ class Steps {
         WheelConnectorSimulation.setDevice(Device(deviceFields[0], deviceFields[1]))
         WheelConnectorSimulation.setMileage(parseFloat(deviceFields[2]))
         WheelConnectorSimulation.setVoltage(parseVoltage(deviceFields[3]))
-    }
-
-    private fun calculateTotalMileage(): Int {
-        var totalMileage = 0
-        mapWheels.forEach { (_, wheel) ->
-            totalMileage += wheel.mileage
-        }
-
-        return totalMileage
     }
 
     private fun parseVoltage(value: String): Float {
