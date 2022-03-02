@@ -6,7 +6,7 @@ Feature: Wheel Connecting
   Background:
     Given this wheel:
       | Name         | Mileage | Voltage Min | Voltage Max |
-      | KingSong 14S | 694     | 48.0V       | 67.2V       |
+      | KingSong 14S | 694     | 48V         | 67.2V       |
     And this simulated device:
       | Bt Name    | Bt Address        | Mileage | Voltage |
       | KS-14S-SIM | C0:C1:C2:C3:C4:C5 | 705.615 | 58.56V  |

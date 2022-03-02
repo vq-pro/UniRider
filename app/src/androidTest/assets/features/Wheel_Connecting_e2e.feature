@@ -6,9 +6,10 @@ Feature: Wheel Connecting - End-2-End
   Background:
     Given these wheels:
       | Name            | Mileage | Voltage Min | Voltage Max |
-      | Gotway Nikola+  | 2927    | 78.0V       | 100.8V      |
-      | KingSong 14S    | 694     | 48.0V       | 67.2V       |
-      | KingSong S18    | 2850    | 60.0V       | 84.0V       |
+      | Gotway Nikola+  | 2927    | 78V         | 100.8V      |
+      | KingSong 14S    | 694     | 48V         | 67.2V       |
+      | KingSong S18    | 2850    | 60V         | 84V         |
+      | Inmotion V10F   | 1600    | 65V         | 84V         |
       | Veteran Sherman | 10000   | 75.6V       | 100.8V      |
     And I start the app
 

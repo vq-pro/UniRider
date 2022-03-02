@@ -5,10 +5,10 @@ Feature: Main Screen
       | Name            | Mileage | Voltage Min | Voltage Max |
       | Veteran Sherman | 17622   | 75.6V       | 100.8V      |
       | Veteran Abrams  | 0       | 74.5V       | 100.8V      |
-      | KingSong S20    | 0       | 90.0V       | 126.0V      |
-      | KingSong 14S    | 694     | 48.0V       | 67.2V       |
-      | Gotway Nikola+  | 2927    | 78.0V       | 100.8V      |
-      | KingSong S18    | 2850    | 60.0V       | 84.0V       |
+      | KingSong S20    | 0       | 90V         | 126V        |
+      | KingSong 14S    | 694     | 48V         | 67.2V       |
+      | Gotway Nikola+  | 2927    | 78V         | 100.8V      |
+      | KingSong S18    | 2850    | 60V         | 84V         |
 
   Scenario: On entering, we see a list of registered wheels and their mileage
     Given the Veteran Sherman has a previous mileage of 3600
