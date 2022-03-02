@@ -133,7 +133,7 @@ class Steps {
     @Then("I see the total mileage")
     fun seeTotalMileage() {
         var totalMileage = 0
-        mapWheels.forEach { (_, wheel) -> totalMileage += (wheel.premileage + wheel.mileage) }
+        mapWheels.forEach { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
 
         assertThat(R.id.total_mileage, hasText("$totalMileage"))
     }
