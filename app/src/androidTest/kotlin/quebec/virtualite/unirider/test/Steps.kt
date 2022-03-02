@@ -279,39 +279,7 @@ class Steps {
 
     @Given("this connected wheel:")
     fun givenThisConnectedWheel(wheel: DataTable) {
-        givenTheseConnectedWheels(wheel)
-    }
-
-    @Given("these connected wheels:")
-    fun givenTheseConnectedWheels(wheels: DataTable) {
-        assertThat(
-            wheels.topCells(),
-            equalTo(listOf("Name", "Bt Name", "Bt Address", "Mileage", "Voltage Min", "Voltage Max"))
-        )
-
-        val wheelEntities = wheels.cells(1)
-            .stream()
-            .map { row ->
-                val name = row[0]
-                val btName = row[1]
-                val btAddress = row[2]
-                val mileage = parseInt(row[3])
-                val voltageMin = parseVoltage(row[4])
-                val voltageMax = parseVoltage(row[5])
-                WheelEntity(0, name, btName, btAddress, mileage, voltageMin, voltageMax)
-            }
-            .collect(toList())
-
-        db.saveWheels(wheelEntities)
-
-        db.getWheels().forEach { wheel ->
-            mapWheels[wheel.name] = wheel
-        }
-    }
-
-    @Given("this wheel:")
-    fun givenThisWheel(wheel: DataTable) {
-        givenTheseWheels(wheel)
+        givenTheseWheelsAreConnected(wheel)
     }
 
     @Given("these wheels:")
@@ -325,15 +293,45 @@ class Steps {
                 val mileage = parseInt(row[1])
                 val voltageMin = parseVoltage(row[2])
                 val voltageMax = parseVoltage(row[3])
+
                 WheelEntity(0, name, null, null, mileage, voltageMin, voltageMax)
             }
             .collect(toList())
 
         db.saveWheels(wheelEntities)
 
-        db.getWheels().forEach { wheel ->
-            mapWheels[wheel.name] = wheel
-        }
+        updateMapWheels()
+    }
+
+    @Given("these wheels are connected:")
+    fun givenTheseWheelsAreConnected(wheels: DataTable) {
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Bt Name", "Bt Address")))
+
+        wheels.cells(1)
+            .forEach { row ->
+                val name = row[0]
+                val btName = row[1]
+                val btAddress = row[2]
+
+                db.findWheel(name)
+                    ?.let {
+                        db.saveWheel(
+                            WheelEntity(it.id, name, btName, btAddress, it.mileage, it.voltageMin, it.voltageMax)
+                        )
+                    }
+            }
+
+        updateMapWheels()
+    }
+
+    @Given("this wheel:")
+    fun givenThisWheel(wheel: DataTable) {
+        givenTheseWheels(wheel)
+    }
+
+    @Given("this wheel is connected:")
+    fun givenThisWheelIsConnected(wheel: DataTable) {
+        givenTheseWheelsAreConnected(wheel)
     }
 
     @Then("we go back to the main view")
@@ -413,5 +411,11 @@ class Steps {
     private fun parseVoltage(value: String): Float {
         assertThat(value, endsWith("V"))
         return parseFloat(value.substring(0, value.length - 1))
+    }
+
+    private fun updateMapWheels() {
+        db.getWheels().forEach { wheel ->
+            mapWheels[wheel.name] = wheel
+        }
     }
 }
