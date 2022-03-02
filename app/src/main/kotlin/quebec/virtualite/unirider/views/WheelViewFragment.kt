@@ -79,10 +79,10 @@ open class WheelViewFragment : BaseFragment() {
         } else {
             fragments.runWithWait {
                 external.connector().getDeviceInfo(wheel!!.btAddr) {
-                    fragments.doneWaitingOnce {
+                    fragments.doneWaiting {
                         // FIXME-0 Can this be put into doneWaiting?
                         if (it == null)
-                            return@doneWaitingOnce
+                            return@doneWaiting
 
                         val newMileage = it.mileage.roundToInt()
                         val newVoltage = round(it.voltage, NB_DECIMALS)

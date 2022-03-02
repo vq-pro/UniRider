@@ -14,16 +14,13 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
 
     private var waitDialog: ProgressDialog? = null
 
-    // FIXME-1 Get rid of the distinction between doneWaitingOnce and Repeatedly
-    open fun doneWaitingOnce(function: (() -> Unit)?) {
+    // FIXME-0 Get rid of the distinction between doneWaitingOnce and Repeatedly
+    open fun doneWaiting(function: (() -> Unit)?) {
         if (waitDialogWasDismissed())
             return
 
-        doneWaiting(function)
-    }
-
-    open fun doneWaitingRepeatedly(function: (() -> Unit)?) {
-        doneWaiting(function)
+        hideWaitDialog()
+        function!!.invoke()
     }
 
     open fun getString(id: Int): String? {
@@ -61,11 +58,6 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
 
     open fun runUI(function: (() -> Unit)?) {
         fragment.activity?.runOnUiThread(function)
-    }
-
-    private fun doneWaiting(function: (() -> Unit)?) {
-        hideWaitDialog()
-        function!!.invoke()
     }
 
     private fun hideWaitDialog() {

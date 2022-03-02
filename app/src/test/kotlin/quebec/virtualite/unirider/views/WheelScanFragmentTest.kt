@@ -87,7 +87,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         verifyRunWithWaitDialogAndBack()
         verifyConnectorScanWith(Device(DEVICE_NAME, DEVICE_ADDR))
-        verifyDoneWaitingRepeatedly()
+        verifyDoneWaiting()
 
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
     }
@@ -103,7 +103,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         // Then
         verifyRunWithWaitDialogAndBack()
         verifyConnectorScanWith(Device(DEVICE_NAME2, DEVICE_ADDR2))
-        verifyDoneWaitingRepeatedly()
+        verifyDoneWaiting()
 
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
@@ -122,7 +122,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         // Then
         verifyRunWithWaitDialogAndBack()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-        verifyDoneWaitingOnce()
+        verifyDoneWaiting()
 
         verify(mockedDb).saveWheel(WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, PREMILEAGE3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3))
         verify(mockedFragments).navigateBack()
