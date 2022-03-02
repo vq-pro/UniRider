@@ -51,8 +51,10 @@ class DeviceConnectorImpl : DeviceConnector {
                         gatt.close()
 
                         if (deviceAddress == disconnectedDeviceAddress && deviceConnector != null) {
+                            val payload = deviceConnector!!.wheelData
                             deviceConnector = null
-                            onDone.invoke(deviceConnector?.wheelData)
+
+                            onDone.invoke(payload)
                         } else {
                             // Timeout while trying to establish a connection
                             onDone.invoke(null)
@@ -67,7 +69,6 @@ class DeviceConnectorImpl : DeviceConnector {
                 Log.i("*** BLE ***", "onServicesDiscovered")
 
                 if (status == BluetoothGatt.GATT_SUCCESS) {
-
                     deviceConnector = DeviceConnectorWheelFactory.detectWheel(gatt)
                     deviceConnector!!.enableNotifications()
                 }

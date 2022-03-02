@@ -78,6 +78,8 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
+        val connectionPayload = Device(DEVICE_NAME, DEVICE_ADDR)
+
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(SHERMAN_3))
 
@@ -86,8 +88,8 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verify(mockedDb).getWheel(ID)
 
         verifyRunWithWaitDialogAndBack()
-        verifyConnectorScanWith(Device(DEVICE_NAME, DEVICE_ADDR))
-        verifyDoneWaiting()
+        verifyConnectorScanWith(connectionPayload)
+        verifyDoneWaiting(connectionPayload)
 
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
     }
@@ -101,9 +103,11 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
+        val connectionPayload = Device(DEVICE_NAME2, DEVICE_ADDR2)
+
         verifyRunWithWaitDialogAndBack()
-        verifyConnectorScanWith(Device(DEVICE_NAME2, DEVICE_ADDR2))
-        verifyDoneWaiting()
+        verifyConnectorScanWith(connectionPayload)
+        verifyDoneWaiting(connectionPayload)
 
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
     }
@@ -120,9 +124,11 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
         // Then
+        val connectionPayload = DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW)
+
         verifyRunWithWaitDialogAndBack()
-        verifyConnectorGetDeviceInfo(DEVICE_ADDR3, DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW))
-        verifyDoneWaiting()
+        verifyConnectorGetDeviceInfo(DEVICE_ADDR3, connectionPayload)
+        verifyDoneWaiting(connectionPayload)
 
         verify(mockedDb).saveWheel(WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, PREMILEAGE3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3))
         verify(mockedFragments).navigateBack()

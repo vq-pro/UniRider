@@ -40,5 +40,5 @@ Feature: Wheel Connecting - End-2-End
 #      | KingSong S18    | 2892    |
       | Veteran Sherman | 18190   |
 
-#  FIXME-1 Scenario with a wheel that won't connect and then a wheel that will connect properly
+#  FIXME-0 Scenario with a wheel that won't connect and then a wheel that will connect properly
 #  FIXME-2 Inmotion

@@ -129,8 +129,8 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         lambdaOnFoundDevice.value.invoke(device)
     }
 
-    fun verifyDoneWaiting() {
-        verify(mockedFragments).doneWaiting(lambdaRunWithWaitDialog.capture())
+    fun verifyDoneWaiting(connectionPayload: Any) {
+        verify(mockedFragments).doneWaiting(eq(connectionPayload), lambdaRunWithWaitDialog.capture())
         lambdaRunWithWaitDialog.value.invoke()
     }
 

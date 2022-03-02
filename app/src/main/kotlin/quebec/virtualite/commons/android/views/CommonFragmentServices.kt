@@ -14,13 +14,12 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
 
     private var waitDialog: ProgressDialog? = null
 
-    // FIXME-0 Get rid of the distinction between doneWaitingOnce and Repeatedly
-    open fun doneWaiting(function: (() -> Unit)?) {
+    open fun doneWaiting(payload: Any?, function: (() -> Unit)?) {
         if (waitDialogWasDismissed())
             return
 
         hideWaitDialog()
-        function!!.invoke()
+        payload?.let { function!!.invoke() }
     }
 
     open fun getString(id: Int): String? {
