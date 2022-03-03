@@ -30,14 +30,14 @@ class DeviceConnectorImpl : DeviceConnector {
         val bluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress)
             ?: throw AssertionError("Impossible to connect to device")
 
-        bluetoothDevice.connectGatt(activity.baseContext, DONT_AUTOCONNECT, connectionCallback())
+        bluetoothDevice.connectGatt(activity.baseContext, DONT_AUTOCONNECT, onBluetoothEvent())
     }
 
     override fun init(activity: Activity) {
         this.activity = activity
     }
 
-    internal fun connectionCallback(): BluetoothGattCallback {
+    internal fun onBluetoothEvent(): BluetoothGattCallback {
         return object : BluetoothGattCallback() {
             override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
                 super.onConnectionStateChange(gatt, status, newState)
@@ -51,7 +51,7 @@ class DeviceConnectorImpl : DeviceConnector {
                         gatt.close()
 
                         if (deviceConnector != null && deviceAddress.equals(disconnectedDeviceAddress)) {
-                            val payload = deviceConnector!!.wheelData
+                            val payload = deviceConnector?.wheelData
                             deviceConnector = null
 
                             onDone.invoke(payload)
