@@ -34,6 +34,7 @@ import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.hasToString
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.startsWith
+import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
 import quebec.virtualite.unirider.views.MainActivity
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
@@ -41,7 +42,7 @@ import java.lang.Thread.sleep
 object StepsUtils {
 
     private val INTERVAL = 250L
-    private val TIMEOUT = 5000L
+    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 15000L else 5000L
 
     fun assertThat(id: Int, assertion: Matcher<View>) {
         poll {
