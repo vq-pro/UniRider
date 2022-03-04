@@ -13,22 +13,22 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
 
-private const val BLE = "*** BLE ***"
 
 class DeviceConnectorImpl : DeviceConnector {
 
+    private val BLE = "*** BLE ***"
     private val DONT_AUTOCONNECT = false
 
     private var deviceAddress: String? = null
     private var deviceConnector: DeviceConnectorWheel? = null
 
-    private var previous_gatt: BluetoothGatt? = null
+    private var previousGatt: BluetoothGatt? = null
 
     private lateinit var activity: Activity
     private lateinit var onDone: (WheelData?) -> Unit
 
     override fun connect(deviceAddress: String, onDone: (WheelData?) -> Unit) {
-        previous_gatt?.disconnect()
+        fasterConnectIfLastAttemptIsStillOngoing()
 
         this.deviceAddress = deviceAddress
         this.onDone = onDone
@@ -38,14 +38,18 @@ class DeviceConnectorImpl : DeviceConnector {
         val bluetoothDevice: BluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress)
             ?: throw AssertionError("Impossible to connect to device")
 
-        previous_gatt = bluetoothDevice.connectGatt(activity.baseContext, DONT_AUTOCONNECT, onBluetoothEvent(), TRANSPORT_LE)
+        previousGatt = bluetoothDevice.connectGatt(activity.baseContext, DONT_AUTOCONNECT, onBluetoothEvent(), TRANSPORT_LE)
     }
 
     override fun init(activity: Activity) {
         this.activity = activity
     }
 
-    internal fun onBluetoothEvent(): BluetoothGattCallback {
+    private fun fasterConnectIfLastAttemptIsStillOngoing() {
+        previousGatt?.disconnect()
+    }
+
+    private fun onBluetoothEvent(): BluetoothGattCallback {
         return object : BluetoothGattCallback() {
             override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
                 super.onConnectionStateChange(gatt, status, newState)
