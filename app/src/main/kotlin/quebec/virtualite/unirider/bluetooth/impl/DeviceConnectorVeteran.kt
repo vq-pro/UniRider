@@ -12,7 +12,7 @@ class DeviceConnectorVeteran(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
             return false
         }
 
-        if (data[0] != 0xDC.toByte() || data[1] != 0x5A.toByte())
+        if (byteArrayInt2(data[0], data[1]) != 0xDC5A)
             return false
 
         val voltage = byteArrayInt2(data[4], data[5]) / 100f
