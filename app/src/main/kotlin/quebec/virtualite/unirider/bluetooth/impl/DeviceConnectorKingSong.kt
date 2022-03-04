@@ -41,7 +41,7 @@ class DeviceConnectorKingSong(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) 
             return false
         }
 
-        if (data[0] != 0xAA.toByte() || data[1] != 0x55.toByte())
+        if (byteArrayInt2(data[0], data[1]) != 0xAA55)
             return false
 
         val dataS = byteArrayToString(data)

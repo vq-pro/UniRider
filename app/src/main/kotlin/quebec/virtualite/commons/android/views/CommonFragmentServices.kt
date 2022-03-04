@@ -71,7 +71,6 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
     private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {
         synchronized(this) {
             waitDialog = ProgressDialog(fragment.activity)
-
             waitDialog!!.setMessage(getString(idStringPleaseWait))
             waitDialog!!.setOnCancelListener {
                 synchronized(this) {
