@@ -28,4 +28,4 @@ Feature: Wheel Connecting
     Then the mileage is updated to 1706
     And the voltage is set to 58.6V and battery to 55.2%
 
-#  FIXME-2 Scenario for adding a wheel and connecting it right away
+#  FIXME-1 Scenario for adding a wheel and connecting it right away

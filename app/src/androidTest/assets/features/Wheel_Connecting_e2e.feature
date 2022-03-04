@@ -54,5 +54,3 @@ Feature: Wheel Connecting - End-2-End
     And I select the Veteran Sherman
     When I reconnect to the wheel
     Then the mileage is updated to 18190
-
-#  FIXME-2 Inmotion

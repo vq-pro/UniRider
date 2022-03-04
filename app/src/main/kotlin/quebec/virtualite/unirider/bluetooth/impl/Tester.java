@@ -1,6 +1,6 @@
 package quebec.virtualite.unirider.bluetooth.impl;
 
-// FIXME-1 Cleanup
+// FIXME-2 Cleanup when Inmotion is done
 public class Tester {
 
     static int intFromBytes(byte[] bytes, int starting) {

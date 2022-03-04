@@ -19,6 +19,8 @@ class DeviceConnectorInmotion(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) 
             return false
         }
 
+        // FIXME-2 Complete Inmotion data decoding
+
         val data2 = byteArrayOf(
             0xAA.toByte(), 0xAA.toByte(),
             0x01, 0x01, 0x06, 0x0F, 0x12, 0, 0, 0, 0, 0, 0, 0, 0xFE.toByte(), 2, 1, 0, 6, 8,
