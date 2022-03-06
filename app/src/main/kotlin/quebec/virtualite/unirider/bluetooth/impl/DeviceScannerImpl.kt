@@ -8,17 +8,13 @@ import android.bluetooth.le.ScanResult
 import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
 import quebec.virtualite.unirider.bluetooth.Device
 
-class DeviceScannerImpl : DeviceScanner {
+class DeviceScannerImpl(activity: Activity) : DeviceScanner {
 
-    private lateinit var activity: Activity
-    private lateinit var bluetoothScanner: BluetoothLeScanner
+    private val bluetoothScanner: BluetoothLeScanner
     private val mapFoundDevices = HashSet<String>()
     private var scanning = false
 
-    // FIXME-1 Change this to a constructor?
-    override fun init(activity: Activity) {
-        this.activity = activity
-
+    init {
         val bluetoothManager = activity.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothScanner = bluetoothManager.adapter.bluetoothLeScanner
     }

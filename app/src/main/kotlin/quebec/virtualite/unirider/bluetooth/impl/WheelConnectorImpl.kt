@@ -7,13 +7,8 @@ import quebec.virtualite.unirider.bluetooth.WheelConnector
 
 open class WheelConnectorImpl(activity: Activity) : WheelConnector {
 
-    private val connector: DeviceConnector = DeviceConnectorImpl()
-    private val scanner: DeviceScanner = DeviceScannerImpl()
-
-    init {
-        connector.init(activity)
-        scanner.init(activity)
-    }
+    private val connector: DeviceConnector = DeviceConnectorImpl(activity)
+    private val scanner: DeviceScanner = DeviceScannerImpl(activity)
 
     override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((DeviceInfo?) -> Unit)?) {
         scanner.stop()
