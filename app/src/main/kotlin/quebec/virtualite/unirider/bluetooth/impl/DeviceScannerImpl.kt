@@ -31,23 +31,7 @@ class DeviceScannerImpl(activity: Activity) : DeviceScanner {
         onDetectedNotifyCaller = onDetected
         mapAlreadyFoundDevices.clear()
 
-        bluetoothScanner.startScan(object : ScanCallback() {
-            override fun onScanResult(callbackType: Int, result: ScanResult?) {
-                val deviceName = result?.device?.name
-                val deviceAddress = result?.device?.address
-
-                if (deviceName == null || deviceAddress == null)
-                    return
-
-                if (!isUnique(deviceAddress))
-                    return
-
-                Log.i(this.javaClass.simpleName, "Got device $deviceName - $deviceAddress")
-
-                // Must use a class property for this, since the callback will never be updated from the first time we call startScan()
-                onDetectedNotifyCaller?.invoke(Device(deviceName, deviceAddress))
-            }
-        })
+        bluetoothScanner.startScan(onDetectedInternal())
     }
 
     override fun stop() {
@@ -64,5 +48,23 @@ class DeviceScannerImpl(activity: Activity) : DeviceScanner {
 
         mapAlreadyFoundDevices.add(deviceAddress)
         return true
+    }
+
+    private fun onDetectedInternal() = object : ScanCallback() {
+        override fun onScanResult(callbackType: Int, result: ScanResult?) {
+            val deviceName = result?.device?.name
+            val deviceAddress = result?.device?.address
+
+            if (deviceName == null || deviceAddress == null)
+                return
+
+            if (!isUnique(deviceAddress))
+                return
+
+            Log.i(this.javaClass.simpleName, "Got device $deviceName - $deviceAddress")
+
+            // Must use a class property for this, since the callback will never be updated from the first time we call startScan()
+            onDetectedNotifyCaller?.invoke(Device(deviceName, deviceAddress))
+        }
     }
 }
