@@ -36,7 +36,7 @@
                         android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginEnd="15dp"
                         android:gravity="end"
                         android:text="@string/label_wheel_voltage_max"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -61,7 +61,7 @@
                         android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginEnd="15dp"
                         android:gravity="end"
                         android:text="@string/label_wheel_voltage_min"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -79,32 +79,6 @@
                 />
             </TableRow>
 
-            <!-- Previous Mileage-->
-            <TableRow>
-                <TextView
-                        android:labelFor="@+id/edit_premileage"
-                        android:layout_weight="2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:gravity="end"
-                        android:text="@string/label_wheel_premileage"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                />
-
-                <EditText
-                        android:id="@+id/edit_premileage"
-                        android:inputType="numberDecimal"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:hint="@string/label_wheel_mileage"
-                        android:autofillHints=""
-                />
-
-            </TableRow>
-
             <!-- Mileage-->
             <TableRow>
                 <TextView
@@ -112,7 +86,7 @@
                         android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginEnd="15dp"
                         android:gravity="end"
                         android:text="@string/label_wheel_mileage"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -126,6 +100,31 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:hint="@string/label_wheel_mileage"
+                        android:autofillHints=""
+                />
+            </TableRow>
+
+            <!-- Previous Mileage-->
+            <TableRow>
+                <TextView
+                        android:labelFor="@+id/edit_premileage"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:gravity="end"
+                        android:text="@string/label_wheel_premileage"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+                <EditText
+                        android:id="@+id/edit_premileage"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:hint="@string/label_wheel_previous"
                         android:autofillHints=""
                 />
             </TableRow>

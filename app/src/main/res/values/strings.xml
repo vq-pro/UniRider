@@ -18,6 +18,7 @@
     <string name="label_wheel_premileage">previous mileage</string>
     <string name="label_wheel_mileage">mileage</string>
     <string name="label_wheel_name">name</string>
+    <string name="label_wheel_previous">previous</string>
     <string name="label_wheel_voltage">voltage</string>
     <string name="label_wheel_voltage_max">max voltage</string>
     <string name="label_wheel_voltage_min">min voltage</string>
