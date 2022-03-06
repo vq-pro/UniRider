@@ -358,8 +358,8 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
     }
 
-    @When("I go back to the view screen")
-    fun goBackToViewScreen() {
+    @When("I go back to view the wheel")
+    fun goBackToViewWheel() {
         back()
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
@@ -422,10 +422,11 @@ class Steps {
         selectListViewItem(R.id.wheels, "name", wheelName)
     }
 
-    @When("^I try to connect to the (.*?)$")
+    @When("^I do a scan and see the (.*?) but go back without connecting$")
     fun whenTryingToConnectTo(deviceName: String) {
         click(R.id.button_connect)
         assertThat(R.id.devices, hasRow(deviceName))
+        goBackToViewWheel()
     }
 
     @Given("this simulated device:")

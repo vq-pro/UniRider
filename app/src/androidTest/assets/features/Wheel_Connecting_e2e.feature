@@ -27,8 +27,7 @@ Feature: Wheel Connecting - End-2-End
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
     Given I select the Veteran Sherman
-    And I try to connect to the LK1149
-    And I go back to the view screen
+    And I do a scan and see the LK1149 but go back without connecting
     When I connect to the LK1149
     Then the wheel's Bluetooth name is updated
 
