@@ -10,146 +10,138 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
     >
-        <EditText
-                android:id="@+id/edit_name"
-                android:layout_width="wrap_content"
+        <TableLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textStyle="bold"
-                android:autofillHints="@string/label_wheel_name"
-                android:inputType="text"
-                tools:ignore="LabelFor"/>
-
-        <!-- Previous Mileage-->
-        <LinearLayout
-                android:id="@+id/group_premileage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"
-                android:layout_below="@+id/edit_name"
+                android:layout_margin="20dp"
         >
-            <TextView
-                    android:labelFor="@+id/edit_premileage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="@string/label_wheel_premileage"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
+            <TableRow>
+                <EditText
+                        android:id="@+id/edit_name"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                        android:autofillHints="@string/label_wheel_name"
+                        android:inputType="text"
+                        tools:ignore="LabelFor"/>
+            </TableRow>
 
-            <EditText
-                    android:id="@+id/edit_premileage"
-                    android:inputType="numberDecimal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:autofillHints="@string/label_wheel_premileage"/>
+            <!-- Previous Mileage-->
+            <TableRow android:layout_marginTop="40dp">
+                <TextView
+                        android:labelFor="@+id/edit_premileage"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:gravity="end"
+                        android:text="@string/label_wheel_premileage"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
 
-        </LinearLayout>
+                <EditText
+                        android:id="@+id/edit_premileage"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints="@string/label_wheel_premileage"/>
 
-        <!-- Mileage-->
-        <LinearLayout
-                android:id="@+id/group_mileage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:layout_below="@+id/group_premileage"
-        >
-            <TextView
-                    android:labelFor="@+id/edit_mileage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="@string/label_wheel_mileage"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
+            </TableRow>
 
-            <EditText
-                    android:id="@+id/edit_mileage"
-                    android:inputType="numberDecimal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:autofillHints="@string/label_wheel_mileage"/>
+            <!-- Mileage-->
+            <TableRow>
+                <TextView
+                        android:labelFor="@+id/edit_mileage"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:gravity="end"
+                        android:text="@string/label_wheel_mileage"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
 
-        </LinearLayout>
+                <EditText
+                        android:id="@+id/edit_mileage"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints="@string/label_wheel_mileage"/>
 
-        <!-- Voltage Max -->
-        <LinearLayout
-                android:id="@+id/group_vmax"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:layout_below="@+id/group_mileage"
-        >
-            <TextView
-                    android:labelFor="@+id/edit_voltage_max"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="@string/label_wheel_voltage_max"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
+            </TableRow>
 
-            <EditText
-                    android:id="@+id/edit_voltage_max"
-                    android:inputType="numberDecimal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:autofillHints="@string/label_max"
-            />
-        </LinearLayout>
+            <!-- Voltage Max -->
+            <TableRow>
+                <TextView
+                        android:labelFor="@+id/edit_voltage_max"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:gravity="end"
+                        android:text="@string/label_wheel_voltage_max"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
 
-        <!-- Voltage Min -->
-        <LinearLayout
-                android:id="@+id/group_vmin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:layout_below="@+id/group_vmax"
-        >
-            <TextView
-                    android:labelFor="@+id/edit_voltage_min"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="@string/label_wheel_voltage_min"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
+                <EditText
+                        android:id="@+id/edit_voltage_max"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints="@string/label_max"
+                />
+            </TableRow>
 
-            <EditText
-                    android:id="@+id/edit_voltage_min"
-                    android:inputType="numberDecimal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:autofillHints="@string/label_min"
-            />
-        </LinearLayout>
+            <!-- Voltage Min -->
+            <TableRow>
+                <TextView
+                        android:labelFor="@+id/edit_voltage_min"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:gravity="end"
+                        android:text="@string/label_wheel_voltage_min"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+                <EditText
+                        android:id="@+id/edit_voltage_min"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints="@string/label_min"
+                />
+            </TableRow>
+        </TableLayout>
 
         <!-- Buttons -->
         <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="20dp"
                 android:layout_alignParentBottom="true"
+                android:gravity="center_horizontal"
         >
             <Button
                     android:id="@+id/button_save"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:text="@string/button_save"
             />
         </LinearLayout>
     </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
