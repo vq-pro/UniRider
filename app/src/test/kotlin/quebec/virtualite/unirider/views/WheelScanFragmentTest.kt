@@ -80,6 +80,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         // Then
         val connectionPayload = Device(DEVICE_NAME, DEVICE_ADDR)
 
+        assertThat(fragment.devices, equalTo(emptyList()))
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(SHERMAN_3))
 
@@ -110,6 +111,15 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verifyDoneWaiting(connectionPayload)
 
         verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
+    }
+
+    @Test
+    fun onDestroyView() {
+        // When
+        fragment.onDestroyView()
+
+        // Then
+        verify(mockedConnector).stopScanning()
     }
 
     @Test

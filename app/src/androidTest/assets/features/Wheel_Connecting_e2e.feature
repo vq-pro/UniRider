@@ -25,6 +25,13 @@ Feature: Wheel Connecting - End-2-End
 #      | KingSong 14S    | KS-14SMD2107 | 765     |
       | Veteran Sherman | LK1149  | 18290   |
 
+  Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
+    Given I select the Veteran Sherman
+    And I try to connect to the LK1149
+    And I go back to the view screen
+    When I connect to the LK1149
+    Then the wheel's Bluetooth name is updated
+
   Scenario Outline: Connecting to a previously connected wheel - <wheel>
     Given these wheels are connected:
       | Name            | Bt Name      | Bt Address        |
@@ -41,7 +48,7 @@ Feature: Wheel Connecting - End-2-End
       | Veteran Sherman | 18290   |
 #      | Inmotion V8F    | 0       |
 
-  Scenario: Connection following failure to connect - long since we need to wait for the natural timeout for the first connection
+  Scenario: Connecting to a previously connected wheel - ERROR - Connection following failure to connect
     Given these wheels are connected:
       | Name            | Bt Name      | Bt Address        |
       | Gotway Nikola+  | GOTWAY       | 00:00:00:00:00:00 |

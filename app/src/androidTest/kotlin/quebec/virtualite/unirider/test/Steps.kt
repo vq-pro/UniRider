@@ -355,6 +355,13 @@ class Steps {
     @When("I go back to the main view")
     fun goBackToMainView() {
         back()
+        assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
+    }
+
+    @When("I go back to the view screen")
+    fun goBackToViewScreen() {
+        back()
+        assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
     @Then("the wheel can be saved")
@@ -413,6 +420,12 @@ class Steps {
     fun whenSelect(wheelName: String) {
         selectedWheel = db.findWheel(wheelName)!!
         selectListViewItem(R.id.wheels, "name", wheelName)
+    }
+
+    @When("^I try to connect to the (.*?)$")
+    fun whenTryingToConnectTo(deviceName: String) {
+        click(R.id.button_connect)
+        assertThat(R.id.devices, hasRow(deviceName))
     }
 
     @Given("this simulated device:")

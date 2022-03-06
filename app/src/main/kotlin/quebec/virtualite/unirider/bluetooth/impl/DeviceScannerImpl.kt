@@ -5,14 +5,16 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
 import quebec.virtualite.unirider.bluetooth.Device
 
 class DeviceScannerImpl(activity: Activity) : DeviceScanner {
 
     private val bluetoothScanner: BluetoothLeScanner
-    private val mapFoundDevices = HashSet<String>()
-    private var scanning = false
+    private val mapAlreadyFoundDevices = HashSet<String>()
+
+    private var onDetectedNotifyCaller: ((Device) -> Unit)? = null
 
     init {
         val bluetoothManager = activity.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
@@ -20,36 +22,47 @@ class DeviceScannerImpl(activity: Activity) : DeviceScanner {
     }
 
     override fun isStopped(): Boolean {
-        return scanning
+        return onDetectedNotifyCaller == null
     }
 
     override fun scan(onDetected: (Device) -> Unit) {
         stop()
 
-        scanning = true
+        onDetectedNotifyCaller = onDetected
+        mapAlreadyFoundDevices.clear()
+
         bluetoothScanner.startScan(object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
-                super.onScanResult(callbackType, result)
-
                 val deviceName = result?.device?.name
                 val deviceAddress = result?.device?.address
 
                 if (deviceName == null || deviceAddress == null)
                     return
 
-                if (mapFoundDevices.contains(deviceAddress))
+                if (!isUnique(deviceAddress))
                     return
 
-                onDetected.invoke(Device(deviceName, deviceAddress))
-                mapFoundDevices.add(deviceAddress)
+                Log.i(this.javaClass.simpleName, "Got device $deviceName - $deviceAddress")
+
+                // Must use a class property for this, since the callback will never be updated from the first time we call startScan()
+                onDetectedNotifyCaller?.invoke(Device(deviceName, deviceAddress))
             }
         })
     }
 
     override fun stop() {
-        if (scanning) {
+        if (!isStopped()) {
+            onDetectedNotifyCaller = null
+            bluetoothScanner.flushPendingScanResults(object : ScanCallback() {})
             bluetoothScanner.stopScan(object : ScanCallback() {})
-            scanning = false
         }
+    }
+
+    private fun isUnique(deviceAddress: String): Boolean {
+        if (mapAlreadyFoundDevices.contains(deviceAddress))
+            return false
+
+        mapAlreadyFoundDevices.add(deviceAddress)
+        return true
     }
 }

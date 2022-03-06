@@ -33,4 +33,8 @@ open class WheelConnectorSimulation : WheelConnector {
         Thread.sleep(1000)
         onFound!!.invoke(device)
     }
+
+    override fun stopScanning() {
+        // Nothing to do
+    }
 }

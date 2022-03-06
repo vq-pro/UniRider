@@ -39,6 +39,12 @@ open class WheelScanFragment : BaseFragment() {
         fragments.runWithWaitAndBack { connectWithWheel(devices[pos]) }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        external.connector().stopScanning()
+    }
+
     private fun connectWithWheel(device: Device) {
         external.connector().getDeviceInfo(device.address) { info ->
             fragments.doneWaiting(info) {
@@ -57,12 +63,15 @@ open class WheelScanFragment : BaseFragment() {
     }
 
     private fun scanForDevices(view: View) {
+
         external.connector().scan {
             fragments.doneWaiting(it) {
                 devices.add(it)
-                val names = devices.stream().map(Device::name).collect(toList())
 
-                fragments.runUI { widgets.stringListAdapter(lvWheels, view, names) }
+                fragments.runUI {
+                    val names = devices.stream().map(Device::name).collect(toList())
+                    widgets.stringListAdapter(lvWheels, view, names)
+                }
             }
         }
     }

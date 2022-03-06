@@ -20,4 +20,8 @@ open class WheelConnectorImpl(activity: Activity) : WheelConnector {
     override fun scan(onFound: ((Device) -> Unit)?) {
         scanner.scan(onFound!!)
     }
+
+    override fun stopScanning() {
+        scanner.stop()
+    }
 }
