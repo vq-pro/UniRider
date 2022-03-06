@@ -154,6 +154,10 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedDb, never()).getWheel(anyLong())
         verify(mockedWidgets).disable(mockedButtonSave)
 
+        verify(mockedEditName, never()).setText(anyString())
+        verify(mockedEditVoltageMax, never()).setText(anyString())
+        verify(mockedEditVoltageMin, never()).setText(anyString())
+
         assertThat(fragment.initialWheel, equalTo(newWheel))
         assertThat(fragment.updatedWheel, equalTo(newWheel))
     }

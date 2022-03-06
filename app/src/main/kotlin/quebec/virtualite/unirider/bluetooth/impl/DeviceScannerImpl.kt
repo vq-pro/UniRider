@@ -1,63 +1,55 @@
 package quebec.virtualite.unirider.bluetooth.impl
 
 import android.app.Activity
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
+import android.bluetooth.le.BluetoothLeScanner
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
+import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
 import quebec.virtualite.unirider.bluetooth.Device
 
-class DeviceScannerImpl : DeviceScanner {
+class DeviceScannerImpl(activity: Activity) : DeviceScanner {
 
-    private lateinit var activity: Activity
-    private lateinit var bluetoothAdapter: BluetoothAdapter
+    private val bluetoothScanner: BluetoothLeScanner
+    private val mapFoundDevices = HashSet<String>()
+    private var scanning = false
 
-    override fun init(activity: Activity) {
-        this.activity = activity
-
-        val bluetoothManager = activity.getSystemService(AppCompatActivity.BLUETOOTH_SERVICE) as BluetoothManager
-        bluetoothAdapter = bluetoothManager.adapter
+    init {
+        val bluetoothManager = activity.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothScanner = bluetoothManager.adapter.bluetoothLeScanner
     }
 
     override fun isStopped(): Boolean {
-        return !bluetoothAdapter.isDiscovering
+        return scanning
     }
 
     override fun scan(onDetected: (Device) -> Unit) {
-
-        val broadcastReceiver = object : BroadcastReceiver() {
-
-            override fun onReceive(context: Context, intent: Intent) {
-                val action: String? = intent.action
-                when (action) {
-                    BluetoothDevice.ACTION_FOUND -> {
-                        val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-
-                        if (device == null || device.name == null) {
-                            return
-                        }
-
-                        onDetected.invoke(Device(device.name, device.address))
-                    }
-                }
-            }
-        }
-
         stop()
 
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        activity.registerReceiver(broadcastReceiver, filter)
+        scanning = true
+        bluetoothScanner.startScan(object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult?) {
+                super.onScanResult(callbackType, result)
 
-        bluetoothAdapter.startDiscovery()
+                val deviceName = result?.device?.name
+                val deviceAddress = result?.device?.address
+
+                if (deviceName == null || deviceAddress == null)
+                    return
+
+                if (mapFoundDevices.contains(deviceAddress))
+                    return
+
+                onDetected.invoke(Device(deviceName, deviceAddress))
+                mapFoundDevices.add(deviceAddress)
+            }
+        })
     }
 
     override fun stop() {
-        if (bluetoothAdapter.isDiscovering()) {
-            bluetoothAdapter.cancelDiscovery()
+        if (scanning) {
+            bluetoothScanner.stopScan(object : ScanCallback() {})
+            scanning = false
         }
     }
 }

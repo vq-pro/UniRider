@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.bluetooth.impl
 
 import android.app.Activity
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothDevice.TRANSPORT_LE
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
@@ -10,11 +9,11 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile.STATE_CONNECTED
 import android.bluetooth.BluetoothProfile.STATE_DISCONNECTED
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
 
 
-class DeviceConnectorImpl : DeviceConnector {
+class DeviceConnectorImpl(val activity: Activity) : DeviceConnector {
 
     private val BLE = "*** BLE ***"
     private val DONT_AUTOCONNECT = false
@@ -24,7 +23,6 @@ class DeviceConnectorImpl : DeviceConnector {
 
     private var previousGatt: BluetoothGatt? = null
 
-    private lateinit var activity: Activity
     private lateinit var onDone: (WheelData?) -> Unit
 
     override fun connect(deviceAddress: String, onDone: (WheelData?) -> Unit) {
@@ -33,16 +31,11 @@ class DeviceConnectorImpl : DeviceConnector {
         this.deviceAddress = deviceAddress
         this.onDone = onDone
 
-        val bluetoothManager = activity.getSystemService(AppCompatActivity.BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter = bluetoothManager.adapter
-        val bluetoothDevice: BluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress)
+        val bluetoothManager = activity.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothDevice = bluetoothManager.adapter.getRemoteDevice(deviceAddress)
             ?: throw AssertionError("Impossible to connect to device")
 
         previousGatt = bluetoothDevice.connectGatt(activity.baseContext, DONT_AUTOCONNECT, onBluetoothEvent(), TRANSPORT_LE)
-    }
-
-    override fun init(activity: Activity) {
-        this.activity = activity
     }
 
     private fun fasterConnectIfLastAttemptIsStillOngoing() {
