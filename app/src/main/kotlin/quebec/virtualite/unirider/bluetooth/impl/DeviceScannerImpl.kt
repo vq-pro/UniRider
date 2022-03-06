@@ -23,7 +23,6 @@ class DeviceScannerImpl(activity: Activity) : DeviceScanner {
         return scanning
     }
 
-    // FIXME-1 This won't work if localization services are disabled (by default). Find a way to detect that and popup
     override fun scan(onDetected: (Device) -> Unit) {
         stop()
 
