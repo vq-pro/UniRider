@@ -10,100 +10,90 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
     >
-        <!-- Name-->
-        <TextView
-                android:id="@+id/view_name"
-                android:layout_width="wrap_content"
+        <TableLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textStyle="bold"
-        />
-
-        <!-- Bluetooth Name -->
-        <LinearLayout
-                android:id="@+id/group_bt_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"
-                android:layout_below="@+id/view_name"
+                android:layout_margin="30dp"
         >
-            <TextView
-                    android:id="@+id/view_bt_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textStyle="italic"
-            />
-        </LinearLayout>
+            <!-- Name-->
+            <TableRow android:layout_marginBottom="40dp">
+                <TextView
+                        android:id="@+id/view_name"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                />
+            </TableRow>
 
-        <!-- Mileage-->
-        <LinearLayout
-                android:id="@+id/group_mileage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"
-                android:layout_below="@+id/group_bt_name"
-        >
-            <TextView
-                    android:id="@+id/view_mileage_label"
-                    android:labelFor="@+id/view_mileage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="@string/label_wheel_mileage"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
+            <!-- Bluetooth Name -->
+            <TableRow android:layout_marginBottom="30dp">
+                <TextView
+                        android:id="@+id/view_bt_name"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textStyle="italic"
+                />
+            </TableRow>
 
-            <TextView
-                    android:id="@+id/view_mileage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
+            <!-- Mileage-->
+            <TableRow>
+                <TextView
+                        android:id="@+id/view_mileage_label"
+                        android:labelFor="@+id/view_mileage"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:text="@string/label_wheel_mileage"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
 
-            <Button
-                    android:id="@+id/button_connect"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/button_connect"
-            />
-        </LinearLayout>
+                <TextView
+                        android:id="@+id/view_mileage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
 
-        <!-- Voltage & Battery-->
-        <LinearLayout
-                android:id="@+id/group_calculator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="80dp"
-                android:layout_below="@+id/group_mileage"
-        >
-            <EditText
-                    android:id="@+id/edit_voltage"
-                    android:hint="@string/label_wheel_voltage"
-                    android:inputType="numberDecimal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:autofillHints=""
-            />
+                <Button
+                        android:id="@+id/button_connect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_connect"
+                />
+            </TableRow>
 
-            <TextView
-                    android:id="@+id/view_battery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
-        </LinearLayout>
+            <!-- Voltage & Battery-->
+            <TableRow android:layout_marginTop="20dp">
+                <EditText
+                        android:id="@+id/edit_voltage"
+                        android:hint="@string/label_wheel_voltage"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                />
+
+                <TextView
+                        android:id="@+id/view_battery"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+            </TableRow>
+        </TableLayout>
 
         <!-- Buttons -->
         <LinearLayout
