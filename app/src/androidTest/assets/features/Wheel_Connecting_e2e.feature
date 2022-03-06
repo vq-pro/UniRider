@@ -21,9 +21,9 @@ Feature: Wheel Connecting - End-2-End
     Then the mileage is updated to <mileage>
     And the wheel's Bluetooth name is updated
     Examples:
-      | wheel           | bt name      | mileage |
+      | wheel           | bt name | mileage |
 #      | KingSong 14S    | KS-14SMD2107 | 765     |
-      | Veteran Sherman | LK1149       | 18190   |
+      | Veteran Sherman | LK1149  | 18290   |
 
   Scenario Outline: Connecting to a previously connected wheel - <wheel>
     Given these wheels are connected:
@@ -38,7 +38,7 @@ Feature: Wheel Connecting - End-2-End
     Examples:
       | wheel           | mileage |
 #      | KingSong 14S    | 765     |
-      | Veteran Sherman | 18190   |
+      | Veteran Sherman | 18290   |
 #      | Inmotion V8F    | 0       |
 
   Scenario: Connection following failure to connect - long since we need to wait for the natural timeout for the first connection
@@ -53,4 +53,4 @@ Feature: Wheel Connecting - End-2-End
     And I cancel the scan and go back
     And I select the Veteran Sherman
     When I reconnect to the wheel
-    Then the mileage is updated to 18190
+    Then the mileage is updated to 18290
