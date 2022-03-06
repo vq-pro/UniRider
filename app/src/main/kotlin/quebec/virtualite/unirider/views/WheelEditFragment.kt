@@ -54,20 +54,22 @@ open class WheelEditFragment : BaseFragment() {
         widgets.setOnClickListener(buttonSave, onSave())
 
         external.runDB {
-            initialWheel = if (parmWheelId == 0L)
-                NEW_WHEEL
-            else
-                it.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
+            if (parmWheelId != 0L) {
+                initialWheel = it.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
+                updatedWheel = initialWheel
 
-            updatedWheel = initialWheel
+                editName.setText(initialWheel.name)
+                editVoltageMax.setText("${initialWheel.voltageMax}")
+                editVoltageMin.setText("${initialWheel.voltageMin}")
 
-            editName.setText(initialWheel.name)
-            if (initialWheel.premileage != 0)
-                editPreMileage.setText("${initialWheel.premileage}")
-            if (initialWheel.mileage != 0)
-                editMileage.setText("${initialWheel.mileage}")
-            editVoltageMax.setText("${initialWheel.voltageMax}")
-            editVoltageMin.setText("${initialWheel.voltageMin}")
+                if (initialWheel.premileage != 0)
+                    editPreMileage.setText("${initialWheel.premileage}")
+                if (initialWheel.mileage != 0)
+                    editMileage.setText("${initialWheel.mileage}")
+            } else {
+                initialWheel = NEW_WHEEL
+                updatedWheel = initialWheel
+            }
 
             widgets.disable(buttonSave)
         }
