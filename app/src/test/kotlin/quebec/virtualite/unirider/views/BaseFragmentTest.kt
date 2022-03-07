@@ -59,25 +59,25 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedWidgets: CommonWidgetServices
 
     @Captor
-    private lateinit var lambdaOnClick: ArgumentCaptor<(View) -> Unit>
+    private lateinit var captorOnClick: ArgumentCaptor<(View) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
+    private lateinit var captorOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnFoundDevice: ArgumentCaptor<(Device) -> Unit>
+    private lateinit var captorOnFoundDevice: ArgumentCaptor<(Device) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnGotDeviceInfo: ArgumentCaptor<(DeviceInfo?) -> Unit>
+    private lateinit var captorOnGotDeviceInfo: ArgumentCaptor<(DeviceInfo?) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
+    private lateinit var captorOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
 
     @Captor
-    private lateinit var lambdaOnUpdateText: ArgumentCaptor<(String) -> Unit>
+    private lateinit var captorOnUpdateText: ArgumentCaptor<(String) -> Unit>
 
     @Captor
-    private lateinit var lambdaRunWithWaitDialog: ArgumentCaptor<() -> Unit>
+    private lateinit var captorRunWithWaitDialog: ArgumentCaptor<() -> Unit>
 
     fun mockArgument(fragment: BaseFragment, param: String, value: Long) {
         given(mockedBundle.getLong(param))
@@ -120,18 +120,18 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, deviceInfo: DeviceInfo) {
-        verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), lambdaOnGotDeviceInfo.capture())
-        lambdaOnGotDeviceInfo.value.invoke(deviceInfo)
+        verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), captorOnGotDeviceInfo.capture())
+        captorOnGotDeviceInfo.value.invoke(deviceInfo)
     }
 
     fun verifyConnectorScanWith(device: Device) {
-        verify(mockedConnector).scan(lambdaOnFoundDevice.capture())
-        lambdaOnFoundDevice.value.invoke(device)
+        verify(mockedConnector).scan(captorOnFoundDevice.capture())
+        captorOnFoundDevice.value.invoke(device)
     }
 
     fun verifyDoneWaiting(connectionPayload: Any) {
-        verify(mockedFragments).doneWaiting(eq(connectionPayload), lambdaRunWithWaitDialog.capture())
-        lambdaRunWithWaitDialog.value.invoke()
+        verify(mockedFragments).doneWaiting(eq(connectionPayload), captorRunWithWaitDialog.capture())
+        captorRunWithWaitDialog.value.invoke()
     }
 
     fun verifyInflate(expectedId: Int) {
@@ -139,33 +139,33 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun verifyOnClick(mockedField: View, methodName: String) {
-        verify(mockedWidgets).setOnClickListener(eq(mockedField), lambdaOnClick.capture())
-        assertThat(lambdaOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        verify(mockedWidgets).setOnClickListener(eq(mockedField), captorOnClick.capture())
+        assertThat(captorOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyOnItemClick(mockedField: ListView, methodName: String) {
-        verify(mockedWidgets).setOnItemClickListener(eq(mockedField), lambdaOnItemClick.capture())
-        assertThat(lambdaOnItemClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        verify(mockedWidgets).setOnItemClickListener(eq(mockedField), captorOnItemClick.capture())
+        assertThat(captorOnItemClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyOnLongClick(mockedField: View, methodName: String) {
-        verify(mockedWidgets).setOnLongClickListener(eq(mockedField), lambdaOnClick.capture())
-        assertThat(lambdaOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        verify(mockedWidgets).setOnLongClickListener(eq(mockedField), captorOnClick.capture())
+        assertThat(captorOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyOnUpdateText(mockedField: EditText, methodName: String) {
-        verify(mockedWidgets).addTextChangedListener(eq(mockedField), lambdaOnUpdateText.capture())
-        assertThat(lambdaOnUpdateText.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        verify(mockedWidgets).addTextChangedListener(eq(mockedField), captorOnUpdateText.capture())
+        assertThat(captorOnUpdateText.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyRunWithWaitDialog() {
-        verify(mockedFragments).runWithWait(lambdaRunWithWaitDialog.capture())
-        lambdaRunWithWaitDialog.value.invoke()
+        verify(mockedFragments).runWithWait(captorRunWithWaitDialog.capture())
+        captorRunWithWaitDialog.value.invoke()
     }
 
     fun verifyRunWithWaitDialogAndBack() {
-        verify(mockedFragments).runWithWaitAndBack(lambdaRunWithWaitDialog.capture())
-        lambdaRunWithWaitDialog.value.invoke()
+        verify(mockedFragments).runWithWaitAndBack(captorRunWithWaitDialog.capture())
+        captorRunWithWaitDialog.value.invoke()
     }
 
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {
@@ -178,8 +178,8 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     ) {
         verify(mockedWidgets).multifieldListAdapter(
             eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData),
-            (lambdaOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
+            (captorOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
         )
-        assertThat(lambdaOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        assertThat(captorOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 }
