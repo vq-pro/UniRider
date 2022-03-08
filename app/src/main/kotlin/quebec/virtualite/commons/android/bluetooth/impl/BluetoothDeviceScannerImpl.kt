@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.bluetooth.impl
+package quebec.virtualite.commons.android.bluetooth.impl
 
 import android.app.Activity
 import android.bluetooth.BluetoothManager
@@ -8,8 +8,9 @@ import android.bluetooth.le.ScanResult
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
+import quebec.virtualite.commons.android.bluetooth.BluetoothDeviceScanner
 
-class DeviceScannerImpl(val activity: Activity) : DeviceScanner {
+class BluetoothDeviceScannerImpl(val activity: Activity) : BluetoothDeviceScanner {
 
     companion object {
         private val mapAlreadyFoundDevices = HashSet<String>()
