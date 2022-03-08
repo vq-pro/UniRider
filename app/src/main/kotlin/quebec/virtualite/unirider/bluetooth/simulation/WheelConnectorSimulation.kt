@@ -1,8 +1,8 @@
 package quebec.virtualite.unirider.bluetooth.simulation
 
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
-import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelConnector
+import quebec.virtualite.unirider.bluetooth.WheelInfo
 
 open class WheelConnectorSimulation : WheelConnector {
 
@@ -24,9 +24,9 @@ open class WheelConnectorSimulation : WheelConnector {
         }
     }
 
-    override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((DeviceInfo?) -> Unit)?) {
+    override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((WheelInfo?) -> Unit)?) {
         Thread.sleep(1000)
-        onGotInfo!!.invoke(DeviceInfo(mileage, voltage))
+        onGotInfo!!.invoke(WheelInfo(mileage, voltage))
     }
 
     override fun scan(onFound: ((BluetoothDevice) -> Unit)?) {

@@ -34,7 +34,7 @@ import quebec.virtualite.unirider.TestDomain.SHERMAN_3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
-import quebec.virtualite.unirider.bluetooth.DeviceInfo
+import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
@@ -134,7 +134,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
         // Then
-        val connectionPayload = DeviceInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW)
+        val connectionPayload = WheelInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW)
 
         verifyRunWithWaitDialogAndBack()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, connectionPayload)
