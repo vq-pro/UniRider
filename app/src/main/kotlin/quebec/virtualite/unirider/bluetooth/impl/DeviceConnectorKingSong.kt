@@ -7,7 +7,7 @@ import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import kotlin.experimental.and
 
-class DeviceConnectorKingSong(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
+class DeviceConnectorKingSong(gatt: BluetoothGatt) : WheelConnector(gatt) {
 
     private val NOTIFICATION_CHARGE_CPU = 0xF5.toByte()
     private val NOTIFICATION_DISTANCE_TIME_FAN = 0xB9.toByte()

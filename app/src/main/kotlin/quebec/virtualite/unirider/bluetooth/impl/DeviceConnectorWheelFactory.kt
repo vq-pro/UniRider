@@ -35,7 +35,7 @@ object DeviceConnectorWheelFactory {
         "0000ffe0-0000-1000-8000-00805f9b34fb"
     )
 
-    fun detectWheel(gatt: BluetoothGatt): DeviceConnectorWheel {
+    fun detectWheel(gatt: BluetoothGatt): WheelConnector {
 
         val serviceUUIDs = gatt.services.stream()
             .map { service -> "${service.uuid}" }

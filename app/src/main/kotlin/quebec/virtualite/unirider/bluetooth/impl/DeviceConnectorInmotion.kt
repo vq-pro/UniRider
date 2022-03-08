@@ -12,7 +12,7 @@ private const val UUID_READ_CHARACTER = "0000ffe4-0000-1000-8000-00805f9b34fb"
 private const val UUID_WRITE_CHARACTER = "0000ffe9-0000-1000-8000-00805f9b34fb"
 private const val UUID_WRITE_SERVICE = "0000ffe5-0000-1000-8000-00805f9b34fb"
 
-class DeviceConnectorInmotion(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
+class DeviceConnectorInmotion(gatt: BluetoothGatt) : WheelConnector(gatt) {
 
     override fun decode(data: ByteArray): Boolean {
 

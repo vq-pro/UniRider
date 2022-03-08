@@ -5,10 +5,9 @@ import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt2
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt4
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 
-class DeviceConnectorVeteran(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
+class DeviceConnectorVeteran(gatt: BluetoothGatt) : WheelConnector(gatt) {
 
     override fun decode(data: ByteArray): Boolean {
-
         if (data.size < 20) {
             return false
         }

@@ -13,7 +13,6 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
 import quebec.virtualite.commons.android.bluetooth.BluetoothDeviceConnector
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
-import quebec.virtualite.unirider.bluetooth.impl.DeviceConnectorWheel
 import quebec.virtualite.unirider.bluetooth.impl.DeviceConnectorWheelFactory
 
 class BluetoothDeviceConnectorImpl(private val activity: Activity) : BluetoothDeviceConnector {
@@ -22,7 +21,7 @@ class BluetoothDeviceConnectorImpl(private val activity: Activity) : BluetoothDe
         private const val BLE = "*** BLE ***"
 
         private var deviceAddress: String? = null
-        private var deviceConnector: DeviceConnectorWheel? = null
+        private var deviceConnector: CommonBluetoothDeviceConnector? = null
 
         private lateinit var onConnected: (Any?) -> Unit
 
@@ -42,7 +41,7 @@ class BluetoothDeviceConnectorImpl(private val activity: Activity) : BluetoothDe
                             gatt.close()
 
                             if (deviceConnector != null && deviceAddress.equals(disconnectedDeviceAddress)) {
-                                val payload = deviceConnector?.wheelInfo
+                                val payload = deviceConnector?.payload()
                                 deviceConnector = null
 
                                 Log.i(BLE, "Disconnected with results: $payload")
