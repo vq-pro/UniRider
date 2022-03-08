@@ -12,9 +12,9 @@ import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.junit.Rule
+import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.simulation.WheelConnectorSimulation
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
@@ -434,7 +434,7 @@ class Steps {
         assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Mileage", "Voltage")))
         val deviceFields = device.cells(1)[0]
 
-        WheelConnectorSimulation.setDevice(Device(deviceFields[0], deviceFields[1]))
+        WheelConnectorSimulation.setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
         WheelConnectorSimulation.setMileage(parseFloat(deviceFields[2]))
         WheelConnectorSimulation.setVoltage(parseVoltage(deviceFields[3]))
     }

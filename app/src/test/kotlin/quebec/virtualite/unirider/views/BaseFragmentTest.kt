@@ -16,9 +16,9 @@ import org.mockito.BDDMockito.lenient
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.verify
+import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.views.CommonFragmentServices
 import quebec.virtualite.commons.android.views.CommonWidgetServices
-import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelConnector
 import quebec.virtualite.unirider.database.WheelDb
@@ -65,7 +65,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     private lateinit var captorOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
 
     @Captor
-    private lateinit var captorOnFoundDevice: ArgumentCaptor<(Device) -> Unit>
+    private lateinit var captorOnFoundDevice: ArgumentCaptor<(BluetoothDevice) -> Unit>
 
     @Captor
     private lateinit var captorOnGotDeviceInfo: ArgumentCaptor<(DeviceInfo?) -> Unit>
@@ -124,7 +124,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         captorOnGotDeviceInfo.value.invoke(deviceInfo)
     }
 
-    fun verifyConnectorScanWith(device: Device) {
+    fun verifyConnectorScanWith(device: BluetoothDevice) {
         verify(mockedConnector).scan(captorOnFoundDevice.capture())
         captorOnFoundDevice.value.invoke(device)
     }

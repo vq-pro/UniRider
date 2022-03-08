@@ -1,17 +1,17 @@
 package quebec.virtualite.unirider.bluetooth.simulation
 
-import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelConnector
 
 open class WheelConnectorSimulation : WheelConnector {
 
     companion object {
-        private var device = Device("KS-14S-SIM", "AB:CD:EF:GH:IJ:KL")
+        private var device = BluetoothDevice("KS-14S-SIM", "AB:CD:EF:GH:IJ:KL")
         private var mileage = 123f
         private var voltage = 61.2f
 
-        fun setDevice(device: Device) {
+        fun setDevice(device: BluetoothDevice) {
             WheelConnectorSimulation.device = device
         }
 
@@ -29,7 +29,7 @@ open class WheelConnectorSimulation : WheelConnector {
         onGotInfo!!.invoke(DeviceInfo(mileage, voltage))
     }
 
-    override fun scan(onFound: ((Device) -> Unit)?) {
+    override fun scan(onFound: ((BluetoothDevice) -> Unit)?) {
         Thread.sleep(1000)
         onFound!!.invoke(device)
     }

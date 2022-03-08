@@ -1,7 +1,7 @@
 package quebec.virtualite.unirider.bluetooth.impl
 
 import android.app.Activity
-import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.bluetooth.DeviceInfo
 import quebec.virtualite.unirider.bluetooth.WheelConnector
 
@@ -17,7 +17,7 @@ open class WheelConnectorImpl(activity: Activity) : WheelConnector {
         }
     }
 
-    override fun scan(onFound: ((Device) -> Unit)?) {
+    override fun scan(onFound: ((BluetoothDevice) -> Unit)?) {
         scanner.scan(onFound!!)
     }
 
