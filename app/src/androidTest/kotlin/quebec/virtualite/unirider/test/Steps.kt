@@ -15,7 +15,7 @@ import org.junit.Rule
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.bluetooth.simulation.WheelConnectorSimulation
+import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
@@ -434,9 +434,9 @@ class Steps {
         assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Mileage", "Voltage")))
         val deviceFields = device.cells(1)[0]
 
-        WheelConnectorSimulation.setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
-        WheelConnectorSimulation.setMileage(parseFloat(deviceFields[2]))
-        WheelConnectorSimulation.setVoltage(parseVoltage(deviceFields[3]))
+        BluetoothServicesSim.setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
+        BluetoothServicesSim.setMileage(parseFloat(deviceFields[2]))
+        BluetoothServicesSim.setVoltage(parseVoltage(deviceFields[3]))
     }
 
     private fun parseVoltage(value: String): Float {

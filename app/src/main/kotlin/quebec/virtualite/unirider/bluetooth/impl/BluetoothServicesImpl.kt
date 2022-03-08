@@ -6,12 +6,12 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDeviceConnector
 import quebec.virtualite.commons.android.bluetooth.BluetoothDeviceScanner
 import quebec.virtualite.commons.android.bluetooth.impl.BluetoothDeviceConnectorImpl
 import quebec.virtualite.commons.android.bluetooth.impl.BluetoothDeviceScannerImpl
-import quebec.virtualite.unirider.bluetooth.WheelConnector
+import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 
-open class WheelConnectorImpl(activity: Activity) : WheelConnector {
+open class BluetoothServicesImpl(activity: Activity) : BluetoothServices {
 
-    private val connector: BluetoothDeviceConnector = BluetoothDeviceConnectorImpl(activity)
+    private val connector: BluetoothDeviceConnector = BluetoothDeviceConnectorImpl(activity, WheelFactory())
     private val scanner: BluetoothDeviceScanner = BluetoothDeviceScannerImpl(activity)
 
     override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((WheelInfo?) -> Unit)?) {

@@ -19,7 +19,7 @@ import org.mockito.Mockito.verify
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.views.CommonFragmentServices
 import quebec.virtualite.commons.android.views.CommonWidgetServices
-import quebec.virtualite.unirider.bluetooth.WheelConnector
+import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.services.ExternalServices
@@ -35,7 +35,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     lateinit var mockedBundle: Bundle
 
     @Mock
-    lateinit var mockedConnector: WheelConnector
+    lateinit var mockedConnector: BluetoothServices
 
     @Mock
     lateinit var mockedContainer: ViewGroup
@@ -96,7 +96,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     @Suppress("UNCHECKED_CAST")
     fun mockExternal() {
         lenient().doReturn(mockedConnector)
-            .`when`(mockedExternal).connector()
+            .`when`(mockedExternal).bluetooth()
 
         lenient().doReturn(mockedDb)
             .`when`(mockedExternal).db()

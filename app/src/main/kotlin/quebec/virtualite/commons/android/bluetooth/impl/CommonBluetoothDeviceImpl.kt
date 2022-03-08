@@ -5,15 +5,24 @@ import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import java.util.*
 
-abstract class CommonBluetoothDeviceConnector(val gatt: BluetoothGatt) {
+abstract class CommonBluetoothDeviceImpl(val gatt: BluetoothGatt) {
 
     abstract fun decode(data: ByteArray): Boolean
 
-    abstract fun payload(): Any
+    abstract fun setPayload(payload: Any)
+
+    abstract fun getPayload(): Any
 
     abstract fun uuidDescriptor(): String
     abstract fun uuidReadCharacter(): String
     abstract fun uuidService(): String
+
+    private var disconnected = false
+
+    fun connected(payload: Any) {
+        setPayload(payload)
+        disconnect()
+    }
 
     fun disableNotifications() {
         val service = gatt.getService(UUID.fromString(uuidService()))
@@ -46,5 +55,14 @@ abstract class CommonBluetoothDeviceConnector(val gatt: BluetoothGatt) {
         characteristic.value = cmd
         characteristic.writeType = 1
         gatt.writeCharacteristic(characteristic)
+    }
+
+    private fun disconnect() {
+        if (disconnected)
+            return
+
+        disableNotifications()
+        gatt.disconnect()
+        disconnected = true
     }
 }

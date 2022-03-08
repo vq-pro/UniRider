@@ -42,11 +42,11 @@ open class WheelScanFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        external.connector().stopScanning()
+        external.bluetooth().stopScanning()
     }
 
     private fun connectWithWheel(device: BluetoothDevice) {
-        external.connector().getDeviceInfo(device.address) { info ->
+        external.bluetooth().getDeviceInfo(device.address) { info ->
             fragments.doneWaiting(info) {
                 external.runDB { db ->
                     val updatedWheel = WheelEntity(
@@ -64,7 +64,7 @@ open class WheelScanFragment : BaseFragment() {
 
     private fun scanForDevices(view: View) {
 
-        external.connector().scan {
+        external.bluetooth().scan {
             fragments.doneWaiting(it) {
                 devices.add(it)
 
