@@ -1,17 +1,17 @@
-package quebec.virtualite.unirider.bluetooth.impl
+package quebec.virtualite.unirider.bluetooth.impl.wheels
 
 import android.bluetooth.BluetoothGatt
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt2
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt4
-import quebec.virtualite.unirider.bluetooth.impl.Tester.intFromBytes
+import quebec.virtualite.unirider.bluetooth.WheelInfo
+import quebec.virtualite.unirider.bluetooth.impl.wheels.Tester.intFromBytes
 import java.util.*
-
 
 private const val UUID_READ_CHARACTER = "0000ffe4-0000-1000-8000-00805f9b34fb"
 private const val UUID_WRITE_CHARACTER = "0000ffe9-0000-1000-8000-00805f9b34fb"
 private const val UUID_WRITE_SERVICE = "0000ffe5-0000-1000-8000-00805f9b34fb"
 
-class DeviceConnectorInmotion(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
+class WheelInmotion(gatt: BluetoothGatt) : WheelBase(gatt) {
 
     override fun decode(data: ByteArray): Boolean {
 
@@ -39,7 +39,7 @@ class DeviceConnectorInmotion(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) 
         val temperature = byteArrayInt2(data[12], data[13]) / 1000f
         val mileage = byteArrayInt4(data[14], data[15], data[12], data[13]) / 1000f
 
-        done(WheelData(mileage, temperature, voltage))
+        connected(WheelInfo(mileage, temperature, voltage))
         return true
     }
 

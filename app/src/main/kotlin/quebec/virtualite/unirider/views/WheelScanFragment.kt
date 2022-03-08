@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.bluetooth.Device
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.util.stream.Collectors.toList
@@ -16,7 +16,7 @@ open class WheelScanFragment : BaseFragment() {
 
     internal lateinit var lvWheels: ListView
 
-    internal val devices = ArrayList<Device>()
+    internal val devices = ArrayList<BluetoothDevice>()
     internal var parmWheelId: Long? = 0
     internal var wheel: WheelEntity? = null
 
@@ -42,11 +42,11 @@ open class WheelScanFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        external.connector().stopScanning()
+        external.bluetooth().stopScanning()
     }
 
-    private fun connectWithWheel(device: Device) {
-        external.connector().getDeviceInfo(device.address) { info ->
+    private fun connectWithWheel(device: BluetoothDevice) {
+        external.bluetooth().getDeviceInfo(device.address) { info ->
             fragments.doneWaiting(info) {
                 external.runDB { db ->
                     val updatedWheel = WheelEntity(
@@ -64,12 +64,12 @@ open class WheelScanFragment : BaseFragment() {
 
     private fun scanForDevices(view: View) {
 
-        external.connector().scan {
+        external.bluetooth().scan {
             fragments.doneWaiting(it) {
                 devices.add(it)
 
                 fragments.runUI {
-                    val names = devices.stream().map(Device::name).collect(toList())
+                    val names = devices.stream().map(BluetoothDevice::name).collect(toList())
                     widgets.stringListAdapter(lvWheels, view, names)
                 }
             }

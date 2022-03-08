@@ -1,6 +1,6 @@
 package quebec.virtualite.unirider
 
-import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelRow
 import java.lang.Float.parseFloat
@@ -47,9 +47,9 @@ object TestDomain {
     val WHEEL_ROW_3_123 = WheelRow(ID3, NAME3, PREMILEAGE3 + MILEAGE3)
     val WHEEL_ROW_NEW = WheelRow(0, NAME_NEW, 0)
 
-    val DEVICE = Device(DEVICE_NAME, DEVICE_ADDR)
-    val DEVICE2 = Device(DEVICE_NAME2, DEVICE_ADDR2)
-    val DEVICE3 = Device(DEVICE_NAME3, DEVICE_ADDR3)
+    val DEVICE = BluetoothDevice(DEVICE_NAME, DEVICE_ADDR)
+    val DEVICE2 = BluetoothDevice(DEVICE_NAME2, DEVICE_ADDR2)
+    val DEVICE3 = BluetoothDevice(DEVICE_NAME3, DEVICE_ADDR3)
 
     val S18_1 = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
     val S20_2 = WheelEntity(ID2, NAME2, DEVICE_NAME2, DEVICE_ADDR2, PREMILEAGE2, MILEAGE2, VOLTAGE_MIN2, VOLTAGE_MAX2)

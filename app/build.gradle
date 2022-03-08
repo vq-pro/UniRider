@@ -53,7 +53,7 @@ android {
 
     productFlavors {
         end2end {
-            buildConfigField 'String', 'SCENARIOS', '"@End2End"'
+            buildConfigField 'String', 'SCENARIOS', '"~@Integration"'
 
             buildConfigField 'Boolean', 'BLUETOOTH_ACTUAL', 'true'
 

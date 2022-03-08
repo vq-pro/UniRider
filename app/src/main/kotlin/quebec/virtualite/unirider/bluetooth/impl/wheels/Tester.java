@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.bluetooth.impl;
+package quebec.virtualite.unirider.bluetooth.impl.wheels;
 
 // FIXME-2 Cleanup when Inmotion is done
 public class Tester {

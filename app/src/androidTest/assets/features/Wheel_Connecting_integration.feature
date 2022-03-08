@@ -1,4 +1,4 @@
-@IntegrationOnly
+@Integration
 Feature: Wheel Connecting
 
   We can connect to a wheel to get its live mileage and voltage.

@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.bluetooth.impl
+package quebec.virtualite.commons.android.bluetooth.impl
 
 import android.app.Activity
 import android.bluetooth.BluetoothManager
@@ -7,14 +7,15 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
-import quebec.virtualite.unirider.bluetooth.Device
+import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
+import quebec.virtualite.commons.android.bluetooth.BluetoothDeviceScanner
 
-class DeviceScannerImpl(val activity: Activity) : DeviceScanner {
+class BluetoothDeviceScannerImpl(val activity: Activity) : BluetoothDeviceScanner {
 
     companion object {
         private val mapAlreadyFoundDevices = HashSet<String>()
 
-        private var onDetectedNotifyCaller: ((Device) -> Unit)? = null
+        private var onDetected: ((BluetoothDevice) -> Unit)? = null
 
         private fun isUnique(deviceAddress: String): Boolean {
             if (mapAlreadyFoundDevices.contains(deviceAddress))
@@ -38,7 +39,7 @@ class DeviceScannerImpl(val activity: Activity) : DeviceScanner {
                 Log.i(this.javaClass.simpleName, "Got device $deviceName - $deviceAddress")
 
                 // Must use a class property for this, since the callback will never be updated from the first time we call startScan()
-                onDetectedNotifyCaller?.invoke(Device(deviceName, deviceAddress))
+                onDetected?.invoke(BluetoothDevice(deviceName, deviceAddress))
             }
         }
     }
@@ -49,10 +50,10 @@ class DeviceScannerImpl(val activity: Activity) : DeviceScanner {
         return bluetoothScanner == null
     }
 
-    override fun scan(onDetected: (Device) -> Unit) {
+    override fun scan(onDetected: (BluetoothDevice) -> Unit) {
         stop()
 
-        onDetectedNotifyCaller = onDetected
+        Companion.onDetected = onDetected
         mapAlreadyFoundDevices.clear()
 
         val bluetoothManager = activity.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
@@ -63,7 +64,7 @@ class DeviceScannerImpl(val activity: Activity) : DeviceScanner {
 
     override fun stop() {
         if (!isStopped()) {
-            onDetectedNotifyCaller = null
+            onDetected = null
 
             bluetoothScanner?.flushPendingScanResults(object : ScanCallback() {})
             bluetoothScanner?.stopScan(object : ScanCallback() {})

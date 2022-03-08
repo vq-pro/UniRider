@@ -1,12 +1,13 @@
-package quebec.virtualite.unirider.bluetooth.impl
+package quebec.virtualite.unirider.bluetooth.impl.wheels
 
 import android.bluetooth.BluetoothGatt
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt2
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt4
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
+import quebec.virtualite.unirider.bluetooth.WheelInfo
 import kotlin.experimental.and
 
-class DeviceConnectorKingSong(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
+class WheelKingSong(gatt: BluetoothGatt) : WheelBase(gatt) {
 
     private val NOTIFICATION_CHARGE_CPU = 0xF5.toByte()
     private val NOTIFICATION_DISTANCE_TIME_FAN = 0xB9.toByte()
@@ -55,7 +56,7 @@ class DeviceConnectorKingSong(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) 
                 val temperature = byteArrayInt2(data[13], data[12]) / 100f
                 val pedalMode = PedalModeType.valueFrom(data[14])
 
-                done(WheelData(mileage, temperature, voltage))
+                connected(WheelInfo(mileage, temperature, voltage))
             }
             NOTIFICATION_DISTANCE_TIME_FAN -> {
                 val distance = byteArrayInt4(data[3], data[2], data[5], data[4]) / 1000f

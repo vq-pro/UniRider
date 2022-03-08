@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.bluetooth.impl
+package quebec.virtualite.commons.android.bluetooth.impl
 
 import android.app.Activity
 import android.bluetooth.BluetoothDevice.TRANSPORT_LE
@@ -11,17 +11,30 @@ import android.bluetooth.BluetoothProfile.STATE_CONNECTED
 import android.bluetooth.BluetoothProfile.STATE_DISCONNECTED
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
+import quebec.virtualite.commons.android.bluetooth.BluetoothDeviceConnector
+import quebec.virtualite.commons.android.bluetooth.CommonBluetoothDeviceFactory
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
+import java.util.stream.Collectors
 
-class DeviceConnectorImpl(private val activity: Activity) : DeviceConnector {
+class BluetoothDeviceConnectorImpl(
+    private val activity: Activity,
+    factory: CommonBluetoothDeviceFactory
+) : BluetoothDeviceConnector {
 
     companion object {
         private const val BLE = "*** BLE ***"
 
         private var deviceAddress: String? = null
-        private var deviceConnector: DeviceConnectorWheel? = null
+        private var deviceDriver: CommonBluetoothDeviceImpl? = null
 
-        private lateinit var onConnected: (WheelData?) -> Unit
+        private lateinit var factory: CommonBluetoothDeviceFactory
+        private lateinit var onConnected: (Any?) -> Unit
+
+        private fun getServices(gatt: BluetoothGatt): List<String> {
+            return gatt.services.stream()
+                .map { service -> "${service.uuid}" }
+                .collect(Collectors.toList())
+        }
 
         private fun onBluetoothEvent(): BluetoothGattCallback {
             return object : BluetoothGattCallback() {
@@ -38,9 +51,9 @@ class DeviceConnectorImpl(private val activity: Activity) : DeviceConnector {
                             val disconnectedDeviceAddress = gatt.device.address
                             gatt.close()
 
-                            if (deviceConnector != null && deviceAddress.equals(disconnectedDeviceAddress)) {
-                                val payload = deviceConnector?.wheelData
-                                deviceConnector = null
+                            if (deviceDriver != null && deviceAddress.equals(disconnectedDeviceAddress)) {
+                                val payload = deviceDriver?.getPayload()
+                                deviceDriver = null
 
                                 Log.i(BLE, "Disconnected with results: $payload")
                                 onConnected.invoke(payload)
@@ -59,8 +72,8 @@ class DeviceConnectorImpl(private val activity: Activity) : DeviceConnector {
                     Log.i(BLE, "onServicesDiscovered")
 
                     if (status == GATT_SUCCESS) {
-                        deviceConnector = DeviceConnectorWheelFactory.detectWheel(gatt)
-                        deviceConnector!!.enableNotifications()
+                        deviceDriver = factory.getConnector(gatt, getServices(gatt))
+                        deviceDriver!!.enableNotifications()
                     }
                 }
 
@@ -69,7 +82,7 @@ class DeviceConnectorImpl(private val activity: Activity) : DeviceConnector {
 
                     Log.i(BLE, "onCharacteristicChanged - " + byteArrayToString(characteristic.value))
 
-                    deviceConnector!!.onCharacteristicChanged(characteristic)
+                    deviceDriver!!.onCharacteristicChanged(characteristic)
                 }
             }
         }
@@ -79,11 +92,15 @@ class DeviceConnectorImpl(private val activity: Activity) : DeviceConnector {
 
     private var previousGatt: BluetoothGatt? = null
 
-    override fun connect(deviceAddress: String, onConnected: (WheelData?) -> Unit) {
+    init {
+        Companion.factory = factory
+    }
+
+    override fun connect(deviceAddress: String, onConnected: (Any?) -> Unit) {
         fasterConnectIfLastAttemptIsStillOngoing()
 
-        DeviceConnectorImpl.deviceAddress = deviceAddress
-        DeviceConnectorImpl.onConnected = onConnected
+        Companion.deviceAddress = deviceAddress
+        Companion.onConnected = onConnected
 
         val bluetoothManager = activity.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
         val bluetoothDevice = bluetoothManager.adapter.getRemoteDevice(Companion.deviceAddress)
