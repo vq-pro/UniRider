@@ -19,16 +19,23 @@ import java.util.stream.Collectors
 class BluetoothDeviceConnectorImpl(
     private val activity: Activity,
     factory: CommonBluetoothDeviceFactory
+
 ) : BluetoothDeviceConnector {
 
     companion object {
         private const val BLE = "*** BLE ***"
+        private val DONT_AUTOCONNECT = false
 
         private var deviceAddress: String? = null
         private var deviceDriver: CommonBluetoothDeviceImpl? = null
+        private var previousGatt: BluetoothGatt? = null
 
         private lateinit var factory: CommonBluetoothDeviceFactory
         private lateinit var onConnected: (Any?) -> Unit
+
+        private fun fasterConnectIfLastAttemptIsStillOngoing() {
+            previousGatt?.disconnect()
+        }
 
         private fun getServices(gatt: BluetoothGatt): List<String> {
             return gatt.services.stream()
@@ -88,10 +95,6 @@ class BluetoothDeviceConnectorImpl(
         }
     }
 
-    private val DONT_AUTOCONNECT = false
-
-    private var previousGatt: BluetoothGatt? = null
-
     init {
         Companion.factory = factory
     }
@@ -107,9 +110,5 @@ class BluetoothDeviceConnectorImpl(
             ?: throw AssertionError("Impossible to connect to device")
 
         previousGatt = bluetoothDevice.connectGatt(activity.baseContext, DONT_AUTOCONNECT, onBluetoothEvent(), TRANSPORT_LE)
-    }
-
-    private fun fasterConnectIfLastAttemptIsStillOngoing() {
-        previousGatt?.disconnect()
     }
 }

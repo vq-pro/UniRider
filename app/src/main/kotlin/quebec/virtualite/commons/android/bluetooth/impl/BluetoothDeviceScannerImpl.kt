@@ -10,11 +10,12 @@ import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.bluetooth.BluetoothDeviceScanner
 
-class BluetoothDeviceScannerImpl(val activity: Activity) : BluetoothDeviceScanner {
+class BluetoothDeviceScannerImpl(private val activity: Activity) : BluetoothDeviceScanner {
 
     companion object {
         private val mapAlreadyFoundDevices = HashSet<String>()
 
+        private var bluetoothScanner: BluetoothLeScanner? = null
         private var onDetected: ((BluetoothDevice) -> Unit)? = null
 
         private fun isUnique(deviceAddress: String): Boolean {
@@ -43,8 +44,6 @@ class BluetoothDeviceScannerImpl(val activity: Activity) : BluetoothDeviceScanne
             }
         }
     }
-
-    private var bluetoothScanner: BluetoothLeScanner? = null
 
     override fun isStopped(): Boolean {
         return bluetoothScanner == null
