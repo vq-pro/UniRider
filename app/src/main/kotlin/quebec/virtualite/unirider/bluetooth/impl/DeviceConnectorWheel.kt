@@ -4,13 +4,14 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
 import android.util.Log
+import quebec.virtualite.commons.android.bluetooth.impl.CommonBluetoothDeviceConnector
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import java.util.*
 
 private const val UUID_DESCRIPTOR = "00002902-0000-1000-8000-00805f9b34fb"
 private const val UUID_SERVICE = "0000ffe0-0000-1000-8000-00805f9b34fb"
 
-abstract class DeviceConnectorWheel(val gatt: BluetoothGatt) {
+abstract class DeviceConnectorWheel(val gatt: BluetoothGatt) : CommonBluetoothDeviceConnector() {
 
     // Override these
     abstract fun decode(data: ByteArray): Boolean

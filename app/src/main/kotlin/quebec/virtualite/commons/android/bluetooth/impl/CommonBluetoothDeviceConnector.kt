@@ -1,0 +1,3 @@
+package quebec.virtualite.commons.android.bluetooth.impl
+
+abstract class CommonBluetoothDeviceConnector

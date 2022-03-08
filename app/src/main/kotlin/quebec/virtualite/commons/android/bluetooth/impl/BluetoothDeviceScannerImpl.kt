@@ -15,7 +15,7 @@ class BluetoothDeviceScannerImpl(val activity: Activity) : BluetoothDeviceScanne
     companion object {
         private val mapAlreadyFoundDevices = HashSet<String>()
 
-        private var onDetectedNotifyCaller: ((BluetoothDevice) -> Unit)? = null
+        private var onDetected: ((BluetoothDevice) -> Unit)? = null
 
         private fun isUnique(deviceAddress: String): Boolean {
             if (mapAlreadyFoundDevices.contains(deviceAddress))
@@ -39,7 +39,7 @@ class BluetoothDeviceScannerImpl(val activity: Activity) : BluetoothDeviceScanne
                 Log.i(this.javaClass.simpleName, "Got device $deviceName - $deviceAddress")
 
                 // Must use a class property for this, since the callback will never be updated from the first time we call startScan()
-                onDetectedNotifyCaller?.invoke(BluetoothDevice(deviceName, deviceAddress))
+                onDetected?.invoke(BluetoothDevice(deviceName, deviceAddress))
             }
         }
     }
@@ -53,7 +53,7 @@ class BluetoothDeviceScannerImpl(val activity: Activity) : BluetoothDeviceScanne
     override fun scan(onDetected: (BluetoothDevice) -> Unit) {
         stop()
 
-        onDetectedNotifyCaller = onDetected
+        Companion.onDetected = onDetected
         mapAlreadyFoundDevices.clear()
 
         val bluetoothManager = activity.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
@@ -64,7 +64,7 @@ class BluetoothDeviceScannerImpl(val activity: Activity) : BluetoothDeviceScanne
 
     override fun stop() {
         if (!isStopped()) {
-            onDetectedNotifyCaller = null
+            onDetected = null
 
             bluetoothScanner?.flushPendingScanResults(object : ScanCallback() {})
             bluetoothScanner?.stopScan(object : ScanCallback() {})

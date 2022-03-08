@@ -1,4 +1,4 @@
-package quebec.virtualite.unirider.bluetooth.impl
+package quebec.virtualite.commons.android.bluetooth.impl
 
 import android.app.Activity
 import android.bluetooth.BluetoothDevice.TRANSPORT_LE
@@ -11,8 +11,10 @@ import android.bluetooth.BluetoothProfile.STATE_CONNECTED
 import android.bluetooth.BluetoothProfile.STATE_DISCONNECTED
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.BLUETOOTH_SERVICE
+import quebec.virtualite.commons.android.bluetooth.BluetoothDeviceConnector
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
-import quebec.virtualite.unirider.bluetooth.WheelInfo
+import quebec.virtualite.unirider.bluetooth.impl.DeviceConnectorWheel
+import quebec.virtualite.unirider.bluetooth.impl.DeviceConnectorWheelFactory
 
 class BluetoothDeviceConnectorImpl(private val activity: Activity) : BluetoothDeviceConnector {
 
@@ -22,7 +24,7 @@ class BluetoothDeviceConnectorImpl(private val activity: Activity) : BluetoothDe
         private var deviceAddress: String? = null
         private var deviceConnector: DeviceConnectorWheel? = null
 
-        private lateinit var onConnected: (WheelInfo?) -> Unit
+        private lateinit var onConnected: (Any?) -> Unit
 
         private fun onBluetoothEvent(): BluetoothGattCallback {
             return object : BluetoothGattCallback() {
@@ -80,11 +82,11 @@ class BluetoothDeviceConnectorImpl(private val activity: Activity) : BluetoothDe
 
     private var previousGatt: BluetoothGatt? = null
 
-    override fun connect(deviceAddress: String, onConnected: (WheelInfo?) -> Unit) {
+    override fun connect(deviceAddress: String, onConnected: (Any?) -> Unit) {
         fasterConnectIfLastAttemptIsStillOngoing()
 
-        BluetoothDeviceConnectorImpl.deviceAddress = deviceAddress
-        BluetoothDeviceConnectorImpl.onConnected = onConnected
+        Companion.deviceAddress = deviceAddress
+        Companion.onConnected = onConnected
 
         val bluetoothManager = activity.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
         val bluetoothDevice = bluetoothManager.adapter.getRemoteDevice(Companion.deviceAddress)
