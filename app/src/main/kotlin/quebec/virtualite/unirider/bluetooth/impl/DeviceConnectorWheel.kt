@@ -2,8 +2,9 @@ package quebec.virtualite.unirider.bluetooth.impl
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
+import android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
 import android.util.Log
+import quebec.virtualite.unirider.bluetooth.WheelInfo
 import java.util.*
 
 private const val UUID_DESCRIPTOR = "00002902-0000-1000-8000-00805f9b34fb"
@@ -27,15 +28,15 @@ abstract class DeviceConnectorWheel(val gatt: BluetoothGatt) {
     }
     // Override end
 
-    internal lateinit var wheelData: WheelData
+    internal lateinit var wheelInfo: WheelInfo
 
     private var disconnected = false
 
-    fun done(wheelData: WheelData) {
+    fun done(wheelInfo: WheelInfo) {
 
-        Log.i("*** BLE ***", "${wheelData.mileage}")
+        Log.i("*** BLE ***", "${wheelInfo.mileage}")
 
-        this.wheelData = wheelData
+        this.wheelInfo = wheelInfo
 
         if (!disconnected) {
             disableNotifications()
@@ -58,7 +59,7 @@ abstract class DeviceConnectorWheel(val gatt: BluetoothGatt) {
             throw RuntimeException("Cannot request notifications")
 
         val descriptor = notifyCharacteristic.getDescriptor(UUID.fromString(UUID_DESCRIPTOR))
-        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
+        descriptor.value = ENABLE_NOTIFICATION_VALUE
         if (!gatt.writeDescriptor(descriptor))
             throw RuntimeException("Cannot request remote notifications")
     }

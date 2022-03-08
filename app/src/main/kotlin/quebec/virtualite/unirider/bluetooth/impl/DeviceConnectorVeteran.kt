@@ -3,6 +3,7 @@ package quebec.virtualite.unirider.bluetooth.impl
 import android.bluetooth.BluetoothGatt
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt2
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt4
+import quebec.virtualite.unirider.bluetooth.WheelInfo
 
 class DeviceConnectorVeteran(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
 
@@ -19,7 +20,7 @@ class DeviceConnectorVeteran(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
         val temperature = byteArrayInt2(data[12], data[13]) / 1000f
         val mileage = byteArrayInt4(data[14], data[15], data[12], data[13]) / 1000f
 
-        done(WheelData(mileage, temperature, voltage))
+        done(WheelInfo(mileage, temperature, voltage))
         return true
     }
 }

@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothGatt
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt2
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayInt4
 import quebec.virtualite.commons.android.utils.ByteArrayUtils.byteArrayToString
+import quebec.virtualite.unirider.bluetooth.WheelInfo
 import kotlin.experimental.and
 
 class DeviceConnectorKingSong(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) {
@@ -55,7 +56,7 @@ class DeviceConnectorKingSong(gatt: BluetoothGatt) : DeviceConnectorWheel(gatt) 
                 val temperature = byteArrayInt2(data[13], data[12]) / 100f
                 val pedalMode = PedalModeType.valueFrom(data[14])
 
-                done(WheelData(mileage, temperature, voltage))
+                done(WheelInfo(mileage, temperature, voltage))
             }
             NOTIFICATION_DISTANCE_TIME_FAN -> {
                 val distance = byteArrayInt4(data[3], data[2], data[5], data[4]) / 1000f

@@ -9,13 +9,13 @@ import quebec.virtualite.unirider.bluetooth.WheelInfo
 
 open class WheelConnectorImpl(activity: Activity) : WheelConnector {
 
-    private val connector: DeviceConnector = DeviceConnectorImpl(activity)
+    private val connector: BluetoothDeviceConnector = BluetoothDeviceConnectorImpl(activity)
     private val scanner: BluetoothDeviceScanner = BluetoothDeviceScannerImpl(activity)
 
     override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((WheelInfo?) -> Unit)?) {
         scanner.stop()
-        connector.connect(deviceAddress!!) { wheelData ->
-            onGotInfo!!.invoke(wheelData?.let { WheelInfo(wheelData.mileage, wheelData.voltage) })
+        connector.connect(deviceAddress!!) {
+            onGotInfo!!.invoke(it)
         }
     }
 

@@ -26,7 +26,7 @@ open class WheelConnectorSimulation : WheelConnector {
 
     override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((WheelInfo?) -> Unit)?) {
         Thread.sleep(1000)
-        onGotInfo!!.invoke(WheelInfo(mileage, voltage))
+        onGotInfo!!.invoke(WheelInfo(mileage, 0f, voltage))
     }
 
     override fun scan(onFound: ((BluetoothDevice) -> Unit)?) {
