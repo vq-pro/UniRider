@@ -31,6 +31,7 @@ import quebec.virtualite.unirider.TestDomain.PERCENTAGE_S
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.S18_DISCONNECTED
+import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
@@ -184,7 +185,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        val connectionPayload = WheelInfo(MILEAGE_NEW_RAW, VOLTAGE_NEW_RAW)
+        val connectionPayload = WheelInfo(MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
 
         verifyRunWithWaitDialog()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)

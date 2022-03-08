@@ -30,6 +30,7 @@ object TestDomain {
     val PREMILEAGE2 = 10000
     val PREMILEAGE3 = 10000
     val PREMILEAGE_NEW = 20000
+    val TEMPERATURE_NEW_RAW = 3333f
     val VOLTAGE_S = "100.8"
     val VOLTAGE = parseFloat(VOLTAGE_S)
     val VOLTAGE_MAX = 84.0f
