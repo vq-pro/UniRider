@@ -369,7 +369,12 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
-    @Given("^the voltage is set to (.*?)$")
+    @Given("^the voltage is set to $")
+    fun voltageIsSetTo() {
+        // Nothing to do, voltage field is already empty
+    }
+
+    @Given("^the voltage is set to (.*?)V$")
     fun voltageIsSetTo(voltage: Float) {
         setText(R.id.edit_voltage, voltage.toString())
     }
