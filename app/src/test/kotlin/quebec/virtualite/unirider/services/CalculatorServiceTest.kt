@@ -28,14 +28,6 @@ class CalculatorServiceTest {
         percentage(92.5f, 67.1f)
     }
 
-    private fun percentage(voltage: Float, expectedPercentage: Float) {
-        // When
-        val percentage = service.percentage(SHERMAN_3, voltage)
-
-        // Then
-        assertThat(percentage, equalTo(expectedPercentage))
-    }
-
     @Test
     fun percentage_whenVoltagesNotSet_zero() {
         percentage_whenVoltagesNotSet_zero(0f, 1f)
@@ -44,6 +36,20 @@ class CalculatorServiceTest {
         percentage_whenVoltagesNotSet_zero(1f, 0f)
         percentage_whenVoltagesNotSet_zero(1f, -1f)
         percentage_whenVoltagesNotSet_zero(1f, -100f)
+    }
+
+    @Test
+    fun range() {
+        range(91.9f, 42, 56.2f)
+        range(83.5f, 81, 16.4f)
+    }
+
+    private fun percentage(voltage: Float, expectedPercentage: Float) {
+        // When
+        val percentage = service.percentage(SHERMAN_3, voltage)
+
+        // Then
+        assertThat(percentage, equalTo(expectedPercentage))
     }
 
     private fun percentage_whenVoltagesNotSet_zero(voltageMin: Float, voltageMax: Float) {
@@ -55,5 +61,13 @@ class CalculatorServiceTest {
 
         // Then
         assertThat(percentage, equalTo(0.0f))
+    }
+
+    private fun range(voltage: Float, km: Int, expectedRange: Float) {
+        // When
+        val range = service.range(SHERMAN_3, voltage, km.toFloat())
+
+        // Then
+        assertThat(range, equalTo(expectedRange))
     }
 }

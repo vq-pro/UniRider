@@ -9,16 +9,35 @@ open class CalculatorService {
             return 0f
         }
 
-        val range = wheel.voltageMax - wheel.voltageMin
-        return percentage(voltage!! - wheel.voltageMin, range)
+        return round(precisePercentage(wheel, voltage!!), 1)
     }
 
+    // FIXME-1 Convert km to Int
     open fun range(wheel: WheelEntity?, voltage: Float, km: Float): Float {
-        return 55.8f
+
+        // FIXME-1 Get this from wheel
+        val whTotal = 3600f
+        val reserveVoltage = 80f
+
+        val percentage = precisePercentage(wheel!!, voltage)
+        val percentageOfReserve = precisePercentage(wheel, reserveVoltage)
+
+        val whRemaining = whTotal * percentage / 100
+        val whConsumed = whTotal - whRemaining
+        val whPerKm = whConsumed / km
+        val whReserve = whTotal * percentageOfReserve / 100
+        val range = (whRemaining - whReserve) / whPerKm
+
+        return round(range, 1)
     }
 
     private fun percentage(value: Float, range: Float): Float {
-        return round(value * 100 / range, 1)
+        return value * 100 / range
+    }
+
+    private fun precisePercentage(wheel: WheelEntity, voltage: Float): Float {
+        val voltageRange = wheel.voltageMax - wheel.voltageMin
+        return percentage(voltage - wheel.voltageMin, voltageRange)
     }
 
     private fun round(value: Float, numDecimals: Int): Float {

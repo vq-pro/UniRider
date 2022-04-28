@@ -42,8 +42,8 @@ Feature: Wheel Viewing
     Examples:
       | wheel           | voltage | km | range |
       | Veteran Sherman |         | 20 |       |
-      | Veteran Sherman | 91.9V   | 42 | 55.8  |
-#      | Veteran Sherman | 83.5V   | 81 | 16.0  |
+      | Veteran Sherman | 91.9V   | 42 | 56.2  |
+      | Veteran Sherman | 83.5V   | 81 | 16.4  |
 
   Scenario: => Editing the wheel
     Given I select the Veteran Sherman
