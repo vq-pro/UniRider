@@ -422,7 +422,7 @@ class Steps {
     }
 
     @When("^I enter a distance so far in (.*?)$")
-    fun whenEnterDistance(distance: Float) {
+    fun whenEnterDistance(distance: Int) {
         enter(R.id.edit_km, distance.toString())
     }
 

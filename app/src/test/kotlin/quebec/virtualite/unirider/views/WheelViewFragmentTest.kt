@@ -10,6 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
@@ -245,14 +246,14 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         mockVoltage(VOLTAGE_S)
 
-        given(mockedCalculatorService.range(fragment.wheel, VOLTAGE, KM))
+        given(mockedCalculatorService.estimatedRange(fragment.wheel, VOLTAGE, KM))
             .willReturn(RANGE)
 
         // When
         fragment.onUpdateKm().invoke("$KM_S ")
 
         // Then
-        verify(mockedCalculatorService).range(fragment.wheel, VOLTAGE, KM)
+        verify(mockedCalculatorService).estimatedRange(fragment.wheel, VOLTAGE, KM)
         verify(mockedTextRange).text = RANGE_S
     }
 
@@ -267,7 +268,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateKm().invoke(" ")
 
         // Then
-        verify(mockedCalculatorService, never()).range(eq(fragment.wheel), anyFloat(), anyFloat())
+        verify(mockedCalculatorService, never()).estimatedRange(eq(fragment.wheel), anyFloat(), anyInt())
         verify(mockedTextRange).text = ""
     }
 
@@ -282,7 +283,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateKm().invoke("$KM_S ")
 
         // Then
-        verify(mockedCalculatorService, never()).range(eq(fragment.wheel), anyFloat(), anyFloat())
+        verify(mockedCalculatorService, never()).estimatedRange(eq(fragment.wheel), anyFloat(), anyInt())
         verify(mockedTextRange).text = ""
     }
 

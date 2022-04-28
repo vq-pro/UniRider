@@ -13,6 +13,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
+import java.lang.Integer.parseInt
 import java.util.Locale.ENGLISH
 import kotlin.math.roundToInt
 
@@ -107,7 +108,7 @@ open class WheelViewFragment : BaseFragment() {
         val km = kmParm.trim()
         val voltage = editVoltage.text.toString().trim()
 
-        textRange.text = if (isEmpty(voltage) || isEmpty(km)) "" else getRange(voltage, km)
+        textRange.text = if (isEmpty(voltage) || isEmpty(km)) "" else getEstimatedRange(voltage, km)
     }
 
     fun onUpdateVoltage() = { voltageParm: String ->
@@ -115,16 +116,16 @@ open class WheelViewFragment : BaseFragment() {
         textBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
     }
 
+    private fun getEstimatedRange(voltage: String, km: String): String {
+        return calculatorService.estimatedRange(wheel, parseFloat(voltage), parseInt(km))
+            .toString()
+    }
+
     private fun getPercentage(voltage: String): String {
         return when (val percentage = calculatorService.percentage(wheel, parseFloat(voltage))) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }
-    }
-
-    private fun getRange(voltage: String, km: String): String {
-        return calculatorService.range(wheel, parseFloat(voltage), parseFloat(km))
-            .toString()
     }
 
     private fun goto(id: Int) {

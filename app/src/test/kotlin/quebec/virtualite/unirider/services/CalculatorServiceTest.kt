@@ -21,6 +21,12 @@ class CalculatorServiceTest {
     lateinit var service: CalculatorService
 
     @Test
+    fun estimatedRange() {
+        estimatedRange(91.9f, 42, 56.2f)
+        estimatedRange(83.5f, 81, 16.4f)
+    }
+
+    @Test
     fun percentage() {
         percentage(100.8f, 100.0f)
         percentage(75.6f, 0.0f)
@@ -38,10 +44,12 @@ class CalculatorServiceTest {
         percentage_whenVoltagesNotSet_zero(1f, -100f)
     }
 
-    @Test
-    fun range() {
-        range(91.9f, 42, 56.2f)
-        range(83.5f, 81, 16.4f)
+    private fun estimatedRange(voltage: Float, km: Int, expectedRange: Float) {
+        // When
+        val range = service.estimatedRange(SHERMAN_3, voltage, km)
+
+        // Then
+        assertThat(range, equalTo(expectedRange))
     }
 
     private fun percentage(voltage: Float, expectedPercentage: Float) {
@@ -61,13 +69,5 @@ class CalculatorServiceTest {
 
         // Then
         assertThat(percentage, equalTo(0.0f))
-    }
-
-    private fun range(voltage: Float, km: Int, expectedRange: Float) {
-        // When
-        val range = service.range(SHERMAN_3, voltage, km.toFloat())
-
-        // Then
-        assertThat(range, equalTo(expectedRange))
     }
 }

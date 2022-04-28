@@ -15,7 +15,7 @@ object TestDomain {
     val ID = 1111L
     val ID2 = 1112L
     val ID3 = 1113L
-    val KM = 4444f
+    val KM = 4444
     val KM_S = KM.toString()
     val MILEAGE = 2222
     val MILEAGE2 = 2223
