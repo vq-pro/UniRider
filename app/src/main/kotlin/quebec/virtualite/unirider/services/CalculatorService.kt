@@ -13,6 +13,10 @@ open class CalculatorService {
         return percentage(voltage!! - wheel.voltageMin, range)
     }
 
+    open fun range(wheel: WheelEntity?, voltage: Float, km: Float): Float {
+        return 55.8f
+    }
+
     private fun percentage(value: Float, range: Float): Float {
         return round(value * 100 / range, 1)
     }

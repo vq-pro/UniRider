@@ -27,11 +27,13 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var buttonConnect: Button
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
+    internal lateinit var editKm: EditText
+    internal lateinit var editVoltage: EditText
     internal lateinit var textBattery: TextView
     internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
     internal lateinit var textName: TextView
-    internal lateinit var editVoltage: EditText
+    internal lateinit var textRange: TextView
 
     internal var wheel: WheelEntity? = null
 
@@ -52,6 +54,8 @@ open class WheelViewFragment : BaseFragment() {
         textMileage = view.findViewById(R.id.view_mileage)
         editVoltage = view.findViewById(R.id.edit_voltage)
         textBattery = view.findViewById(R.id.view_battery)
+        editKm = view.findViewById(R.id.edit_km)
+        textRange = view.findViewById(R.id.view_range)
         buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
@@ -60,6 +64,7 @@ open class WheelViewFragment : BaseFragment() {
             wheel = it.getWheel(parmWheelId!!)
 
             if (wheel != null) {
+                widgets.addTextChangedListener(editKm, onUpdateKm())
                 widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
@@ -98,6 +103,13 @@ open class WheelViewFragment : BaseFragment() {
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment)
     }
 
+    fun onUpdateKm() = { kmParm: String ->
+        val km = kmParm.trim()
+        val voltage = editVoltage.text.toString().trim()
+
+        textRange.text = if (isEmpty(voltage) || isEmpty(km)) "" else getRange(voltage, km)
+    }
+
     fun onUpdateVoltage() = { voltageParm: String ->
         val voltage = voltageParm.trim()
         textBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
@@ -108,6 +120,11 @@ open class WheelViewFragment : BaseFragment() {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }
+    }
+
+    private fun getRange(voltage: String, km: String): String {
+        return calculatorService.range(wheel, parseFloat(voltage), parseFloat(km))
+            .toString()
     }
 
     private fun goto(id: Int) {

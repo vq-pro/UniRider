@@ -33,6 +33,17 @@ Feature: Wheel Viewing
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108V    | 50.0%   |
 
+  @WIP
+  Scenario Outline: Calculating estimated range remaining [<wheel>]
+    Given I select the <wheel>
+    And the voltage is set to <voltage>
+    When I enter a distance so far in <km>
+    Then it displays an estimated <range>
+    Examples:
+      | wheel           | voltage | km | range |
+      | Veteran Sherman | 91.9V   | 42 | 55.8  |
+#      | Veteran Sherman | 83.5V   | 81 | 16.0  |
+
   Scenario: => Editing the wheel
     Given I select the Veteran Sherman
     When I edit the wheel

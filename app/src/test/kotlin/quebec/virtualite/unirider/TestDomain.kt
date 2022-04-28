@@ -15,6 +15,8 @@ object TestDomain {
     val ID = 1111L
     val ID2 = 1112L
     val ID3 = 1113L
+    val KM = 4444f
+    val KM_S = KM.toString()
     val MILEAGE = 2222
     val MILEAGE2 = 2223
     val MILEAGE3 = 2223
@@ -30,6 +32,8 @@ object TestDomain {
     val PREMILEAGE2 = 10000
     val PREMILEAGE3 = 10000
     val PREMILEAGE_NEW = 20000
+    val RANGE = 5555f
+    val RANGE_S = RANGE.toString()
     val TEMPERATURE_NEW_RAW = 3333f
     val VOLTAGE_S = "100.8"
     val VOLTAGE = parseFloat(VOLTAGE_S)
