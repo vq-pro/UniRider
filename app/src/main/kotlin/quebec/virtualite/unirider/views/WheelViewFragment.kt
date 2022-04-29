@@ -34,7 +34,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
     internal lateinit var textName: TextView
-    internal lateinit var textRange: TextView
+    internal lateinit var textRemainingRange: TextView
 
     internal var wheel: WheelEntity? = null
 
@@ -56,7 +56,7 @@ open class WheelViewFragment : BaseFragment() {
         editVoltage = view.findViewById(R.id.edit_voltage)
         textBattery = view.findViewById(R.id.view_battery)
         editKm = view.findViewById(R.id.edit_km)
-        textRange = view.findViewById(R.id.view_remaining_range)
+        textRemainingRange = view.findViewById(R.id.view_remaining_range)
         buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
@@ -105,24 +105,23 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onUpdateKm() = { kmParm: String ->
-        val km = kmParm.trim()
-        val voltage = editVoltage.text.toString().trim()
-
-        textRange.text = if (isEmpty(voltage) || isEmpty(km)) "" else getEstimatedRange(voltage, km)
+        updateEstimatedValues(kmParm.trim(), widgets.text(editVoltage))
     }
 
     fun onUpdateVoltage() = { voltageParm: String ->
         val voltage = voltageParm.trim()
-        textBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
+        textBattery.text = if (isEmpty(voltage)) "" else formatPercentage(voltage)
+
+        updateEstimatedValues(widgets.text(editKm), voltage)
     }
 
     // FIXME-1 Get 'km' value from strings
-    private fun getEstimatedRange(voltage: String, km: String): String {
+    private fun formatEstimatedRange(km: String, voltage: String): String {
         val estimatedRange = calculatorService.estimatedRange(wheel, parseFloat(voltage), parseInt(km))
         return "$estimatedRange km"
     }
 
-    private fun getPercentage(voltage: String): String {
+    private fun formatPercentage(voltage: String): String {
         return when (val percentage = calculatorService.percentage(wheel, parseFloat(voltage))) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
@@ -131,6 +130,15 @@ open class WheelViewFragment : BaseFragment() {
 
     private fun goto(id: Int) {
         fragments.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
+    }
+
+    private fun updateEstimatedValues(km: String, voltage: String) {
+        if (!isEmpty(km) && !isEmpty(voltage)) {
+            textRemainingRange.text = formatEstimatedRange(km, voltage)
+
+        } else {
+            textRemainingRange.text = ""
+        }
     }
 
     private fun updateWheel(newMileage: Int, newVoltage: Float) {

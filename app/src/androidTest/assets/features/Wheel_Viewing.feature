@@ -20,12 +20,12 @@ Feature: Wheel Viewing
       | Veteran Sherman | 0                | 17622            |
       | Veteran Sherman | 10000            | 27622            |
 
-  Scenario Outline: Calculating percentage [<Wheel> / <Voltage>]
-    Given I select the <Wheel>
-    When I enter a voltage of <Voltage>
-    Then it displays a percentage of <Battery>
+  Scenario Outline: Calculating percentage [<wheel> / <voltage>]
+    Given I select the <wheel>
+    When I enter a voltage of <voltage>
+    Then it displays a percentage of <battery>
     Examples:
-      | Wheel           | Voltage | Battery |
+      | wheel           | voltage | battery |
       | Gotway Nikola+  | 96.4V   | 80.7%   |
       | Gotway Nikola+  | 89.1V   | 48.7%   |
       | KingSong 14S    | 63.5V   | 80.7%   |
@@ -33,16 +33,18 @@ Feature: Wheel Viewing
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108V    | 50.0%   |
 
+  # FIXME-1 Put error values under a "blank estimated values" error scenario
+  @WIP
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
-    And the voltage is set to <voltage>
-    When I enter a distance so far in <km>
-    Then it displays an estimated <range>
+    And the distance so far is set to <km>
+    When I enter a voltage of <voltage>
+    Then it displays an estimated remaining <range>
     Examples:
       | wheel           | km | voltage | range   |
       | Veteran Sherman | 42 | 91.9V   | 56.2 km |
       | Veteran Sherman | 81 | 83.5V   | 16.4 km |
-      | Veteran Sherman | 20 |         |         |
+#      | Veteran Sherman | 20 |         |         |
       | Veteran Sherman |    | 91.9V   |         |
 
   Scenario: => Editing the wheel

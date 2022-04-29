@@ -5,7 +5,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 open class CalculatorService {
 
     open fun estimatedRange(wheel: WheelEntity?, voltage: Float, km: Int): Float {
-        // FIXME-1 Get this from wheel
+        // FIXME-1 Get these from wheel
         val whTotal = 3600f
         val reserveVoltage = 80f
 

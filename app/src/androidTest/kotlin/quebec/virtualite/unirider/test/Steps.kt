@@ -292,7 +292,7 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
-    @Then("^it displays an estimated (.*?)$")
+    @Then("^it displays an estimated remaining (.*?)$")
     fun displaysRange(range: String) {
         assertThat(R.id.view_remaining_range, hasText(range))
     }
@@ -369,14 +369,9 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
-    @Given("^the voltage is set to $")
-    fun voltageIsSetTo() {
-        // Nothing to do, voltage field is already empty
-    }
-
-    @Given("^the voltage is set to (.*?)V$")
-    fun voltageIsSetTo(voltage: Float) {
-        setText(R.id.edit_voltage, voltage.toString())
+    @Given("^the distance so far is set to (.*?)$")
+    fun distanceIsSetTo(km: String) {
+        setText(R.id.edit_km, km);
     }
 
     @Then("the wheel can be saved")
@@ -419,11 +414,6 @@ class Steps {
         selectListViewItem(R.id.devices, deviceName)
 
         expectedDeviceName = deviceName
-    }
-
-    @When("^I enter a distance so far in (.*?)$")
-    fun whenEnterDistance(distance: String) {
-        enter(R.id.edit_km, distance)
     }
 
     @When("^I enter a voltage of (.*?)V$")
