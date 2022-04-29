@@ -422,8 +422,8 @@ class Steps {
     }
 
     @When("^I enter a distance so far in (.*?)$")
-    fun whenEnterDistance(distance: Int) {
-        enter(R.id.edit_km, distance.toString())
+    fun whenEnterDistance(distance: String) {
+        enter(R.id.edit_km, distance)
     }
 
     @When("^I enter a voltage of (.*?)V$")
