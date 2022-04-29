@@ -294,7 +294,7 @@ class Steps {
 
     @Then("^it displays an estimated (.*?)$")
     fun displaysRange(range: String) {
-        assertThat(R.id.view_range, hasText(range))
+        assertThat(R.id.view_remaining_range, hasText(range))
     }
 
     @When("I edit the wheel")

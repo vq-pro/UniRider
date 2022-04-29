@@ -16,7 +16,7 @@
                 android:layout_margin="30dp"
         >
             <!-- Name-->
-            <TableRow android:layout_marginBottom="40dp">
+            <TableRow>
                 <TextView
                         android:id="@+id/view_name"
                         android:layout_weight="1"
@@ -27,21 +27,117 @@
                 />
             </TableRow>
 
-            <!-- Bluetooth Name -->
-            <TableRow android:layout_marginBottom="30dp">
-                <TextView
-                        android:id="@+id/view_bt_name"
+            <!-- Km & Voltage -->
+            <TableRow android:layout_marginTop="15dp">
+                <EditText
+                        android:id="@+id/edit_km"
+                        android:inputType="numberDecimal"
                         android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:gravity="center_horizontal"
+                        android:layout_marginStart="30dp"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                />
+
+                <TextView
+                        android:id="@+id/label_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textStyle="italic"
+                        android:text="@string/label_km"
+                        android:labelFor="@+id/edit_km"
+                />
+
+                <EditText
+                        android:id="@+id/edit_voltage"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                />
+
+                <TextView
+                        android:id="@+id/label_voltage"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage"
+                        android:labelFor="@+id/edit_voltage"
                 />
             </TableRow>
 
+            <!-- Battery Percentage -->
+            <TableRow android:layout_marginTop="15dp">
+                <TextView
+                        android:id="@+id/label_battery"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:labelFor="@+id/view_battery"
+                        android:text="@string/label_battery"
+                />
+
+                <TextView
+                        android:id="@+id/view_battery"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+            </TableRow>
+
+            <!-- Remaining Range -->
+            <TableRow android:layout_marginTop="15dp">
+                <TextView
+                        android:id="@+id/label_remaining_range"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:labelFor="@+id/view_remaining_range"
+                        android:text="@string/label_remaining_range"
+                />
+
+                <TextView
+                        android:id="@+id/view_remaining_range"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+            </TableRow>
+
+            <!-- Total Range -->
+            <TableRow android:layout_marginTop="15dp">
+                <!--                <TextView-->
+                <!--                        android:id="@+id/view_range"-->
+                <!--                        android:layout_weight="1"-->
+                <!--                        android:layout_width="0dp"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+                <!--                />-->
+            </TableRow>
+
+            <!-- Divider -->
+            <View
+                    android:layout_width="2dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:color/darker_gray"
+            />
+
             <!-- Mileage-->
-            <TableRow>
+            <TableRow android:layout_marginTop="15dp">
                 <TextView
                         android:id="@+id/view_mileage_label"
                         android:labelFor="@+id/view_mileage"
@@ -50,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
                         android:text="@string/label_wheel_mileage"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 />
 
                 <TextView
@@ -69,53 +165,16 @@
                 />
             </TableRow>
 
-            <!-- Voltage & Battery -->
-            <TableRow android:layout_marginTop="20dp">
-                <EditText
-                        android:id="@+id/edit_voltage"
-                        android:hint="@string/label_wheel_voltage"
-                        android:inputType="numberDecimal"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="50dp"
-                        android:layout_marginEnd="20dp"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:autofillHints=""
-                />
-
+            <!-- Bluetooth Name -->
+            <TableRow android:layout_marginTop="15dp">
                 <TextView
-                        android:id="@+id/view_battery"
+                        android:id="@+id/view_bt_name"
                         android:layout_weight="1"
-                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                />
-            </TableRow>
-
-            <!-- Distance & Range -->
-            <TableRow android:layout_marginTop="20dp">
-                <EditText
-                        android:id="@+id/edit_km"
-                        android:hint="@string/label_wheel_distance"
-                        android:inputType="numberDecimal"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="50dp"
                         android:layout_marginEnd="20dp"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:autofillHints=""
-                />
-
-                <TextView
-                        android:id="@+id/view_range"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textStyle="italic"
                 />
             </TableRow>
         </TableLayout>

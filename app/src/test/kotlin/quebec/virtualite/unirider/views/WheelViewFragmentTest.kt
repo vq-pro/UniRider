@@ -103,7 +103,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.edit_voltage, mockedEditVoltage)
         mockField(R.id.view_battery, mockedTextBattery)
         mockField(R.id.edit_km, mockedEditKm)
-        mockField(R.id.view_range, mockedTextRange)
+        mockField(R.id.view_remaining_range, mockedTextRange)
 
         mockExternal()
         mockFragments()
@@ -239,6 +239,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         )
     }
 
+    // FIXME-0 Update range when updating either the km or the v
+
     @Test
     fun onUpdateKm() {
         // Given
@@ -254,7 +256,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verify(mockedCalculatorService).estimatedRange(fragment.wheel, VOLTAGE, KM)
-        verify(mockedTextRange).text = RANGE_S
+        // FIXME-1 Get 'km' value from strings
+        verify(mockedTextRange).text = "$RANGE_S km"
     }
 
     @Test

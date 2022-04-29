@@ -56,7 +56,7 @@ open class WheelViewFragment : BaseFragment() {
         editVoltage = view.findViewById(R.id.edit_voltage)
         textBattery = view.findViewById(R.id.view_battery)
         editKm = view.findViewById(R.id.edit_km)
-        textRange = view.findViewById(R.id.view_range)
+        textRange = view.findViewById(R.id.view_remaining_range)
         buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
@@ -116,9 +116,10 @@ open class WheelViewFragment : BaseFragment() {
         textBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
     }
 
+    // FIXME-1 Get 'km' value from strings
     private fun getEstimatedRange(voltage: String, km: String): String {
-        return calculatorService.estimatedRange(wheel, parseFloat(voltage), parseInt(km))
-            .toString()
+        val estimatedRange = calculatorService.estimatedRange(wheel, parseFloat(voltage), parseInt(km))
+        return "$estimatedRange km"
     }
 
     private fun getPercentage(voltage: String): String {
