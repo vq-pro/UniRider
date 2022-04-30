@@ -33,7 +33,7 @@ Feature: Wheel Viewing
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108V    | 50.0%   |
 
-  # FIXME-1 Add estimated total range and wh/km
+  # FIXME-0 Add estimated total range and wh/km
   # FIXME-1 Make km a Float
   # FIXME-1 Put error values under a "blank estimated values" error scenario
   @WIP
@@ -41,13 +41,14 @@ Feature: Wheel Viewing
     Given I select the <wheel>
     And the distance so far is set to <km>
     When I enter a voltage of <voltage>
-    Then it displays an estimated remaining <range>
+    Then it displays an estimated remaining range of <remaining>
+    And it displays an estimated total range of <total>
     Examples:
-      | wheel           | km | voltage | range   |
-      | Veteran Sherman | 42 | 91.9V   | 56.2 km |
-      | Veteran Sherman | 81 | 83.5V   | 16.4 km |
+      | wheel           | km | voltage | remaining | total   |
+      | Veteran Sherman | 42 | 91.9V   | 56.2 km   | 98.2 km |
+      | Veteran Sherman | 81 | 83.5V   | 16.4 km   | 97.4 km |
 #      | Veteran Sherman | 20 |         |         |
-      | Veteran Sherman |    | 91.9V   |         |
+      | Veteran Sherman |    | 91.9V   |           |         |
 #      | Veteran Sherman | aa |         |         |
 #      | Veteran Sherman |    | bb      |         |
 #      | Veteran Sherman | aa | bb      |         |

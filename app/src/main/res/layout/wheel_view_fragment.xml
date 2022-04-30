@@ -119,13 +119,24 @@
 
             <!-- Total Range -->
             <TableRow android:layout_marginTop="15dp">
-                <!--                <TextView-->
-                <!--                        android:id="@+id/view_range"-->
-                <!--                        android:layout_weight="1"-->
-                <!--                        android:layout_width="0dp"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-                <!--                />-->
+                <TextView
+                        android:id="@+id/label_total_range"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:labelFor="@+id/view_remaining_range"
+                        android:text="@string/label_total_range"
+                />
+
+                <TextView
+                        android:id="@+id/view_total_range"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
             </TableRow>
 
             <!-- Divider -->

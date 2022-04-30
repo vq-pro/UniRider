@@ -292,9 +292,14 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
-    @Then("^it displays an estimated remaining (.*?)$")
-    fun displaysRange(range: String) {
+    @Then("^it displays an estimated remaining range of (.*?)$")
+    fun displaysRemainingRange(range: String) {
         assertThat(R.id.view_remaining_range, hasText(range))
+    }
+
+    @Then("^it displays an estimated total range of (.*?)$")
+    fun displaysTotalRange(range: String) {
+        assertThat(R.id.view_total_range, hasText(range))
     }
 
     @When("I edit the wheel")

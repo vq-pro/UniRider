@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +36,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textMileage: TextView
     internal lateinit var textName: TextView
     internal lateinit var textRemainingRange: TextView
+    internal lateinit var textTotalRange: TextView
 
     internal var wheel: WheelEntity? = null
 
@@ -57,6 +59,7 @@ open class WheelViewFragment : BaseFragment() {
         textBattery = view.findViewById(R.id.view_battery)
         editKm = view.findViewById(R.id.edit_km)
         textRemainingRange = view.findViewById(R.id.view_remaining_range)
+        textTotalRange = view.findViewById(R.id.view_total_range)
         buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
@@ -115,11 +118,6 @@ open class WheelViewFragment : BaseFragment() {
         updateEstimatedValues(widgets.text(editKm), voltage)
     }
 
-    private fun formatEstimatedRange(km: String, voltage: String): String {
-        val estimatedRange = calculatorService.estimatedRange(wheel, parseFloat(voltage), parseInt(km))
-        return "$estimatedRange ${fragments.string(R.string.label_km)}"
-    }
-
     private fun formatPercentage(voltage: String): String {
         return when (val percentage = calculatorService.percentage(wheel, parseFloat(voltage))) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
@@ -131,12 +129,19 @@ open class WheelViewFragment : BaseFragment() {
         fragments.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateEstimatedValues(km: String, voltage: String) {
         if (!isEmpty(km) && !isEmpty(voltage)) {
-            textRemainingRange.text = formatEstimatedRange(km, voltage)
+
+            val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseInt(km))
+            val label = fragments.string(R.string.label_km)
+
+            textRemainingRange.text = "${values.remainingRange} $label"
+            textTotalRange.text = "${values.totalRange} $label"
 
         } else {
             textRemainingRange.text = ""
+            textTotalRange.text = ""
         }
     }
 

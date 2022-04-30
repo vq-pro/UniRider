@@ -33,9 +33,11 @@ object TestDomain {
     val PREMILEAGE2 = 10000
     val PREMILEAGE3 = 10000
     val PREMILEAGE_NEW = 20000
-    val RANGE = 5555f
-    val RANGE_S = RANGE.toString()
+    val REMAINING_RANGE = 5555f
+    val REMAINING_RANGE_S = REMAINING_RANGE.toString()
     val TEMPERATURE_NEW_RAW = 3333f
+    val TOTAL_RANGE = 6666f
+    val TOTAL_RANGE_S = TOTAL_RANGE.toString()
     val VOLTAGE_S = "100.8"
     val VOLTAGE = parseFloat(VOLTAGE_S)
     val VOLTAGE_MAX = 84.0f
