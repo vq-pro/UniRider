@@ -16,6 +16,7 @@ object TestDomain {
     val ID2 = 1112L
     val ID3 = 1113L
     val LABEL_KM = "kilometers"
+    val LABEL_WH_PER_KM = "watt-hours per kilometer"
     val KM = 4444
     val KM_S = KM.toString()
     val MILEAGE = 2222
@@ -50,6 +51,8 @@ object TestDomain {
     val VOLTAGE_MIN2 = 90.0f
     val VOLTAGE_MIN3 = 75.6f
     val VOLTAGE_MIN_NEW = 74.5f
+    val WH_PER_KM = 7777f
+    val WH_PER_KM_S = WH_PER_KM.toString()
     val WHEEL_ROW_1_123 = WheelRow(ID, NAME, PREMILEAGE + MILEAGE)
     val WHEEL_ROW_2_456 = WheelRow(ID2, NAME2, PREMILEAGE2 + MILEAGE2)
     val WHEEL_ROW_3_123 = WheelRow(ID3, NAME3, PREMILEAGE3 + MILEAGE3)

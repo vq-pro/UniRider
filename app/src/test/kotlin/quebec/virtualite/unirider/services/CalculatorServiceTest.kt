@@ -22,8 +22,8 @@ class CalculatorServiceTest {
 
     @Test
     fun estimatedValues() {
-        estimatedValues(91.9f, 42, 56.2f, 98.2f)
-        estimatedValues(83.5f, 81, 16.4f, 97.4f)
+        estimatedValues(91.9f, 42, 56.2f, 98.2f, 30.3f)
+        estimatedValues(83.5f, 81, 16.4f, 97.4f, 30.5f)
     }
 
     @Test
@@ -48,7 +48,8 @@ class CalculatorServiceTest {
         voltage: Float,
         km: Int,
         expectedRemainingRange: Float,
-        expectedTotalRange: Float
+        expectedTotalRange: Float,
+        expectedWhPerKm: Float
     ) {
         // When
         val values = service.estimatedValues(SHERMAN_3, voltage, km)
@@ -56,6 +57,7 @@ class CalculatorServiceTest {
         // Then
         assertThat(values.remainingRange, equalTo(expectedRemainingRange))
         assertThat(values.totalRange, equalTo(expectedTotalRange))
+        assertThat(values.whPerKm, equalTo(expectedWhPerKm))
     }
 
     private fun percentage(voltage: Float, expectedPercentage: Float) {

@@ -21,6 +21,7 @@ import quebec.virtualite.commons.android.views.CommonFragmentServices
 import quebec.virtualite.commons.android.views.CommonWidgetServices
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.LABEL_KM
+import quebec.virtualite.unirider.TestDomain.LABEL_WH_PER_KM
 import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelDb
@@ -122,6 +123,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
         lenient().doReturn(LABEL_KM)
             .`when`(mockedFragments).string(R.string.label_km)
+
+        lenient().doReturn(LABEL_WH_PER_KM)
+            .`when`(mockedFragments).string(R.string.label_wh_per_km)
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {

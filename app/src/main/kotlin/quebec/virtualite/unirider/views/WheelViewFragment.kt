@@ -37,6 +37,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textName: TextView
     internal lateinit var textRemainingRange: TextView
     internal lateinit var textTotalRange: TextView
+    internal lateinit var textWhPerKm: TextView
 
     internal var wheel: WheelEntity? = null
 
@@ -60,6 +61,7 @@ open class WheelViewFragment : BaseFragment() {
         editKm = view.findViewById(R.id.edit_km)
         textRemainingRange = view.findViewById(R.id.view_remaining_range)
         textTotalRange = view.findViewById(R.id.view_total_range)
+        textWhPerKm = view.findViewById(R.id.view_wh_per_km)
         buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
@@ -134,14 +136,17 @@ open class WheelViewFragment : BaseFragment() {
         if (!isEmpty(km) && !isEmpty(voltage)) {
 
             val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseInt(km))
-            val label = fragments.string(R.string.label_km)
+            val labelKm = fragments.string(R.string.label_km)
+            val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
 
-            textRemainingRange.text = "${values.remainingRange} $label"
-            textTotalRange.text = "${values.totalRange} $label"
+            textRemainingRange.text = "${values.remainingRange} $labelKm"
+            textTotalRange.text = "${values.totalRange} $labelKm"
+            textWhPerKm.text = "${values.whPerKm} $labelWhPerKm"
 
         } else {
             textRemainingRange.text = ""
             textTotalRange.text = ""
+            textWhPerKm.text = ""
         }
     }
 

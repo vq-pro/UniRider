@@ -4,7 +4,11 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 open class CalculatorService {
 
-    data class EstimatedValues(val remainingRange: Float, val totalRange: Float)
+    data class EstimatedValues(
+        val remainingRange: Float,
+        val totalRange: Float,
+        val whPerKm: Float
+    )
 
     open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Int): EstimatedValues {
         // FIXME-1 Get these from wheel
@@ -18,10 +22,14 @@ open class CalculatorService {
         val whConsumed = whTotal - whRemaining
         val whPerKm = whConsumed / km
         val whReserve = whTotal * percentageOfReserve
-        val remainingRange = round((whRemaining - whReserve) / whPerKm, 1)
+        val remainingRange = (whRemaining - whReserve) / whPerKm
         val totalRange = remainingRange + km
 
-        return EstimatedValues(remainingRange, totalRange)
+        return EstimatedValues(
+            round(remainingRange, 1),
+            round(totalRange, 1),
+            round(whPerKm, 1)
+        )
     }
 
     open fun percentage(wheel: WheelEntity?, voltage: Float?): Float {
