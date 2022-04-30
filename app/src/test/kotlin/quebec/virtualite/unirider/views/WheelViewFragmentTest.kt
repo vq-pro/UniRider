@@ -25,6 +25,7 @@ import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.KM_S
+import quebec.virtualite.unirider.TestDomain.LABEL_KM
 import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
@@ -282,8 +283,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verify(mockedCalculatorService).estimatedRange(fragment.wheel, VOLTAGE, KM)
-        // FIXME-1 Get 'km' value from strings
-        verify(mockedTextRemainingRange).text = "$RANGE_S km"
+        verify(mockedTextRemainingRange).text = "$RANGE_S $LABEL_KM"
     }
 
     @Test
@@ -364,8 +364,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
 
         verify(mockedTextBattery).text = PERCENTAGE_S
-        // FIXME-1 Get 'km' value from strings
-        verify(mockedTextRemainingRange).text = "$RANGE_S km"
+        verify(mockedTextRemainingRange).text = "$RANGE_S $LABEL_KM"
     }
 
     private fun mockKm(km: String) {

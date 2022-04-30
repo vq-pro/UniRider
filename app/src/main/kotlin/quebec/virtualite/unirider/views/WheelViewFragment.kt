@@ -115,10 +115,9 @@ open class WheelViewFragment : BaseFragment() {
         updateEstimatedValues(widgets.text(editKm), voltage)
     }
 
-    // FIXME-1 Get 'km' value from strings
     private fun formatEstimatedRange(km: String, voltage: String): String {
         val estimatedRange = calculatorService.estimatedRange(wheel, parseFloat(voltage), parseInt(km))
-        return "$estimatedRange km"
+        return "$estimatedRange ${fragments.string(R.string.label_km)}"
     }
 
     private fun formatPercentage(voltage: String): String {

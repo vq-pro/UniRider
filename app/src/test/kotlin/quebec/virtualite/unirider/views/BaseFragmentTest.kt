@@ -19,6 +19,8 @@ import org.mockito.Mockito.verify
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.views.CommonFragmentServices
 import quebec.virtualite.commons.android.views.CommonWidgetServices
+import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.LABEL_KM
 import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelDb
@@ -117,6 +119,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
             .`when`(mockedFragments).runUI(any())
+
+        lenient().doReturn(LABEL_KM)
+            .`when`(mockedFragments).string(R.string.label_km)
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {
