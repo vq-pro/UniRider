@@ -9,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
@@ -264,7 +263,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateKm().invoke(" ")
 
         // Then
-        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyInt())
+        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
         verify(mockedTextRemainingRange).text = ""
         verify(mockedTextTotalRange).text = ""
         verify(mockedTextWhPerKm).text = ""

@@ -33,7 +33,6 @@ Feature: Wheel Viewing
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108V    | 50.0%   |
 
-  # FIXME-1 Make km a Float
   # FIXME-1 Put error values under a "blank estimated values" error scenario
   @WIP
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
@@ -44,11 +43,11 @@ Feature: Wheel Viewing
     And it displays an estimated total range of <total>
     And it displays an estimated wh/km of <wh/km>
     Examples:
-      | wheel           | km | voltage | remaining | total   | wh/km      |
-      | Veteran Sherman | 42 | 91.9V   | 56.2 km   | 98.2 km | 30.3 wh/km |
-      | Veteran Sherman | 81 | 83.5V   | 16.4 km   | 97.4 km | 30.5 wh/km |
+      | wheel           | km   | voltage | remaining | total   | wh/km      |
+      | Veteran Sherman | 42.0 | 91.9V   | 56.2 km   | 98.2 km | 30.3 wh/km |
+      | Veteran Sherman | 81.0 | 83.5V   | 16.4 km   | 97.4 km | 30.5 wh/km |
 #      | Veteran Sherman | 20 |         |         |
-      | Veteran Sherman |    | 91.9V   |           |         |            |
+      | Veteran Sherman |      | 91.9V   |           |         |            |
 #      | Veteran Sherman | aa |         |         |
 #      | Veteran Sherman |    | bb      |         |
 #      | Veteran Sherman | aa | bb      |         |

@@ -10,7 +10,7 @@ open class CalculatorService {
         val whPerKm: Float
     )
 
-    open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Int): EstimatedValues {
+    open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Float): EstimatedValues {
         // FIXME-1 Get these from wheel
         val whTotal = 3600f
         val reserveVoltage = 80f

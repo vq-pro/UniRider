@@ -17,7 +17,7 @@ object TestDomain {
     val ID3 = 1113L
     val LABEL_KM = "kilometers"
     val LABEL_WH_PER_KM = "watt-hours per kilometer"
-    val KM = 4444
+    val KM = 4444f
     val KM_S = KM.toString()
     val MILEAGE = 2222
     val MILEAGE2 = 2223

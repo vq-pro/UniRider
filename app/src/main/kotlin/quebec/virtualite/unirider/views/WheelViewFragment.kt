@@ -14,7 +14,6 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
-import java.lang.Integer.parseInt
 import java.util.Locale.ENGLISH
 import kotlin.math.roundToInt
 
@@ -135,7 +134,7 @@ open class WheelViewFragment : BaseFragment() {
     private fun updateEstimatedValues(km: String, voltage: String) {
         if (!isEmpty(km) && !isEmpty(voltage)) {
 
-            val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseInt(km))
+            val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
             val labelKm = fragments.string(R.string.label_km)
             val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
 

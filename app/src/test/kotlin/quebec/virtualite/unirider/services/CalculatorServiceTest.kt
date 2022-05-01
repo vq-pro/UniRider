@@ -22,8 +22,8 @@ class CalculatorServiceTest {
 
     @Test
     fun estimatedValues() {
-        estimatedValues(91.9f, 42, 56.2f, 98.2f, 30.3f)
-        estimatedValues(83.5f, 81, 16.4f, 97.4f, 30.5f)
+        estimatedValues(91.9f, 42f, 56.2f, 98.2f, 30.3f)
+        estimatedValues(83.5f, 81f, 16.4f, 97.4f, 30.5f)
     }
 
     @Test
@@ -46,7 +46,7 @@ class CalculatorServiceTest {
 
     private fun estimatedValues(
         voltage: Float,
-        km: Int,
+        km: Float,
         expectedRemainingRange: Float,
         expectedTotalRange: Float,
         expectedWhPerKm: Float
