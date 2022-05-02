@@ -30,11 +30,12 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.NAME3
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
 import quebec.virtualite.unirider.TestDomain.S18_1
-import quebec.virtualite.unirider.TestDomain.SHERMAN_3
+import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
+import quebec.virtualite.unirider.TestDomain.WH3
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 
@@ -73,7 +74,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.wheel = null
 
         given(mockedDb.getWheel(ID))
-            .willReturn(SHERMAN_3)
+            .willReturn(SHERMAN_MAX_3)
 
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
@@ -83,7 +84,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         assertThat(fragment.devices, equalTo(emptyList()))
         assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
-        assertThat(fragment.wheel, equalTo(SHERMAN_3))
+        assertThat(fragment.wheel, equalTo(SHERMAN_MAX_3))
 
         verifyOnItemClick(mockedLvWheels, "onSelectDevice")
 
@@ -129,7 +130,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
         val selectedDevice = 2
 
-        fragment.wheel = SHERMAN_3
+        fragment.wheel = SHERMAN_MAX_3
 
         // When
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
@@ -141,7 +142,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        verify(mockedDb).saveWheel(WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, PREMILEAGE3, MILEAGE_NEW, VOLTAGE_MIN3, VOLTAGE_MAX3))
+        verify(mockedDb).saveWheel(WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, PREMILEAGE3, MILEAGE_NEW, WH3, VOLTAGE_MIN3, VOLTAGE_MAX3))
         verify(mockedFragments).navigateBack()
     }
 }

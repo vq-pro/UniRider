@@ -21,6 +21,7 @@
     <string name="label_remaining_range">Remaining</string>
     <string name="label_total_range">Total</string>
     <string name="label_voltage">V</string>
+    <string name="label_wh">wh</string>
     <string name="label_wh_per_km">wh/km</string>
     <string name="label_wheel_premileage">previous mileage</string>
     <string name="label_wheel_mileage">Mileage</string>
@@ -28,5 +29,6 @@
     <string name="label_wheel_previous">previous</string>
     <string name="label_wheel_voltage_max">max voltage</string>
     <string name="label_wheel_voltage_min">min voltage</string>
+    <string name="label_wheel_wh">Wh</string>
     <string name="question_are_you_sure_you_want_to_delete">Are you sure you want to delete this wheel?</string>
 </resources>

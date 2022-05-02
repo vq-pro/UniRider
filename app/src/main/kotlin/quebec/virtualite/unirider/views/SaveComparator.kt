@@ -8,6 +8,7 @@ open class SaveComparator {
     open fun canSave(updatedWheel: WheelEntity?, initialWheel: WheelEntity?): Boolean {
         if (equals(updatedWheel, initialWheel)
             || updatedWheel!!.name == ""
+            || updatedWheel.wh == 0
             || updatedWheel.voltageMin == 0f
             || updatedWheel.voltageMax == 0f
         )
@@ -16,6 +17,7 @@ open class SaveComparator {
         return (updatedWheel.name != initialWheel!!.name) ||
                 (updatedWheel.premileage != initialWheel.premileage) ||
                 (updatedWheel.mileage != initialWheel.mileage) ||
+                (updatedWheel.wh != initialWheel.wh) ||
                 (updatedWheel.voltageMax != initialWheel.voltageMax) ||
                 (updatedWheel.voltageMin != initialWheel.voltageMin)
     }

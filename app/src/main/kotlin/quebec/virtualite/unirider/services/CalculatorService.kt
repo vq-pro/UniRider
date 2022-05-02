@@ -11,17 +11,16 @@ open class CalculatorService {
     )
 
     open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Float): EstimatedValues {
-        // FIXME-1 Get these from wheel
-        val whTotal = 3600f
+        // FIXME-1 Get the reserve voltage from wheel
         val reserveVoltage = 80f
 
         val percentage = precisePercentage(wheel!!, voltage) / 100
         val percentageOfReserve = precisePercentage(wheel, reserveVoltage) / 100
 
-        val whRemaining = whTotal * percentage
-        val whConsumed = whTotal - whRemaining
+        val whRemaining = wheel.wh * percentage
+        val whConsumed = wheel.wh - whRemaining
         val whPerKm = whConsumed / km
-        val whReserve = whTotal * percentageOfReserve
+        val whReserve = wheel.wh * percentageOfReserve
         val remainingRange = (whRemaining - whReserve) / whPerKm
         val totalRange = remainingRange + km
 

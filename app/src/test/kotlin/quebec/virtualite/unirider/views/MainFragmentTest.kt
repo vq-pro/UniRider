@@ -23,7 +23,7 @@ import quebec.virtualite.unirider.TestDomain.PREMILEAGE2
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.S20_2
-import quebec.virtualite.unirider.TestDomain.SHERMAN_3
+import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_1_123
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_2_456
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_3_123
@@ -69,7 +69,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         given(mockedDb.getWheels())
             .willReturn(
                 listOf(
-                    SHERMAN_3,
+                    SHERMAN_MAX_3,
                     S18_1,
                     S20_2,
                 )

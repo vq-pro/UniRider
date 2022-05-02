@@ -11,6 +11,7 @@ import cucumber.api.java.en.When
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.notNullValue
 import org.junit.Rule
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
@@ -73,7 +74,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -91,10 +92,7 @@ class Steps {
     @Then("^it shows the updated name and a mileage of (.*?) on the main view$")
     fun itShowsTheUpdatedNameAndMileageOnTheMainView(expectedMileage: Int) {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
-        assertThat(
-            R.id.wheels,
-            hasRow(WheelRow(selectedWheel.id, updatedWheel.name, expectedMileage))
-        )
+        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, expectedMileage)))
     }
 
     @Then("^the mileage is updated to (.*?)$")
@@ -150,6 +148,7 @@ class Steps {
             Pair("Name", R.id.edit_name),
             Pair("Previous Mileage", R.id.edit_premileage),
             Pair("Mileage", R.id.edit_mileage),
+            Pair("Wh", R.id.edit_wh),
             Pair("Voltage Min", R.id.edit_voltage_min),
             Pair("Voltage Max", R.id.edit_voltage_max)
         )
@@ -171,6 +170,7 @@ class Steps {
             null,
             parseInt(mapEntity["Previous Mileage"]!!),
             parseInt(mapEntity["Mileage"]!!),
+            parseInt(mapEntity["Wh"]!!),
             parseFloat(mapEntity["Voltage Min"]!!),
             parseFloat(mapEntity["Voltage Max"]!!)
         )
@@ -218,6 +218,11 @@ class Steps {
     @When("I blank the previous mileage")
     fun blankWheelPreMileage() {
         setText(R.id.edit_premileage, " ")
+    }
+
+    @When("I blank the wh")
+    fun blankWheelWh() {
+        setText(R.id.edit_wh, " ")
     }
 
     @Then("^the wheel's Bluetooth name is undefined$")
@@ -268,6 +273,11 @@ class Steps {
     @When("I change the previous mileage")
     fun changeWheelPreMileage() {
         setText(R.id.edit_premileage, "123")
+    }
+
+    @When("I change the wh")
+    fun changeWheelWh() {
+        setText(R.id.edit_wh, "123")
     }
 
     @When("I confirm the deletion")
@@ -327,17 +337,18 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Voltage Min", "Voltage Max")))
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Max")))
 
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
                 val name = row[0]
                 val mileage = parseInt(row[1])
-                val voltageMin = parseVoltage(row[2])
-                val voltageMax = parseVoltage(row[3])
+                val wh = parseInt(row[2])
+                val voltageMin = parseVoltage(row[3])
+                val voltageMax = parseVoltage(row[4])
 
-                WheelEntity(0, name, null, null, 0, mileage, voltageMin, voltageMax)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMin, voltageMax)
             }
             .collect(toList())
 
@@ -357,7 +368,7 @@ class Steps {
                 val btAddress = row[2]
 
                 db.findWheel(name)?.let {
-                    db.saveWheel(WheelEntity(it.id, name, btName, btAddress, it.premileage, it.mileage, it.voltageMin, it.voltageMax))
+                    db.saveWheel(WheelEntity(it.id, name, btName, btAddress, it.premileage, it.mileage, it.wh, it.voltageMin, it.voltageMax))
                 }
             }
 
@@ -388,7 +399,7 @@ class Steps {
 
     @Given("^the distance so far is set to (.*?)$")
     fun distanceIsSetTo(km: String) {
-        setText(R.id.edit_km, km);
+        setText(R.id.edit_km, km)
     }
 
     @Then("the wheel can be saved")
@@ -404,7 +415,7 @@ class Steps {
     @Given("^the (.*?) has a previous mileage of (.*?)$")
     fun wheelHasPreviousMileage(name: String, premileage: Int) {
         db.findWheel(name)?.let {
-            db.saveWheel(WheelEntity(it.id, it.name, it.btName, it.btAddr, premileage, it.mileage, it.voltageMin, it.voltageMax))
+            db.saveWheel(WheelEntity(it.id, it.name, it.btName, it.btAddr, premileage, it.mileage, it.wh, it.voltageMin, it.voltageMax))
             updateMapWheels()
         }
     }
@@ -417,6 +428,7 @@ class Steps {
         assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))
         assertThat(selectedWheel.voltageMax, equalTo(updatedWheel.voltageMax))
         assertThat(selectedWheel.voltageMin, equalTo(updatedWheel.voltageMin))
+        assertThat(selectedWheel.wh, equalTo(updatedWheel.wh))
     }
 
     @Then("the wheel was updated")
@@ -449,6 +461,8 @@ class Steps {
     @When("^I select the (.*?)$")
     fun whenSelect(wheelName: String) {
         selectedWheel = db.findWheel(wheelName)!!
+        assertThat(selectedWheel, notNullValue())
+
         selectListViewItem(R.id.wheels, "name", wheelName)
     }
 

@@ -162,8 +162,10 @@ open class WheelViewFragment : BaseFragment() {
 
     private fun updateWheel(newMileage: Int, newVoltage: Float) {
         wheel = WheelEntity(
-            wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
+            wheel!!.id, wheel!!.name,
+            wheel!!.btName, wheel!!.btAddr,
             wheel!!.premileage, newMileage,
+            wheel!!.wh,
             wheel!!.voltageMin, wheel!!.voltageMax
         )
 

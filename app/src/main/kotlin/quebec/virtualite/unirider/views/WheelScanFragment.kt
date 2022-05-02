@@ -50,8 +50,10 @@ open class WheelScanFragment : BaseFragment() {
             fragments.doneWaiting(info) {
                 external.runDB { db ->
                     val updatedWheel = WheelEntity(
-                        wheel!!.id, wheel!!.name, device.name, device.address,
+                        wheel!!.id, wheel!!.name,
+                        device.name, device.address,
                         wheel!!.premileage, info!!.mileage.roundToInt(),
+                        wheel!!.wh,
                         wheel!!.voltageMin, wheel!!.voltageMax
                     )
                     db.saveWheel(updatedWheel)
@@ -63,7 +65,6 @@ open class WheelScanFragment : BaseFragment() {
     }
 
     private fun scanForDevices(view: View) {
-
         external.bluetooth().scan {
             fragments.doneWaiting(it) {
                 devices.add(it)

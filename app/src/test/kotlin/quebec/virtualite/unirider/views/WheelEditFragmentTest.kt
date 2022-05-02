@@ -30,6 +30,8 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
+import quebec.virtualite.unirider.TestDomain.WH
+import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
@@ -58,20 +60,17 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     lateinit var mockedEditVoltageMin: EditText
 
     @Mock
+    lateinit var mockedEditWh: EditText
+
+    @Mock
     lateinit var mockedSaveComparator: SaveComparator
 
     @Before
     fun before() {
         fragment.parmWheelId = ID
 
-        mockField(R.id.button_save, mockedButtonSave)
-        mockField(R.id.edit_name, mockedEditName)
-        mockField(R.id.edit_premileage, mockedEditPreMileage)
-        mockField(R.id.edit_mileage, mockedEditMileage)
-        mockField(R.id.edit_voltage_max, mockedEditVoltageMax)
-        mockField(R.id.edit_voltage_min, mockedEditVoltageMin)
-
         mockExternal()
+        mockFields()
         mockFragments()
     }
 
@@ -90,7 +89,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     @Test
     fun onViewCreated() {
         // Given
-        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX)
         given(mockedDb.getWheel(ID))
             .willReturn(wheel)
 
@@ -108,6 +107,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         assertThat(fragment.editMileage, equalTo(mockedEditMileage))
         assertThat(fragment.editVoltageMax, equalTo(mockedEditVoltageMax))
         assertThat(fragment.editVoltageMin, equalTo(mockedEditVoltageMin))
+        assertThat(fragment.editWh, equalTo(mockedEditWh))
         assertThat(fragment.buttonSave, equalTo(mockedButtonSave))
 
         verify(mockedEditName).setText(NAME)
@@ -115,6 +115,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedEditMileage).setText("$MILEAGE")
         verify(mockedEditVoltageMax).setText("$VOLTAGE_MAX")
         verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
+        verify(mockedEditWh).setText("$WH")
         verify(mockedWidgets).disable(mockedButtonSave)
 
         verifyOnUpdateText(mockedEditName, "onUpdateName")
@@ -122,13 +123,14 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verifyOnUpdateText(mockedEditMileage, "onUpdateMileage")
         verifyOnUpdateText(mockedEditVoltageMax, "onUpdateVoltageMax")
         verifyOnUpdateText(mockedEditVoltageMin, "onUpdateVoltageMin")
+        verifyOnUpdateText(mockedEditWh, "onUpdateWh")
         verifyOnClick(mockedButtonSave, "onSave")
     }
 
     @Test
     fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
         // Given
-        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, VOLTAGE_MIN, VOLTAGE_MAX)
+        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, WH, VOLTAGE_MIN, VOLTAGE_MAX)
         given(mockedDb.getWheel(ID))
             .willReturn(wheel)
 
@@ -145,7 +147,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         // Given
         fragment.parmWheelId = 0L
 
-        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0f, 0f)
+        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -171,7 +173,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         fragment.enableSaveIfChanged()
 
         // Then
-        verify(mockedDb).findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX))
+        verify(mockedDb).findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX))
         verify(mockedWidgets).enable(mockedButtonSave)
     }
 
@@ -187,7 +189,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         fragment.enableSaveIfChanged()
 
         // Then
-        verify(mockedDb).findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX))
+        verify(mockedDb).findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX))
         verify(mockedWidgets).disable(mockedButtonSave)
     }
 
@@ -207,7 +209,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     @Test
     fun onSave() {
         // Given
-        fragment.updatedWheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.updatedWheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX)
 
         // When
         fragment.onSave().invoke(mockedView)
@@ -230,7 +232,10 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).enable(mockedButtonSave)
 
-        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX)))
+        assertThat(
+            fragment.updatedWheel,
+            equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE_NEW, WH, VOLTAGE_MIN, VOLTAGE_MAX))
+        )
     }
 
     @Test
@@ -245,7 +250,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).disable(mockedButtonSave)
 
-        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, 0, VOLTAGE_MIN, VOLTAGE_MAX)))
+        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, 0, WH, VOLTAGE_MIN, VOLTAGE_MAX)))
     }
 
     @Test
@@ -261,7 +266,10 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).enable(mockedButtonSave)
 
-        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE_NEW, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)))
+        assertThat(
+            fragment.updatedWheel,
+            equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE_NEW, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX))
+        )
     }
 
     @Test
@@ -276,7 +284,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).disable(mockedButtonSave)
 
-        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)))
+        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX)))
     }
 
     @Test
@@ -292,7 +300,10 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).enable(mockedButtonSave)
 
-        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME_NEW, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)))
+        assertThat(
+            fragment.updatedWheel,
+            equalTo(WheelEntity(ID, NAME_NEW, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX))
+        )
     }
 
     @Test
@@ -308,7 +319,10 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).enable(mockedButtonSave)
 
-        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX_NEW)))
+        assertThat(
+            fragment.updatedWheel,
+            equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX_NEW))
+        )
     }
 
     @Test
@@ -324,7 +338,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).disable(mockedButtonSave)
 
-        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, 0f)))
+        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, 0f)))
     }
 
     @Test
@@ -340,7 +354,10 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).enable(mockedButtonSave)
 
-        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN_NEW, VOLTAGE_MAX)))
+        assertThat(
+            fragment.updatedWheel,
+            equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN_NEW, VOLTAGE_MAX))
+        )
     }
 
     @Test
@@ -356,14 +373,59 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedSaveComparator).canSave(any(), any())
         verify(mockedWidgets).disable(mockedButtonSave)
 
-        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, 0f, VOLTAGE_MAX)))
+        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, 0f, VOLTAGE_MAX)))
+    }
+
+    @Test
+    fun onUpdateWh() {
+        // Given
+        initForUpdates(true)
+
+        // When
+        fragment.onUpdateWh().invoke("$WH_NEW ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedSaveComparator).canSave(any(), any())
+        verify(mockedWidgets).enable(mockedButtonSave)
+
+        assertThat(
+            fragment.updatedWheel,
+            equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH_NEW, VOLTAGE_MIN, VOLTAGE_MAX))
+        )
+    }
+
+    @Test
+    fun onUpdateWh_whenEmpty_zero() {
+        // Given
+        initForUpdates(false)
+
+        // When
+        fragment.onUpdateWh().invoke(" ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedSaveComparator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, 0, VOLTAGE_MIN, VOLTAGE_MAX)))
     }
 
     private fun initForUpdates(canSave: Boolean) {
-        fragment.initialWheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
+        fragment.initialWheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX)
         fragment.updatedWheel = fragment.initialWheel
 
         given(mockedSaveComparator.canSave(any(), any()))
             .willReturn(canSave)
+    }
+
+    private fun mockFields() {
+        mockField(R.id.button_save, mockedButtonSave)
+        mockField(R.id.edit_name, mockedEditName)
+        mockField(R.id.edit_premileage, mockedEditPreMileage)
+        mockField(R.id.edit_mileage, mockedEditMileage)
+        mockField(R.id.edit_voltage_max, mockedEditVoltageMax)
+        mockField(R.id.edit_voltage_min, mockedEditVoltageMin)
+        mockField(R.id.edit_wh, mockedEditWh)
     }
 }

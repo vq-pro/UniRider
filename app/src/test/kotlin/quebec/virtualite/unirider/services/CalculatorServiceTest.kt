@@ -11,7 +11,8 @@ import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
-import quebec.virtualite.unirider.TestDomain.SHERMAN_3
+import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
+import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
@@ -52,7 +53,7 @@ class CalculatorServiceTest {
         expectedWhPerKm: Float
     ) {
         // When
-        val values = service.estimatedValues(SHERMAN_3, voltage, km)
+        val values = service.estimatedValues(SHERMAN_MAX_3, voltage, km)
 
         // Then
         assertThat(values.remainingRange, equalTo(expectedRemainingRange))
@@ -62,7 +63,7 @@ class CalculatorServiceTest {
 
     private fun percentage(voltage: Float, expectedPercentage: Float) {
         // When
-        val percentage = service.percentage(SHERMAN_3, voltage)
+        val percentage = service.percentage(SHERMAN_MAX_3, voltage)
 
         // Then
         assertThat(percentage, equalTo(expectedPercentage))
@@ -70,7 +71,7 @@ class CalculatorServiceTest {
 
     private fun percentage_whenVoltagesNotSet_zero(voltageMin: Float, voltageMax: Float) {
         // Given
-        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, voltageMin, voltageMax)
+        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, voltageMin, voltageMax)
 
         // When
         val percentage = service.percentage(wheel, 108.0f)

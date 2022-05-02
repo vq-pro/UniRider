@@ -15,7 +15,7 @@ import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WH
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0f, 0f)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f)
 
     internal lateinit var buttonSave: Button
     internal lateinit var editMileage: EditText
@@ -23,6 +23,7 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editPreMileage: EditText
     internal lateinit var editVoltageMax: EditText
     internal lateinit var editVoltageMin: EditText
+    internal lateinit var editWh: EditText
 
     internal lateinit var initialWheel: WheelEntity
     internal lateinit var updatedWheel: WheelEntity
@@ -44,6 +45,7 @@ open class WheelEditFragment : BaseFragment() {
         editMileage = view.findViewById(R.id.edit_mileage)
         editVoltageMax = view.findViewById(R.id.edit_voltage_max)
         editVoltageMin = view.findViewById(R.id.edit_voltage_min)
+        editWh = view.findViewById(R.id.edit_wh)
         buttonSave = view.findViewById(R.id.button_save)
 
         widgets.addTextChangedListener(editName, onUpdateName())
@@ -51,6 +53,7 @@ open class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editMileage, onUpdateMileage())
         widgets.addTextChangedListener(editVoltageMax, onUpdateVoltageMax())
         widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
+        widgets.addTextChangedListener(editWh, onUpdateWh())
         widgets.setOnClickListener(buttonSave, onSave())
 
         external.runDB {
@@ -61,6 +64,7 @@ open class WheelEditFragment : BaseFragment() {
                 editName.setText(initialWheel.name)
                 editVoltageMax.setText("${initialWheel.voltageMax}")
                 editVoltageMin.setText("${initialWheel.voltageMin}")
+                editWh.setText("${initialWheel.wh}")
 
                 if (initialWheel.premileage != 0)
                     editPreMileage.setText("${initialWheel.premileage}")
@@ -100,6 +104,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.btAddr,
             updatedWheel.premileage,
             intOf(newMileage),
+            updatedWheel.wh,
             updatedWheel.voltageMin,
             updatedWheel.voltageMax
         )
@@ -115,6 +120,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.btAddr,
             updatedWheel.premileage,
             updatedWheel.mileage,
+            updatedWheel.wh,
             updatedWheel.voltageMin,
             updatedWheel.voltageMax
         )
@@ -130,6 +136,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.btAddr,
             intOf(newPreMileage),
             updatedWheel.mileage,
+            updatedWheel.wh,
             updatedWheel.voltageMin,
             updatedWheel.voltageMax
         )
@@ -145,6 +152,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.btAddr,
             updatedWheel.premileage,
             updatedWheel.mileage,
+            updatedWheel.wh,
             updatedWheel.voltageMin,
             floatOf(newVoltage)
         )
@@ -160,7 +168,24 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.btAddr,
             updatedWheel.premileage,
             updatedWheel.mileage,
+            updatedWheel.wh,
             floatOf(newVoltage),
+            updatedWheel.voltageMax
+        )
+
+        enableSaveIfChanged()
+    }
+
+    fun onUpdateWh() = { newWh: String ->
+        updatedWheel = WheelEntity(
+            updatedWheel.id,
+            updatedWheel.name,
+            updatedWheel.btName,
+            updatedWheel.btAddr,
+            updatedWheel.premileage,
+            updatedWheel.mileage,
+            intOf(newWh),
+            updatedWheel.voltageMin,
             updatedWheel.voltageMax
         )
 
