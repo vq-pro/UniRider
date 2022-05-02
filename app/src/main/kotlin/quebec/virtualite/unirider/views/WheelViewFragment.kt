@@ -108,19 +108,20 @@ open class WheelViewFragment : BaseFragment() {
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment)
     }
 
-    fun onUpdateKm() = { kmParm: String ->
-        updateEstimatedValues(kmParm.trim(), widgets.text(editVoltage))
+    fun onUpdateKm() = { km: String ->
+        updateEstimatedValues(km.trim(), widgets.text(editVoltage))
     }
 
     fun onUpdateVoltage() = { voltageParm: String ->
         val voltage = voltageParm.trim()
-        textBattery.text = if (isEmpty(voltage)) "" else formatPercentage(voltage)
+        textBattery.text = if (isVoltageWithinRange(voltage))
+            formatPercentage(parseFloat(voltage)) else ""
 
         updateEstimatedValues(widgets.text(editKm), voltage)
     }
 
-    private fun formatPercentage(voltage: String): String {
-        return when (val percentage = calculatorService.percentage(wheel, parseFloat(voltage))) {
+    private fun formatPercentage(voltage: Float): String {
+        return when (val percentage = calculatorService.percentage(wheel, voltage)) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }
@@ -130,23 +131,33 @@ open class WheelViewFragment : BaseFragment() {
         fragments.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
     }
 
+    private fun isVoltageWithinRange(voltageParm: String): Boolean {
+        if (isEmpty(voltageParm))
+            return false
+
+        val voltage = parseFloat(voltageParm)
+        if (voltage < wheel!!.voltageMin || wheel!!.voltageMax < voltage)
+            return false
+
+        return true
+    }
+
     @SuppressLint("SetTextI18n")
     private fun updateEstimatedValues(km: String, voltage: String) {
-        if (!isEmpty(km) && !isEmpty(voltage)) {
-
-            val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
-            val labelKm = fragments.string(R.string.label_km)
-            val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
-
-            textRemainingRange.text = "${values.remainingRange} $labelKm"
-            textTotalRange.text = "${values.totalRange} $labelKm"
-            textWhPerKm.text = "${values.whPerKm} $labelWhPerKm"
-
-        } else {
+        if (isEmpty(km) || !isVoltageWithinRange(voltage)) {
             textRemainingRange.text = ""
             textTotalRange.text = ""
             textWhPerKm.text = ""
+            return
         }
+
+        val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
+        val labelKm = fragments.string(R.string.label_km)
+        val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
+
+        textRemainingRange.text = "${values.remainingRange} $labelKm"
+        textTotalRange.text = "${values.totalRange} $labelKm"
+        textWhPerKm.text = "${values.whPerKm} $labelWhPerKm"
     }
 
     private fun updateWheel(newMileage: Int, newVoltage: Float) {

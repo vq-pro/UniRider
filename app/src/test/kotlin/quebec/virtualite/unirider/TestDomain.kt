@@ -39,7 +39,7 @@ object TestDomain {
     val TEMPERATURE_NEW_RAW = 3333f
     val TOTAL_RANGE = 6666f
     val TOTAL_RANGE_S = TOTAL_RANGE.toString()
-    val VOLTAGE_S = "100.8"
+    val VOLTAGE_S = "84"
     val VOLTAGE = parseFloat(VOLTAGE_S)
     val VOLTAGE_MAX = 84.0f
     val VOLTAGE_MAX2 = 126.0f

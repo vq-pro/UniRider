@@ -8,6 +8,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
@@ -247,10 +248,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateKm().invoke("$KM_S ")
 
         // Then
-        verify(mockedCalculatorService, never()).estimatedValues(fragment.wheel, VOLTAGE, KM)
-        verify(mockedTextRemainingRange).text = ""
-        verify(mockedTextTotalRange).text = ""
-        verify(mockedTextWhPerKm).text = ""
+        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
+        verifyClearEstimatedValues()
     }
 
     @Test
@@ -264,9 +263,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
-        verify(mockedTextRemainingRange).text = ""
-        verify(mockedTextTotalRange).text = ""
-        verify(mockedTextWhPerKm).text = ""
+        verifyClearEstimatedValues()
     }
 
     @Test
@@ -303,9 +300,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
         verify(mockedTextBattery).text = PERCENTAGE_S
-        verify(mockedTextRemainingRange).text = ""
-        verify(mockedTextTotalRange).text = ""
-        verify(mockedTextWhPerKm).text = ""
+        verifyClearEstimatedValues()
     }
 
     @Test
@@ -318,30 +313,39 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateVoltage().invoke(" ")
 
         // Then
-        verify(mockedCalculatorService, never()).percentage(eq(fragment.wheel), anyFloat())
+        verify(mockedCalculatorService, never()).percentage(any(), anyFloat())
         verify(mockedTextBattery).text = ""
-        verify(mockedTextRemainingRange).text = ""
-        verify(mockedTextTotalRange).text = ""
-        verify(mockedTextWhPerKm).text = ""
+        verifyClearEstimatedValues()
     }
 
     @Test
-    fun onUpdateVoltage_whenOverTheTop_noDisplay() {
+    fun onUpdateVoltage_whenLowVoltage_noDisplay() {
         // Given
         injectMocks()
-        mockKm(" ")
-
-        given(mockedCalculatorService.percentage(fragment.wheel, 200f))
-            .willReturn(2 * PERCENTAGE)
+        mockKm(KM_S)
 
         // When
-        fragment.onUpdateVoltage().invoke("200 ")
+        fragment.onUpdateVoltage().invoke("${fragment.wheel!!.voltageMin - 0.1f} ")
 
         // Then
+        verifyNoInteractions(mockedCalculatorService)
         verify(mockedTextBattery).text = ""
-        verify(mockedTextRemainingRange).text = ""
-        verify(mockedTextTotalRange).text = ""
-        verify(mockedTextWhPerKm).text = ""
+        verifyClearEstimatedValues()
+    }
+
+    @Test
+    fun onUpdateVoltage_whenHighVoltage_noDisplay() {
+        // Given
+        injectMocks()
+        mockKm(KM_S)
+
+        // When
+        fragment.onUpdateVoltage().invoke("${fragment.wheel!!.voltageMax + 0.1f} ")
+
+        // Then
+        verifyNoInteractions(mockedCalculatorService)
+        verify(mockedTextBattery).text = ""
+        verifyClearEstimatedValues()
     }
 
     @Test
@@ -407,5 +411,11 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         given(mockedWidgets.text(mockedEditVoltage))
             .willReturn(voltage.trim())
+    }
+
+    private fun verifyClearEstimatedValues() {
+        verify(mockedTextRemainingRange).text = ""
+        verify(mockedTextTotalRange).text = ""
+        verify(mockedTextWhPerKm).text = ""
     }
 }

@@ -33,8 +33,6 @@ Feature: Wheel Viewing
       | Veteran Sherman | 96.5V   | 82.9%   |
       | KingSong S20    | 108V    | 50.0%   |
 
-  # FIXME-1 Put error values under a "blank estimated values" error scenario
-  @WIP
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And the distance so far is set to <km>
@@ -46,11 +44,21 @@ Feature: Wheel Viewing
       | wheel           | km   | voltage | remaining | total   | wh/km      |
       | Veteran Sherman | 42.0 | 91.9V   | 56.2 km   | 98.2 km | 30.3 wh/km |
       | Veteran Sherman | 81.0 | 83.5V   | 16.4 km   | 97.4 km | 30.5 wh/km |
-#      | Veteran Sherman | 20 |         |         |
-      | Veteran Sherman |      | 91.9V   |           |         |            |
-#      | Veteran Sherman | aa |         |         |
-#      | Veteran Sherman |    | bb      |         |
-#      | Veteran Sherman | aa | bb      |         |
+      | Veteran Sherman | 42.0 | 91.     | 47.1 km   | 89.1 km | 33.3 wh/km |
+
+  Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
+    Given I select the <wheel>
+    And the distance so far is set to <km>
+    When I enter a voltage of <voltage>
+    Then it displays blank estimated values
+    Examples:
+      | wheel           | km   | voltage |
+      | Veteran Sherman | 20   |         |
+      | Veteran Sherman |      | 91.9V   |
+      | Veteran Sherman | 20.2 | 9       |
+      | Veteran Sherman | aa   |         |
+      | Veteran Sherman |      | bb      |
+      | Veteran Sherman | aa   | bb      |
 
   Scenario: => Editing the wheel
     Given I select the Veteran Sherman

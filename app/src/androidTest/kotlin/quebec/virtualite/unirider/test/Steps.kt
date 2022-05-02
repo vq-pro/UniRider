@@ -292,6 +292,13 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
+    @Then("it displays blank estimated values")
+    fun displaysBlankEstimatedValues() {
+        assertThat(R.id.view_remaining_range, isEmpty())
+        assertThat(R.id.view_total_range, isEmpty())
+        assertThat(R.id.view_wh_per_km, isEmpty())
+    }
+
     @Then("^it displays an estimated remaining range of (.*?)$")
     fun displaysRemainingRange(range: String) {
         assertThat(R.id.view_remaining_range, hasText(range))
@@ -426,9 +433,12 @@ class Steps {
         expectedDeviceName = deviceName
     }
 
-    @When("^I enter a voltage of (.*?)V$")
-    fun whenEnterVoltage(voltage: Float) {
-        enter(R.id.edit_voltage, voltage.toString())
+    @When("^I enter a voltage of (.*?)$")
+    fun whenEnterVoltage(voltageParm: String) {
+        enter(
+            R.id.edit_voltage,
+            if (voltageParm.endsWith("V")) voltageParm.substring(0, voltageParm.length - 1) else voltageParm
+        )
     }
 
     @When("I reconnect to the wheel")
