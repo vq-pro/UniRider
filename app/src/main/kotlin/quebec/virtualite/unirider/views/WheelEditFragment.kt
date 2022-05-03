@@ -15,7 +15,7 @@ import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WH
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f)
 
     internal lateinit var buttonSave: Button
     internal lateinit var editMileage: EditText
@@ -23,6 +23,7 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editPreMileage: EditText
     internal lateinit var editVoltageMax: EditText
     internal lateinit var editVoltageMin: EditText
+    internal lateinit var editVoltageReserve: EditText
     internal lateinit var editWh: EditText
 
     internal lateinit var initialWheel: WheelEntity
@@ -45,6 +46,7 @@ open class WheelEditFragment : BaseFragment() {
         editMileage = view.findViewById(R.id.edit_mileage)
         editVoltageMax = view.findViewById(R.id.edit_voltage_max)
         editVoltageMin = view.findViewById(R.id.edit_voltage_min)
+        editVoltageReserve = view.findViewById(R.id.edit_voltage_reserve)
         editWh = view.findViewById(R.id.edit_wh)
         buttonSave = view.findViewById(R.id.button_save)
 
@@ -53,6 +55,7 @@ open class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editMileage, onUpdateMileage())
         widgets.addTextChangedListener(editVoltageMax, onUpdateVoltageMax())
         widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
+        widgets.addTextChangedListener(editVoltageReserve, onUpdateVoltageReserve())
         widgets.addTextChangedListener(editWh, onUpdateWh())
         widgets.setOnClickListener(buttonSave, onSave())
 
@@ -64,6 +67,7 @@ open class WheelEditFragment : BaseFragment() {
                 editName.setText(initialWheel.name)
                 editVoltageMax.setText("${initialWheel.voltageMax}")
                 editVoltageMin.setText("${initialWheel.voltageMin}")
+                editVoltageReserve.setText("${initialWheel.voltageReserve}")
                 editWh.setText("${initialWheel.wh}")
 
                 if (initialWheel.premileage != 0)
@@ -106,6 +110,7 @@ open class WheelEditFragment : BaseFragment() {
             intOf(newMileage),
             updatedWheel.wh,
             updatedWheel.voltageMin,
+            updatedWheel.voltageReserve,
             updatedWheel.voltageMax
         )
 
@@ -122,6 +127,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.mileage,
             updatedWheel.wh,
             updatedWheel.voltageMin,
+            updatedWheel.voltageReserve,
             updatedWheel.voltageMax
         )
 
@@ -138,6 +144,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.mileage,
             updatedWheel.wh,
             updatedWheel.voltageMin,
+            updatedWheel.voltageReserve,
             updatedWheel.voltageMax
         )
 
@@ -154,6 +161,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.mileage,
             updatedWheel.wh,
             updatedWheel.voltageMin,
+            updatedWheel.voltageReserve,
             floatOf(newVoltage)
         )
 
@@ -169,6 +177,24 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.premileage,
             updatedWheel.mileage,
             updatedWheel.wh,
+            floatOf(newVoltage),
+            updatedWheel.voltageReserve,
+            updatedWheel.voltageMax
+        )
+
+        enableSaveIfChanged()
+    }
+
+    fun onUpdateVoltageReserve() = { newVoltage: String ->
+        updatedWheel = WheelEntity(
+            updatedWheel.id,
+            updatedWheel.name,
+            updatedWheel.btName,
+            updatedWheel.btAddr,
+            updatedWheel.premileage,
+            updatedWheel.mileage,
+            updatedWheel.wh,
+            updatedWheel.voltageMin,
             floatOf(newVoltage),
             updatedWheel.voltageMax
         )
@@ -186,6 +212,7 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.mileage,
             intOf(newWh),
             updatedWheel.voltageMin,
+            updatedWheel.voltageReserve,
             updatedWheel.voltageMax
         )
 

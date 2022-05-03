@@ -54,7 +54,7 @@ open class WheelScanFragment : BaseFragment() {
                         device.name, device.address,
                         wheel!!.premileage, info!!.mileage.roundToInt(),
                         wheel!!.wh,
-                        wheel!!.voltageMin, wheel!!.voltageMax
+                        wheel!!.voltageMin, wheel!!.voltageReserve, wheel!!.voltageMax
                     )
                     db.saveWheel(updatedWheel)
                 }

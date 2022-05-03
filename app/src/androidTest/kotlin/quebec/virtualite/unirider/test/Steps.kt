@@ -74,7 +74,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -150,6 +150,7 @@ class Steps {
             Pair("Mileage", R.id.edit_mileage),
             Pair("Wh", R.id.edit_wh),
             Pair("Voltage Min", R.id.edit_voltage_min),
+            Pair("Voltage Reserve", R.id.edit_voltage_reserve),
             Pair("Voltage Max", R.id.edit_voltage_max)
         )
 
@@ -172,6 +173,7 @@ class Steps {
             parseInt(mapEntity["Mileage"]!!),
             parseInt(mapEntity["Wh"]!!),
             parseFloat(mapEntity["Voltage Min"]!!),
+            parseFloat(mapEntity["Voltage Reserve"]!!),
             parseFloat(mapEntity["Voltage Max"]!!)
         )
 
@@ -337,7 +339,7 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Max")))
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max")))
 
         val wheelEntities = wheels.cells(1)
             .stream()
@@ -346,9 +348,10 @@ class Steps {
                 val mileage = parseInt(row[1])
                 val wh = parseInt(row[2])
                 val voltageMin = parseVoltage(row[3])
-                val voltageMax = parseVoltage(row[4])
+                val voltageReserve = parseVoltage(row[4])
+                val voltageMax = parseVoltage(row[5])
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMin, voltageMax)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMin, voltageReserve, voltageMax)
             }
             .collect(toList())
 
@@ -368,7 +371,13 @@ class Steps {
                 val btAddress = row[2]
 
                 db.findWheel(name)?.let {
-                    db.saveWheel(WheelEntity(it.id, name, btName, btAddress, it.premileage, it.mileage, it.wh, it.voltageMin, it.voltageMax))
+                    db.saveWheel(
+                        WheelEntity(
+                            it.id, name, btName, btAddress,
+                            it.premileage, it.mileage, it.wh,
+                            it.voltageMin, it.voltageReserve, it.voltageMax
+                        )
+                    )
                 }
             }
 
@@ -415,7 +424,13 @@ class Steps {
     @Given("^the (.*?) has a previous mileage of (.*?)$")
     fun wheelHasPreviousMileage(name: String, premileage: Int) {
         db.findWheel(name)?.let {
-            db.saveWheel(WheelEntity(it.id, it.name, it.btName, it.btAddr, premileage, it.mileage, it.wh, it.voltageMin, it.voltageMax))
+            db.saveWheel(
+                WheelEntity(
+                    it.id, it.name, it.btName, it.btAddr,
+                    premileage, it.mileage, it.wh,
+                    it.voltageMin, it.voltageReserve, it.voltageMax
+                )
+            )
             updateMapWheels()
         }
     }

@@ -5,14 +5,14 @@ Feature: Wheel Connecting - End-2-End
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Voltage Min | Voltage Max |
-      | Nikola+     | 2927    | 78V         | 100.8V      |
-      | 14S         | 890     | 48V         | 67.2V       |
-      | S18         | 2916    | 60V         | 84V         |
-      | V8F         | 0       | 65V         | 84V         |
-      | V10F        | 1600    | 65V         | 84V         |
-      | Sherman     | 10000   | 75.6V       | 100.8V      |
-      | Sherman Max | 1188    | 75.6V       | 100.8V      |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max |
+      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      |
+      | 14S         | 898     | 840  | 48V         | 55V             | 67.2V       |
+      | S18         | 2916    | 1110 | 60V         | 68V             | 84V         |
+      | V8F         | 0       | 480  | 65V         | 70V             | 84V         |
+      | V10F        | 1600    | 960  | 65V         | 70V             | 84V         |
+      | Sherman     | 10000   | 3200 | 75.6V       | 80V             | 100.8V      |
+      | Sherman Max | 1188    | 3600 | 75.6V       | 80V             | 100.8V      |
     And the Sherman has a previous mileage of 3600
     And I start the app
 

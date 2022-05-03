@@ -166,7 +166,7 @@ open class WheelViewFragment : BaseFragment() {
             wheel!!.btName, wheel!!.btAddr,
             wheel!!.premileage, newMileage,
             wheel!!.wh,
-            wheel!!.voltageMin, wheel!!.voltageMax
+            wheel!!.voltageMin, wheel!!.voltageReserve, wheel!!.voltageMax
         )
 
         external.runDB { it.saveWheel(wheel) }

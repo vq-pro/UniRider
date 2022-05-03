@@ -2,12 +2,12 @@ Feature: Wheel Viewing
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Max |
-      | Sherman     | 17622   | 3200 | 75.6V       | 100.8V      |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      |
-      | 14S         | 694     | 840  | 48V         | 67.2V       |
-      | Nikola+     | 2927    | 1800 | 78V         | 100.8V      |
-      | S18         | 2850    | 1110 | 60V         | 84V         |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max |
+      | Sherman     | 17622   | 3200 | 75.6V       | 80V             | 100.8V      |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      |
+      | 14S         | 694     | 840  | 48V         | 55V             | 67.2V       |
+      | S18         | 2850    | 1110 | 60V         | 68V             | 84V         |
+      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      |
     And I start the app
 
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]

@@ -5,8 +5,8 @@ Feature: Wheel Connecting
 
   Background:
     Given this wheel:
-      | Name | Mileage | Wh  | Voltage Min | Voltage Max |
-      | 14S  | 694     | 840 | 48V         | 67.2V       |
+      | Name | Mileage | Wh  | Voltage Min | Voltage Reserve | Voltage Max |
+      | 14S  | 694     | 840 | 48V         | 55V             | 67.2V       |
     And this simulated device:
       | Bt Name    | Bt Address        | Mileage | Voltage |
       | KS-14S-SIM | C0:C1:C2:C3:C4:C5 | 705.615 | 58.56V  |

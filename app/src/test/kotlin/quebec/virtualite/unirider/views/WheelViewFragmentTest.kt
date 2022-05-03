@@ -46,6 +46,7 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_S
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
@@ -210,7 +211,20 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        verify(mockedDb).saveWheel(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE_NEW, WH, VOLTAGE_MIN, VOLTAGE_MAX))
+        verify(mockedDb).saveWheel(
+            WheelEntity(
+                ID,
+                NAME,
+                DEVICE_NAME,
+                DEVICE_ADDR,
+                PREMILEAGE,
+                MILEAGE_NEW,
+                WH,
+                VOLTAGE_MIN,
+                VOLTAGE_RESERVE,
+                VOLTAGE_MAX
+            )
+        )
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
     }
