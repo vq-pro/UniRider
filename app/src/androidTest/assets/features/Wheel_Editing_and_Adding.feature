@@ -2,39 +2,43 @@ Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
-      | Name            | Mileage | Voltage Min | Voltage Max |
-      | Veteran Sherman | 17622   | 75.6V       | 100.8V      |
-      | KingSong S18    | 2850    | 60V         | 84V         |
+      | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max |
+      | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      |
+      | S18     | 2850    | 1110 | 60V         | 68V             | 84V         |
     And I start the app
 
   Scenario: Adding a wheel in full
     When I add a new wheel
     And I set these new values:
-      | Name             | Veteran Sherman Max |
-      | Previous Mileage | 0                   |
-      | Mileage          | 150                 |
-      | Voltage Min      | 74.5                |
-      | Voltage Max      | 100.9               |
+      | Name             | Sherman Max |
+      | Previous Mileage | 0           |
+      | Mileage          | 150         |
+      | Wh               | 3600        |
+      | Voltage Max      | 100.8       |
+      | Voltage Reserve  | 80.0        |
+      | Voltage Min      | 75.6        |
     Then the wheel was added
     And it shows the updated name and a mileage of 150 on the main view
     And the wheel's Bluetooth name is undefined
 
   Scenario: Editing a wheel in full
-    Given I select the Veteran Sherman
+    Given I select the Sherman
     When I edit the wheel
     And I set these new values:
-      | Name             | Veteran Sherman Max |
-      | Previous Mileage | 50                  |
-      | Mileage          | 150                 |
-      | Voltage Min      | 74.5                |
-      | Voltage Max      | 100.9               |
+      | Name             | Sherman Max |
+      | Previous Mileage | 50          |
+      | Mileage          | 150         |
+      | Wh               | 3600        |
+      | Voltage Max      | 100.9       |
+      | Voltage Reserve  | 80.5        |
+      | Voltage Min      | 74.5        |
     Then the wheel was updated
     And I go back to the main view
     And it shows the updated name and a mileage of 200 on the main view
 
   Scenario Outline: Wheel <can or cannot> be saved if we <do something>
-    Given the Veteran Sherman has a previous mileage of 3600
-    And I select the Veteran Sherman
+    Given the Sherman has a previous mileage of 3600
+    And I select the Sherman
     When I edit the wheel
     And I <do something>
     Then the wheel <can or cannot> be saved
@@ -47,8 +51,10 @@ Feature: Wheel Editing & Adding
       | can           | change the minimum voltage  |
       | can           | change the previous mileage |
       | can           | blank the previous mileage  |
+      | can           | change the wh               |
       | cannot        | blank the name              |
+      | cannot        | blank the wh                |
       | cannot        | blank the maximum voltage   |
       | cannot        | blank the minimum voltage   |
       | cannot        | change nothing              |
-      | cannot        | reuse the name KingSong S18 |
+      | cannot        | reuse the name S18          |

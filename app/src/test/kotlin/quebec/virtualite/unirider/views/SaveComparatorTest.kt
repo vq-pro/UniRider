@@ -19,6 +19,10 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE_NEW
+import quebec.virtualite.unirider.TestDomain.WH
+import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
@@ -29,28 +33,38 @@ class SaveComparatorTest {
 
     @Test
     fun canSave() {
-        canSave(NAME, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, false)
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, false)
 
-        canSave(NAME_NEW, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, true)
-        canSave("", PREMILEAGE_NEW, MILEAGE_NEW, VOLTAGE_MIN_NEW, VOLTAGE_MAX_NEW, false)
+        canSave(NAME_NEW, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, true)
+        canSave("", PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, false)
 
-        canSave(NAME, PREMILEAGE_NEW, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX, true)
-        canSave(NAME_NEW, 0, MILEAGE, VOLTAGE_MIN_NEW, VOLTAGE_MAX_NEW, true)
+        canSave(NAME, PREMILEAGE_NEW, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, true)
+        canSave(NAME_NEW, 0, MILEAGE, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, true)
 
-        canSave(NAME, PREMILEAGE, MILEAGE_NEW, VOLTAGE_MIN, VOLTAGE_MAX, true)
-        canSave(NAME_NEW, PREMILEAGE_NEW, 0, VOLTAGE_MIN_NEW, VOLTAGE_MAX_NEW, true)
+        canSave(NAME, PREMILEAGE, MILEAGE_NEW, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, true)
+        canSave(NAME_NEW, PREMILEAGE_NEW, 0, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, true)
 
-        canSave(NAME, PREMILEAGE, MILEAGE, VOLTAGE_MIN_NEW, VOLTAGE_MAX, true)
-        canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, 0f, VOLTAGE_MAX_NEW, false)
+        canSave(NAME, PREMILEAGE, MILEAGE, WH_NEW, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, true)
+        canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, 0, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, false)
 
-        canSave(NAME, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX_NEW, true)
-        canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, VOLTAGE_MIN_NEW, 0f, false)
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE, VOLTAGE_MAX, true)
+        canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, 0f, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, false)
+
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX, true)
+        canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, VOLTAGE_MIN, 0f, VOLTAGE_MAX_NEW, false)
+
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX_NEW, true)
+        canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, 0f, false)
     }
 
-    private fun canSave(name: String, premileage: Int, mileage: Int, voltageMin: Float, voltageMax: Float, expectedCanSave: Boolean) {
+    private fun canSave(
+        name: String, premileage: Int, mileage: Int, wh: Int,
+        voltageMin: Float, voltageReserve: Float, voltageMax: Float,
+        expectedCanSave: Boolean
+    ) {
         // Given
-        val initial = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, VOLTAGE_MIN, VOLTAGE_MAX)
-        val updated = WheelEntity(ID, name.trim(), DEVICE_NAME, DEVICE_ADDR, premileage, mileage, voltageMin, voltageMax)
+        val initial = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX)
+        val updated = WheelEntity(ID, name.trim(), DEVICE_NAME, DEVICE_ADDR, premileage, mileage, wh, voltageMin, voltageReserve, voltageMax)
 
         // When
         val result = comparator.canSave(updated, initial)

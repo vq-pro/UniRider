@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,11 +28,15 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var buttonConnect: Button
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
+    internal lateinit var editKm: EditText
+    internal lateinit var editVoltage: EditText
     internal lateinit var textBattery: TextView
     internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
     internal lateinit var textName: TextView
-    internal lateinit var editVoltage: EditText
+    internal lateinit var textRemainingRange: TextView
+    internal lateinit var textTotalRange: TextView
+    internal lateinit var textWhPerKm: TextView
 
     internal var wheel: WheelEntity? = null
 
@@ -52,6 +57,10 @@ open class WheelViewFragment : BaseFragment() {
         textMileage = view.findViewById(R.id.view_mileage)
         editVoltage = view.findViewById(R.id.edit_voltage)
         textBattery = view.findViewById(R.id.view_battery)
+        editKm = view.findViewById(R.id.edit_km)
+        textRemainingRange = view.findViewById(R.id.view_remaining_range)
+        textTotalRange = view.findViewById(R.id.view_total_range)
+        textWhPerKm = view.findViewById(R.id.view_wh_per_km)
         buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         buttonDelete = view.findViewById(R.id.button_delete)
@@ -60,6 +69,7 @@ open class WheelViewFragment : BaseFragment() {
             wheel = it.getWheel(parmWheelId!!)
 
             if (wheel != null) {
+                widgets.addTextChangedListener(editKm, onUpdateKm())
                 widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
@@ -98,13 +108,20 @@ open class WheelViewFragment : BaseFragment() {
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment)
     }
 
-    fun onUpdateVoltage() = { voltageParm: String ->
-        val voltage = voltageParm.trim()
-        textBattery.text = if (isEmpty(voltage)) "" else getPercentage(voltage)
+    fun onUpdateKm() = { km: String ->
+        updateEstimatedValues(km.trim(), widgets.text(editVoltage))
     }
 
-    private fun getPercentage(voltage: String): String {
-        return when (val percentage = calculatorService.percentage(wheel, parseFloat(voltage))) {
+    fun onUpdateVoltage() = { voltageParm: String ->
+        val voltage = voltageParm.trim()
+        textBattery.text = if (isVoltageWithinRange(voltage))
+            formatPercentage(parseFloat(voltage)) else ""
+
+        updateEstimatedValues(widgets.text(editKm), voltage)
+    }
+
+    private fun formatPercentage(voltage: Float): String {
+        return when (val percentage = calculatorService.percentage(wheel, voltage)) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }
@@ -114,11 +131,42 @@ open class WheelViewFragment : BaseFragment() {
         fragments.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
     }
 
+    private fun isVoltageWithinRange(voltageParm: String): Boolean {
+        if (isEmpty(voltageParm))
+            return false
+
+        val voltage = parseFloat(voltageParm)
+        if (voltage < wheel!!.voltageMin || wheel!!.voltageMax < voltage)
+            return false
+
+        return true
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateEstimatedValues(km: String, voltage: String) {
+        if (isEmpty(km) || !isVoltageWithinRange(voltage)) {
+            textRemainingRange.text = ""
+            textTotalRange.text = ""
+            textWhPerKm.text = ""
+            return
+        }
+
+        val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
+        val labelKm = fragments.string(R.string.label_km)
+        val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
+
+        textRemainingRange.text = "${values.remainingRange} $labelKm"
+        textTotalRange.text = "${values.totalRange} $labelKm"
+        textWhPerKm.text = "${values.whPerKm} $labelWhPerKm"
+    }
+
     private fun updateWheel(newMileage: Int, newVoltage: Float) {
         wheel = WheelEntity(
-            wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
+            wheel!!.id, wheel!!.name,
+            wheel!!.btName, wheel!!.btAddr,
             wheel!!.premileage, newMileage,
-            wheel!!.voltageMin, wheel!!.voltageMax
+            wheel!!.wh,
+            wheel!!.voltageMin, wheel!!.voltageReserve, wheel!!.voltageMax
         )
 
         external.runDB { it.saveWheel(wheel) }

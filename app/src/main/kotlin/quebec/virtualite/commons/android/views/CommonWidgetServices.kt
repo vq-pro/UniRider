@@ -83,6 +83,10 @@ open class CommonWidgetServices {
         widget.isVisible = true
     }
 
+    open fun text(edit: EditText): String {
+        return edit.text.toString().trim()
+    }
+
     open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {
         listView.adapter = arrayAdapter(view!!, android.R.layout.simple_list_item_1, contents!!) as ListAdapter
     }

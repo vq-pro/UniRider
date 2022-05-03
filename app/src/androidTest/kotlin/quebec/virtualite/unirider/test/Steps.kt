@@ -11,6 +11,7 @@ import cucumber.api.java.en.When
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.notNullValue
 import org.junit.Rule
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
@@ -73,7 +74,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -91,10 +92,7 @@ class Steps {
     @Then("^it shows the updated name and a mileage of (.*?) on the main view$")
     fun itShowsTheUpdatedNameAndMileageOnTheMainView(expectedMileage: Int) {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
-        assertThat(
-            R.id.wheels,
-            hasRow(WheelRow(selectedWheel.id, updatedWheel.name, expectedMileage))
-        )
+        assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, expectedMileage)))
     }
 
     @Then("^the mileage is updated to (.*?)$")
@@ -150,7 +148,9 @@ class Steps {
             Pair("Name", R.id.edit_name),
             Pair("Previous Mileage", R.id.edit_premileage),
             Pair("Mileage", R.id.edit_mileage),
+            Pair("Wh", R.id.edit_wh),
             Pair("Voltage Min", R.id.edit_voltage_min),
+            Pair("Voltage Reserve", R.id.edit_voltage_reserve),
             Pair("Voltage Max", R.id.edit_voltage_max)
         )
 
@@ -171,7 +171,9 @@ class Steps {
             null,
             parseInt(mapEntity["Previous Mileage"]!!),
             parseInt(mapEntity["Mileage"]!!),
+            parseInt(mapEntity["Wh"]!!),
             parseFloat(mapEntity["Voltage Min"]!!),
+            parseFloat(mapEntity["Voltage Reserve"]!!),
             parseFloat(mapEntity["Voltage Max"]!!)
         )
 
@@ -218,6 +220,11 @@ class Steps {
     @When("I blank the previous mileage")
     fun blankWheelPreMileage() {
         setText(R.id.edit_premileage, " ")
+    }
+
+    @When("I blank the wh")
+    fun blankWheelWh() {
+        setText(R.id.edit_wh, " ")
     }
 
     @Then("^the wheel's Bluetooth name is undefined$")
@@ -270,6 +277,11 @@ class Steps {
         setText(R.id.edit_premileage, "123")
     }
 
+    @When("I change the wh")
+    fun changeWheelWh() {
+        setText(R.id.edit_wh, "123")
+    }
+
     @When("I confirm the deletion")
     fun confirmDelete() {
         assertThat(currentFragment(mainActivity), equalTo(WheelDeleteConfirmationFragment::class.java))
@@ -292,6 +304,28 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
+    @Then("it displays blank estimated values")
+    fun displaysBlankEstimatedValues() {
+        assertThat(R.id.view_remaining_range, isEmpty())
+        assertThat(R.id.view_total_range, isEmpty())
+        assertThat(R.id.view_wh_per_km, isEmpty())
+    }
+
+    @Then("^it displays an estimated remaining range of (.*?)$")
+    fun displaysRemainingRange(range: String) {
+        assertThat(R.id.view_remaining_range, hasText(range))
+    }
+
+    @Then("^it displays an estimated total range of (.*?)$")
+    fun displaysTotalRange(range: String) {
+        assertThat(R.id.view_total_range, hasText(range))
+    }
+
+    @Then("^it displays an estimated wh/km of (.*?)$")
+    fun displaysWhPerKm(whPerKm: String) {
+        assertThat(R.id.view_wh_per_km, hasText(whPerKm))
+    }
+
     @When("I edit the wheel")
     fun editWheel() {
         click(R.id.button_edit)
@@ -305,17 +339,19 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Voltage Min", "Voltage Max")))
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max")))
 
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
                 val name = row[0]
                 val mileage = parseInt(row[1])
-                val voltageMin = parseVoltage(row[2])
-                val voltageMax = parseVoltage(row[3])
+                val wh = parseInt(row[2])
+                val voltageMin = parseVoltage(row[3])
+                val voltageReserve = parseVoltage(row[4])
+                val voltageMax = parseVoltage(row[5])
 
-                WheelEntity(0, name, null, null, 0, mileage, voltageMin, voltageMax)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMin, voltageReserve, voltageMax)
             }
             .collect(toList())
 
@@ -335,7 +371,13 @@ class Steps {
                 val btAddress = row[2]
 
                 db.findWheel(name)?.let {
-                    db.saveWheel(WheelEntity(it.id, name, btName, btAddress, it.premileage, it.mileage, it.voltageMin, it.voltageMax))
+                    db.saveWheel(
+                        WheelEntity(
+                            it.id, name, btName, btAddress,
+                            it.premileage, it.mileage, it.wh,
+                            it.voltageMin, it.voltageReserve, it.voltageMax
+                        )
+                    )
                 }
             }
 
@@ -364,6 +406,11 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
+    @Given("^the distance so far is set to (.*?)$")
+    fun distanceIsSetTo(km: String) {
+        setText(R.id.edit_km, km)
+    }
+
     @Then("the wheel can be saved")
     fun wheelCanBeSaved() {
         assertThat(R.id.button_save, isEnabled())
@@ -377,7 +424,13 @@ class Steps {
     @Given("^the (.*?) has a previous mileage of (.*?)$")
     fun wheelHasPreviousMileage(name: String, premileage: Int) {
         db.findWheel(name)?.let {
-            db.saveWheel(WheelEntity(it.id, it.name, it.btName, it.btAddr, premileage, it.mileage, it.voltageMin, it.voltageMax))
+            db.saveWheel(
+                WheelEntity(
+                    it.id, it.name, it.btName, it.btAddr,
+                    premileage, it.mileage, it.wh,
+                    it.voltageMin, it.voltageReserve, it.voltageMax
+                )
+            )
             updateMapWheels()
         }
     }
@@ -390,6 +443,7 @@ class Steps {
         assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))
         assertThat(selectedWheel.voltageMax, equalTo(updatedWheel.voltageMax))
         assertThat(selectedWheel.voltageMin, equalTo(updatedWheel.voltageMin))
+        assertThat(selectedWheel.wh, equalTo(updatedWheel.wh))
     }
 
     @Then("the wheel was updated")
@@ -406,9 +460,12 @@ class Steps {
         expectedDeviceName = deviceName
     }
 
-    @When("^I enter a voltage of (.*?)V$")
-    fun whenEnterVoltage(voltage: Float) {
-        enter(R.id.edit_voltage, voltage.toString())
+    @When("^I enter a voltage of (.*?)$")
+    fun whenEnterVoltage(voltageParm: String) {
+        enter(
+            R.id.edit_voltage,
+            if (voltageParm.endsWith("V")) voltageParm.substring(0, voltageParm.length - 1) else voltageParm
+        )
     }
 
     @When("I reconnect to the wheel")
@@ -419,6 +476,8 @@ class Steps {
     @When("^I select the (.*?)$")
     fun whenSelect(wheelName: String) {
         selectedWheel = db.findWheel(wheelName)!!
+        assertThat(selectedWheel, notNullValue())
+
         selectListViewItem(R.id.wheels, "name", wheelName)
     }
 

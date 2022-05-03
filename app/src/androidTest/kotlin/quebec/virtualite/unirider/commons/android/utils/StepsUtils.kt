@@ -26,12 +26,12 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
 import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
 import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.hasToString
+import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.startsWith
 import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
@@ -71,8 +71,12 @@ object StepsUtils {
     }
 
     fun currentFragment(mainActivity: MainActivity): Class<Fragment> {
-        return mainActivity.supportFragmentManager.fragments[0]
-            .childFragmentManager.fragments[0].javaClass
+        return mainActivity
+            .supportFragmentManager
+            .fragments[0]
+            .childFragmentManager
+            .fragments[0]
+            .javaClass
     }
 
     fun enter(id: Int, text: String) {

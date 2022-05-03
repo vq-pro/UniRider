@@ -22,10 +22,6 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         payload?.let { function!!.invoke() }
     }
 
-    open fun getString(id: Int): String? {
-        return fragment.activity?.applicationContext?.getString(id)
-    }
-
     internal open fun navigateBack(nb: Int = 1) {
         runUI {
             if (nb < 1)
@@ -59,6 +55,10 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         fragment.activity?.runOnUiThread(function)
     }
 
+    open fun string(id: Int): String? {
+        return fragment.activity?.applicationContext?.getString(id)
+    }
+
     private fun hideWaitDialog() {
         runUI {
             synchronized(this) {
@@ -71,7 +71,7 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
     private fun waitDialog(backOnCancel: Boolean, function: () -> Unit) {
         synchronized(this) {
             waitDialog = ProgressDialog(fragment.activity)
-            waitDialog!!.setMessage(getString(idStringPleaseWait))
+            waitDialog!!.setMessage(string(idStringPleaseWait))
             waitDialog!!.setOnCancelListener {
                 synchronized(this) {
                     waitDialog = null
