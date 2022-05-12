@@ -26,6 +26,6 @@ Feature: Wheel Connecting
     And I select the 14S
     When I reconnect to the wheel
     Then the mileage is updated to 1706
-    And the voltage is set to 58.6V and battery to 55.2%
+    And the voltage shows 58.6V and the battery 55.2%
 
 #  FIXME-2 Scenario for adding a wheel and connecting it right away

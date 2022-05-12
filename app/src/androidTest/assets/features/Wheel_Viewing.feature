@@ -24,25 +24,27 @@ Feature: Wheel Viewing
     When I enter a voltage of <voltage>
     Then it displays a percentage of <battery>
     Examples:
-      | wheel   | voltage | battery |
-      | Nikola+ | 96.4V   | 80.7%   |
-      | Nikola+ | 89.1V   | 48.7%   |
-      | 14S     | 63.5V   | 80.7%   |
-      | S18     | 71.4V   | 47.5%   |
-      | Sherman | 96.5V   | 82.9%   |
+      | wheel       | voltage | battery |
+      | Nikola+     | 96.4V   | 80.7%   |
+      | Nikola+     | 89.1V   | 48.7%   |
+      | 14S         | 63.5V   | 80.7%   |
+      | S18         | 71.4V   | 47.5%   |
+      | Sherman     | 96.5V   | 82.9%   |
+      | Sherman Max | 91.9V   | 64.7%   |
 
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And the distance so far is set to <km>
     When I enter a voltage of <voltage>
-    Then it displays an estimated remaining range of <remaining>
-    And it displays an estimated total range of <total>
-    And it displays an estimated wh/km of <wh/km>
+    Then it displays an estimated remaining range of "<remaining>"
+    And it displays an estimated total range of "<total>"
+    And it displays an estimated wh/km of "<wh/km>"
     Examples:
       | wheel       | km   | voltage | remaining | total   | wh/km      |
       | Sherman Max | 42.0 | 91.9V   | 56.2 km   | 98.2 km | 30.3 wh/km |
       | Sherman Max | 81.0 | 83.5V   | 16.4 km   | 97.4 km | 30.5 wh/km |
       | Sherman Max | 42.0 | 91.     | 47.1 km   | 89.1 km | 33.3 wh/km |
+      | S18         | 42.0 | 67      | 0 km      | 42.0 km | 18.7 wh/km |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
@@ -62,6 +64,18 @@ Feature: Wheel Viewing
     Given I select the Sherman
     When I edit the wheel
     Then it shows that every field is editable
+
+  Scenario: => Editing the wheel with estimated values
+    Given I select the Sherman Max
+    And the distance so far is set to 42
+    And the voltage is set to 91.9
+    And it displays an estimated remaining range of "56.2 km"
+    When I edit the wheel
+    And I go back to view the wheel
+    Then it displays a percentage of 64.7%
+    And it displays an estimated remaining range of "56.2 km"
+    And it displays an estimated total range of "98.2 km"
+    And it displays an estimated wh/km of "30.3 wh/km"
 
   Scenario: => Deleting the wheel
     Given I select the Nikola+

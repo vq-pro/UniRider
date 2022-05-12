@@ -10,6 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyFloat
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
@@ -128,7 +129,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     fun onViewCreated() {
         // Given
         fragment.wheel = null
-        given(mockedDb.getWheel(ID))
+        given(mockedDb.getWheel(anyLong()))
             .willReturn(S18_1)
 
         // When
@@ -164,9 +165,39 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun onViewCreated_whenKmAndVoltageAreSet_updateEstimatedValues() {
+        // Given
+        fragment.wheel = null
+
+        mockKm(KM_S)
+        mockVoltage(VOLTAGE_S)
+
+        given(mockedDb.getWheel(anyLong()))
+            .willReturn(S18_1)
+
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
+            .willReturn(PERCENTAGE)
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        // When
+        fragment.onViewCreated(mockedView, mockedBundle)
+
+        // Then
+        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM)
+        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
+
+        verify(mockedTextBattery).text = PERCENTAGE_S
+        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
+        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+    }
+
+    @Test
     fun onViewCreated_whenWheelIsntFound() {
         // Given
-        given(mockedDb.getWheel(ID))
+        given(mockedDb.getWheel(anyLong()))
             .willReturn(null)
 
         // When
@@ -213,16 +244,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         verify(mockedDb).saveWheel(
             WheelEntity(
-                ID,
-                NAME,
-                DEVICE_NAME,
-                DEVICE_ADDR,
-                PREMILEAGE,
-                MILEAGE_NEW,
-                WH,
-                VOLTAGE_MIN,
-                VOLTAGE_RESERVE,
-                VOLTAGE_MAX
+                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+                PREMILEAGE, MILEAGE_NEW, WH,
+                VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX
             )
         )
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
@@ -287,7 +311,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         injectMocks()
         mockVoltage(VOLTAGE_S)
 
-        given(mockedCalculatorService.estimatedValues(fragment.wheel, VOLTAGE, KM))
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
         // When
@@ -301,12 +325,33 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun onUpdateKm_withVoltageLowerThanReserve_updateEstimatedValues() {
+        // Given
+        val voltage = VOLTAGE_RESERVE - 0.1f
+
+        injectMocks()
+        mockVoltage("$voltage")
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+            .willReturn(EstimatedValues(0f, TOTAL_RANGE, WH_PER_KM))
+
+        // When
+        fragment.onUpdateKm().invoke("$KM_S ")
+
+        // Then
+        verify(mockedCalculatorService).estimatedValues(fragment.wheel, voltage, KM)
+        verify(mockedTextRemainingRange).text = "0 $LABEL_KM"
+        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+    }
+
+    @Test
     fun onUpdateVoltage() {
         // Given
         injectMocks()
         mockKm(" ")
 
-        given(mockedCalculatorService.percentage(fragment.wheel, VOLTAGE))
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         // When
@@ -369,10 +414,10 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         injectMocks()
         mockKm(KM_S)
 
-        given(mockedCalculatorService.estimatedValues(fragment.wheel, VOLTAGE, KM))
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
-        given(mockedCalculatorService.percentage(fragment.wheel, VOLTAGE))
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         // When

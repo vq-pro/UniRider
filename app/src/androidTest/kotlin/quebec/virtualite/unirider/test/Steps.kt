@@ -100,7 +100,7 @@ class Steps {
         assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
-    @Then("^the voltage is set to (.*?)V and battery to (.*?)%$")
+    @Then("^the voltage shows (.*?)V and the battery (.*?)%$")
     fun voltageAndBatteryTo(expectedVoltage: Float, expectedBattery: Float) {
         assertThat(R.id.edit_voltage, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery%"))
@@ -311,17 +311,17 @@ class Steps {
         assertThat(R.id.view_wh_per_km, isEmpty())
     }
 
-    @Then("^it displays an estimated remaining range of (.*?)$")
+    @Then("^it displays an estimated remaining range of \"(.*?)\"$")
     fun displaysRemainingRange(range: String) {
         assertThat(R.id.view_remaining_range, hasText(range))
     }
 
-    @Then("^it displays an estimated total range of (.*?)$")
+    @Then("^it displays an estimated total range of \"(.*?)\"$")
     fun displaysTotalRange(range: String) {
         assertThat(R.id.view_total_range, hasText(range))
     }
 
-    @Then("^it displays an estimated wh/km of (.*?)$")
+    @Then("^it displays an estimated wh/km of \"(.*?)\"$")
     fun displaysWhPerKm(whPerKm: String) {
         assertThat(R.id.view_wh_per_km, hasText(whPerKm))
     }
@@ -409,6 +409,11 @@ class Steps {
     @Given("^the distance so far is set to (.*?)$")
     fun distanceIsSetTo(km: String) {
         setText(R.id.edit_km, km)
+    }
+
+    @Given("^the voltage is set to (.*?)$")
+    fun voltageIsSetTo(voltage: String) {
+        setText(R.id.edit_voltage, voltage)
     }
 
     @Then("the wheel can be saved")

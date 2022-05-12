@@ -25,6 +25,9 @@ class CalculatorServiceTest {
     fun estimatedValues() {
         estimatedValues(91.9f, 42f, 56.2f, 98.2f, 30.3f)
         estimatedValues(83.5f, 81f, 16.4f, 97.4f, 30.5f)
+
+        // Voltage lower than reserve
+        estimatedValues(79.5f, 81.2f, 0f, 81.2f, 37.5f)
     }
 
     @Test
