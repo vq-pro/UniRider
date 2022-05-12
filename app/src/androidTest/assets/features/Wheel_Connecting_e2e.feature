@@ -8,7 +8,7 @@ Feature: Wheel Connecting - End-2-End
       | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max |
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      |
       | 14S         | 924     | 840  | 48V         | 55V             | 67.2V       |
-      | S18         | 2938    | 1110 | 60V         | 68V             | 84V         |
+      | S18         | 3049    | 1110 | 60V         | 68V             | 84V         |
       | V8F         | 0       | 480  | 65V         | 70V             | 84V         |
       | V10F        | 1600    | 960  | 65V         | 70V             | 84V         |
       | Sherman     | 10000   | 3200 | 75.6V       | 80V             | 100.8V      |
@@ -23,10 +23,9 @@ Feature: Wheel Connecting - End-2-End
     And the wheel's Bluetooth name is updated
     Examples:
       | wheel       | bt name      | mileage |
-      | 14S         | KS-14SMD2107 | 925     |
-      | S18         | KS-S18-1410  | 2939    |
+      | 14S         | KS-14SMD2107 | 932     |
       | Sherman     | LK1149       | 19445   |
-      | Sherman Max | LK4142       | 2435    |
+      | Sherman Max | LK4142       | 3051    |
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
     Given I select the Sherman
@@ -47,10 +46,9 @@ Feature: Wheel Connecting - End-2-End
     Then the mileage is updated to <mileage>
     Examples:
       | wheel       | mileage |
-      | 14S         | 925     |
-      | S18         | 2939    |
+      | 14S         | 932     |
       | Sherman     | 19445   |
-      | Sherman Max | 2435    |
+      | Sherman Max | 3051    |
 
   Scenario: Connecting to a previously connected wheel - ERROR - Connection following failure to connect
     Given these wheels are connected:
