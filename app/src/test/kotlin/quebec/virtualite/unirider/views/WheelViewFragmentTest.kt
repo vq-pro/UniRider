@@ -165,6 +165,36 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun onViewCreated_whenKmAndVoltageAreSet_updateEstimatedValues() {
+        // Given
+        fragment.wheel = null
+
+        mockKm(KM_S)
+        mockVoltage(VOLTAGE_S)
+
+        given(mockedDb.getWheel(anyLong()))
+            .willReturn(S18_1)
+
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
+            .willReturn(PERCENTAGE)
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        // When
+        fragment.onViewCreated(mockedView, mockedBundle)
+
+        // Then
+        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM)
+        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
+
+        verify(mockedTextBattery).text = PERCENTAGE_S
+        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
+        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+    }
+
+    @Test
     fun onViewCreated_whenWheelIsntFound() {
         // Given
         given(mockedDb.getWheel(anyLong()))

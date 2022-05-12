@@ -78,6 +78,12 @@ open class WheelViewFragment : BaseFragment() {
                 textName.text = wheel!!.name
                 textBtName.text = wheel!!.btName
                 textMileage.text = "${wheel!!.totalMileage()}"
+
+                val km = widgets.text(editKm)
+                val voltage = widgets.text(editVoltage)
+
+                updateEstimatedValues(km, voltage)
+                updatePercentage(voltage)
             }
         }
     }
@@ -114,10 +120,8 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onUpdateVoltage() = { voltageParm: String ->
         val voltage = voltageParm.trim()
-        textBattery.text = if (isVoltageWithinRange(voltage))
-            formatPercentage(parseFloat(voltage)) else ""
-
         updateEstimatedValues(widgets.text(editKm), voltage)
+        updatePercentage(voltage)
     }
 
     private fun formatPercentage(voltage: Float): String {
@@ -151,13 +155,23 @@ open class WheelViewFragment : BaseFragment() {
             return
         }
 
-        val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
+        val values = calculatorService
+            .estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
+
         val labelKm = fragments.string(R.string.label_km)
         val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
 
-        textRemainingRange.text = "${if (values.remainingRange > 0) values.remainingRange else 0} $labelKm"
-        textTotalRange.text = "${values.totalRange} $labelKm"
-        textWhPerKm.text = "${values.whPerKm} $labelWhPerKm"
+        textRemainingRange.text =
+            "${if (values.remainingRange > 0) values.remainingRange else 0} $labelKm"
+        textTotalRange.text =
+            "${values.totalRange} $labelKm"
+        textWhPerKm.text =
+            "${values.whPerKm} $labelWhPerKm"
+    }
+
+    private fun updatePercentage(voltage: String) {
+        textBattery.text = if (isVoltageWithinRange(voltage))
+            formatPercentage(parseFloat(voltage)) else ""
     }
 
     private fun updateWheel(newMileage: Int, newVoltage: Float) {
