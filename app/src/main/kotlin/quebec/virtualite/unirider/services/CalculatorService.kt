@@ -1,6 +1,7 @@
 package quebec.virtualite.unirider.services
 
 import quebec.virtualite.unirider.database.WheelEntity
+import kotlin.math.max
 
 open class CalculatorService {
 
@@ -18,7 +19,8 @@ open class CalculatorService {
         val whConsumed = wheel.wh - whRemaining
         val whPerKm = whConsumed / km
         val whReserve = wheel.wh * percentageOfReserve
-        val remainingRange = (whRemaining - whReserve) / whPerKm
+
+        val remainingRange = max((whRemaining - whReserve) / whPerKm, 0f)
         val totalRange = remainingRange + km
 
         return EstimatedValues(

@@ -155,7 +155,7 @@ open class WheelViewFragment : BaseFragment() {
         val labelKm = fragments.string(R.string.label_km)
         val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
 
-        textRemainingRange.text = "${values.remainingRange} $labelKm"
+        textRemainingRange.text = "${if (values.remainingRange > 0) values.remainingRange else 0} $labelKm"
         textTotalRange.text = "${values.totalRange} $labelKm"
         textWhPerKm.text = "${values.whPerKm} $labelWhPerKm"
     }

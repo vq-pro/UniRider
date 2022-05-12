@@ -43,6 +43,7 @@ Feature: Wheel Viewing
       | Sherman Max | 42.0 | 91.9V   | 56.2 km   | 98.2 km | 30.3 wh/km |
       | Sherman Max | 81.0 | 83.5V   | 16.4 km   | 97.4 km | 30.5 wh/km |
       | Sherman Max | 42.0 | 91.     | 47.1 km   | 89.1 km | 33.3 wh/km |
+      | S18         | 42.0 | 67      | 0 km      | 42.0 km | 18.7 wh/km |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
@@ -58,6 +59,7 @@ Feature: Wheel Viewing
       | Sherman |      | bb      |
       | Sherman | aa   | bb      |
 
+#  FIXME-1 Refresh estimates when we go back to the page
   Scenario: => Editing the wheel
     Given I select the Sherman
     When I edit the wheel
