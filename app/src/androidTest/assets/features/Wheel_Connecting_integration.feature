@@ -18,9 +18,11 @@ Feature: Wheel Connecting
     Then the mileage is updated to 706
     And the wheel's Bluetooth name is updated
 
-  Scenario: Connecting to a previously connected wheel to update its mileage
+  # FIXME-0 Get segment km from Bluetooth
+  @WIP
+  Scenario: Connecting to a previously connected wheel to update its values
     Given the 14S has a previous mileage of 1000
-    Given this wheel is connected:
+    And this wheel is connected:
       | Name | Bt Name    | Bt Address        |
       | 14S  | KS-14S-SIM | C0:C1:C2:C3:C4:C5 |
     And I select the 14S
