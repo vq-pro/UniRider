@@ -332,6 +332,20 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun onUpdateKm_whenZero_noDisplay() {
+        // Given
+        injectMocks()
+        mockVoltage(VOLTAGE_S)
+
+        // When
+        fragment.onUpdateKm().invoke("0.0")
+
+        // Then
+        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
+        verifyClearEstimatedValues()
+    }
+
+    @Test
     fun onUpdateVoltage() {
         // Given
         injectMocks()

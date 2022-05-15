@@ -134,7 +134,7 @@ open class WheelViewFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateEstimatedValues(km: String, voltage: String) {
-        if (isEmpty(km) || !isVoltageWithinRange(voltage)) {
+        if (isEmpty(km) || !isPositive(km) || !isVoltageWithinRange(voltage)) {
             textRemainingRange.text = ""
             textTotalRange.text = ""
             textWhPerKm.text = ""
@@ -153,6 +153,10 @@ open class WheelViewFragment : BaseFragment() {
             "${values.totalRange} $labelKm"
         textWhPerKm.text =
             "${values.whPerKm} $labelWhPerKm"
+    }
+
+    private fun isPositive(value: String): Boolean {
+        return parseFloat(value) > 0f
     }
 
     private fun updatePercentage(voltage: String) {
