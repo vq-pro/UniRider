@@ -32,6 +32,11 @@ class WheelKingSong(gatt: BluetoothGatt) : WheelBase(gatt) {
 
     private var doneRequestingMoreNotifications = false
 
+    private var km: Float? = null
+    private var mileage: Float? = null
+    private var temperature: Float? = null
+    private var voltage: Float? = null
+
     override fun decode(data: ByteArray): Boolean {
 
         if (data.size < 20) {
@@ -49,17 +54,15 @@ class WheelKingSong(gatt: BluetoothGatt) : WheelBase(gatt) {
 
         when (data[16]) {
             NOTIFICATION_LIVE -> {
-                val voltage = byteArrayInt2(data[3], data[2]) / 100f
+                voltage = byteArrayInt2(data[3], data[2]) / 100f
                 val speed = byteArrayInt2(data[5], data[4])
-                val mileage = byteArrayInt4(data[7], data[6], data[9], data[8]) / 1000f
+                mileage = byteArrayInt4(data[7], data[6], data[9], data[8]) / 1000f
                 val current = data[10] and (0xFF + data[11] * 256).toByte()
-                val temperature = byteArrayInt2(data[13], data[12]) / 100f
+                temperature = byteArrayInt2(data[13], data[12]) / 100f
                 val pedalMode = PedalModeType.valueFrom(data[14])
-
-                connected(WheelInfo(mileage, temperature, voltage))
             }
             NOTIFICATION_DISTANCE_TIME_FAN -> {
-                val distance = byteArrayInt4(data[3], data[2], data[5], data[4]) / 1000f
+                km = byteArrayInt4(data[3], data[2], data[5], data[4]) / 1000f
                 val elapsedSecondsDeviceIsOn = byteArrayInt2(data[7], data[6])
                 val topSpeed = byteArrayInt2(data[9], data[8]) / 100f
                 val fanStatus = data[12]
@@ -73,6 +76,10 @@ class WheelKingSong(gatt: BluetoothGatt) : WheelBase(gatt) {
             NOTIFICATION_NAME_TYPE -> {}
             NOTIFICATION_SERIAL_NUMBER -> {}
             else -> {}
+        }
+
+        if (km != null && mileage != null && temperature != null && voltage != null) {
+            connected(WheelInfo(km!!, mileage!!, temperature!!, voltage!!))
         }
 
         return true

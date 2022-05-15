@@ -76,9 +76,3 @@ Feature: Wheel Viewing
     And it displays an estimated remaining range of "56.2 km"
     And it displays an estimated total range of "98.2 km"
     And it displays an estimated wh/km of "30.3 wh/km"
-
-  Scenario: => Deleting the wheel
-    Given I select the Nikola+
-    When I delete the wheel
-    And I confirm the deletion
-    Then I am back to the main screen and the wheel is gone

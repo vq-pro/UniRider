@@ -19,14 +19,9 @@ import kotlin.math.roundToInt
 
 open class WheelViewFragment : BaseFragment() {
 
-    companion object {
-        const val PARAMETER_WHEEL_ID = "wheelID"
-    }
-
     private val NB_DECIMALS = 1
 
     internal lateinit var buttonConnect: Button
-    internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
     internal lateinit var editKm: EditText
     internal lateinit var editVoltage: EditText
@@ -63,7 +58,6 @@ open class WheelViewFragment : BaseFragment() {
         textWhPerKm = view.findViewById(R.id.view_wh_per_km)
         buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
-        buttonDelete = view.findViewById(R.id.button_delete)
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
@@ -73,7 +67,6 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
-                widgets.setOnLongClickListener(buttonDelete, onDelete())
 
                 textName.text = wheel!!.name
                 textBtName.text = wheel!!.btName
@@ -90,28 +83,25 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onConnect(): (View) -> Unit = {
         if (wheel!!.btName == null) {
-            goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
+            goto(R.id.action_WheelViewFragment_to_WheelScanFragment, wheel!!)
 
         } else {
             fragments.runWithWait {
                 external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
                     fragments.doneWaiting(it) {
-                        val newMileage = it!!.mileage.roundToInt()
+                        val newKm = round(it!!.km, NB_DECIMALS)
+                        val newMileage = it.mileage.roundToInt()
                         val newVoltage = round(it.voltage, NB_DECIMALS)
 
-                        updateWheel(newMileage, newVoltage)
+                        updateWheel(newKm, newMileage, newVoltage)
                     }
                 }
             }
         }
     }
 
-    fun onDelete(): (View) -> Unit = {
-        goto(R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment)
-    }
-
     fun onEdit(): (View) -> Unit = {
-        goto(R.id.action_WheelViewFragment_to_WheelEditFragment)
+        goto(R.id.action_WheelViewFragment_to_WheelEditFragment, wheel!!)
     }
 
     fun onUpdateKm() = { km: String ->
@@ -131,10 +121,6 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
-    private fun goto(id: Int) {
-        fragments.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
-    }
-
     private fun isVoltageWithinRange(voltageParm: String): Boolean {
         if (isEmpty(voltageParm))
             return false
@@ -148,7 +134,7 @@ open class WheelViewFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateEstimatedValues(km: String, voltage: String) {
-        if (isEmpty(km) || !isVoltageWithinRange(voltage)) {
+        if (isEmpty(km) || !isPositive(km) || !isVoltageWithinRange(voltage)) {
             textRemainingRange.text = ""
             textTotalRange.text = ""
             textWhPerKm.text = ""
@@ -169,12 +155,16 @@ open class WheelViewFragment : BaseFragment() {
             "${values.whPerKm} $labelWhPerKm"
     }
 
+    private fun isPositive(value: String): Boolean {
+        return parseFloat(value) > 0f
+    }
+
     private fun updatePercentage(voltage: String) {
         textBattery.text = if (isVoltageWithinRange(voltage))
             formatPercentage(parseFloat(voltage)) else ""
     }
 
-    private fun updateWheel(newMileage: Int, newVoltage: Float) {
+    private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
         wheel = WheelEntity(
             wheel!!.id, wheel!!.name,
             wheel!!.btName, wheel!!.btAddr,
@@ -186,6 +176,7 @@ open class WheelViewFragment : BaseFragment() {
         external.runDB { it.saveWheel(wheel) }
         fragments.runUI {
             textMileage.text = "${wheel!!.totalMileage()}"
+            editKm.setText("$newKm")
             editVoltage.setText("$newVoltage")
         }
     }

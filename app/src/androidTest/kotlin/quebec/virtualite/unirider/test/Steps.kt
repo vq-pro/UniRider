@@ -78,7 +78,7 @@ class Steps {
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
-    @Then("I am back to the main screen and the wheel is gone")
+    @Then("I am back at the main screen and the wheel is gone")
     fun backOnMainScreenAndWheelIsGone() {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
         assertThat(R.id.wheels, not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))))
@@ -95,13 +95,18 @@ class Steps {
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, expectedMileage)))
     }
 
+    @Then("^the km is updated to (.*?) km$")
+    fun kmUpdatedTo(expectedKm: Float) {
+        assertThat(R.id.edit_km, hasText("$expectedKm"))
+    }
+
     @Then("^the mileage is updated to (.*?)$")
     fun mileageUpdatedTo(expectedMileage: Int) {
         assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
-    @Then("^the voltage shows (.*?)V and the battery (.*?)%$")
-    fun voltageAndBatteryTo(expectedVoltage: Float, expectedBattery: Float) {
+    @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
+    fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
         assertThat(R.id.edit_voltage, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery%"))
     }
@@ -495,12 +500,13 @@ class Steps {
 
     @Given("this simulated device:")
     fun simulatedDevice(device: DataTable) {
-        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Mileage", "Voltage")))
+        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltage")))
         val deviceFields = device.cells(1)[0]
 
         BluetoothServicesSim.setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
-        BluetoothServicesSim.setMileage(parseFloat(deviceFields[2]))
-        BluetoothServicesSim.setVoltage(parseVoltage(deviceFields[3]))
+        BluetoothServicesSim.setKm(parseFloat(deviceFields[2]))
+        BluetoothServicesSim.setMileage(parseFloat(deviceFields[3]))
+        BluetoothServicesSim.setVoltage(parseVoltage(deviceFields[4]))
     }
 
     private fun parseVoltage(value: String): Float {

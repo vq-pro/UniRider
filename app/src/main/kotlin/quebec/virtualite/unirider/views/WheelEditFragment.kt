@@ -11,12 +11,12 @@ import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
-import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
 open class WheelEditFragment : BaseFragment() {
 
     private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f)
 
+    internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
     internal lateinit var editMileage: EditText
     internal lateinit var editName: EditText
@@ -48,6 +48,7 @@ open class WheelEditFragment : BaseFragment() {
         editVoltageMin = view.findViewById(R.id.edit_voltage_min)
         editVoltageReserve = view.findViewById(R.id.edit_voltage_reserve)
         editWh = view.findViewById(R.id.edit_wh)
+        buttonDelete = view.findViewById(R.id.button_delete)
         buttonSave = view.findViewById(R.id.button_save)
 
         widgets.addTextChangedListener(editName, onUpdateName())
@@ -57,6 +58,7 @@ open class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
         widgets.addTextChangedListener(editVoltageReserve, onUpdateVoltageReserve())
         widgets.addTextChangedListener(editWh, onUpdateWh())
+        widgets.setOnLongClickListener(buttonDelete, onDelete())
         widgets.setOnClickListener(buttonSave, onSave())
 
         external.runDB {
@@ -93,6 +95,10 @@ open class WheelEditFragment : BaseFragment() {
             }
         } else
             widgets.disable(buttonSave)
+    }
+
+    fun onDelete(): (View) -> Unit = {
+        goto(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment, updatedWheel)
     }
 
     fun onSave(): (View) -> Unit = {

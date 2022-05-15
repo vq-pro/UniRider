@@ -28,7 +28,7 @@ import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_1_123
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_2_456
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_3_123
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_NEW
-import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
 class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {

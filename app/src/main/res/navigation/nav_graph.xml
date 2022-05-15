@@ -32,11 +32,6 @@
         />
 
         <action
-                android:id="@+id/action_WheelViewFragment_to_WheelDeleteConfirmationFragment"
-                app:destination="@+id/WheelDeleteConfirmationFragment"
-        />
-
-        <action
                 android:id="@+id/action_WheelViewFragment_to_WheelScanFragment"
                 app:destination="@+id/WheelScanFragment"
         />
@@ -46,6 +41,11 @@
             android:id="@+id/WheelEditFragment"
             android:name="quebec.virtualite.unirider.views.WheelEditFragment"
             tools:layout="@layout/wheel_edit_fragment">
+
+        <action
+                android:id="@+id/action_WheelEditFragment_to_WheelDeleteConfirmationFragment"
+                app:destination="@+id/WheelDeleteConfirmationFragment"
+        />
     </fragment>
 
     <fragment

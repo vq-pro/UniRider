@@ -30,59 +30,56 @@
             <!-- Km & Voltage -->
             <TableRow android:layout_marginTop="15dp">
                 <EditText
-                        android:id="@+id/edit_km"
-                        android:inputType="numberDecimal"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:autofillHints=""
-                />
-
-                <TextView
-                        android:id="@+id/label_km"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_km"
-                        android:labelFor="@+id/edit_km"
-                />
-
-                <EditText
                         android:id="@+id/edit_voltage"
                         android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
                         android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:autofillHints=""
                 />
 
                 <TextView
-                        android:id="@+id/label_voltage"
+                        android:labelFor="@+id/edit_voltage"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="@string/label_voltage"
-                        android:labelFor="@+id/edit_voltage"
+                />
+
+                <EditText
+                        android:id="@+id/edit_km"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                />
+
+                <TextView
+                        android:labelFor="@+id/edit_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_km"
                 />
             </TableRow>
 
             <!-- Battery Percentage -->
             <TableRow android:layout_marginTop="15dp">
                 <TextView
-                        android:id="@+id/label_battery"
+                        android:labelFor="@+id/view_battery"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:labelFor="@+id/view_battery"
                         android:text="@string/label_battery"
                 />
 
@@ -98,13 +95,12 @@
             <!-- Remaining Range -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:id="@+id/label_remaining_range"
+                        android:labelFor="@+id/view_remaining_range"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:labelFor="@+id/view_remaining_range"
                         android:text="@string/label_remaining_range"
                 />
 
@@ -120,13 +116,12 @@
             <!-- Total Range -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:id="@+id/label_total_range"
+                        android:labelFor="@+id/view_remaining_range"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:labelFor="@+id/view_remaining_range"
                         android:text="@string/label_total_range"
                 />
 
@@ -142,13 +137,12 @@
             <!-- wh/km -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:id="@+id/label_wh_per_km"
+                        android:labelFor="@+id/view_wh_per_km"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:labelFor="@+id/view_wh_per_km"
                         android:text="@string/label_wh_per_km"
                 />
 
@@ -172,40 +166,41 @@
             <!-- Mileage-->
             <TableRow android:layout_marginTop="15dp">
                 <TextView
-                        android:id="@+id/view_mileage_label"
                         android:labelFor="@+id/view_mileage"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="15dp"
                         android:text="@string/label_wheel_mileage"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 />
 
                 <TextView
                         android:id="@+id/view_mileage"
-                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                />
-
-                <Button
-                        android:id="@+id/button_connect"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/button_connect"
                 />
             </TableRow>
 
             <!-- Bluetooth Name -->
-            <TableRow android:layout_marginTop="15dp">
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/view_bt_name"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_bt_name"
+                />
+
                 <TextView
                         android:id="@+id/view_bt_name"
                         android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:gravity="center_horizontal"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="italic"
                 />
@@ -224,15 +219,15 @@
                     android:id="@+id/button_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="15dp"
                     android:text="@string/button_edit"
             />
 
             <Button
-                    android:id="@+id/button_delete"
+                    android:id="@+id/button_connect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/button_delete"
+                    android:text="@string/button_connect"
             />
         </LinearLayout>
     </RelativeLayout>

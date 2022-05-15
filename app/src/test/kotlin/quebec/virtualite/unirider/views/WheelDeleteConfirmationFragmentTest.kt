@@ -18,6 +18,7 @@ import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirmationFragment::class.java) {
@@ -49,7 +50,7 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
     @Test
     fun onCreateView() {
         // Given
-        mockArgument(fragment, WheelViewFragment.PARAMETER_WHEEL_ID, ID)
+        mockArgument(fragment, PARAMETER_WHEEL_ID, ID)
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
@@ -115,6 +116,6 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
 
         // Then
         verify(mockedDb).deleteWheel(ID)
-        verify(mockedFragments).navigateBack(2)
+        verify(mockedFragments).navigateBack(3)
     }
 }

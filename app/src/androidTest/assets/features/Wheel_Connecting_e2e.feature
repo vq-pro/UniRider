@@ -23,9 +23,9 @@ Feature: Wheel Connecting - End-2-End
     And the wheel's Bluetooth name is updated
     Examples:
       | wheel       | bt name      | mileage |
-      | 14S         | KS-14SMD2107 | 932     |
+      | 14S         | KS-14SMD2107 | 937     |
       | Sherman     | LK1149       | 19445   |
-      | Sherman Max | LK4142       | 3051    |
+      | Sherman Max | LK4142       | 3245    |
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
     Given I select the Sherman
@@ -46,9 +46,9 @@ Feature: Wheel Connecting - End-2-End
     Then the mileage is updated to <mileage>
     Examples:
       | wheel       | mileage |
-      | 14S         | 932     |
+      | 14S         | 937     |
       | Sherman     | 19445   |
-      | Sherman Max | 3051    |
+      | Sherman Max | 3245    |
 
   Scenario: Connecting to a previously connected wheel - ERROR - Connection following failure to connect
     Given these wheels are connected:

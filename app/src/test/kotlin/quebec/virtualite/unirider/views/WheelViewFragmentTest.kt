@@ -25,6 +25,8 @@ import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.KM
+import quebec.virtualite.unirider.TestDomain.KM_NEW
+import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.KM_S
 import quebec.virtualite.unirider.TestDomain.LABEL_KM
 import quebec.virtualite.unirider.TestDomain.LABEL_WH_PER_KM
@@ -56,7 +58,7 @@ import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
-import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
@@ -66,9 +68,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     @Mock
     lateinit var mockedButtonConnect: Button
-
-    @Mock
-    lateinit var mockedButtonDelete: Button
 
     @Mock
     lateinit var mockedButtonEdit: Button
@@ -151,7 +150,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         assertThat(fragment.textWhPerKm, equalTo(mockedTextWhPerKm))
         assertThat(fragment.buttonConnect, equalTo(mockedButtonConnect))
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
-        assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
         verify(mockedTextName).text = NAME
         verify(mockedTextBtName).text = DEVICE_NAME
@@ -161,7 +159,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
-        verifyOnLongClick(mockedButtonDelete, "onDelete")
     }
 
     @Test
@@ -236,7 +233,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        val connectionPayload = WheelInfo(MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
+        val connectionPayload = WheelInfo(KM_NEW_RAW, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
 
         verifyRunWithWaitDialog()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)
@@ -249,20 +246,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
                 VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX
             )
         )
+        verify(mockedEditKm).setText("$KM_NEW")
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
-    }
-
-    @Test
-    fun onDelete() {
-        // When
-        fragment.onDelete().invoke(mockedView)
-
-        // Then
-        verify(mockedFragments).navigateTo(
-            R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment,
-            Pair(PARAMETER_WHEEL_ID, ID)
-        )
     }
 
     @Test
@@ -343,6 +329,20 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextRemainingRange).text = "0 $LABEL_KM"
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
         verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+    }
+
+    @Test
+    fun onUpdateKm_whenZero_noDisplay() {
+        // Given
+        injectMocks()
+        mockVoltage(VOLTAGE_S)
+
+        // When
+        fragment.onUpdateKm().invoke("0.0")
+
+        // Then
+        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
+        verifyClearEstimatedValues()
     }
 
     @Test
@@ -435,6 +435,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun injectMocks() {
         fragment.buttonConnect = mockedButtonConnect
+        fragment.editKm = mockedEditKm
         fragment.editVoltage = mockedEditVoltage
         fragment.textBattery = mockedTextBattery
         fragment.textBtName = mockedTextBtName
@@ -446,7 +447,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun mockFields() {
         mockField(R.id.button_connect, mockedButtonConnect)
-        mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_bt_name, mockedTextBtName)
