@@ -58,7 +58,7 @@ import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
-import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
@@ -68,9 +68,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     @Mock
     lateinit var mockedButtonConnect: Button
-
-    @Mock
-    lateinit var mockedButtonDelete: Button
 
     @Mock
     lateinit var mockedButtonEdit: Button
@@ -153,7 +150,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         assertThat(fragment.textWhPerKm, equalTo(mockedTextWhPerKm))
         assertThat(fragment.buttonConnect, equalTo(mockedButtonConnect))
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
-        assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
 
         verify(mockedTextName).text = NAME
         verify(mockedTextBtName).text = DEVICE_NAME
@@ -163,7 +159,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyOnUpdateText(mockedEditVoltage, "onUpdateVoltage")
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
-        verifyOnLongClick(mockedButtonDelete, "onDelete")
     }
 
     @Test
@@ -254,18 +249,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedEditKm).setText("$KM_NEW")
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedEditVoltage).setText("$VOLTAGE_NEW")
-    }
-
-    @Test
-    fun onDelete() {
-        // When
-        fragment.onDelete().invoke(mockedView)
-
-        // Then
-        verify(mockedFragments).navigateTo(
-            R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment,
-            Pair(PARAMETER_WHEEL_ID, ID)
-        )
     }
 
     @Test
@@ -450,7 +433,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun mockFields() {
         mockField(R.id.button_connect, mockedButtonConnect)
-        mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_bt_name, mockedTextBtName)

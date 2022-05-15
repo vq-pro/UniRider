@@ -35,13 +35,16 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE_NEW
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
     @InjectMocks
     lateinit var fragment: WheelEditFragment
+
+    @Mock
+    lateinit var mockedButtonDelete: Button
 
     @Mock
     lateinit var mockedButtonSave: Button
@@ -114,6 +117,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         assertThat(fragment.editVoltageReserve, equalTo(mockedEditVoltageReserve))
         assertThat(fragment.editVoltageMin, equalTo(mockedEditVoltageMin))
         assertThat(fragment.editWh, equalTo(mockedEditWh))
+        assertThat(fragment.buttonDelete, equalTo(mockedButtonDelete))
         assertThat(fragment.buttonSave, equalTo(mockedButtonSave))
 
         verify(mockedEditName).setText(NAME)
@@ -132,6 +136,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verifyOnUpdateText(mockedEditVoltageMin, "onUpdateVoltageMin")
         verifyOnUpdateText(mockedEditVoltageReserve, "onUpdateVoltageReserve")
         verifyOnUpdateText(mockedEditWh, "onUpdateWh")
+        verifyOnLongClick(mockedButtonDelete, "onDelete")
         verifyOnClick(mockedButtonSave, "onSave")
     }
 
@@ -176,6 +181,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun enableSaveIfChanged_whenChanged_enabled() {
         // Given
         initForUpdates(true)
+        injectMocks()
 
         // When
         fragment.enableSaveIfChanged()
@@ -191,6 +197,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun enableSaveIfChanged_whenChangedAndDuplicate_disabled() {
         // Given
         initForUpdates(true)
+        injectMocks()
 
         given(mockedDb.findDuplicate(any()))
             .willReturn(true)
@@ -209,6 +216,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun enableSaveIfChanged_whenNotChanged_disabled() {
         // Given
         initForUpdates(false)
+        injectMocks()
 
         // When
         fragment.enableSaveIfChanged()
@@ -216,6 +224,21 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         // Then
         verify(mockedDb, never()).findDuplicate(any())
         verify(mockedWidgets).disable(mockedButtonSave)
+    }
+
+    @Test
+    fun onDelete() {
+        // Given
+        fragment.updatedWheel = definedWheel()
+
+        // When
+        fragment.onDelete().invoke(mockedView)
+
+        // Then
+        verify(mockedFragments).navigateTo(
+            R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment,
+            Pair(PARAMETER_WHEEL_ID, ID)
+        )
     }
 
     @Test
@@ -235,6 +258,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateMileage() {
         // Given
         initForUpdates(true)
+        injectMocks()
 
         // When
         fragment.onUpdateMileage().invoke("$MILEAGE_NEW ")
@@ -254,6 +278,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateMileage_whenEmpty_zero() {
         // Given
         initForUpdates(false)
+        injectMocks()
 
         // When
         fragment.onUpdateMileage().invoke(" ")
@@ -272,6 +297,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdatePreMileage() {
         // Given
         initForUpdates(true)
+        injectMocks()
 
         // When
         fragment.onUpdatePreMileage().invoke("$PREMILEAGE_NEW ")
@@ -291,6 +317,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdatePreMileage_whenEmpty_zero() {
         // Given
         initForUpdates(false)
+        injectMocks()
 
         // When
         fragment.onUpdatePreMileage().invoke(" ")
@@ -309,6 +336,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateName() {
         // Given
         initForUpdates(true)
+        injectMocks()
 
         // When
         fragment.onUpdateName().invoke("$NAME_NEW ")
@@ -328,6 +356,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateVoltageMax() {
         // Given
         initForUpdates(true)
+        injectMocks()
 
         // When
         fragment.onUpdateVoltageMax().invoke("$VOLTAGE_MAX_NEW ")
@@ -347,6 +376,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateVoltageMax_whenEmpty_zero() {
         // Given
         initForUpdates(false)
+        injectMocks()
 
         // When
         fragment.onUpdateVoltageMax().invoke(" ")
@@ -366,6 +396,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateVoltageMin() {
         // Given
         initForUpdates(true)
+        injectMocks()
 
         // When
         fragment.onUpdateVoltageMin().invoke("$VOLTAGE_MIN_NEW ")
@@ -385,6 +416,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateVoltageMin_whenEmpty_zero() {
         // Given
         initForUpdates(false)
+        injectMocks()
 
         // When
         fragment.onUpdateVoltageMin().invoke(" ")
@@ -404,6 +436,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateVoltageReserve() {
         // Given
         initForUpdates(true)
+        injectMocks()
 
         // When
         fragment.onUpdateVoltageReserve().invoke("$VOLTAGE_RESERVE_NEW ")
@@ -429,6 +462,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateVoltageReserve_whenEmpty_zero() {
         // Given
         initForUpdates(false)
+        injectMocks()
 
         // When
         fragment.onUpdateVoltageReserve().invoke(" ")
@@ -454,6 +488,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateWh() {
         // Given
         initForUpdates(true)
+        injectMocks()
 
         // When
         fragment.onUpdateWh().invoke("$WH_NEW ")
@@ -473,6 +508,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     fun onUpdateWh_whenEmpty_zero() {
         // Given
         initForUpdates(false)
+        injectMocks()
 
         // When
         fragment.onUpdateWh().invoke(" ")
@@ -498,7 +534,12 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
             .willReturn(canSave)
     }
 
+    private fun injectMocks() {
+        fragment.buttonSave = mockedButtonSave
+    }
+
     private fun mockFields() {
+        mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_save, mockedButtonSave)
         mockField(R.id.edit_name, mockedEditName)
         mockField(R.id.edit_premileage, mockedEditPreMileage)

@@ -8,7 +8,6 @@ import android.widget.ListView
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 import java.util.stream.Collectors.toList
 import kotlin.math.roundToInt
 

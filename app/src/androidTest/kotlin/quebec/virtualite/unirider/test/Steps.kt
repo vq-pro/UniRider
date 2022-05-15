@@ -78,7 +78,7 @@ class Steps {
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
-    @Then("I am back to the main screen and the wheel is gone")
+    @Then("I am back at the main screen and the wheel is gone")
     fun backOnMainScreenAndWheelIsGone() {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
         assertThat(R.id.wheels, not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))))

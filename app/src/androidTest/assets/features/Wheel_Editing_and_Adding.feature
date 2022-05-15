@@ -3,6 +3,7 @@ Feature: Wheel Editing & Adding
   Background:
     Given these wheels:
       | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max |
+      | Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      |
       | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      |
       | S18     | 2850    | 1110 | 60V         | 68V             | 84V         |
     And I start the app
@@ -58,3 +59,10 @@ Feature: Wheel Editing & Adding
       | cannot        | blank the minimum voltage   |
       | cannot        | change nothing              |
       | cannot        | reuse the name S18          |
+
+  Scenario: => Deleting the wheel
+    Given I select the Nikola+
+    And I edit the wheel
+    When I delete the wheel
+    And I confirm the deletion
+    Then I am back at the main screen and the wheel is gone

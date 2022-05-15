@@ -192,8 +192,14 @@
                     android:id="@+id/button_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
                     android:text="@string/button_save"
+            />
+
+            <Button
+                    android:id="@+id/button_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_delete"
             />
         </LinearLayout>
     </RelativeLayout>

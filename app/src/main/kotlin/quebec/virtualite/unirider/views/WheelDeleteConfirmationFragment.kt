@@ -9,7 +9,6 @@ import android.widget.TextView
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
-import quebec.virtualite.unirider.views.WheelViewFragment.Companion.PARAMETER_WHEEL_ID
 
 open class WheelDeleteConfirmationFragment : BaseFragment() {
 
@@ -48,6 +47,6 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
 
     fun onDelete(): (View) -> Unit = {
         external.runDB { it.deleteWheel(wheel.id) }
-        fragments.navigateBack(2)
+        fragments.navigateBack(3)
     }
 }

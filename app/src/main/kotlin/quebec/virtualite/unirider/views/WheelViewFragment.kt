@@ -19,14 +19,9 @@ import kotlin.math.roundToInt
 
 open class WheelViewFragment : BaseFragment() {
 
-    companion object {
-        const val PARAMETER_WHEEL_ID = "wheelID"
-    }
-
     private val NB_DECIMALS = 1
 
     internal lateinit var buttonConnect: Button
-    internal lateinit var buttonDelete: Button
     internal lateinit var buttonEdit: Button
     internal lateinit var editKm: EditText
     internal lateinit var editVoltage: EditText
@@ -63,7 +58,6 @@ open class WheelViewFragment : BaseFragment() {
         textWhPerKm = view.findViewById(R.id.view_wh_per_km)
         buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
-        buttonDelete = view.findViewById(R.id.button_delete)
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
@@ -73,7 +67,6 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
-                widgets.setOnLongClickListener(buttonDelete, onDelete())
 
                 textName.text = wheel!!.name
                 textBtName.text = wheel!!.btName
@@ -90,7 +83,7 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onConnect(): (View) -> Unit = {
         if (wheel!!.btName == null) {
-            goto(R.id.action_WheelViewFragment_to_WheelScanFragment)
+            goto(R.id.action_WheelViewFragment_to_WheelScanFragment, wheel!!)
 
         } else {
             fragments.runWithWait {
@@ -107,12 +100,8 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
-    fun onDelete(): (View) -> Unit = {
-        goto(R.id.action_WheelViewFragment_to_WheelDeleteConfirmationFragment)
-    }
-
     fun onEdit(): (View) -> Unit = {
-        goto(R.id.action_WheelViewFragment_to_WheelEditFragment)
+        goto(R.id.action_WheelViewFragment_to_WheelEditFragment, wheel!!)
     }
 
     fun onUpdateKm() = { km: String ->
@@ -130,10 +119,6 @@ open class WheelViewFragment : BaseFragment() {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }
-    }
-
-    private fun goto(id: Int) {
-        fragments.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel!!.id))
     }
 
     private fun isVoltageWithinRange(voltageParm: String): Boolean {
