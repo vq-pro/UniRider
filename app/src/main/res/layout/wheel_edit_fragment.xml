@@ -29,12 +29,11 @@
 
                 <EditText
                         android:id="@+id/edit_name"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:textStyle="bold"
-                        android:hint="@string/label_wheel_name"
                         android:autofillHints=""
                         android:inputType="text"
                 />
