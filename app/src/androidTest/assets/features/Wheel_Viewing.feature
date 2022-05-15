@@ -10,7 +10,6 @@ Feature: Wheel Viewing
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      |
     And I start the app
 
-#    FIXME-1 Move Bluetooth name in parenthesis below the wheel name
 #    FIXME-1 Move Delete button in the edit screen, go back to the main view afterwards
 #    FIXME-1 Move Connect button on the bottom of the view wheel screen
 

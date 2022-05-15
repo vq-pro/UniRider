@@ -35,7 +35,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:autofillHints=""
@@ -80,7 +80,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:labelFor="@+id/view_battery"
                         android:text="@string/label_battery"
@@ -102,7 +102,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:labelFor="@+id/view_remaining_range"
                         android:text="@string/label_remaining_range"
@@ -124,7 +124,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:labelFor="@+id/view_remaining_range"
                         android:text="@string/label_total_range"
@@ -146,7 +146,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:labelFor="@+id/view_wh_per_km"
                         android:text="@string/label_wh_per_km"
@@ -199,15 +199,24 @@
             </TableRow>
 
             <!-- Bluetooth Name -->
-            <TableRow android:layout_marginTop="15dp">
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:id="@+id/label_bt_name"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:labelFor="@+id/view_bt_name"
+                        android:text="@string/label_bt_name"
+                />
+
                 <TextView
                         android:id="@+id/view_bt_name"
                         android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:gravity="center_horizontal"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textStyle="italic"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 />
             </TableRow>
         </TableLayout>
