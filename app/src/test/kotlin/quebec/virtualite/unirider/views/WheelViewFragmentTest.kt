@@ -292,6 +292,34 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun onUpdateKm_whenNonNumeric_noDisplay() {
+        // Given
+        injectMocks()
+        mockVoltage(VOLTAGE_S)
+
+        // When
+        fragment.onUpdateKm().invoke("a ")
+
+        // Then
+        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
+        verifyClearEstimatedValues()
+    }
+
+    @Test
+    fun onUpdateKm_whenZero_noDisplay() {
+        // Given
+        injectMocks()
+        mockVoltage(VOLTAGE_S)
+
+        // When
+        fragment.onUpdateKm().invoke("0.0 ")
+
+        // Then
+        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
+        verifyClearEstimatedValues()
+    }
+
+    @Test
     fun onUpdateKm_withVoltage_updateEstimatedValues() {
         // Given
         injectMocks()
@@ -329,20 +357,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextRemainingRange).text = "0 $LABEL_KM"
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
         verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
-    }
-
-    @Test
-    fun onUpdateKm_whenZero_noDisplay() {
-        // Given
-        injectMocks()
-        mockVoltage(VOLTAGE_S)
-
-        // When
-        fragment.onUpdateKm().invoke("0.0")
-
-        // Then
-        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
-        verifyClearEstimatedValues()
     }
 
     @Test
@@ -404,6 +418,21 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyNoInteractions(mockedCalculatorService)
+        verify(mockedTextBattery).text = ""
+        verifyClearEstimatedValues()
+    }
+
+    @Test
+    fun onUpdateVoltage_whenNonNumeric_noDisplay() {
+        // Given
+        injectMocks()
+        mockKm(" ")
+
+        // When
+        fragment.onUpdateVoltage().invoke("ab ")
+
+        // Then
+        verify(mockedCalculatorService, never()).percentage(any(), anyFloat())
         verify(mockedTextBattery).text = ""
         verifyClearEstimatedValues()
     }

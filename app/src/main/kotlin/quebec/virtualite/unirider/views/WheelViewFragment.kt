@@ -33,9 +33,8 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textTotalRange: TextView
     internal lateinit var textWhPerKm: TextView
 
-    internal var wheel: WheelEntity? = null
-
     internal var parmWheelId: Long? = 0
+    internal var wheel: WheelEntity? = null
 
     private var calculatorService = CalculatorService()
 
@@ -125,6 +124,9 @@ open class WheelViewFragment : BaseFragment() {
         if (isEmpty(voltageParm))
             return false
 
+        if (!isNumeric(voltageParm))
+            return false
+
         val voltage = parseFloat(voltageParm)
         if (voltage < wheel!!.voltageMin || wheel!!.voltageMax < voltage)
             return false
@@ -155,8 +157,12 @@ open class WheelViewFragment : BaseFragment() {
             "${values.whPerKm} $labelWhPerKm"
     }
 
+    private fun isNumeric(value: String): Boolean {
+        return value.matches("^[0-9.]*$".toRegex())
+    }
+
     private fun isPositive(value: String): Boolean {
-        return parseFloat(value) > 0f
+        return isNumeric(value) && parseFloat(value) > 0f
     }
 
     private fun updatePercentage(voltage: String) {
