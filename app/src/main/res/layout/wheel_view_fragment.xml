@@ -30,33 +30,12 @@
             <!-- Km & Voltage -->
             <TableRow android:layout_marginTop="15dp">
                 <EditText
-                        android:id="@+id/edit_km"
-                        android:inputType="numberDecimal"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:autofillHints=""
-                />
-
-                <TextView
-                        android:id="@+id/label_km"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_km"
-                        android:labelFor="@+id/edit_km"
-                />
-
-                <EditText
                         android:id="@+id/edit_voltage"
                         android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
                         android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:autofillHints=""
@@ -70,6 +49,27 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="@string/label_voltage"
                         android:labelFor="@+id/edit_voltage"
+                />
+
+                <EditText
+                        android:id="@+id/edit_km"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                />
+
+                <TextView
+                        android:id="@+id/label_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_km"
+                        android:labelFor="@+id/edit_km"
                 />
             </TableRow>
 
