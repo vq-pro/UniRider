@@ -177,24 +177,17 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="20dp"
                         android:text="@string/label_wheel_mileage"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 />
 
                 <TextView
                         android:id="@+id/view_mileage"
-                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                />
-
-                <Button
-                        android:id="@+id/button_connect"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/button_connect"
                 />
             </TableRow>
 
@@ -216,7 +209,8 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textStyle="italic"
                 />
             </TableRow>
         </TableLayout>
@@ -233,8 +227,15 @@
                     android:id="@+id/button_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="15dp"
                     android:text="@string/button_edit"
+            />
+
+            <Button
+                    android:id="@+id/button_connect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_connect"
             />
         </LinearLayout>
     </RelativeLayout>

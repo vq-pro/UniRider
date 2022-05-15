@@ -10,8 +10,6 @@ Feature: Wheel Viewing
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      |
     And I start the app
 
-#    FIXME-1 Move Connect button on the bottom of the view wheel screen
-
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
     Given the <wheel> has a previous mileage of <previous mileage>
     When I select the <wheel>
