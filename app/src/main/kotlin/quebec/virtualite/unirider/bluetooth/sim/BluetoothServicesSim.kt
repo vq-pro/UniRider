@@ -8,11 +8,16 @@ open class BluetoothServicesSim : BluetoothServices {
 
     companion object {
         private var device = BluetoothDevice("KS-14S-SIM", "AB:CD:EF:GH:IJ:KL")
+        private var km = 15f
         private var mileage = 123f
         private var voltage = 61.2f
 
         fun setDevice(device: BluetoothDevice) {
             Companion.device = device
+        }
+
+        fun setKm(km: Float) {
+            Companion.km = km
         }
 
         fun setMileage(mileage: Float) {
@@ -26,7 +31,7 @@ open class BluetoothServicesSim : BluetoothServices {
 
     override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((WheelInfo?) -> Unit)?) {
         Thread.sleep(1000)
-        onGotInfo!!.invoke(WheelInfo(mileage, 0f, voltage))
+        onGotInfo!!.invoke(WheelInfo(km, mileage, 0f, voltage))
     }
 
     override fun scan(onFound: ((BluetoothDevice) -> Unit)?) {

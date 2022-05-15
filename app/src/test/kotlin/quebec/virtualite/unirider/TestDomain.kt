@@ -19,6 +19,8 @@ object TestDomain {
     const val LABEL_WH_PER_KM = "watt-hours per kilometer"
     const val KM = 4444f
     const val KM_S = KM.toString()
+    const val KM_NEW = 4445f
+    const val KM_NEW_RAW = 4445.012f
     const val MILEAGE = 2222
     const val MILEAGE2 = 2223
     const val MILEAGE3 = 2223

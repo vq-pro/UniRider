@@ -79,7 +79,7 @@ class WheelKingSong(gatt: BluetoothGatt) : WheelBase(gatt) {
         }
 
         if (km != null && mileage != null && temperature != null && voltage != null) {
-            connected(WheelInfo(mileage!!, temperature!!, voltage!!))
+            connected(WheelInfo(km!!, mileage!!, temperature!!, voltage!!))
         }
 
         return true

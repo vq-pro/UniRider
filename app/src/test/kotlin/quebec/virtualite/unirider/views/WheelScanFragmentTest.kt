@@ -25,6 +25,7 @@ import quebec.virtualite.unirider.TestDomain.DEVICE_NAME2
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME3
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.ID3
+import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.NAME3
@@ -137,7 +138,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
 
         // Then
-        val connectionPayload = WheelInfo(MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
+        val connectionPayload = WheelInfo(KM_NEW_RAW, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
 
         verifyRunWithWaitDialogAndBack()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, connectionPayload)

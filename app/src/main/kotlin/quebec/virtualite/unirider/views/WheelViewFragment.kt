@@ -96,10 +96,11 @@ open class WheelViewFragment : BaseFragment() {
             fragments.runWithWait {
                 external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
                     fragments.doneWaiting(it) {
-                        val newMileage = it!!.mileage.roundToInt()
+                        val newKm = round(it!!.km, NB_DECIMALS)
+                        val newMileage = it.mileage.roundToInt()
                         val newVoltage = round(it.voltage, NB_DECIMALS)
 
-                        updateWheel(newMileage, newVoltage)
+                        updateWheel(newKm, newMileage, newVoltage)
                     }
                 }
             }
@@ -174,7 +175,7 @@ open class WheelViewFragment : BaseFragment() {
             formatPercentage(parseFloat(voltage)) else ""
     }
 
-    private fun updateWheel(newMileage: Int, newVoltage: Float) {
+    private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
         wheel = WheelEntity(
             wheel!!.id, wheel!!.name,
             wheel!!.btName, wheel!!.btAddr,
@@ -186,6 +187,7 @@ open class WheelViewFragment : BaseFragment() {
         external.runDB { it.saveWheel(wheel) }
         fragments.runUI {
             textMileage.text = "${wheel!!.totalMileage()}"
+            editKm.setText("$newKm")
             editVoltage.setText("$newVoltage")
         }
     }

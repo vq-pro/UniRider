@@ -39,7 +39,7 @@ class WheelInmotion(gatt: BluetoothGatt) : WheelBase(gatt) {
         val temperature = byteArrayInt2(data[12], data[13]) / 1000f
         val mileage = byteArrayInt4(data[14], data[15], data[12], data[13]) / 1000f
 
-        connected(WheelInfo(mileage, temperature, voltage))
+        connected(WheelInfo(0f, mileage, temperature, voltage))
         return true
     }
 

@@ -20,7 +20,7 @@ class WheelVeteran(gatt: BluetoothGatt) : WheelBase(gatt) {
         val temperature = byteArrayInt2(data[18], data[19]) / 100f
         val voltage = byteArrayInt2(data[4], data[5]) / 100f
 
-        connected(WheelInfo(mileage, temperature, voltage))
+        connected(WheelInfo(km, mileage, temperature, voltage))
         return true
     }
 }
