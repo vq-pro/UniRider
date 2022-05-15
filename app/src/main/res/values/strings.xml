@@ -24,10 +24,9 @@
     <string name="label_voltage">V</string>
     <string name="label_wh">wh</string>
     <string name="label_wh_per_km">wh/km</string>
-    <string name="label_wheel_premileage">previous mileage</string>
+    <string name="label_wheel_premileage">Pre-Mileage</string>
     <string name="label_wheel_mileage">Mileage</string>
-    <string name="label_wheel_name">name</string>
-    <string name="label_wheel_previous">previous</string>
+    <string name="label_wheel_name">Name</string>
     <string name="label_wheel_voltage_max">Max voltage</string>
     <string name="label_wheel_voltage_min">Min voltage</string>
     <string name="label_wheel_voltage_reserve">Reserve</string>
