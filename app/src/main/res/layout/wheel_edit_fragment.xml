@@ -96,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_wheel_voltage_min"
+                        android:text="@string/label_wheel_voltage_reserve"
                 />
 
                 <EditText
@@ -154,7 +154,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:hint="@string/label_wheel_mileage"
+                        android:hint="@string/label_km"
                         android:autofillHints=""
                 />
             </TableRow>
@@ -178,7 +178,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:hint="@string/label_wheel_mileage"
+                        android:hint="@string/label_km"
                         android:autofillHints=""
                 />
             </TableRow>
