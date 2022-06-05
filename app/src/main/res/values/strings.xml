@@ -22,6 +22,7 @@
     <string name="label_reserve">reserve</string>
     <string name="label_total_range">Total</string>
     <string name="label_voltage">V</string>
+    <string name="label_voltage_start">Start</string>
     <string name="label_wh">wh</string>
     <string name="label_wh_per_km">wh/km</string>
     <string name="label_wheel_premileage">Pre-Mileage</string>

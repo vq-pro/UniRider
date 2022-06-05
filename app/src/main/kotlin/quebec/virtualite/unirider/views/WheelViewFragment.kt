@@ -24,7 +24,8 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var buttonConnect: Button
     internal lateinit var buttonEdit: Button
     internal lateinit var editKm: EditText
-    internal lateinit var editVoltage: EditText
+    internal lateinit var editVoltageActual: EditText
+    internal lateinit var editVoltageStart: EditText
     internal lateinit var textBattery: TextView
     internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
@@ -46,36 +47,39 @@ open class WheelViewFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        textName = view.findViewById(R.id.view_name)
+        buttonConnect = view.findViewById(R.id.button_connect)
+        buttonEdit = view.findViewById(R.id.button_edit)
+        editKm = view.findViewById(R.id.edit_km)
+        editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
+        editVoltageStart = view.findViewById(R.id.edit_voltage_start)
+        textBattery = view.findViewById(R.id.view_battery)
         textBtName = view.findViewById(R.id.view_bt_name)
         textMileage = view.findViewById(R.id.view_mileage)
-        editVoltage = view.findViewById(R.id.edit_voltage)
-        textBattery = view.findViewById(R.id.view_battery)
-        editKm = view.findViewById(R.id.edit_km)
+        textName = view.findViewById(R.id.view_name)
         textRemainingRange = view.findViewById(R.id.view_remaining_range)
         textTotalRange = view.findViewById(R.id.view_total_range)
         textWhPerKm = view.findViewById(R.id.view_wh_per_km)
-        buttonConnect = view.findViewById(R.id.button_connect)
-        buttonEdit = view.findViewById(R.id.button_edit)
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
 
             if (wheel != null) {
+                widgets.addTextChangedListener(editVoltageStart, onUpdateVoltageStart())
                 widgets.addTextChangedListener(editKm, onUpdateKm())
-                widgets.addTextChangedListener(editVoltage, onUpdateVoltage())
+                widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
 
                 textName.text = wheel!!.name
+                editVoltageStart.setText("${wheel!!.voltageStart}")
                 textBtName.text = wheel!!.btName
                 textMileage.text = "${wheel!!.totalMileage()}"
 
                 val km = widgets.text(editKm)
-                val voltage = widgets.text(editVoltage)
+                val voltageCurrent = widgets.text(editVoltageActual)
 
-                updateEstimatedValues(km, voltage)
-                updatePercentage(voltage)
+                updateEstimatedValues(km, voltageCurrent)
+                updatePercentage(voltageCurrent)
             }
         }
     }
@@ -104,11 +108,22 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onUpdateKm() = { km: String ->
-        updateEstimatedValues(km.trim(), widgets.text(editVoltage))
+        updateEstimatedValues(km.trim(), widgets.text(editVoltageActual))
     }
 
-    fun onUpdateVoltage() = { voltageParm: String ->
+    fun onUpdateVoltageActual() = { voltageParm: String ->
         val voltage = voltageParm.trim()
+        updateEstimatedValues(widgets.text(editKm), voltage)
+        updatePercentage(voltage)
+    }
+
+    fun onUpdateVoltageStart() = { voltageParm: String ->
+        val voltage = voltageParm.trim()
+        wheel = WheelEntity(
+            wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
+            wheel!!.premileage, wheel!!.mileage, wheel!!.wh,
+            wheel!!.voltageMax, wheel!!.voltageMin, wheel!!.voltageReserve, parseFloat(voltage)
+        )
         updateEstimatedValues(widgets.text(editKm), voltage)
         updatePercentage(voltage)
     }
@@ -176,14 +191,14 @@ open class WheelViewFragment : BaseFragment() {
             wheel!!.btName, wheel!!.btAddr,
             wheel!!.premileage, newMileage,
             wheel!!.wh,
-            wheel!!.voltageMin, wheel!!.voltageReserve, wheel!!.voltageMax
+            wheel!!.voltageMax, wheel!!.voltageMin, wheel!!.voltageReserve, wheel!!.voltageStart
         )
 
         external.runDB { it.saveWheel(wheel) }
         fragments.runUI {
             textMileage.text = "${wheel!!.totalMileage()}"
             editKm.setText("$newKm")
-            editVoltage.setText("$newVoltage")
+            editVoltageActual.setText("$newVoltage")
         }
     }
 }

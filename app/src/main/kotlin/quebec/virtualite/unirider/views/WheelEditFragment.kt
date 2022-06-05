@@ -14,7 +14,7 @@ import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f)
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
@@ -115,9 +115,10 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.premileage,
             intOf(newMileage),
             updatedWheel.wh,
+            updatedWheel.voltageMax,
             updatedWheel.voltageMin,
             updatedWheel.voltageReserve,
-            updatedWheel.voltageMax
+            updatedWheel.voltageStart
         )
 
         enableSaveIfChanged()
@@ -132,9 +133,10 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.premileage,
             updatedWheel.mileage,
             updatedWheel.wh,
+            updatedWheel.voltageMax,
             updatedWheel.voltageMin,
             updatedWheel.voltageReserve,
-            updatedWheel.voltageMax
+            updatedWheel.voltageStart
         )
 
         enableSaveIfChanged()
@@ -149,9 +151,10 @@ open class WheelEditFragment : BaseFragment() {
             intOf(newPreMileage),
             updatedWheel.mileage,
             updatedWheel.wh,
+            updatedWheel.voltageMax,
             updatedWheel.voltageMin,
             updatedWheel.voltageReserve,
-            updatedWheel.voltageMax
+            updatedWheel.voltageStart
         )
 
         enableSaveIfChanged()
@@ -166,9 +169,10 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.premileage,
             updatedWheel.mileage,
             updatedWheel.wh,
+            floatOf(newVoltage),
             updatedWheel.voltageMin,
             updatedWheel.voltageReserve,
-            floatOf(newVoltage)
+            updatedWheel.voltageStart
         )
 
         enableSaveIfChanged()
@@ -183,9 +187,10 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.premileage,
             updatedWheel.mileage,
             updatedWheel.wh,
+            updatedWheel.voltageMax,
             floatOf(newVoltage),
             updatedWheel.voltageReserve,
-            updatedWheel.voltageMax
+            updatedWheel.voltageStart
         )
 
         enableSaveIfChanged()
@@ -200,9 +205,10 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.premileage,
             updatedWheel.mileage,
             updatedWheel.wh,
+            updatedWheel.voltageMax,
             updatedWheel.voltageMin,
             floatOf(newVoltage),
-            updatedWheel.voltageMax
+            updatedWheel.voltageStart
         )
 
         enableSaveIfChanged()
@@ -217,9 +223,10 @@ open class WheelEditFragment : BaseFragment() {
             updatedWheel.premileage,
             updatedWheel.mileage,
             intOf(newWh),
+            updatedWheel.voltageMax,
             updatedWheel.voltageMin,
             updatedWheel.voltageReserve,
-            updatedWheel.voltageMax
+            updatedWheel.voltageStart
         )
 
         enableSaveIfChanged()

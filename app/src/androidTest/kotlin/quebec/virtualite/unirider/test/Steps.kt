@@ -74,7 +74,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -107,7 +107,7 @@ class Steps {
 
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
-        assertThat(R.id.edit_voltage, hasText("$expectedVoltage"))
+        assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery%"))
     }
 
@@ -177,9 +177,10 @@ class Steps {
             parseInt(mapEntity["Previous Mileage"]!!),
             parseInt(mapEntity["Mileage"]!!),
             parseInt(mapEntity["Wh"]!!),
+            parseFloat(mapEntity["Voltage Max"]!!),
             parseFloat(mapEntity["Voltage Min"]!!),
             parseFloat(mapEntity["Voltage Reserve"]!!),
-            parseFloat(mapEntity["Voltage Max"]!!)
+            null
         )
 
         click(R.id.button_save)
@@ -198,7 +199,7 @@ class Steps {
 
     @Then("it blanks the displays")
     fun blanksTheDisplays() {
-        assertThat(R.id.edit_voltage, isEmpty())
+        assertThat(R.id.edit_voltage_actual, isEmpty())
         assertThat(R.id.view_battery, isEmpty())
     }
 
@@ -298,10 +299,11 @@ class Steps {
         longClick(R.id.button_delete)
     }
 
-    @Then("^the details view shows the (.*?) with a mileage of (.*?)$")
-    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: Int) {
+    @Then("^the details view shows the (.*) with a mileage of (.*) and a starting voltage of (.*)V$")
+    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: Int, expectedStartingVoltage: Float) {
         assertThat(R.id.view_name, hasText(expectedName))
         assertThat(R.id.view_mileage, hasText("$expectedMileage"))
+        assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
     }
 
     @Then("^it displays a percentage of (.*?)$")
@@ -356,7 +358,7 @@ class Steps {
                 val voltageReserve = parseVoltage(row[4])
                 val voltageMax = parseVoltage(row[5])
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMin, voltageReserve, voltageMax)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, null)
             }
             .collect(toList())
 
@@ -380,7 +382,7 @@ class Steps {
                         WheelEntity(
                             it.id, name, btName, btAddress,
                             it.premileage, it.mileage, it.wh,
-                            it.voltageMin, it.voltageReserve, it.voltageMax
+                            it.voltageMax, it.voltageMin, it.voltageReserve, null
                         )
                     )
                 }
@@ -416,9 +418,14 @@ class Steps {
         setText(R.id.edit_km, km)
     }
 
-    @Given("^the voltage is set to (.*?)$")
-    fun voltageIsSetTo(voltage: String) {
-        setText(R.id.edit_voltage, voltage)
+    @Given("^the starting voltage is set to (.*)V$")
+    fun startingVoltageIsSetTo(startingVoltage: String) {
+        setText(R.id.edit_voltage_start, startingVoltage)
+    }
+
+    @Given("^the current voltage is set to (.*?)$")
+    fun currentVoltageIsSetTo(voltage: String) {
+        setText(R.id.edit_voltage_actual, voltage)
     }
 
     @Then("the wheel can be saved")
@@ -438,7 +445,7 @@ class Steps {
                 WheelEntity(
                     it.id, it.name, it.btName, it.btAddr,
                     premileage, it.mileage, it.wh,
-                    it.voltageMin, it.voltageReserve, it.voltageMax
+                    it.voltageMax, it.voltageMin, it.voltageReserve, it.voltageStart
                 )
             )
             updateMapWheels()
@@ -470,10 +477,10 @@ class Steps {
         expectedDeviceName = deviceName
     }
 
-    @When("^I enter a voltage of (.*?)$")
-    fun whenEnterVoltage(voltageParm: String) {
+    @When("^I enter an actual voltage of (.*?)$")
+    fun whenEnterActualVoltage(voltageParm: String) {
         enter(
-            R.id.edit_voltage,
+            R.id.edit_voltage_actual,
             if (voltageParm.endsWith("V")) voltageParm.substring(0, voltageParm.length - 1) else voltageParm
         )
     }

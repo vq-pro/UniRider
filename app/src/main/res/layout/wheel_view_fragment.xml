@@ -27,10 +27,34 @@
                 />
             </TableRow>
 
-            <!-- Km & Voltage -->
+            <!-- Starting Voltage -->
             <TableRow android:layout_marginTop="15dp">
+                <TextView
+                        android:labelFor="@+id/edit_voltage_start"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_start"
+                />
+
                 <EditText
-                        android:id="@+id/edit_voltage"
+                        android:id="@+id/edit_voltage_start"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                        android:autofillHints=""
+                        android:inputType="text"
+                />
+            </TableRow>
+
+            <!-- Km & Current Voltage -->
+            <TableRow android:layout_marginTop="10dp">
+                <EditText
+                        android:id="@+id/edit_voltage_actual"
                         android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -42,7 +66,7 @@
                 />
 
                 <TextView
-                        android:labelFor="@+id/edit_voltage"
+                        android:labelFor="@+id/edit_voltage_actual"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
