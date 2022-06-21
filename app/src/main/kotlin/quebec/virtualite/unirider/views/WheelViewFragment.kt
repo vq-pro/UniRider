@@ -71,7 +71,7 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonEdit, onEdit())
 
                 textName.text = wheel!!.name
-                editVoltageStart.setText("${wheel!!.voltageStart}")
+                editVoltageStart.setText("${wheel!!.voltageStart ?: wheel!!.voltageMax}")
                 textBtName.text = wheel!!.btName
                 textMileage.text = "${wheel!!.totalMileage()}"
 
@@ -119,13 +119,14 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onUpdateVoltageStart() = { voltageParm: String ->
         val voltage = voltageParm.trim()
-        wheel = WheelEntity(
-            wheel!!.id, wheel!!.name, wheel!!.btName, wheel!!.btAddr,
-            wheel!!.premileage, wheel!!.mileage, wheel!!.wh,
-            wheel!!.voltageMax, wheel!!.voltageMin, wheel!!.voltageReserve, parseFloat(voltage)
-        )
+
         updateEstimatedValues(widgets.text(editKm), voltage)
         updatePercentage(voltage)
+
+        if (isVoltageWithinRange(voltage)) {
+            wheel = wheel!!.copy(voltageStart = parseFloat(voltage))
+            external.runDB { it.saveWheel(wheel) }
+        }
     }
 
     private fun formatPercentage(voltage: Float): String {
@@ -186,15 +187,9 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
-        wheel = WheelEntity(
-            wheel!!.id, wheel!!.name,
-            wheel!!.btName, wheel!!.btAddr,
-            wheel!!.premileage, newMileage,
-            wheel!!.wh,
-            wheel!!.voltageMax, wheel!!.voltageMin, wheel!!.voltageReserve, wheel!!.voltageStart
-        )
-
+        wheel = wheel!!.copy(mileage = newMileage)
         external.runDB { it.saveWheel(wheel) }
+
         fragments.runUI {
             textMileage.text = "${wheel!!.totalMileage()}"
             editKm.setText("$newKm")

@@ -199,6 +199,37 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun onViewCreated_whenVoltageStartWasNeverSaved_useVoltageMax() {
+        // Given
+        fragment.wheel = null
+
+        mockKm(KM_S)
+        mockVoltageActual(VOLTAGE_S)
+
+        given(mockedDb.getWheel(anyLong()))
+            .willReturn(S18_1.copy(voltageStart = null))
+
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
+            .willReturn(PERCENTAGE)
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        // When
+        fragment.onViewCreated(mockedView, mockedBundle)
+
+        // Then
+        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM)
+        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
+
+        verify(mockedEditVoltageStart).setText("$VOLTAGE_MAX")
+        verify(mockedTextBattery).text = PERCENTAGE_S
+        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
+        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+    }
+
+    @Test
     fun onViewCreated_whenWheelIsntFound() {
         // Given
         given(mockedDb.getWheel(anyLong()))
@@ -394,7 +425,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateVoltageActual().invoke(" ")
 
         // Then
-        verify(mockedCalculatorService, never()).percentage(any(), anyFloat())
+        verifyNoInteractions(mockedCalculatorService)
         verify(mockedTextBattery).text = ""
         verifyClearEstimatedValues()
     }
@@ -448,7 +479,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     fun onUpdateVoltageActual_withKm_updateEstimatedValues() {
         // Given
         injectMocks()
-        mockKm(KM_S)
+        mockKm("$KM ")
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
@@ -467,6 +498,48 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
         verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+    }
+
+    @Test
+    fun onUpdateVoltageStart() {
+        // Given
+        injectMocks()
+        mockKm("$KM ")
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
+            .willReturn(PERCENTAGE)
+
+        // When
+        fragment.onUpdateVoltageStart().invoke("$VOLTAGE_START ")
+
+        // Then
+        // FIXME-1 Convert all these to 'should' statements
+        verify(mockedDb).saveWheel(S18_1.copy(voltageStart = VOLTAGE_START))
+        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE_START, KM)
+        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE_START)
+        verify(mockedTextBattery).text = PERCENTAGE_S
+        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
+        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+    }
+
+    @Test
+    fun onUpdateVoltageStart_whenBlank_noDisplay() {
+        // Given
+        injectMocks()
+        mockKm(" ")
+
+        // When
+        fragment.onUpdateVoltageStart().invoke(" ")
+
+        // Then
+        verify(mockedDb, never()).saveWheel(any())
+        verifyNoInteractions(mockedCalculatorService)
+        verify(mockedTextBattery).text = ""
+        verifyClearEstimatedValues()
     }
 
     private fun injectMocks() {

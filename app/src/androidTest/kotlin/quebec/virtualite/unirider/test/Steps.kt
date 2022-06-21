@@ -466,7 +466,7 @@ class Steps {
     @Then("the wheel was updated")
     fun wheelWasUpdated() {
         val wheel = db.getWheel(selectedWheel.id)
-        assertThat(wheel, equalTo(updatedWheel))
+        assertThat(wheel, equalTo(updatedWheel.copy(voltageStart = selectedWheel.voltageMax)))
     }
 
     @When("^I connect to the (.*?)$")

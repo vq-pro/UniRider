@@ -12,13 +12,13 @@ Feature: Wheel Viewing
 
   @WIP
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
-    Given the <wheel> has a previous mileage of <previous mileage>
-    When I select the <wheel>
-    Then the details view shows the <wheel> with a mileage of <expected mileage> and a starting voltage of <starting voltage>
+    Given the Sherman has a previous mileage of <previous mileage>
+    When I select the Sherman
+    Then the details view shows the Sherman with a mileage of <expected mileage> and a starting voltage of 100.8V
     Examples:
-      | wheel   | previous mileage | expected mileage | starting voltage |
-      | Sherman | 0                | 17622            | 100.8V           |
-      | Sherman | 10000            | 27622            | 100.8V           |
+      | previous mileage | expected mileage |
+      | 0                | 17622            |
+      | 10000            | 27622            |
 
   Scenario Outline: Calculating percentage [<wheel> / <voltage>]
     Given I select the <wheel>
