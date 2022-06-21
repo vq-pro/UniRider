@@ -3,7 +3,6 @@ package quebec.virtualite.unirider
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelRow
-import java.lang.Float.parseFloat
 
 object TestDomain {
     const val DEVICE_ADDR = "AA:BB:CC:DD:EE:FF"
@@ -18,7 +17,6 @@ object TestDomain {
     const val LABEL_KM = "kilometers"
     const val LABEL_WH_PER_KM = "watt-hours per kilometer"
     const val KM = 4444f
-    const val KM_S = KM.toString()
     const val KM_NEW = 4445f
     const val KM_NEW_RAW = 4445.012f
     const val MILEAGE = 2222
@@ -31,18 +29,15 @@ object TestDomain {
     const val NAME3 = "Sherman"
     const val NAME_NEW = "<New>"
     const val PERCENTAGE = 100.0f
-    const val PERCENTAGE_S = "100.0%"
     const val PREMILEAGE = 1
     const val PREMILEAGE2 = 10000
     const val PREMILEAGE3 = 10000
     const val PREMILEAGE_NEW = 20000
     const val REMAINING_RANGE = 5555f
-    const val REMAINING_RANGE_S = REMAINING_RANGE.toString()
+    const val REMAINING_RANGE_ZERO = 0
     const val TEMPERATURE_NEW_RAW = 3333f
     const val TOTAL_RANGE = 6666f
-    const val TOTAL_RANGE_S = TOTAL_RANGE.toString()
-    const val VOLTAGE_S = "84"
-    val VOLTAGE = parseFloat(VOLTAGE_S)
+    const val VOLTAGE = 84f
     const val VOLTAGE_MAX = 84.0f
     const val VOLTAGE_MAX2 = 126.0f
     const val VOLTAGE_MAX3 = 100.8f
@@ -65,7 +60,6 @@ object TestDomain {
     const val WH3 = 3600
     const val WH_NEW = 9999
     const val WH_PER_KM = 7777f
-    const val WH_PER_KM_S = WH_PER_KM.toString()
     val WHEEL_ROW_1_123 = WheelRow(ID, NAME, PREMILEAGE + MILEAGE)
     val WHEEL_ROW_2_456 = WheelRow(ID2, NAME2, PREMILEAGE2 + MILEAGE2)
     val WHEEL_ROW_3_123 = WheelRow(ID3, NAME3, PREMILEAGE3 + MILEAGE3)

@@ -12,7 +12,6 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
@@ -27,7 +26,6 @@ import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.KM_NEW
 import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.KM_S
 import quebec.virtualite.unirider.TestDomain.LABEL_KM
 import quebec.virtualite.unirider.TestDomain.LABEL_WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.MILEAGE
@@ -35,26 +33,22 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE
-import quebec.virtualite.unirider.TestDomain.PERCENTAGE_S
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE
-import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE_S
+import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE_ZERO
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.S18_DISCONNECTED
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.TOTAL_RANGE
-import quebec.virtualite.unirider.TestDomain.TOTAL_RANGE_S
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_S
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_START
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
-import quebec.virtualite.unirider.TestDomain.WH_PER_KM_S
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
@@ -173,8 +167,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Given
         fragment.wheel = null
 
-        mockKm(KM_S)
-        mockVoltageActual(VOLTAGE_S)
+        mockKm("$KM ")
+        mockVoltageActual("$VOLTAGE ")
 
         given(mockedDb.getWheel(anyLong()))
             .willReturn(S18_1)
@@ -189,13 +183,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM)
-        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
-
-        verify(mockedTextBattery).text = PERCENTAGE_S
-        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
-        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+        verifyUpdatePercentage()
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
     }
 
     @Test
@@ -203,8 +192,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Given
         fragment.wheel = null
 
-        mockKm(KM_S)
-        mockVoltageActual(VOLTAGE_S)
+        mockKm("$KM ")
+        mockVoltageActual("$VOLTAGE ")
 
         given(mockedDb.getWheel(anyLong()))
             .willReturn(S18_1.copy(voltageStart = null))
@@ -219,14 +208,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM)
-        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
-
-        verify(mockedEditVoltageStart).setText("$VOLTAGE_MAX")
-        verify(mockedTextBattery).text = PERCENTAGE_S
-        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
-        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+        verifyUpdatePercentage()
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
     }
 
     @Test
@@ -308,10 +291,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockVoltageActual(" ")
 
         // When
-        fragment.onUpdateKm().invoke("$KM_S ")
+        fragment.onUpdateKm().invoke("$KM ")
 
         // Then
-        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
         verifyClearEstimatedValues()
     }
 
@@ -319,13 +301,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     fun onUpdateKm_whenBlank_noDisplay() {
         // Given
         injectMocks()
-        mockVoltageActual(VOLTAGE_S)
+        mockVoltageActual("$VOLTAGE")
 
         // When
         fragment.onUpdateKm().invoke(" ")
 
         // Then
-        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
         verifyClearEstimatedValues()
     }
 
@@ -333,13 +314,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     fun onUpdateKm_whenNonNumeric_noDisplay() {
         // Given
         injectMocks()
-        mockVoltageActual(VOLTAGE_S)
+        mockVoltageActual("$VOLTAGE")
 
         // When
         fragment.onUpdateKm().invoke("a ")
 
         // Then
-        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
         verifyClearEstimatedValues()
     }
 
@@ -347,13 +327,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     fun onUpdateKm_whenZero_noDisplay() {
         // Given
         injectMocks()
-        mockVoltageActual(VOLTAGE_S)
+        mockVoltageActual("$VOLTAGE")
 
         // When
         fragment.onUpdateKm().invoke("0.0 ")
 
         // Then
-        verify(mockedCalculatorService, never()).estimatedValues(eq(fragment.wheel), anyFloat(), anyFloat())
         verifyClearEstimatedValues()
     }
 
@@ -361,19 +340,16 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     fun onUpdateKm_withVoltage_updateEstimatedValues() {
         // Given
         injectMocks()
-        mockVoltageActual(VOLTAGE_S)
+        mockVoltageActual("$VOLTAGE")
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
         // When
-        fragment.onUpdateKm().invoke("$KM_S ")
+        fragment.onUpdateKm().invoke("$KM ")
 
         // Then
-        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM)
-        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
-        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
     }
 
     @Test
@@ -388,13 +364,10 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             .willReturn(EstimatedValues(0f, TOTAL_RANGE, WH_PER_KM))
 
         // When
-        fragment.onUpdateKm().invoke("$KM_S ")
+        fragment.onUpdateKm().invoke("$KM ")
 
         // Then
-        verify(mockedCalculatorService).estimatedValues(fragment.wheel, voltage, KM)
-        verify(mockedTextRemainingRange).text = "0 $LABEL_KM"
-        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+        verifyUpdateEstimatedValues(voltage, "$REMAINING_RANGE_ZERO")
     }
 
     @Test
@@ -407,11 +380,10 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             .willReturn(PERCENTAGE)
 
         // When
-        fragment.onUpdateVoltageActual().invoke("$VOLTAGE_S ")
+        fragment.onUpdateVoltageActual().invoke("$VOLTAGE ")
 
         // Then
-        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
-        verify(mockedTextBattery).text = PERCENTAGE_S
+        verifyUpdatePercentage()
         verifyClearEstimatedValues()
     }
 
@@ -425,8 +397,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateVoltageActual().invoke(" ")
 
         // Then
-        verifyNoInteractions(mockedCalculatorService)
-        verify(mockedTextBattery).text = ""
+        verifyClearPercentage()
         verifyClearEstimatedValues()
     }
 
@@ -434,14 +405,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     fun onUpdateVoltageActual_whenLowVoltage_noDisplay() {
         // Given
         injectMocks()
-        mockKm(KM_S)
+        mockKm("$KM")
 
         // When
         fragment.onUpdateVoltageActual().invoke("${fragment.wheel!!.voltageMin - 0.1f} ")
 
         // Then
-        verifyNoInteractions(mockedCalculatorService)
-        verify(mockedTextBattery).text = ""
+        verifyClearPercentage()
         verifyClearEstimatedValues()
     }
 
@@ -449,14 +419,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     fun onUpdateVoltageActual_whenHighVoltage_noDisplay() {
         // Given
         injectMocks()
-        mockKm(KM_S)
+        mockKm("$KM")
 
         // When
         fragment.onUpdateVoltageActual().invoke("${fragment.wheel!!.voltageMax + 0.1f} ")
 
         // Then
-        verifyNoInteractions(mockedCalculatorService)
-        verify(mockedTextBattery).text = ""
+        verifyClearPercentage()
         verifyClearEstimatedValues()
     }
 
@@ -470,8 +439,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateVoltageActual().invoke("ab ")
 
         // Then
-        verify(mockedCalculatorService, never()).percentage(any(), anyFloat())
-        verify(mockedTextBattery).text = ""
+        verifyClearPercentage()
         verifyClearEstimatedValues()
     }
 
@@ -488,16 +456,11 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             .willReturn(PERCENTAGE)
 
         // When
-        fragment.onUpdateVoltageActual().invoke("$VOLTAGE_S ")
+        fragment.onUpdateVoltageActual().invoke("$VOLTAGE ")
 
         // Then
-        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM)
-        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
-
-        verify(mockedTextBattery).text = PERCENTAGE_S
-        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
-        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
+        verifyUpdatePercentage()
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
     }
 
     @Test
@@ -516,14 +479,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateVoltageStart().invoke("$VOLTAGE_START ")
 
         // Then
-        // FIXME-1 Convert all these to 'should' statements
+        verifyUpdateEstimatedValues(VOLTAGE_START, "$REMAINING_RANGE")
+
         verify(mockedDb).saveWheel(S18_1.copy(voltageStart = VOLTAGE_START))
-        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE_START, KM)
-        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE_START)
-        verify(mockedTextBattery).text = PERCENTAGE_S
-        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE_S $LABEL_KM"
-        verify(mockedTextTotalRange).text = "$TOTAL_RANGE_S $LABEL_KM"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM_S $LABEL_WH_PER_KM"
     }
 
     @Test
@@ -536,10 +494,10 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateVoltageStart().invoke(" ")
 
         // Then
-        verify(mockedDb, never()).saveWheel(any())
-        verifyNoInteractions(mockedCalculatorService)
-        verify(mockedTextBattery).text = ""
+        verifyClearPercentage()
         verifyClearEstimatedValues()
+
+        verify(mockedDb, never()).saveWheel(any())
     }
 
     private fun injectMocks() {
@@ -585,8 +543,28 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun verifyClearEstimatedValues() {
+        verify(mockedCalculatorService, never()).estimatedValues(any(), anyFloat(), anyFloat())
+
         verify(mockedTextRemainingRange).text = ""
         verify(mockedTextTotalRange).text = ""
         verify(mockedTextWhPerKm).text = ""
+    }
+
+    private fun verifyClearPercentage() {
+        verify(mockedCalculatorService, never()).percentage(any(), anyFloat())
+        verify(mockedTextBattery).text = ""
+    }
+
+    private fun verifyUpdateEstimatedValues(voltage: Float, remainingRange: String) {
+        verify(mockedCalculatorService).estimatedValues(fragment.wheel, voltage, KM)
+
+        verify(mockedTextRemainingRange).text = "$remainingRange $LABEL_KM"
+        verify(mockedTextTotalRange).text = "$TOTAL_RANGE $LABEL_KM"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM $LABEL_WH_PER_KM"
+    }
+
+    private fun verifyUpdatePercentage() {
+        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
+        verify(mockedTextBattery).text = "$PERCENTAGE%"
     }
 }
