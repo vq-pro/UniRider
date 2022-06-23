@@ -384,10 +384,10 @@ class Steps {
 
                 db.findWheel(name)?.let {
                     db.saveWheel(
-                        WheelEntity(
-                            it.id, name, btName, btAddress,
-                            it.premileage, it.mileage, it.wh,
-                            it.voltageMax, it.voltageMin, it.voltageReserve, it.voltageMax
+                        it.copy(
+                            name = name,
+                            btName = btName,
+                            btAddr = btAddress
                         )
                     )
                 }
@@ -446,13 +446,7 @@ class Steps {
     @Given("^the (.*?) has a previous mileage of (.*?) km$")
     fun wheelHasPreviousMileage(name: String, premileage: Int) {
         db.findWheel(name)?.let {
-            db.saveWheel(
-                WheelEntity(
-                    it.id, it.name, it.btName, it.btAddr,
-                    premileage, it.mileage, it.wh,
-                    it.voltageMax, it.voltageMin, it.voltageReserve, it.voltageStart
-                )
-            )
+            db.saveWheel(it.copy(premileage = premileage))
             updateMapWheels()
         }
     }

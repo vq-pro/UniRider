@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "wheel")
 data class WheelEntity(
-
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val name: String,
