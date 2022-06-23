@@ -130,7 +130,7 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun formatPercentage(voltage: Float): String {
-        return when (val percentage = calculatorService.percentage(wheel, voltage)) {
+        return when (val percentage = calculatorService.roundedPercentage(wheel, voltage)) {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }

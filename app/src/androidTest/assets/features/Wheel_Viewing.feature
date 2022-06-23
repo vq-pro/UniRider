@@ -10,7 +10,6 @@ Feature: Wheel Viewing
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      |
     And I start the app
 
-  @WIP
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
     Given the Sherman has a previous mileage of <previous mileage>
     When I select the Sherman
@@ -34,7 +33,7 @@ Feature: Wheel Viewing
       | Sherman Max | 91.9V   | 64.7%   |
 
 #    FIXME-1 Combine the setting of initial values: start voltage, km and current voltage
-  Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
+  Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
     Given I select the <wheel>
     And the starting voltage is set to <starting voltage>
     And the distance so far is set to <km>
@@ -43,12 +42,12 @@ Feature: Wheel Viewing
     And it displays an estimated total range of "<total>"
     And it displays an estimated wh/km of "<wh/km>"
     Examples:
-      | wheel       | starting voltage | km   | voltage | remaining | total   | wh/km      |
-      | Sherman Max | 100.4V           | 42.0 | 91.9V   | 56.2 km   | 98.2 km | 30.3 wh/km |
-      | Sherman Max | 100.4V           | 81.0 | 83.5V   | 16.4 km   | 97.4 km | 30.5 wh/km |
-      | Sherman Max | 100.4V           | 42.0 | 91.     | 47.1 km   | 89.1 km | 33.3 wh/km |
-      | Sherman Max | 98.2V            | 42.0 | 91.     | 47.1 km   | 89.1 km | 33.3 wh/km |
-      | S18         | 84V              | 42.0 | 67      | 0 km      | 42.0 km | 18.7 wh/km |
+      | wheel       | starting voltage | km   | voltage | remaining | total    | wh/km      |
+      | Sherman Max | 100.4V           | 42.0 | 91.9V   | 58.8 km   | 100.8 km | 28.9 wh/km |
+      | Sherman Max | 100.4V           | 81.0 | 83.5V   | 16.8 km   | 97.8 km  | 29.8 wh/km |
+      | Sherman Max | 100.4V           | 42.0 | 91.     | 49.1 km   | 91.1 km  | 32.0 wh/km |
+      | Sherman Max | 98.2V            | 42.0 | 91.     | 64.2 km   | 106.2 km | 24.5 wh/km |
+      | S18         | 84V              | 42.0 | 67      | 0 km      | 42.0 km  | 18.7 wh/km |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>

@@ -173,7 +173,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedDb.getWheel(anyLong()))
             .willReturn(S18_1)
 
-        given(mockedCalculatorService.percentage(any(), anyFloat()))
+        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
@@ -198,7 +198,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedDb.getWheel(anyLong()))
             .willReturn(S18_1.copy(voltageStart = null))
 
-        given(mockedCalculatorService.percentage(any(), anyFloat()))
+        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
@@ -374,9 +374,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     fun onUpdateVoltageActual() {
         // Given
         injectMocks()
-        mockKm(" ")
+        mockKm("$KM ")
+//        mockVoltageStart("$VOLTAGE_MAX ")
 
-        given(mockedCalculatorService.percentage(any(), anyFloat()))
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         // When
@@ -384,7 +388,28 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyUpdatePercentage()
-        verifyClearEstimatedValues()
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
+    }
+
+    @Test
+    fun onUpdateVoltageActual_withDifferentVoltageStart() {
+        // Given
+        injectMocks()
+        mockKm("$KM ")
+//        mockVoltageStart("$VOLTAGE_START ")
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
+            .willReturn(PERCENTAGE)
+
+        // When
+        fragment.onUpdateVoltageActual().invoke("$VOLTAGE ")
+
+        // Then
+        verifyUpdatePercentage()
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
     }
 
     @Test
@@ -452,7 +477,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
-        given(mockedCalculatorService.percentage(any(), anyFloat()))
+        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         // When
@@ -472,7 +497,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
-        given(mockedCalculatorService.percentage(any(), anyFloat()))
+        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         // When
@@ -542,6 +567,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             .willReturn(voltage.trim())
     }
 
+    private fun mockVoltageStart(voltage: String) {
+        fragment.editVoltageStart = mockedEditVoltageStart
+
+        given(mockedWidgets.text(mockedEditVoltageStart))
+            .willReturn(voltage.trim())
+    }
+
     private fun verifyClearEstimatedValues() {
         verify(mockedCalculatorService, never()).estimatedValues(any(), anyFloat(), anyFloat())
 
@@ -551,7 +583,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun verifyClearPercentage() {
-        verify(mockedCalculatorService, never()).percentage(any(), anyFloat())
+        verify(mockedCalculatorService, never()).roundedPercentage(any(), anyFloat())
         verify(mockedTextBattery).text = ""
     }
 
@@ -564,7 +596,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun verifyUpdatePercentage() {
-        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
+        verify(mockedCalculatorService).roundedPercentage(fragment.wheel, VOLTAGE)
         verify(mockedTextBattery).text = "$PERCENTAGE%"
     }
 }

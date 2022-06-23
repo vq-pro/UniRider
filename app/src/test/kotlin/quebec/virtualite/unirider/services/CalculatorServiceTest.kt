@@ -23,11 +23,14 @@ class CalculatorServiceTest {
 
     @Test
     fun estimatedValues() {
-        estimatedValues(91.9f, 42f, 56.2f, 98.2f, 30.3f)
-        estimatedValues(83.5f, 81f, 16.4f, 97.4f, 30.5f)
+        estimatedValues(100.8f, 91.9f, 42f, 56.2f, 98.2f, 30.3f)
+        estimatedValues(98.2f, 91.9f, 42f, 79.3f, 121.3f, 21.4f)
+
+        estimatedValues(100.8f, 83.5f, 81f, 16.4f, 97.4f, 30.5f)
+        estimatedValues(100.4f, 83.5f, 81f, 16.8f, 97.8f, 29.8f)
 
         // Voltage lower than reserve
-        estimatedValues(79.5f, 81.2f, 0f, 81.2f, 37.5f)
+        estimatedValues(100.8f, 79.5f, 81.2f, 0f, 81.2f, 37.5f)
     }
 
     @Test
@@ -49,14 +52,17 @@ class CalculatorServiceTest {
     }
 
     private fun estimatedValues(
-        voltage: Float,
+        voltageStart: Float,
+        voltageActual: Float,
         km: Float,
         expectedRemainingRange: Float,
         expectedTotalRange: Float,
         expectedWhPerKm: Float
     ) {
         // When
-        val values = service.estimatedValues(SHERMAN_MAX_3, voltage, km)
+        val values = service.estimatedValues(
+            SHERMAN_MAX_3.copy(voltageStart = voltageStart), voltageActual, km
+        )
 
         // Then
         assertThat(values.remainingRange, equalTo(expectedRemainingRange))
@@ -66,7 +72,7 @@ class CalculatorServiceTest {
 
     private fun percentage(voltage: Float, expectedPercentage: Float) {
         // When
-        val percentage = service.percentage(SHERMAN_MAX_3, voltage)
+        val percentage = service.roundedPercentage(SHERMAN_MAX_3, voltage)
 
         // Then
         assertThat(percentage, equalTo(expectedPercentage))
@@ -77,7 +83,7 @@ class CalculatorServiceTest {
         val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, voltageMax, voltageMin, 1f, null)
 
         // When
-        val percentage = service.percentage(wheel, 108.0f)
+        val percentage = service.roundedPercentage(wheel, 108.0f)
 
         // Then
         assertThat(percentage, equalTo(0.0f))
