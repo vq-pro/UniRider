@@ -32,11 +32,10 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 82.9%   |
       | Sherman Max | 91.9V   | 64.7%   |
 
-#    FIXME-1 Combine the setting of initial values: start voltage, km and current voltage
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
     Given I select the <wheel>
-    And the starting voltage is set to <starting voltage>
-    And the distance so far is set to <km>
+    And set the starting voltage to <starting voltage>
+    And set the distance to <km>
     When I enter an actual voltage of <voltage>
     Then it displays an estimated remaining range of "<remaining>"
     And it displays an estimated total range of "<total>"
@@ -45,13 +44,13 @@ Feature: Wheel Viewing
       | wheel       | starting voltage | km   | voltage | remaining | total    | wh/km      |
       | Sherman Max | 100.4V           | 42.0 | 91.9V   | 58.8 km   | 100.8 km | 28.9 wh/km |
       | Sherman Max | 100.4V           | 81.0 | 83.5V   | 16.8 km   | 97.8 km  | 29.8 wh/km |
-      | Sherman Max | 100.4V           | 42.0 | 91.     | 49.1 km   | 91.1 km  | 32.0 wh/km |
-      | Sherman Max | 98.2V            | 42.0 | 91.     | 64.2 km   | 106.2 km | 24.5 wh/km |
-      | S18         | 84V              | 42.0 | 67      | 0 km      | 42.0 km  | 18.7 wh/km |
+      | Sherman Max | 100.4V           | 42.0 | 91V     | 49.1 km   | 91.1 km  | 32.0 wh/km |
+      | Sherman Max | 98.2V            | 42.0 | 91V     | 64.2 km   | 106.2 km | 24.5 wh/km |
+      | S18         | 84V              | 42.0 | 67V     | 0 km      | 42.0 km  | 18.7 wh/km |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
-    And the distance so far is set to <km>
+    And set the distance to <km>
     When I enter an actual voltage of <voltage>
     Then it displays blank estimated values
     Examples:
@@ -70,8 +69,8 @@ Feature: Wheel Viewing
 
   Scenario: => Editing the wheel with estimated values
     Given I select the Sherman Max
-    And the distance so far is set to 42
-    And the current voltage is set to 91.9
+    And set the distance to 42
+    And set the current voltage to 91.9
     And it displays an estimated remaining range of "56.2 km"
     When I edit the wheel
     And I go back to view the wheel

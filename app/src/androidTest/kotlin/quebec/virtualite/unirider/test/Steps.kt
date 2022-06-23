@@ -413,19 +413,19 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
-    @Given("^the distance so far is set to (.*?)$")
-    fun distanceIsSetTo(km: String) {
+    @Given("^set the distance to (.*?)$")
+    fun setDistanceTo(km: String) {
         setText(R.id.edit_km, km)
     }
 
-    @Given("^the starting voltage is set to (.*)V$")
-    fun startingVoltageIsSetTo(startingVoltage: String) {
-        setText(R.id.edit_voltage_start, startingVoltage)
+    @Given("^set the current voltage to (.*?)$")
+    fun setCurrentVoltageTo(voltage: String) {
+        setText(R.id.edit_voltage_actual, voltage)
     }
 
-    @Given("^the current voltage is set to (.*?)$")
-    fun currentVoltageIsSetTo(voltage: String) {
-        setText(R.id.edit_voltage_actual, voltage)
+    @Given("^set the starting voltage to (.*)V$")
+    fun setStartingVoltageTo(startingVoltage: String) {
+        setText(R.id.edit_voltage_start, startingVoltage)
     }
 
     @Then("the wheel can be saved")
