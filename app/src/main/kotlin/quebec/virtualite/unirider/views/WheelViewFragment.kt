@@ -19,6 +19,9 @@ import kotlin.math.roundToInt
 open class WheelViewFragment : BaseFragment() {
 
     private val NB_DECIMALS = 1
+    private val READ_KM = null
+    private val READ_VOLTAGE_ACTUAL = null
+    private val READ_VOLTAGE_START = null
 
     internal lateinit var buttonConnect: Button
     internal lateinit var buttonEdit: Button
@@ -69,16 +72,18 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
 
+                if (wheel!!.voltageStart == null) {
+                    wheel = wheel!!.copy(voltageStart = wheel!!.voltageMax)
+                    it.saveWheel(wheel)
+                }
+
                 textName.text = wheel!!.name
-                editVoltageStart.setText("${wheel!!.voltageStart ?: wheel!!.voltageMax}")
+                editVoltageStart.setText("${wheel!!.voltageStart}")
                 textBtName.text = wheel!!.btName
                 textMileage.text = textKm(wheel!!.totalMileage())
 
-                val km = widgets.text(editKm)
-                val voltageCurrent = widgets.text(editVoltageActual)
-
-                updateEstimatedValues(km, voltageCurrent)
-                updatePercentage(voltageCurrent)
+                // FIXME-1 Generalize the use of this update method for calculated fields
+                updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
             }
         }
     }
@@ -106,25 +111,50 @@ open class WheelViewFragment : BaseFragment() {
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment, wheel!!)
     }
 
-    fun onUpdateKm() = { km: String ->
-        updateEstimatedValues(km.trim(), widgets.text(editVoltageActual))
+    fun onUpdateKm() = { kmParm: String ->
+        val km = kmParm.trim()
+        val voltageActual = widgets.text(editVoltageActual)
+        val voltageStart = widgets.text(editVoltageStart)
+
+        if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
+            updateEstimatedValues(km, voltageActual)
+        } else {
+            clearEstimatedValues()
+        }
     }
 
-    fun onUpdateVoltageActual() = { voltageParm: String ->
-        val voltage = voltageParm.trim()
-        updateEstimatedValues(widgets.text(editKm), voltage)
-        updatePercentage(voltage)
+    fun onUpdateVoltageActual() = { voltageActualParm: String ->
+        val voltageActual = voltageActualParm.trim()
+        val km = widgets.text(editKm)
+        val voltageStart = widgets.text(editVoltageStart)
+
+        if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
+            updateEstimatedValues(km, voltageActual)
+        } else {
+            clearEstimatedValues()
+        }
+
+        if (isVoltageWithinRange(voltageActual)) {
+            updatePercentage(voltageActual)
+        } else {
+            clearPercentage()
+        }
     }
 
-    fun onUpdateVoltageStart() = { voltageParm: String ->
-        val voltage = voltageParm.trim()
+    fun onUpdateVoltageStart() = { voltageStartParm: String ->
+        val voltageStart = voltageStartParm.trim()
+        val km = widgets.text(editKm)
+        val voltageActual = widgets.text(editVoltageActual)
 
-        updateEstimatedValues(widgets.text(editKm), voltage)
-        updatePercentage(voltage)
-
-        if (isVoltageWithinRange(voltage)) {
-            wheel = wheel!!.copy(voltageStart = parseFloat(voltage))
+        if (isVoltageWithinRange(voltageStart)) {
+            wheel = wheel!!.copy(voltageStart = parseFloat(voltageStart))
             external.runDB { it.saveWheel(wheel) }
+        }
+
+        if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
+            updateEstimatedValues(km, voltageActual)
+        } else {
+            clearEstimatedValues()
         }
     }
 
@@ -133,6 +163,23 @@ open class WheelViewFragment : BaseFragment() {
             in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
             else -> ""
         }
+    }
+
+    private fun isAllRequiredValuesFilled(km: String, voltageActual: String, voltageStart: String): Boolean {
+        return !isEmpty(km)
+                && isPositive(km)
+                && isVoltageWithinRange(voltageActual)
+                && isVoltageWithinRange(voltageStart)
+    }
+
+    private fun clearEstimatedValues() {
+        textRemainingRange.text = ""
+        textTotalRange.text = ""
+        textWhPerKm.text = ""
+    }
+
+    private fun clearPercentage() {
+        textBattery.text = ""
     }
 
     private fun isVoltageWithinRange(voltageParm: String): Boolean {
@@ -147,22 +194,6 @@ open class WheelViewFragment : BaseFragment() {
             return false
 
         return true
-    }
-
-    private fun updateEstimatedValues(km: String, voltage: String) {
-        if (isEmpty(km) || !isPositive(km) || !isVoltageWithinRange(voltage)) {
-            textRemainingRange.text = ""
-            textTotalRange.text = ""
-            textWhPerKm.text = ""
-            return
-        }
-
-        val values = calculatorService
-            .estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
-
-        textRemainingRange.text = textKmWithDecimal(if (values.remainingRange > 0) values.remainingRange else 0f)
-        textTotalRange.text = textKmWithDecimal(values.totalRange)
-        textWhPerKm.text = textWhPerKm(values.whPerKm)
     }
 
     private fun isNumeric(value: String): Boolean {
@@ -189,9 +220,34 @@ open class WheelViewFragment : BaseFragment() {
         return "$value $labelWhPerKm"
     }
 
+    private fun updateCalculatedValues(kmParm: String?, voltageActualParm: String?, voltageStartParm: String?) {
+        val km = kmParm ?: widgets.text(editKm)
+        val voltageActual = voltageActualParm ?: widgets.text(editVoltageActual)
+        val voltageStart = voltageStartParm ?: widgets.text(editVoltageStart)
+
+        if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
+            updateEstimatedValues(km, voltageActual)
+        } else {
+            clearEstimatedValues()
+        }
+
+        if (isVoltageWithinRange(voltageActual)) {
+            updatePercentage(voltageActual)
+        } else {
+            clearPercentage()
+        }
+    }
+
+    private fun updateEstimatedValues(km: String, voltage: String) {
+        val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
+
+        textRemainingRange.text = textKmWithDecimal(if (values.remainingRange > 0) values.remainingRange else 0f)
+        textTotalRange.text = textKmWithDecimal(values.totalRange)
+        textWhPerKm.text = textWhPerKm(values.whPerKm)
+    }
+
     private fun updatePercentage(voltage: String) {
-        textBattery.text = if (isVoltageWithinRange(voltage))
-            formatPercentage(parseFloat(voltage)) else ""
+        textBattery.text = formatPercentage(parseFloat(voltage))
     }
 
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {

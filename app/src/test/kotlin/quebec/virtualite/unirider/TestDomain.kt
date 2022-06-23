@@ -37,7 +37,7 @@ object TestDomain {
     const val REMAINING_RANGE_ZERO = 0
     const val TEMPERATURE_NEW_RAW = 3333f
     const val TOTAL_RANGE = 6666f
-    const val VOLTAGE = 84f
+    const val VOLTAGE = 76f
     const val VOLTAGE_MAX = 84.0f
     const val VOLTAGE_MAX2 = 126.0f
     const val VOLTAGE_MAX3 = 100.8f
@@ -55,6 +55,7 @@ object TestDomain {
     const val VOLTAGE_START = 83.8f
     const val VOLTAGE_START2 = 124.5f
     const val VOLTAGE_START3 = 100.4f
+    const val VOLTAGE_START_NEW = 83.1f
     const val WH = 1110
     const val WH2 = 2220
     const val WH3 = 3600

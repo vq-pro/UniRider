@@ -19,7 +19,7 @@ Feature: Wheel Connecting - End-2-End
   Scenario Outline: Connecting to a wheel for the first time - <wheel>
     Given I select the <wheel>
     When I connect to the <bt name>
-    Then the mileage is updated to <mileage>
+    Then the mileage is updated to <mileage> km
     And the wheel's Bluetooth name is updated
     Examples:
       | wheel       | bt name      | mileage |
@@ -43,7 +43,7 @@ Feature: Wheel Connecting - End-2-End
       | Sherman Max | LK4142       | 88:25:83:F3:61:20 |
     And I select the <wheel>
     When I reconnect to the wheel
-    Then the mileage is updated to <mileage>
+    Then the mileage is updated to <mileage> km
     Examples:
       | wheel       | mileage |
       | 14S         | 937     |
@@ -63,4 +63,4 @@ Feature: Wheel Connecting - End-2-End
     And I cancel the scan and go back
     And I select the Sherman
     When I reconnect to the wheel
-    Then the mileage is updated to 19445
+    Then the mileage is updated to 19445 km

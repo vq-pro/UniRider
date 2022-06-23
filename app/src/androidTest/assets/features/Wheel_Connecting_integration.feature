@@ -18,6 +18,7 @@ Feature: Wheel Connecting
     Then the mileage is updated to 706 km
     And the wheel's Bluetooth name is updated
 
+  @WIP
   Scenario: Connecting to a previously connected wheel to update its values
     Given the 14S has a previous mileage of 1000 km
     And this wheel is connected:
