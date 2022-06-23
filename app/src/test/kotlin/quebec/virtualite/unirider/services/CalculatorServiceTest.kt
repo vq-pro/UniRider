@@ -80,7 +80,7 @@ class CalculatorServiceTest {
 
     private fun percentage_whenVoltagesNotSet_zero(voltageMin: Float, voltageMax: Float) {
         // Given
-        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, voltageMax, voltageMin, 1f, null)
+        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, voltageMax, voltageMin, 1f, voltageMax)
 
         // When
         val percentage = service.roundedPercentage(wheel, 108.0f)

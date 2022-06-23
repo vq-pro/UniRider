@@ -180,7 +180,7 @@ class Steps {
             floatOf(mapEntity["Voltage Max"]!!),
             floatOf(mapEntity["Voltage Min"]!!),
             floatOf(mapEntity["Voltage Reserve"]!!),
-            null
+            floatOf(mapEntity["Voltage Max"]!!)
         )
 
         click(R.id.button_save)
@@ -363,7 +363,7 @@ class Steps {
                 val voltageReserve = voltageOf(row[4])
                 val voltageMax = voltageOf(row[5])
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, null)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax)
             }
             .collect(toList())
 
@@ -387,7 +387,7 @@ class Steps {
                         WheelEntity(
                             it.id, name, btName, btAddress,
                             it.premileage, it.mileage, it.wh,
-                            it.voltageMax, it.voltageMin, it.voltageReserve, null
+                            it.voltageMax, it.voltageMin, it.voltageReserve, it.voltageMax
                         )
                     )
                 }
@@ -471,7 +471,7 @@ class Steps {
     @Then("the wheel was updated")
     fun wheelWasUpdated() {
         val wheel = db.getWheel(selectedWheel.id)
-        assertThat(wheel, equalTo(updatedWheel.copy(voltageStart = selectedWheel.voltageMax)))
+        assertThat(wheel, equalTo(updatedWheel))
     }
 
     @When("^I connect to the (.*?)$")

@@ -160,6 +160,7 @@ open class WheelEditFragment : BaseFragment() {
         enableSaveIfChanged()
     }
 
+    // FIXME-1 Use copy instead of building a new object
     fun onUpdateVoltageMax() = { newVoltage: String ->
         updatedWheel = WheelEntity(
             updatedWheel.id,
@@ -172,7 +173,7 @@ open class WheelEditFragment : BaseFragment() {
             floatOf(newVoltage),
             updatedWheel.voltageMin,
             updatedWheel.voltageReserve,
-            updatedWheel.voltageStart
+            floatOf(newVoltage)
         )
 
         enableSaveIfChanged()

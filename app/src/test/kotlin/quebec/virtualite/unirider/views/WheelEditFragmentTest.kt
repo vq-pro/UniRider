@@ -423,7 +423,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
                     VOLTAGE_MAX_NEW,
                     VOLTAGE_MIN,
                     VOLTAGE_RESERVE,
-                    VOLTAGE_START
+                    VOLTAGE_MAX_NEW
                 )
             )
         )
@@ -445,7 +445,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         assertThat(
             fragment.updatedWheel,
-            equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, 0f, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START))
+            equalTo(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, 0f, VOLTAGE_MIN, VOLTAGE_RESERVE, 0f))
         )
     }
 

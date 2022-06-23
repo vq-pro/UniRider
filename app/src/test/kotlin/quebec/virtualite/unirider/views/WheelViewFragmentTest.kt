@@ -165,7 +165,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedDb, never()).saveWheel(any())
     }
 
-    // FIXME-1 Make voltageStart non-nullable, set it to the max initially only
+    // FIXME-0 Make voltageStart non-nullable, set it to the max initially only
     @Test
     fun onViewCreated_whenVoltageStartAndVoltageActualAndKmAreFilled_updateCalculatedValues() {
         // Given
@@ -176,7 +176,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockVoltageStart("$VOLTAGE_START ")
 
         given(mockedDb.getWheel(anyLong()))
-            .willReturn(S18_1.copy(voltageStart = null))
+            .willReturn(S18_1.copy(voltageStart = VOLTAGE_MAX))
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
@@ -190,27 +190,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         verifyUpdatePercentage()
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
-    }
-
-    @Test
-    fun onViewCreated_whenVoltageStartWasNeverSaved_useVoltageMax() {
-        // Given
-        fragment.wheel = null
-
-        mockKm("$KM ")
-        mockVoltageActual("$VOLTAGE ")
-
-        given(mockedDb.getWheel(anyLong()))
-            .willReturn(S18_1.copy(voltageStart = null))
-
-        // When
-        fragment.onViewCreated(mockedView, mockedBundle)
-
-        // Then
-        verify(mockedEditVoltageStart).setText("$VOLTAGE_MAX")
-        assertThat(fragment.wheel!!.voltageStart, equalTo(VOLTAGE_MAX))
-
-        verify(mockedDb).saveWheel(S18_1.copy(voltageStart = VOLTAGE_MAX))
     }
 
     @Test
