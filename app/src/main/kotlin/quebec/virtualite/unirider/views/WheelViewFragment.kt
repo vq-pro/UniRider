@@ -82,7 +82,7 @@ open class WheelViewFragment : BaseFragment() {
                 textBtName.text = wheel!!.btName
                 textMileage.text = textKm(wheel!!.totalMileage())
 
-                // FIXME-1 Generalize the use of this update method for calculated fields
+                // FIXME-0 Generalize the use of this update method for calculated fields
                 updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
             }
         }
@@ -111,38 +111,21 @@ open class WheelViewFragment : BaseFragment() {
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment, wheel!!)
     }
 
-    fun onUpdateKm() = { kmParm: String ->
-        val km = kmParm.trim()
-        val voltageActual = widgets.text(editVoltageActual)
-        val voltageStart = widgets.text(editVoltageStart)
-
-        if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
-            updateEstimatedValues(km, voltageActual)
-        } else {
-            clearEstimatedValues()
-        }
+    fun onUpdateKm() = { km: String ->
+        updateCalculatedValues(km.trim(), READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
     }
 
-    fun onUpdateVoltageActual() = { voltageActualParm: String ->
-        val voltageActual = voltageActualParm.trim()
-        val km = widgets.text(editKm)
-        val voltageStart = widgets.text(editVoltageStart)
-
-        if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
-            updateEstimatedValues(km, voltageActual)
-        } else {
-            clearEstimatedValues()
-        }
-
-        if (isVoltageWithinRange(voltageActual)) {
-            updatePercentage(voltageActual)
-        } else {
-            clearPercentage()
-        }
+    fun onUpdateVoltageActual() = { voltageActual: String ->
+        updateCalculatedValues(READ_KM, voltageActual.trim(), READ_VOLTAGE_START)
     }
 
     fun onUpdateVoltageStart() = { voltageStartParm: String ->
         val voltageStart = voltageStartParm.trim()
+//        updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, voltageStart) {
+//            wheel = wheel!!.copy(voltageStart = parseFloat(voltageStart))
+//            external.runDB { it.saveWheel(wheel) }
+//        }
+
         val km = widgets.text(editKm)
         val voltageActual = widgets.text(editVoltageActual)
 
@@ -221,11 +204,16 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateCalculatedValues(kmParm: String?, voltageActualParm: String?, voltageStartParm: String?) {
+        updateCalculatedValues(kmParm, voltageActualParm, voltageStartParm, null)
+    }
+
+    private fun updateCalculatedValues(kmParm: String?, voltageActualParm: String?, voltageStartParm: String?, whenAllValuesAreThere: (() -> Unit)?) {
         val km = kmParm ?: widgets.text(editKm)
         val voltageActual = voltageActualParm ?: widgets.text(editVoltageActual)
         val voltageStart = voltageStartParm ?: widgets.text(editVoltageStart)
 
         if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
+            whenAllValuesAreThere?.invoke()
             updateEstimatedValues(km, voltageActual)
         } else {
             clearEstimatedValues()
