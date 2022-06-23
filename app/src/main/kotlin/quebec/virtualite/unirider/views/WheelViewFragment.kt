@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.views
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -73,7 +72,7 @@ open class WheelViewFragment : BaseFragment() {
                 textName.text = wheel!!.name
                 editVoltageStart.setText("${wheel!!.voltageStart ?: wheel!!.voltageMax}")
                 textBtName.text = wheel!!.btName
-                textMileage.text = "${wheel!!.totalMileage()}"
+                textMileage.text = textKm(wheel!!.totalMileage())
 
                 val km = widgets.text(editKm)
                 val voltageCurrent = widgets.text(editVoltageActual)
@@ -150,7 +149,6 @@ open class WheelViewFragment : BaseFragment() {
         return true
     }
 
-    @SuppressLint("SetTextI18n")
     private fun updateEstimatedValues(km: String, voltage: String) {
         if (isEmpty(km) || !isPositive(km) || !isVoltageWithinRange(voltage)) {
             textRemainingRange.text = ""
@@ -162,15 +160,9 @@ open class WheelViewFragment : BaseFragment() {
         val values = calculatorService
             .estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
 
-        val labelKm = fragments.string(R.string.label_km)
-        val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
-
-        textRemainingRange.text =
-            "${if (values.remainingRange > 0) values.remainingRange else 0} $labelKm"
-        textTotalRange.text =
-            "${values.totalRange} $labelKm"
-        textWhPerKm.text =
-            "${values.whPerKm} $labelWhPerKm"
+        textRemainingRange.text = textKmWithDecimal(if (values.remainingRange > 0) values.remainingRange else 0f)
+        textTotalRange.text = textKmWithDecimal(values.totalRange)
+        textWhPerKm.text = textWhPerKm(values.whPerKm)
     }
 
     private fun isNumeric(value: String): Boolean {
@@ -179,6 +171,22 @@ open class WheelViewFragment : BaseFragment() {
 
     private fun isPositive(value: String): Boolean {
         return isNumeric(value) && parseFloat(value) > 0f
+    }
+
+    private fun textKm(value: Int): String {
+        val labelKm = fragments.string(R.string.label_km)
+        return "$value $labelKm"
+    }
+
+    private fun textKmWithDecimal(value: Float): String {
+        val labelKm = fragments.string(R.string.label_km)
+        return "$value $labelKm"
+            .replace("0.0", "0")
+    }
+
+    private fun textWhPerKm(value: Float): String {
+        val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
+        return "$value $labelWhPerKm"
     }
 
     private fun updatePercentage(voltage: String) {
@@ -191,7 +199,7 @@ open class WheelViewFragment : BaseFragment() {
         external.runDB { it.saveWheel(wheel) }
 
         fragments.runUI {
-            textMileage.text = "${wheel!!.totalMileage()}"
+            textMileage.text = textKm(wheel!!.totalMileage())
             editKm.setText("$newKm")
             editVoltageActual.setText("$newVoltage")
         }

@@ -153,7 +153,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextName).text = NAME
         verify(mockedTextBtName).text = DEVICE_NAME
         verify(mockedEditVoltageStart).setText("$VOLTAGE_START")
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE} $LABEL_KM"
 
         verifyOnUpdateText(mockedEditVoltageStart, "onUpdateVoltageStart")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
@@ -173,11 +173,11 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedDb.getWheel(anyLong()))
             .willReturn(S18_1)
 
-        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
-            .willReturn(PERCENTAGE)
-
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
+            .willReturn(PERCENTAGE)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -268,7 +268,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             )
         )
         verify(mockedEditKm).setText("$KM_NEW")
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW} $LABEL_KM"
         verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
     }
 
@@ -375,7 +375,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Given
         injectMocks()
         mockKm("$KM ")
-//        mockVoltageStart("$VOLTAGE_MAX ")
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
@@ -396,7 +395,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Given
         injectMocks()
         mockKm("$KM ")
-//        mockVoltageStart("$VOLTAGE_START ")
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
@@ -564,13 +562,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.editVoltageActual = mockedEditVoltageActual
 
         given(mockedWidgets.text(mockedEditVoltageActual))
-            .willReturn(voltage.trim())
-    }
-
-    private fun mockVoltageStart(voltage: String) {
-        fragment.editVoltageStart = mockedEditVoltageStart
-
-        given(mockedWidgets.text(mockedEditVoltageStart))
             .willReturn(voltage.trim())
     }
 

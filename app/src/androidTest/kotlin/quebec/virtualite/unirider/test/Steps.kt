@@ -95,14 +95,14 @@ class Steps {
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, expectedMileage)))
     }
 
-    @Then("^the km is updated to (.*?) km$")
+    @Then("^the km is updated to (.*?)$")
     fun kmUpdatedTo(expectedKm: Float) {
         assertThat(R.id.edit_km, hasText("$expectedKm"))
     }
 
-    @Then("^the mileage is updated to (.*?)$")
+    @Then("^the mileage is updated to (.*?) km$")
     fun mileageUpdatedTo(expectedMileage: Int) {
-        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
+        assertThat(R.id.view_mileage, hasText("$expectedMileage km"))
     }
 
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
@@ -300,9 +300,9 @@ class Steps {
     }
 
     @Then("^the details view shows the (.*) with a mileage of (.*) and a starting voltage of (.*)V$")
-    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: Int, expectedStartingVoltage: Float) {
+    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String, expectedStartingVoltage: Float) {
         assertThat(R.id.view_name, hasText(expectedName))
-        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
+        assertThat(R.id.view_mileage, hasText(expectedMileage))
         assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
     }
 
@@ -443,7 +443,7 @@ class Steps {
         assertThat(R.id.button_save, isDisabled())
     }
 
-    @Given("^the (.*?) has a previous mileage of (.*?)$")
+    @Given("^the (.*?) has a previous mileage of (.*?) km$")
     fun wheelHasPreviousMileage(name: String, premileage: Int) {
         db.findWheel(name)?.let {
             db.saveWheel(

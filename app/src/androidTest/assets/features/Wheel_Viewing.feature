@@ -16,8 +16,8 @@ Feature: Wheel Viewing
     Then the details view shows the Sherman with a mileage of <expected mileage> and a starting voltage of 100.8V
     Examples:
       | previous mileage | expected mileage |
-      | 0                | 17622            |
-      | 10000            | 27622            |
+      | 0 km             | 17622 km         |
+      | 10000 km         | 27622 km         |
 
   Scenario Outline: Calculating percentage [<wheel> / <voltage>]
     Given I select the <wheel>

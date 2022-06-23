@@ -10,7 +10,7 @@ Feature: Main Screen
       | S18         | 2850    | 1110 | 60V         | 68V             | 84V         |
 
   Scenario: On entering, we see a list of registered wheels and their mileage
-    Given the Sherman has a previous mileage of 3600
+    Given the Sherman has a previous mileage of 3600 km
     When I start the app
     Then I see my wheels and their mileage:
       | Name        | Mileage |

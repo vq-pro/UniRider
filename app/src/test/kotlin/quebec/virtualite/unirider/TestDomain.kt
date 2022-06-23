@@ -14,8 +14,8 @@ object TestDomain {
     const val ID = 1111L
     const val ID2 = 1112L
     const val ID3 = 1113L
-    const val LABEL_KM = "kilometers"
-    const val LABEL_WH_PER_KM = "watt-hours per kilometer"
+    const val LABEL_KM = "km"
+    const val LABEL_WH_PER_KM = "wh/km"
     const val KM = 4444f
     const val KM_NEW = 4445f
     const val KM_NEW_RAW = 4445.012f
