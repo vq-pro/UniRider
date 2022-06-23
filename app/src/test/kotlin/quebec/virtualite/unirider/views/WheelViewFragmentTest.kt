@@ -165,7 +165,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedDb, never()).saveWheel(any())
     }
 
-    // FIXME-0 Make voltageStart non-nullable, set it to the max initially only
     @Test
     fun onViewCreated_whenVoltageStartAndVoltageActualAndKmAreFilled_updateCalculatedValues() {
         // Given

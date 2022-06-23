@@ -107,129 +107,37 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onUpdateMileage() = { newMileage: String ->
-        updatedWheel = WheelEntity(
-            updatedWheel.id,
-            updatedWheel.name,
-            updatedWheel.btName,
-            updatedWheel.btAddr,
-            updatedWheel.premileage,
-            intOf(newMileage),
-            updatedWheel.wh,
-            updatedWheel.voltageMax,
-            updatedWheel.voltageMin,
-            updatedWheel.voltageReserve,
-            updatedWheel.voltageStart
-        )
-
+        updatedWheel = updatedWheel.copy(mileage = intOf(newMileage))
         enableSaveIfChanged()
     }
 
     fun onUpdateName() = { newName: String ->
-        updatedWheel = WheelEntity(
-            updatedWheel.id,
-            newName.trim(),
-            updatedWheel.btName,
-            updatedWheel.btAddr,
-            updatedWheel.premileage,
-            updatedWheel.mileage,
-            updatedWheel.wh,
-            updatedWheel.voltageMax,
-            updatedWheel.voltageMin,
-            updatedWheel.voltageReserve,
-            updatedWheel.voltageStart
-        )
-
+        updatedWheel = updatedWheel.copy(name = newName.trim())
         enableSaveIfChanged()
     }
 
     fun onUpdatePreMileage() = { newPreMileage: String ->
-        updatedWheel = WheelEntity(
-            updatedWheel.id,
-            updatedWheel.name,
-            updatedWheel.btName,
-            updatedWheel.btAddr,
-            intOf(newPreMileage),
-            updatedWheel.mileage,
-            updatedWheel.wh,
-            updatedWheel.voltageMax,
-            updatedWheel.voltageMin,
-            updatedWheel.voltageReserve,
-            updatedWheel.voltageStart
-        )
-
+        updatedWheel = updatedWheel.copy(premileage = intOf(newPreMileage))
         enableSaveIfChanged()
     }
 
-    // FIXME-1 Use copy instead of building a new object
     fun onUpdateVoltageMax() = { newVoltage: String ->
-        updatedWheel = WheelEntity(
-            updatedWheel.id,
-            updatedWheel.name,
-            updatedWheel.btName,
-            updatedWheel.btAddr,
-            updatedWheel.premileage,
-            updatedWheel.mileage,
-            updatedWheel.wh,
-            floatOf(newVoltage),
-            updatedWheel.voltageMin,
-            updatedWheel.voltageReserve,
-            floatOf(newVoltage)
-        )
-
+        updatedWheel = updatedWheel.copy(voltageMax = floatOf(newVoltage), voltageStart = floatOf(newVoltage))
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageMin() = { newVoltage: String ->
-        updatedWheel = WheelEntity(
-            updatedWheel.id,
-            updatedWheel.name,
-            updatedWheel.btName,
-            updatedWheel.btAddr,
-            updatedWheel.premileage,
-            updatedWheel.mileage,
-            updatedWheel.wh,
-            updatedWheel.voltageMax,
-            floatOf(newVoltage),
-            updatedWheel.voltageReserve,
-            updatedWheel.voltageStart
-        )
-
+        updatedWheel = updatedWheel.copy(voltageMin = floatOf(newVoltage))
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageReserve() = { newVoltage: String ->
-        updatedWheel = WheelEntity(
-            updatedWheel.id,
-            updatedWheel.name,
-            updatedWheel.btName,
-            updatedWheel.btAddr,
-            updatedWheel.premileage,
-            updatedWheel.mileage,
-            updatedWheel.wh,
-            updatedWheel.voltageMax,
-            updatedWheel.voltageMin,
-            floatOf(newVoltage),
-            updatedWheel.voltageStart
-        )
-
+        updatedWheel = updatedWheel.copy(voltageReserve = floatOf(newVoltage))
         enableSaveIfChanged()
     }
 
     fun onUpdateWh() = { newWh: String ->
-        updatedWheel = WheelEntity(
-            updatedWheel.id,
-            updatedWheel.name,
-            updatedWheel.btName,
-            updatedWheel.btAddr,
-            updatedWheel.premileage,
-            updatedWheel.mileage,
-            intOf(newWh),
-            updatedWheel.voltageMax,
-            updatedWheel.voltageMin,
-            updatedWheel.voltageReserve,
-            updatedWheel.voltageStart
-        )
-
+        updatedWheel = updatedWheel.copy(wh = intOf(newWh))
         enableSaveIfChanged()
     }
 }
