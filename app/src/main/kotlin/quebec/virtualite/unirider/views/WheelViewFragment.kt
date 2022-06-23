@@ -121,24 +121,13 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onUpdateVoltageStart() = { voltageStartParm: String ->
         val voltageStart = voltageStartParm.trim()
-//        updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, voltageStart) {
-//            wheel = wheel!!.copy(voltageStart = parseFloat(voltageStart))
-//            external.runDB { it.saveWheel(wheel) }
-//        }
-
-        val km = widgets.text(editKm)
-        val voltageActual = widgets.text(editVoltageActual)
 
         if (isVoltageWithinRange(voltageStart)) {
             wheel = wheel!!.copy(voltageStart = parseFloat(voltageStart))
             external.runDB { it.saveWheel(wheel) }
         }
 
-        if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
-            updateEstimatedValues(km, voltageActual)
-        } else {
-            clearEstimatedValues()
-        }
+        updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, voltageStart)
     }
 
     private fun formatPercentage(voltage: Float): String {
@@ -159,10 +148,6 @@ open class WheelViewFragment : BaseFragment() {
         textRemainingRange.text = ""
         textTotalRange.text = ""
         textWhPerKm.text = ""
-    }
-
-    private fun clearPercentage() {
-        textBattery.text = ""
     }
 
     private fun isVoltageWithinRange(voltageParm: String): Boolean {
@@ -204,25 +189,16 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateCalculatedValues(kmParm: String?, voltageActualParm: String?, voltageStartParm: String?) {
-        updateCalculatedValues(kmParm, voltageActualParm, voltageStartParm, null)
-    }
-
-    private fun updateCalculatedValues(kmParm: String?, voltageActualParm: String?, voltageStartParm: String?, whenAllValuesAreThere: (() -> Unit)?) {
         val km = kmParm ?: widgets.text(editKm)
         val voltageActual = voltageActualParm ?: widgets.text(editVoltageActual)
         val voltageStart = voltageStartParm ?: widgets.text(editVoltageStart)
 
+        updatePercentage(voltageActual)
+
         if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
-            whenAllValuesAreThere?.invoke()
             updateEstimatedValues(km, voltageActual)
         } else {
             clearEstimatedValues()
-        }
-
-        if (isVoltageWithinRange(voltageActual)) {
-            updatePercentage(voltageActual)
-        } else {
-            clearPercentage()
         }
     }
 
@@ -234,8 +210,11 @@ open class WheelViewFragment : BaseFragment() {
         textWhPerKm.text = textWhPerKm(values.whPerKm)
     }
 
-    private fun updatePercentage(voltage: String) {
-        textBattery.text = formatPercentage(parseFloat(voltage))
+    private fun updatePercentage(voltageActual: String) {
+        textBattery.text = when {
+            isVoltageWithinRange(voltageActual) -> formatPercentage(parseFloat(voltageActual))
+            else -> ""
+        }
     }
 
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
