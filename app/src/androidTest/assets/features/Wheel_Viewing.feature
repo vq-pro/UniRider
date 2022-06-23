@@ -34,8 +34,8 @@ Feature: Wheel Viewing
 
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
     Given I select the <wheel>
-    And set the starting voltage to <starting voltage>
-    And set the distance to <km>
+    And I set the starting voltage to <starting voltage>
+    And I set the distance to <km>
     When I enter an actual voltage of <voltage>
     Then it displays an estimated remaining range of "<remaining>"
     And it displays an estimated total range of "<total>"
@@ -50,7 +50,7 @@ Feature: Wheel Viewing
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
-    And set the distance to <km>
+    And I set the distance to <km>
     When I enter an actual voltage of <voltage>
     Then it displays blank estimated values
     Examples:
@@ -62,6 +62,14 @@ Feature: Wheel Viewing
       | Sherman |      | bb      |
       | Sherman | aa   | bb      |
 
+  Scenario: Saving the starting voltage
+    Given I select the Sherman
+    And the starting voltage is 100.8V
+    When I set the starting voltage to 98.5V
+    And I go back to the main view
+    And I select the Sherman
+    Then the starting voltage is 98.5V
+
   Scenario: => Editing the wheel
     Given I select the Sherman
     When I edit the wheel
@@ -69,8 +77,8 @@ Feature: Wheel Viewing
 
   Scenario: => Editing the wheel with estimated values
     Given I select the Sherman Max
-    And set the distance to 42
-    And set the current voltage to 91.9
+    And I set the distance to 42
+    And I set the current voltage to 91.9
     And it displays an estimated remaining range of "56.2 km"
     When I edit the wheel
     And I go back to view the wheel
@@ -78,5 +86,3 @@ Feature: Wheel Viewing
     And it displays an estimated remaining range of "56.2 km"
     And it displays an estimated total range of "98.2 km"
     And it displays an estimated wh/km of "30.3 wh/km"
-
-#    FIXME-1 Saving the start voltage

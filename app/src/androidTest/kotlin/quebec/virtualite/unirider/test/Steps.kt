@@ -306,6 +306,11 @@ class Steps {
         assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
     }
 
+    @Then("^the starting voltage is (.*)V$")
+    fun startingVoltageIs(expectedStartingVoltage: Float) {
+        assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
+    }
+
     @Then("^it displays a percentage of (.*?)$")
     fun displaysPercentage(percentage: String) {
         assertThat(R.id.view_battery, hasText(percentage))
@@ -413,17 +418,17 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
-    @Given("^set the distance to (.*?)$")
+    @Given("^I set the distance to (.*?)$")
     fun setDistanceTo(km: String) {
         setText(R.id.edit_km, km)
     }
 
-    @Given("^set the current voltage to (.*?)$")
+    @Given("^I set the current voltage to (.*?)$")
     fun setCurrentVoltageTo(voltage: String) {
         setText(R.id.edit_voltage_actual, voltage)
     }
 
-    @Given("^set the starting voltage to (.*)V$")
+    @Given("^I set the starting voltage to (.*)V$")
     fun setStartingVoltageTo(startingVoltage: String) {
         setText(R.id.edit_voltage_start, startingVoltage)
     }
