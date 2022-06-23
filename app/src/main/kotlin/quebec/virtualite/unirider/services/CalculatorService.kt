@@ -12,15 +12,11 @@ open class CalculatorService {
     )
 
     open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Float): EstimatedValues {
-        val percentage = precisePercentage(wheel!!, voltage) / 100
-        val percentageOfReserve = precisePercentage(wheel, wheel.voltageReserve) / 100
+        val whConsumedAfterStart = wh(wheel!!, wheel.voltageStart!!, voltage)
+        val whRemainingToReserve = wh(wheel, voltage, wheel.voltageReserve)
 
-        val whRemaining = wheel.wh * percentage
-        val whConsumed = wheel.wh - whRemaining
-        val whPerKm = whConsumed / km
-        val whReserve = wheel.wh * percentageOfReserve
-
-        val remainingRange = max((whRemaining - whReserve) / whPerKm, 0f)
+        val whPerKm = whConsumedAfterStart / km
+        val remainingRange = max(whRemainingToReserve / whPerKm, 0f)
         val totalRange = remainingRange + km
 
         return EstimatedValues(
@@ -30,19 +26,19 @@ open class CalculatorService {
         )
     }
 
-    open fun percentage(wheel: WheelEntity?, voltage: Float?): Float {
+    open fun roundedPercentage(wheel: WheelEntity?, voltage: Float?): Float {
         if ((wheel!!.voltageMax <= 0f) || (wheel.voltageMin <= 0f)) {
             return 0f
         }
 
-        return round(precisePercentage(wheel, voltage!!), 1)
+        return round(percentage(wheel, voltage!!) * 100, 1)
     }
 
     private fun percentage(value: Float, range: Float): Float {
-        return value * 100 / range
+        return value / range
     }
 
-    private fun precisePercentage(wheel: WheelEntity, voltage: Float): Float {
+    private fun percentage(wheel: WheelEntity, voltage: Float): Float {
         val voltageRange = wheel.voltageMax - wheel.voltageMin
         return percentage(voltage - wheel.voltageMin, voltageRange)
     }
@@ -50,5 +46,13 @@ open class CalculatorService {
     private fun round(value: Float, numDecimals: Int): Float {
         val factor = Math.pow(10.0, numDecimals.toDouble())
         return (Math.round(value * factor) / factor).toFloat()
+    }
+
+    private fun wh(wheel: WheelEntity, highVoltage: Float, lowVoltage: Float): Float {
+        val percentageHigh = percentage(wheel, highVoltage)
+        val percentageLow = percentage(wheel, lowVoltage)
+
+        val percentageForSegment = percentageHigh - percentageLow
+        return percentageForSegment * wheel.wh
     }
 }

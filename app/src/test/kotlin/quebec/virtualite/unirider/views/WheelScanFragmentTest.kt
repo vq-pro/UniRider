@@ -37,6 +37,7 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE3
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_START3
 import quebec.virtualite.unirider.TestDomain.WH3
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
@@ -148,7 +149,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
             WheelEntity(
                 ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
                 PREMILEAGE3, MILEAGE_NEW, WH3,
-                VOLTAGE_MIN3, VOLTAGE_RESERVE3, VOLTAGE_MAX3
+                VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3, VOLTAGE_START3
             )
         )
         verify(mockedFragments).navigateBack()

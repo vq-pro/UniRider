@@ -48,14 +48,13 @@ open class WheelScanFragment : BaseFragment() {
         external.bluetooth().getDeviceInfo(device.address) { info ->
             fragments.doneWaiting(info) {
                 external.runDB { db ->
-                    val updatedWheel = WheelEntity(
-                        wheel!!.id, wheel!!.name,
-                        device.name, device.address,
-                        wheel!!.premileage, info!!.mileage.roundToInt(),
-                        wheel!!.wh,
-                        wheel!!.voltageMin, wheel!!.voltageReserve, wheel!!.voltageMax
+                    db.saveWheel(
+                        wheel!!.copy(
+                            btName = device.name,
+                            btAddr = device.address,
+                            mileage = info!!.mileage.roundToInt()
+                        )
                     )
-                    db.saveWheel(updatedWheel)
                 }
 
                 fragments.navigateBack()

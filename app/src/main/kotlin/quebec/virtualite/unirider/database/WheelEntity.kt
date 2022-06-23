@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "wheel")
 data class WheelEntity(
-
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val name: String,
@@ -14,9 +13,10 @@ data class WheelEntity(
     val premileage: Int,
     val mileage: Int,
     val wh: Int,
+    val voltageMax: Float,
     val voltageMin: Float,
     val voltageReserve: Float,
-    val voltageMax: Float
+    val voltageStart: Float
 ) {
     fun totalMileage() = premileage + mileage
 }

@@ -21,6 +21,7 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE_NEW
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_START
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
@@ -63,8 +64,16 @@ class SaveComparatorTest {
         expectedCanSave: Boolean
     ) {
         // Given
-        val initial = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX)
-        val updated = WheelEntity(ID, name.trim(), DEVICE_NAME, DEVICE_ADDR, premileage, mileage, wh, voltageMin, voltageReserve, voltageMax)
+        val initial = WheelEntity(
+            ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+            PREMILEAGE, MILEAGE, WH,
+            VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START
+        )
+        val updated = WheelEntity(
+            ID, name.trim(), DEVICE_NAME, DEVICE_ADDR,
+            premileage, mileage, wh,
+            voltageMax, voltageMin, voltageReserve, VOLTAGE_START
+        )
 
         // When
         val result = comparator.canSave(updated, initial)

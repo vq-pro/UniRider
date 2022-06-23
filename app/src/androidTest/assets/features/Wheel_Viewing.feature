@@ -11,17 +11,17 @@ Feature: Wheel Viewing
     And I start the app
 
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
-    Given the <wheel> has a previous mileage of <previous mileage>
-    When I select the <wheel>
-    Then the details view shows the <wheel> with a mileage of <expected mileage>
+    Given the Sherman has a previous mileage of <previous mileage>
+    When I select the Sherman
+    Then the details view shows the Sherman with a mileage of <expected mileage> and a starting voltage of 100.8V
     Examples:
-      | wheel   | previous mileage | expected mileage |
-      | Sherman | 0                | 17622            |
-      | Sherman | 10000            | 27622            |
+      | previous mileage | expected mileage |
+      | 0 km             | 17622 km         |
+      | 10000 km         | 27622 km         |
 
   Scenario Outline: Calculating percentage [<wheel> / <voltage>]
     Given I select the <wheel>
-    When I enter a voltage of <voltage>
+    When I enter an actual voltage of <voltage>
     Then it displays a percentage of <battery>
     Examples:
       | wheel       | voltage | battery |
@@ -32,24 +32,26 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 82.9%   |
       | Sherman Max | 91.9V   | 64.7%   |
 
-  Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
+  Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
     Given I select the <wheel>
-    And the distance so far is set to <km>
-    When I enter a voltage of <voltage>
+    And I set the starting voltage to <starting voltage>
+    And I set the distance to <km>
+    When I enter an actual voltage of <voltage>
     Then it displays an estimated remaining range of "<remaining>"
     And it displays an estimated total range of "<total>"
     And it displays an estimated wh/km of "<wh/km>"
     Examples:
-      | wheel       | km   | voltage | remaining | total   | wh/km      |
-      | Sherman Max | 42.0 | 91.9V   | 56.2 km   | 98.2 km | 30.3 wh/km |
-      | Sherman Max | 81.0 | 83.5V   | 16.4 km   | 97.4 km | 30.5 wh/km |
-      | Sherman Max | 42.0 | 91.     | 47.1 km   | 89.1 km | 33.3 wh/km |
-      | S18         | 42.0 | 67      | 0 km      | 42.0 km | 18.7 wh/km |
+      | wheel       | starting voltage | km   | voltage | remaining | total    | wh/km      |
+      | Sherman Max | 100.4V           | 42.0 | 91.9V   | 58.8 km   | 100.8 km | 28.9 wh/km |
+      | Sherman Max | 100.4V           | 81.0 | 83.5V   | 16.8 km   | 97.8 km  | 29.8 wh/km |
+      | Sherman Max | 100.4V           | 42.0 | 91V     | 49.1 km   | 91.1 km  | 32.0 wh/km |
+      | Sherman Max | 98.2V            | 42.0 | 91V     | 64.2 km   | 106.2 km | 24.5 wh/km |
+      | S18         | 84V              | 42.0 | 67V     | 0 km      | 42.0 km  | 18.7 wh/km |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
-    And the distance so far is set to <km>
-    When I enter a voltage of <voltage>
+    And I set the distance to <km>
+    When I enter an actual voltage of <voltage>
     Then it displays blank estimated values
     Examples:
       | wheel   | km   | voltage |
@@ -60,6 +62,14 @@ Feature: Wheel Viewing
       | Sherman |      | bb      |
       | Sherman | aa   | bb      |
 
+  Scenario: Saving the starting voltage
+    Given I select the Sherman
+    And the starting voltage is 100.8V
+    When I set the starting voltage to 98.5V
+    And I go back to the main view
+    And I select the Sherman
+    Then the starting voltage is 98.5V
+
   Scenario: => Editing the wheel
     Given I select the Sherman
     When I edit the wheel
@@ -67,8 +77,8 @@ Feature: Wheel Viewing
 
   Scenario: => Editing the wheel with estimated values
     Given I select the Sherman Max
-    And the distance so far is set to 42
-    And the voltage is set to 91.9
+    And I set the distance to 42
+    And I set the current voltage to 91.9
     And it displays an estimated remaining range of "56.2 km"
     When I edit the wheel
     And I go back to view the wheel

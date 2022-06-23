@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7acdb95cc4844f70ef7f14f717249ae0",
+    "identityHash": "217c6d503c9494ff03b5be19503de8ba",
     "entities": [
       {
         "tableName": "wheel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `btName` TEXT, `btAddr` TEXT, `premileage` INTEGER NOT NULL, `mileage` INTEGER NOT NULL, `wh` INTEGER NOT NULL, `voltageMin` REAL NOT NULL, `voltageReserve` REAL NOT NULL, `voltageMax` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `btName` TEXT, `btAddr` TEXT, `premileage` INTEGER NOT NULL, `mileage` INTEGER NOT NULL, `wh` INTEGER NOT NULL, `voltageMax` REAL NOT NULL, `voltageMin` REAL NOT NULL, `voltageReserve` REAL NOT NULL, `voltageStart` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -51,6 +51,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "voltageMax",
+            "columnName": "voltageMax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
             "fieldPath": "voltageMin",
             "columnName": "voltageMin",
             "affinity": "REAL",
@@ -63,8 +69,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "voltageMax",
-            "columnName": "voltageMax",
+            "fieldPath": "voltageStart",
+            "columnName": "voltageStart",
             "affinity": "REAL",
             "notNull": true
           }
@@ -82,7 +88,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7acdb95cc4844f70ef7f14f717249ae0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '217c6d503c9494ff03b5be19503de8ba')"
     ]
   }
 }

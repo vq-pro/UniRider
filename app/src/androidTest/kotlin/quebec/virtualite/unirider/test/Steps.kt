@@ -14,6 +14,7 @@ import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.notNullValue
 import org.junit.Rule
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
+import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
@@ -42,7 +43,6 @@ import quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
-import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
@@ -74,7 +74,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -95,19 +95,19 @@ class Steps {
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, expectedMileage)))
     }
 
-    @Then("^the km is updated to (.*?) km$")
+    @Then("^the km is updated to (.*?)$")
     fun kmUpdatedTo(expectedKm: Float) {
         assertThat(R.id.edit_km, hasText("$expectedKm"))
     }
 
-    @Then("^the mileage is updated to (.*?)$")
+    @Then("^the mileage is updated to (.*?) km$")
     fun mileageUpdatedTo(expectedMileage: Int) {
-        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
+        assertThat(R.id.view_mileage, hasText("$expectedMileage km"))
     }
 
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
-        assertThat(R.id.edit_voltage, hasText("$expectedVoltage"))
+        assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery%"))
     }
 
@@ -174,12 +174,13 @@ class Steps {
             mapEntity["Name"]!!,
             null,
             null,
-            parseInt(mapEntity["Previous Mileage"]!!),
-            parseInt(mapEntity["Mileage"]!!),
-            parseInt(mapEntity["Wh"]!!),
-            parseFloat(mapEntity["Voltage Min"]!!),
-            parseFloat(mapEntity["Voltage Reserve"]!!),
-            parseFloat(mapEntity["Voltage Max"]!!)
+            intOf(mapEntity["Previous Mileage"]!!),
+            intOf(mapEntity["Mileage"]!!),
+            intOf(mapEntity["Wh"]!!),
+            floatOf(mapEntity["Voltage Max"]!!),
+            floatOf(mapEntity["Voltage Min"]!!),
+            floatOf(mapEntity["Voltage Reserve"]!!),
+            floatOf(mapEntity["Voltage Max"]!!)
         )
 
         click(R.id.button_save)
@@ -198,7 +199,7 @@ class Steps {
 
     @Then("it blanks the displays")
     fun blanksTheDisplays() {
-        assertThat(R.id.edit_voltage, isEmpty())
+        assertThat(R.id.edit_voltage_actual, isEmpty())
         assertThat(R.id.view_battery, isEmpty())
     }
 
@@ -298,10 +299,16 @@ class Steps {
         longClick(R.id.button_delete)
     }
 
-    @Then("^the details view shows the (.*?) with a mileage of (.*?)$")
-    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: Int) {
+    @Then("^the details view shows the (.*) with a mileage of (.*) and a starting voltage of (.*)V$")
+    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String, expectedStartingVoltage: Float) {
         assertThat(R.id.view_name, hasText(expectedName))
-        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
+        assertThat(R.id.view_mileage, hasText(expectedMileage))
+        assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
+    }
+
+    @Then("^the starting voltage is (.*)V$")
+    fun startingVoltageIs(expectedStartingVoltage: Float) {
+        assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
     }
 
     @Then("^it displays a percentage of (.*?)$")
@@ -352,11 +359,11 @@ class Steps {
                 val name = row[0]
                 val mileage = parseInt(row[1])
                 val wh = parseInt(row[2])
-                val voltageMin = parseVoltage(row[3])
-                val voltageReserve = parseVoltage(row[4])
-                val voltageMax = parseVoltage(row[5])
+                val voltageMin = voltageOf(row[3])
+                val voltageReserve = voltageOf(row[4])
+                val voltageMax = voltageOf(row[5])
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMin, voltageReserve, voltageMax)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax)
             }
             .collect(toList())
 
@@ -377,10 +384,10 @@ class Steps {
 
                 db.findWheel(name)?.let {
                     db.saveWheel(
-                        WheelEntity(
-                            it.id, name, btName, btAddress,
-                            it.premileage, it.mileage, it.wh,
-                            it.voltageMin, it.voltageReserve, it.voltageMax
+                        it.copy(
+                            name = name,
+                            btName = btName,
+                            btAddr = btAddress
                         )
                     )
                 }
@@ -411,14 +418,19 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
-    @Given("^the distance so far is set to (.*?)$")
-    fun distanceIsSetTo(km: String) {
+    @Given("^I set the distance to (.*?)$")
+    fun setDistanceTo(km: String) {
         setText(R.id.edit_km, km)
     }
 
-    @Given("^the voltage is set to (.*?)$")
-    fun voltageIsSetTo(voltage: String) {
-        setText(R.id.edit_voltage, voltage)
+    @Given("^I set the current voltage to (.*?)$")
+    fun setCurrentVoltageTo(voltage: String) {
+        setText(R.id.edit_voltage_actual, voltage)
+    }
+
+    @Given("^I set the starting voltage to (.*)V$")
+    fun setStartingVoltageTo(startingVoltage: String) {
+        setText(R.id.edit_voltage_start, startingVoltage)
     }
 
     @Then("the wheel can be saved")
@@ -431,16 +443,10 @@ class Steps {
         assertThat(R.id.button_save, isDisabled())
     }
 
-    @Given("^the (.*?) has a previous mileage of (.*?)$")
+    @Given("^the (.*?) has a previous mileage of (.*?) km$")
     fun wheelHasPreviousMileage(name: String, premileage: Int) {
         db.findWheel(name)?.let {
-            db.saveWheel(
-                WheelEntity(
-                    it.id, it.name, it.btName, it.btAddr,
-                    premileage, it.mileage, it.wh,
-                    it.voltageMin, it.voltageReserve, it.voltageMax
-                )
-            )
+            db.saveWheel(it.copy(premileage = premileage))
             updateMapWheels()
         }
     }
@@ -470,10 +476,10 @@ class Steps {
         expectedDeviceName = deviceName
     }
 
-    @When("^I enter a voltage of (.*?)$")
-    fun whenEnterVoltage(voltageParm: String) {
+    @When("^I enter an actual voltage of (.*?)$")
+    fun whenEnterActualVoltage(voltageParm: String) {
         enter(
-            R.id.edit_voltage,
+            R.id.edit_voltage_actual,
             if (voltageParm.endsWith("V")) voltageParm.substring(0, voltageParm.length - 1) else voltageParm
         )
     }
@@ -504,19 +510,19 @@ class Steps {
         val deviceFields = device.cells(1)[0]
 
         BluetoothServicesSim.setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
-        BluetoothServicesSim.setKm(parseFloat(deviceFields[2]))
-        BluetoothServicesSim.setMileage(parseFloat(deviceFields[3]))
-        BluetoothServicesSim.setVoltage(parseVoltage(deviceFields[4]))
-    }
-
-    private fun parseVoltage(value: String): Float {
-        assertThat(value, endsWith("V"))
-        return parseFloat(value.substring(0, value.length - 1))
+        BluetoothServicesSim.setKm(floatOf(deviceFields[2]))
+        BluetoothServicesSim.setMileage(floatOf(deviceFields[3]))
+        BluetoothServicesSim.setVoltage(voltageOf(deviceFields[4]))
     }
 
     private fun updateMapWheels() {
         db.getWheels().forEach { wheel ->
             mapWheels[wheel.name] = wheel
         }
+    }
+
+    private fun voltageOf(value: String): Float {
+        assertThat(value, endsWith("V"))
+        return floatOf(value.substring(0, value.length - 1))
     }
 }
