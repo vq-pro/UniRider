@@ -45,9 +45,17 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textStyle="bold"
                         android:autofillHints=""
                         android:inputType="text"
+                />
+
+                <TextView
+                        android:labelFor="@+id/edit_voltage_start"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage"
                 />
             </TableRow>
 
