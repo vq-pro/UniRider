@@ -14,6 +14,7 @@ import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.notNullValue
 import org.junit.Rule
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
+import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
@@ -174,12 +175,12 @@ class Steps {
             mapEntity["Name"]!!,
             null,
             null,
-            parseInt(mapEntity["Previous Mileage"]!!),
-            parseInt(mapEntity["Mileage"]!!),
-            parseInt(mapEntity["Wh"]!!),
-            parseFloat(mapEntity["Voltage Max"]!!),
-            parseFloat(mapEntity["Voltage Min"]!!),
-            parseFloat(mapEntity["Voltage Reserve"]!!),
+            intOf(mapEntity["Previous Mileage"]!!),
+            intOf(mapEntity["Mileage"]!!),
+            intOf(mapEntity["Wh"]!!),
+            floatOf(mapEntity["Voltage Max"]!!),
+            floatOf(mapEntity["Voltage Min"]!!),
+            floatOf(mapEntity["Voltage Reserve"]!!),
             null
         )
 
@@ -359,9 +360,9 @@ class Steps {
                 val name = row[0]
                 val mileage = parseInt(row[1])
                 val wh = parseInt(row[2])
-                val voltageMin = parseVoltage(row[3])
-                val voltageReserve = parseVoltage(row[4])
-                val voltageMax = parseVoltage(row[5])
+                val voltageMin = voltageOf(row[3])
+                val voltageReserve = voltageOf(row[4])
+                val voltageMax = voltageOf(row[5])
 
                 WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, null)
             }
@@ -516,19 +517,19 @@ class Steps {
         val deviceFields = device.cells(1)[0]
 
         BluetoothServicesSim.setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
-        BluetoothServicesSim.setKm(parseFloat(deviceFields[2]))
-        BluetoothServicesSim.setMileage(parseFloat(deviceFields[3]))
-        BluetoothServicesSim.setVoltage(parseVoltage(deviceFields[4]))
-    }
-
-    private fun parseVoltage(value: String): Float {
-        assertThat(value, endsWith("V"))
-        return parseFloat(value.substring(0, value.length - 1))
+        BluetoothServicesSim.setKm(floatOf(deviceFields[2]))
+        BluetoothServicesSim.setMileage(floatOf(deviceFields[3]))
+        BluetoothServicesSim.setVoltage(voltageOf(deviceFields[4]))
     }
 
     private fun updateMapWheels() {
         db.getWheels().forEach { wheel ->
             mapWheels[wheel.name] = wheel
         }
+    }
+
+    private fun voltageOf(value: String): Float {
+        assertThat(value, endsWith("V"))
+        return parseFloat(value.substring(0, value.length - 1))
     }
 }

@@ -8,11 +8,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import org.apache.http.util.TextUtils.isEmpty
+import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
+import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
+import quebec.virtualite.commons.android.utils.NumberUtils.isPositive
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
-import java.lang.Float.parseFloat
 import java.util.Locale.ENGLISH
 import kotlin.math.roundToInt
 
@@ -82,7 +84,6 @@ open class WheelViewFragment : BaseFragment() {
                 textBtName.text = wheel!!.btName
                 textMileage.text = textKm(wheel!!.totalMileage())
 
-                // FIXME-0 Generalize the use of this update method for calculated fields
                 updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
             }
         }
@@ -123,7 +124,7 @@ open class WheelViewFragment : BaseFragment() {
         val voltageStart = voltageStartParm.trim()
 
         if (isVoltageWithinRange(voltageStart)) {
-            wheel = wheel!!.copy(voltageStart = parseFloat(voltageStart))
+            wheel = wheel!!.copy(voltageStart = floatOf(voltageStart))
             external.runDB { it.saveWheel(wheel) }
         }
 
@@ -137,19 +138,6 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
-    private fun isAllRequiredValuesFilled(km: String, voltageActual: String, voltageStart: String): Boolean {
-        return !isEmpty(km)
-                && isPositive(km)
-                && isVoltageWithinRange(voltageActual)
-                && isVoltageWithinRange(voltageStart)
-    }
-
-    private fun clearEstimatedValues() {
-        textRemainingRange.text = ""
-        textTotalRange.text = ""
-        textWhPerKm.text = ""
-    }
-
     private fun isVoltageWithinRange(voltageParm: String): Boolean {
         if (isEmpty(voltageParm))
             return false
@@ -157,19 +145,11 @@ open class WheelViewFragment : BaseFragment() {
         if (!isNumeric(voltageParm))
             return false
 
-        val voltage = parseFloat(voltageParm)
+        val voltage = floatOf(voltageParm)
         if (voltage < wheel!!.voltageMin || wheel!!.voltageMax < voltage)
             return false
 
         return true
-    }
-
-    private fun isNumeric(value: String): Boolean {
-        return value.matches("^[0-9.]*$".toRegex())
-    }
-
-    private fun isPositive(value: String): Boolean {
-        return isNumeric(value) && parseFloat(value) > 0f
     }
 
     private fun textKm(value: Int): String {
@@ -194,25 +174,30 @@ open class WheelViewFragment : BaseFragment() {
         val voltageStart = voltageStartParm ?: widgets.text(editVoltageStart)
 
         updatePercentage(voltageActual)
-
-        if (isAllRequiredValuesFilled(km, voltageActual, voltageStart)) {
-            updateEstimatedValues(km, voltageActual)
-        } else {
-            clearEstimatedValues()
-        }
+        updateEstimatedValues(km, voltageActual, voltageStart)
     }
 
-    private fun updateEstimatedValues(km: String, voltage: String) {
-        val values = calculatorService.estimatedValues(wheel, parseFloat(voltage), parseFloat(km))
+    private fun updateEstimatedValues(km: String, voltageActual: String, voltageStart: String) {
+        if (!isEmpty(km) && isPositive(km)
+            && isVoltageWithinRange(voltageActual)
+            && isVoltageWithinRange(voltageStart)
+        ) {
+            val values = calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km))
 
-        textRemainingRange.text = textKmWithDecimal(if (values.remainingRange > 0) values.remainingRange else 0f)
-        textTotalRange.text = textKmWithDecimal(values.totalRange)
-        textWhPerKm.text = textWhPerKm(values.whPerKm)
+            textRemainingRange.text = textKmWithDecimal(if (values.remainingRange > 0) values.remainingRange else 0f)
+            textTotalRange.text = textKmWithDecimal(values.totalRange)
+            textWhPerKm.text = textWhPerKm(values.whPerKm)
+
+        } else {
+            textRemainingRange.text = ""
+            textTotalRange.text = ""
+            textWhPerKm.text = ""
+        }
     }
 
     private fun updatePercentage(voltageActual: String) {
         textBattery.text = when {
-            isVoltageWithinRange(voltageActual) -> formatPercentage(parseFloat(voltageActual))
+            isVoltageWithinRange(voltageActual) -> formatPercentage(floatOf(voltageActual))
             else -> ""
         }
     }
