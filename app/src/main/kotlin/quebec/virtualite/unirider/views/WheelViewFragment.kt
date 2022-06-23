@@ -113,16 +113,14 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onUpdateKm() = { km: String ->
-        updateCalculatedValues(km.trim(), READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
+        updateCalculatedValues(km, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
     }
 
     fun onUpdateVoltageActual() = { voltageActual: String ->
-        updateCalculatedValues(READ_KM, voltageActual.trim(), READ_VOLTAGE_START)
+        updateCalculatedValues(READ_KM, voltageActual, READ_VOLTAGE_START)
     }
 
-    fun onUpdateVoltageStart() = { voltageStartParm: String ->
-        val voltageStart = voltageStartParm.trim()
-
+    fun onUpdateVoltageStart() = { voltageStart: String ->
         if (isVoltageWithinRange(voltageStart)) {
             wheel = wheel!!.copy(voltageStart = floatOf(voltageStart))
             external.runDB { it.saveWheel(wheel) }

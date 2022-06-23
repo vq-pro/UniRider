@@ -43,7 +43,6 @@ import quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
-import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
@@ -530,6 +529,6 @@ class Steps {
 
     private fun voltageOf(value: String): Float {
         assertThat(value, endsWith("V"))
-        return parseFloat(value.substring(0, value.length - 1))
+        return floatOf(value.substring(0, value.length - 1))
     }
 }

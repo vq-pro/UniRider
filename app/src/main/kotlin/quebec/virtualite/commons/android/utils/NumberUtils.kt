@@ -13,7 +13,7 @@ object NumberUtils {
     fun intOf(string: String): Int = if (isBlank(string.trim())) 0 else parseInt(string.trim())
 
     fun isNumeric(value: String): Boolean {
-        return value.matches("^[0-9.]*$".toRegex())
+        return value.trim().matches("^[0-9.]*$".toRegex())
     }
 
     fun isPositive(value: String): Boolean {
