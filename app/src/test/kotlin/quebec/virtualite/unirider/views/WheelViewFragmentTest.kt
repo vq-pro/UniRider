@@ -249,6 +249,35 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedEditKm).setText("$KM_NEW")
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW} $LABEL_KM"
         verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
+        verifyNoInteractions(mockedEditVoltageStart)
+    }
+
+    @Test
+    fun onConnect_whenNotFirstTimeAndKmIsZero_setStartingVoltageToActual() {
+        // Given
+        injectMocks()
+
+        // When
+        fragment.onConnect().invoke(mockedView)
+
+        // Then
+        val connectionPayload = WheelInfo(0f, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
+
+        verifyRunWithWaitDialog()
+        verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)
+        verifyDoneWaiting(connectionPayload)
+
+        verify(mockedDb).saveWheel(
+            WheelEntity(
+                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+                PREMILEAGE, MILEAGE_NEW, WH,
+                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_NEW
+            )
+        )
+        verify(mockedEditKm).setText("0.0")
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW} $LABEL_KM"
+        verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
+        verify(mockedEditVoltageStart).setText("$VOLTAGE_NEW")
     }
 
     @Test
