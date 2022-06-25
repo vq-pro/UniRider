@@ -202,6 +202,12 @@ open class WheelViewFragment : BaseFragment() {
 
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
         wheel = wheel!!.copy(mileage = newMileage)
+
+        if (newKm < 0.1f) {
+            wheel = wheel!!.copy(voltageStart = newVoltage)
+            fragments.runUI { editVoltageStart.setText("${wheel!!.voltageStart}") }
+        }
+
         external.runDB { it.saveWheel(wheel) }
 
         fragments.runUI {
