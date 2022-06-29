@@ -39,6 +39,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import quebec.virtualite.unirider.views.MainActivity
 import quebec.virtualite.unirider.views.MainFragment
+import quebec.virtualite.unirider.views.WheelChargeFragment
 import quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
@@ -87,6 +88,11 @@ class Steps {
     @Then("it shows that every field is editable")
     fun itShowsThatEveryFieldIsEditable() {
         assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
+    }
+
+    @Then("it shows that it's ready to help with charging")
+    fun itShowsThatReadyForCharging() {
+        assertThat(currentFragment(mainActivity), equalTo(WheelChargeFragment::class.java))
     }
 
     @Then("^it shows the updated name and a mileage of (.*?) on the main view$")
@@ -338,10 +344,14 @@ class Steps {
         assertThat(R.id.view_wh_per_km, hasText(whPerKm))
     }
 
+    @When("I charge the wheel")
+    fun chargeWheel() {
+        click(R.id.button_charge)
+    }
+
     @When("I edit the wheel")
     fun editWheel() {
         click(R.id.button_edit)
-        assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
     }
 
     @Given("this connected wheel:")

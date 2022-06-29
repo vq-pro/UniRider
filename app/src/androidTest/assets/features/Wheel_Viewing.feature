@@ -70,6 +70,12 @@ Feature: Wheel Viewing
     And I select the Sherman
     Then the starting voltage is 98.5V
 
+  @WIP
+  Scenario: => Charging the wheel
+    Given I select the Sherman
+    When I charge the wheel
+    Then it shows that it's ready to help with charging
+
   Scenario: => Editing the wheel
     Given I select the Sherman
     When I edit the wheel

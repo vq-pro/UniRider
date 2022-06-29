@@ -63,6 +63,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     lateinit var fragment: WheelViewFragment
 
     @Mock
+    lateinit var mockedButtonCharge: Button
+
+    @Mock
     lateinit var mockedButtonConnect: Button
 
     @Mock
@@ -138,6 +141,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         assertThat(fragment.wheel, equalTo(S18_1))
 
+        assertThat(fragment.buttonCharge, equalTo(mockedButtonCharge))
         assertThat(fragment.buttonConnect, equalTo(mockedButtonConnect))
         assertThat(fragment.buttonEdit, equalTo(mockedButtonEdit))
         assertThat(fragment.editKm, equalTo(mockedEditKm))
@@ -159,6 +163,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyOnUpdateText(mockedEditVoltageStart, "onUpdateVoltageStart")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
         verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
+        verifyOnClick(mockedButtonCharge, "onCharge")
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
 
@@ -205,6 +210,18 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextName, never()).text = anyString()
         verify(mockedTextBtName, never()).text = anyString()
         verify(mockedTextMileage, never()).text = anyString()
+    }
+
+    @Test
+    fun onCharge() {
+        // When
+        fragment.onCharge().invoke(mockedView)
+
+        // Then
+        verify(mockedFragments).navigateTo(
+            R.id.action_WheelViewFragment_to_WheelChargeFragment,
+            Pair(PARAMETER_WHEEL_ID, ID)
+        )
     }
 
     @Test
@@ -537,6 +554,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun injectMocks() {
+        fragment.buttonCharge = mockedButtonCharge
         fragment.buttonConnect = mockedButtonConnect
         fragment.editKm = mockedEditKm
         fragment.editVoltageActual = mockedEditVoltageActual
@@ -550,6 +568,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun mockFields() {
+        mockField(R.id.button_charge, mockedButtonCharge)
         mockField(R.id.button_connect, mockedButtonConnect)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.edit_km, mockedEditKm)

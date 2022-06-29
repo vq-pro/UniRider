@@ -25,6 +25,7 @@ open class WheelViewFragment : BaseFragment() {
     private val READ_VOLTAGE_ACTUAL = null
     private val READ_VOLTAGE_START = null
 
+    internal lateinit var buttonCharge: Button
     internal lateinit var buttonConnect: Button
     internal lateinit var buttonEdit: Button
     internal lateinit var editKm: EditText
@@ -51,6 +52,7 @@ open class WheelViewFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        buttonCharge = view.findViewById(R.id.button_charge)
         buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         editKm = view.findViewById(R.id.edit_km)
@@ -71,13 +73,14 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.addTextChangedListener(editVoltageStart, onUpdateVoltageStart())
                 widgets.addTextChangedListener(editKm, onUpdateKm())
                 widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
+                widgets.setOnClickListener(buttonCharge, onCharge())
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
 
-                if (wheel!!.voltageStart == null) {
-                    wheel = wheel!!.copy(voltageStart = wheel!!.voltageMax)
-                    it.saveWheel(wheel)
-                }
+//                if (wheel!!.voltageStart == null) {
+//                    wheel = wheel!!.copy(voltageStart = wheel!!.voltageMax)
+//                    it.saveWheel(wheel)
+//                }
 
                 textName.text = wheel!!.name
                 editVoltageStart.setText("${wheel!!.voltageStart}")
@@ -87,6 +90,10 @@ open class WheelViewFragment : BaseFragment() {
                 updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
             }
         }
+    }
+
+    fun onCharge(): (View) -> Unit = {
+        goto(R.id.action_WheelViewFragment_to_WheelChargeFragment, wheel!!)
     }
 
     fun onConnect(): (View) -> Unit = {
