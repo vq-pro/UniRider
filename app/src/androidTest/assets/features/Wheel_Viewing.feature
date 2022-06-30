@@ -70,11 +70,14 @@ Feature: Wheel Viewing
     And I select the Sherman
     Then the starting voltage is 98.5V
 
-  @WIP
-  Scenario: => Charging the wheel
+  Scenario Outline: => Charging the wheel [when <available>]
     Given I select the Sherman
-    When I charge the wheel
-    Then it shows that it's ready to help with charging
+    When the wh/km is <available>
+    Then I <can> charge the wheel
+    Examples:
+      | available     | can    |
+      | available     | can    |
+      | not available | cannot |
 
   Scenario: => Editing the wheel
     Given I select the Sherman
@@ -84,7 +87,7 @@ Feature: Wheel Viewing
   Scenario: => Editing the wheel with estimated values
     Given I select the Sherman Max
     And I set the distance to 42
-    And I set the current voltage to 91.9
+    And I set the actual voltage to 91.9
     And it displays an estimated remaining range of "56.2 km"
     When I edit the wheel
     And I go back to view the wheel

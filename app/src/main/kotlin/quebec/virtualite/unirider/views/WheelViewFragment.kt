@@ -77,11 +77,6 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
 
-//                if (wheel!!.voltageStart == null) {
-//                    wheel = wheel!!.copy(voltageStart = wheel!!.voltageMax)
-//                    it.saveWheel(wheel)
-//                }
-
                 textName.text = wheel!!.name
                 editVoltageStart.setText("${wheel!!.voltageStart}")
                 textBtName.text = wheel!!.btName
@@ -183,6 +178,7 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateEstimatedValues(km: String, voltageActual: String, voltageStart: String) {
+        // FIXME-1 Refactor to use conditional statements for each assignment
         if (!isEmpty(km) && isPositive(km)
             && isVoltageWithinRange(voltageActual)
             && isVoltageWithinRange(voltageStart)
@@ -193,10 +189,18 @@ open class WheelViewFragment : BaseFragment() {
             textTotalRange.text = textKmWithDecimal(values.totalRange)
             textWhPerKm.text = textWhPerKm(values.whPerKm)
 
+            fragments.runUI {
+                buttonCharge.isEnabled = true
+            }
+
         } else {
             textRemainingRange.text = ""
             textTotalRange.text = ""
             textWhPerKm.text = ""
+
+            fragments.runUI {
+                buttonCharge.isEnabled = false
+            }
         }
     }
 

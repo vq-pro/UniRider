@@ -85,14 +85,20 @@ class Steps {
         assertThat(R.id.wheels, not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))))
     }
 
+    @Then("I can charge the wheel")
+    fun canChargeWheel() {
+        click(R.id.button_charge)
+        assertThat(currentFragment(mainActivity), equalTo(WheelChargeFragment::class.java))
+    }
+
+    @Then("I cannot charge the wheel")
+    fun cannotChargeWheel() {
+        assertThat(R.id.button_charge, isDisabled())
+    }
+
     @Then("it shows that every field is editable")
     fun itShowsThatEveryFieldIsEditable() {
         assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
-    }
-
-    @Then("it shows that it's ready to help with charging")
-    fun itShowsThatReadyForCharging() {
-        assertThat(currentFragment(mainActivity), equalTo(WheelChargeFragment::class.java))
     }
 
     @Then("^it shows the updated name and a mileage of (.*?) on the main view$")
@@ -115,6 +121,17 @@ class Steps {
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
         assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery%"))
+    }
+
+    @When("the wh/km is available")
+    fun whPerKmIsAvailable() {
+        setActualVoltageTo("90")
+        setDistanceTo("40")
+    }
+
+    @When("the wh/km is not available")
+    fun whPerKmIsNotAvailable() {
+        // Nothing to do, values are already cleared
     }
 
     @When("^I reuse the name (.*?)$")
@@ -239,13 +256,13 @@ class Steps {
         setText(R.id.edit_wh, " ")
     }
 
-    @Then("^the wheel's Bluetooth name is undefined$")
+    @Then("the wheel's Bluetooth name is undefined")
     fun bluetoothNameUndefined() {
         assertThat(selectedWheel.btName, equalTo(null))
         assertThat(selectedWheel.btAddr, equalTo(null))
     }
 
-    @Then("^the wheel's Bluetooth name is updated$")
+    @Then("the wheel's Bluetooth name is updated")
     fun bluetoothNameUpdated() {
         assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
     }
@@ -344,11 +361,6 @@ class Steps {
         assertThat(R.id.view_wh_per_km, hasText(whPerKm))
     }
 
-    @When("I charge the wheel")
-    fun chargeWheel() {
-        click(R.id.button_charge)
-    }
-
     @When("I edit the wheel")
     fun editWheel() {
         click(R.id.button_edit)
@@ -428,14 +440,14 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
+    @Given("^I set the actual voltage to (.*?)$")
+    fun setActualVoltageTo(voltage: String) {
+        setText(R.id.edit_voltage_actual, voltage)
+    }
+
     @Given("^I set the distance to (.*?)$")
     fun setDistanceTo(km: String) {
         setText(R.id.edit_km, km)
-    }
-
-    @Given("^I set the current voltage to (.*?)$")
-    fun setCurrentVoltageTo(voltage: String) {
-        setText(R.id.edit_voltage_actual, voltage)
     }
 
     @Given("^I set the starting voltage to (.*)V$")

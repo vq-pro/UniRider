@@ -610,6 +610,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextRemainingRange).text = ""
         verify(mockedTextTotalRange).text = ""
         verify(mockedTextWhPerKm).text = ""
+
+        verify(mockedButtonCharge).isEnabled = false
     }
 
     private fun verifyClearPercentage() {
@@ -623,6 +625,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextRemainingRange).text = "$remainingRange $LABEL_KM"
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE $LABEL_KM"
         verify(mockedTextWhPerKm).text = "$WH_PER_KM $LABEL_WH_PER_KM"
+
+        verify(mockedButtonCharge).isEnabled = true
     }
 
     private fun verifyUpdatePercentage() {
