@@ -12,7 +12,7 @@ open class CalculatorService {
     )
 
     open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Float): EstimatedValues {
-        val whConsumedAfterStart = wh(wheel!!, wheel.voltageStart!!, voltage)
+        val whConsumedAfterStart = wh(wheel!!, wheel.voltageStart, voltage)
         val whRemainingToReserve = wh(wheel, voltage, wheel.voltageReserve)
 
         val whPerKm = whConsumedAfterStart / km

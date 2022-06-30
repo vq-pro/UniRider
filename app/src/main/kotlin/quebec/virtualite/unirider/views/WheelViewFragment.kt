@@ -178,29 +178,20 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateEstimatedValues(km: String, voltageActual: String, voltageStart: String) {
-        // FIXME-1 Refactor to use conditional statements for each assignment
-        if (!isEmpty(km) && isPositive(km)
-            && isVoltageWithinRange(voltageActual)
-            && isVoltageWithinRange(voltageStart)
-        ) {
-            val values = calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km))
+        val estimated = !isEmpty(km) && isPositive(km)
+                && isVoltageWithinRange(voltageActual) && isVoltageWithinRange(voltageStart)
 
-            textRemainingRange.text = textKmWithDecimal(if (values.remainingRange > 0) values.remainingRange else 0f)
-            textTotalRange.text = textKmWithDecimal(values.totalRange)
-            textWhPerKm.text = textWhPerKm(values.whPerKm)
+        val estimates = when {
+            estimated -> calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km))
+            else -> null
+        }
 
-            fragments.runUI {
-                buttonCharge.isEnabled = true
-            }
+        textRemainingRange.text = if (estimated) textKmWithDecimal(estimates!!.remainingRange) else ""
+        textTotalRange.text = if (estimated) textKmWithDecimal(estimates!!.totalRange) else ""
+        textWhPerKm.text = if (estimated) textWhPerKm(estimates!!.whPerKm) else ""
 
-        } else {
-            textRemainingRange.text = ""
-            textTotalRange.text = ""
-            textWhPerKm.text = ""
-
-            fragments.runUI {
-                buttonCharge.isEnabled = false
-            }
+        fragments.runUI {
+            buttonCharge.isEnabled = estimated
         }
     }
 
