@@ -18,24 +18,33 @@
             <!-- Name-->
             <TableRow>
                 <TextView
-                        android:labelFor="@+id/edit_name"
+                        android:id="@+id/view_name"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                />
+            </TableRow>
+
+            <!-- wh/km -->
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/view_wh_per_km"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_wheel_name"
+                        android:text="@string/label_wh_per_km"
                 />
 
-                <EditText
-                        android:id="@+id/edit_name"
-                        android:layout_weight="2"
+                <TextView
+                        android:id="@+id/view_wh_per_km"
+                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textStyle="bold"
-                        android:autofillHints=""
-                        android:inputType="text"
                 />
             </TableRow>
         </TableLayout>

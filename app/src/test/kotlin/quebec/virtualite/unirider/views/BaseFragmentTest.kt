@@ -82,6 +82,13 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     @Captor
     private lateinit var captorRunWithWaitDialog: ArgumentCaptor<() -> Unit>
 
+    fun mockArgument(fragment: BaseFragment, param: String, value: Float) {
+        given(mockedBundle.getFloat(param))
+            .willReturn(value)
+
+        fragment.arguments = mockedBundle
+    }
+
     fun mockArgument(fragment: BaseFragment, param: String, value: Long) {
         given(mockedBundle.getLong(param))
             .willReturn(value)

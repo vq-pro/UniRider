@@ -15,7 +15,7 @@ import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
-import java.util.Locale.ENGLISH
+import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
 import kotlin.math.roundToInt
 
 open class WheelViewFragment : BaseFragment() {
@@ -39,6 +39,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textTotalRange: TextView
     internal lateinit var textWhPerKm: TextView
 
+    internal var estimates: EstimatedValues? = null
     internal var parmWheelId: Long? = 0
     internal var wheel: WheelEntity? = null
 
@@ -88,7 +89,11 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onCharge(): (View) -> Unit = {
-        goto(R.id.action_WheelViewFragment_to_WheelChargeFragment, wheel!!)
+        goto(
+            R.id.action_WheelViewFragment_to_WheelChargeFragment,
+            wheel!!,
+            estimates!!.whPerKm
+        )
     }
 
     fun onConnect(): (View) -> Unit = {
@@ -131,11 +136,12 @@ open class WheelViewFragment : BaseFragment() {
         updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, voltageStart)
     }
 
-    private fun formatPercentage(voltage: Float): String {
-        return when (val percentage = calculatorService.roundedPercentage(wheel, voltage)) {
-            in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
-            else -> ""
-        }
+    private fun goto(id: Int, wheel: WheelEntity, whPerKm: Float) {
+        fragments.navigateTo(
+            id,
+            Pair(PARAMETER_WHEEL_ID, wheel.id),
+            Pair(PARAMETER_WH_PER_KM, whPerKm)
+        )
     }
 
     private fun isVoltageWithinRange(voltageParm: String): Boolean {
@@ -152,22 +158,6 @@ open class WheelViewFragment : BaseFragment() {
         return true
     }
 
-    private fun textKm(value: Int): String {
-        val labelKm = fragments.string(R.string.label_km)
-        return "$value $labelKm"
-    }
-
-    private fun textKmWithDecimal(value: Float): String {
-        val labelKm = fragments.string(R.string.label_km)
-        return "$value $labelKm"
-            .replace("0.0", "0")
-    }
-
-    private fun textWhPerKm(value: Float): String {
-        val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
-        return "$value $labelWhPerKm"
-    }
-
     private fun updateCalculatedValues(kmParm: String?, voltageActualParm: String?, voltageStartParm: String?) {
         val km = kmParm ?: widgets.text(editKm)
         val voltageActual = voltageActualParm ?: widgets.text(editVoltageActual)
@@ -178,28 +168,32 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateEstimatedValues(km: String, voltageActual: String, voltageStart: String) {
-        val estimated = !isEmpty(km) && isPositive(km)
-                && isVoltageWithinRange(voltageActual) && isVoltageWithinRange(voltageStart)
+        estimates = when {
+            !isEmpty(km) && isPositive(km)
+                    && isVoltageWithinRange(voltageActual)
+                    && isVoltageWithinRange(voltageStart) ->
 
-        val estimates = when {
-            estimated -> calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km))
-            else -> null
+                calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km))
+            else ->
+                null
         }
 
-        textRemainingRange.text = if (estimated) textKmWithDecimal(estimates!!.remainingRange) else ""
-        textTotalRange.text = if (estimated) textKmWithDecimal(estimates!!.totalRange) else ""
-        textWhPerKm.text = if (estimated) textWhPerKm(estimates!!.whPerKm) else ""
+        textRemainingRange.text = textKmWithDecimal(estimates?.remainingRange)
+        textTotalRange.text = textKmWithDecimal(estimates?.totalRange)
+        textWhPerKm.text = textWhPerKm(estimates?.whPerKm)
 
         fragments.runUI {
-            buttonCharge.isEnabled = estimated
+            buttonCharge.isEnabled = estimates != null
         }
     }
 
     private fun updatePercentage(voltageActual: String) {
-        textBattery.text = when {
-            isVoltageWithinRange(voltageActual) -> formatPercentage(floatOf(voltageActual))
-            else -> ""
+        val percentage: Float? = when {
+            isVoltageWithinRange(voltageActual) -> calculatorService.roundedPercentage(wheel, floatOf(voltageActual))
+            else -> null
         }
+
+        textBattery.text = textPercentageWithDecimal(percentage)
     }
 
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {

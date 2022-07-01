@@ -4,6 +4,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -55,6 +56,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WH_PER_KM
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
@@ -124,6 +126,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyInflate(R.layout.wheel_view_fragment)
+
+        assertThat(fragment.parmWheelId, equalTo(ID))
     }
 
     @Test
@@ -214,13 +218,17 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     @Test
     fun onCharge() {
+        // Given
+        fragment.estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM)
+
         // When
         fragment.onCharge().invoke(mockedView)
 
         // Then
         verify(mockedFragments).navigateTo(
             R.id.action_WheelViewFragment_to_WheelChargeFragment,
-            Pair(PARAMETER_WHEEL_ID, ID)
+            Pair(PARAMETER_WHEEL_ID, ID),
+            Pair(PARAMETER_WH_PER_KM, WH_PER_KM)
         )
     }
 
@@ -612,6 +620,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextWhPerKm).text = ""
 
         verify(mockedButtonCharge).isEnabled = false
+
+        assertThat(fragment.estimates, equalTo(null))
     }
 
     private fun verifyClearPercentage() {
@@ -627,6 +637,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextWhPerKm).text = "$WH_PER_KM $LABEL_WH_PER_KM"
 
         verify(mockedButtonCharge).isEnabled = true
+
+        assertThat(fragment.estimates, not(equalTo(null)))
     }
 
     private fun verifyUpdatePercentage() {

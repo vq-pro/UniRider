@@ -346,19 +346,24 @@ class Steps {
         assertThat(R.id.view_wh_per_km, isEmpty())
     }
 
-    @Then("^it displays an estimated remaining range of \"(.*?)\"$")
+    @Then("^it displays an estimated remaining range of (.*?)$")
     fun displaysRemainingRange(range: String) {
         assertThat(R.id.view_remaining_range, hasText(range))
     }
 
-    @Then("^it displays an estimated total range of \"(.*?)\"$")
+    @Then("^it displays an estimated total range of (.*?)$")
     fun displaysTotalRange(range: String) {
         assertThat(R.id.view_total_range, hasText(range))
     }
 
-    @Then("^it displays an estimated wh/km of \"(.*?)\"$")
-    fun displaysWhPerKm(whPerKm: String) {
+    @Then("^it displays an estimated wh/km of (.*?)$")
+    fun displaysEstimatedWhPerKm(whPerKm: String) {
         assertThat(R.id.view_wh_per_km, hasText(whPerKm))
+    }
+
+    @When("I charge the wheel")
+    fun chargeWheel() {
+        click(R.id.button_charge)
     }
 
     @When("I edit the wheel")
@@ -440,19 +445,19 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
-    @Given("^I set the actual voltage to (.*?)$")
+    @Given("^I set the actual voltage to (.*?)V$")
     fun setActualVoltageTo(voltage: String) {
         setText(R.id.edit_voltage_actual, voltage)
     }
 
     @Given("^I set the distance to (.*?)$")
     fun setDistanceTo(km: String) {
-        setText(R.id.edit_km, km)
+        setText(R.id.edit_km, strip(km, "km"))
     }
 
-    @Given("^I set the starting voltage to (.*)V$")
+    @Given("^I set the starting voltage to (.*)$")
     fun setStartingVoltageTo(startingVoltage: String) {
-        setText(R.id.edit_voltage_start, startingVoltage)
+        setText(R.id.edit_voltage_start, strip(startingVoltage, "V"))
     }
 
     @Then("the wheel can be saved")
@@ -499,11 +504,8 @@ class Steps {
     }
 
     @When("^I enter an actual voltage of (.*?)$")
-    fun whenEnterActualVoltage(voltageParm: String) {
-        enter(
-            R.id.edit_voltage_actual,
-            if (voltageParm.endsWith("V")) voltageParm.substring(0, voltageParm.length - 1) else voltageParm
-        )
+    fun whenEnterActualVoltage(voltage: String) {
+        enter(R.id.edit_voltage_actual, strip(voltage, "V"))
     }
 
     @When("I reconnect to the wheel")
@@ -535,6 +537,13 @@ class Steps {
         BluetoothServicesSim.setKm(floatOf(deviceFields[2]))
         BluetoothServicesSim.setMileage(floatOf(deviceFields[3]))
         BluetoothServicesSim.setVoltage(voltageOf(deviceFields[4]))
+    }
+
+    private fun strip(value: String, stripValue: String): String {
+        return when {
+            value.endsWith(stripValue) -> value.substring(0, value.length - stripValue.length).trim()
+            else -> value.trim()
+        }
     }
 
     private fun updateMapWheels() {
