@@ -5,7 +5,10 @@ import kotlin.math.max
 
 open class CalculatorService {
 
-    private val NUM_DECIMALS = 1
+    companion object {
+        const val CHARGER_OFFSET = 1.5f
+        const val NUM_DECIMALS = 1
+    }
 
     data class EstimatedValues(
         val remainingRange: Float,
@@ -44,7 +47,7 @@ open class CalculatorService {
         val voltageRange = wheel.voltageMax - wheel.voltageMin
         val voltageRequired = percentage * voltageRange + wheel.voltageMin
 
-        return round(voltageRequired, NUM_DECIMALS)
+        return round(voltageRequired + CHARGER_OFFSET, NUM_DECIMALS)
     }
 
     private fun rawPercentage(value: Float, range: Float): Float {

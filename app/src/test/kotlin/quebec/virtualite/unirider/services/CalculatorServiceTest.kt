@@ -14,6 +14,7 @@ import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
 
 @RunWith(MockitoJUnitRunner::class)
 class CalculatorServiceTest {
@@ -53,8 +54,8 @@ class CalculatorServiceTest {
 
     @Test
     fun requiredVoltage() {
-        requiredVoltage(28.9f, 20f, 84.0f)
-        requiredVoltage(35.9f, 40f, 90.1f)
+        requiredVoltage(28.9f, 20f, 84.0f + CHARGER_OFFSET)
+        requiredVoltage(35.9f, 40f, 90.1f + CHARGER_OFFSET)
     }
 
     private fun estimatedValues(

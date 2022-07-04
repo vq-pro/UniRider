@@ -14,4 +14,4 @@ Feature: Wheel Charging
     And I charge the wheel
     And it displays an estimated wh/km of 28.9 wh/km
     When I request to charge for 20 km
-    Then it displays a required voltage of 84.0V
+    Then it displays a required voltage of 85.5V
