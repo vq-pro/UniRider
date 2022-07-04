@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.widget.EditText
 import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -14,6 +15,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.ID
+import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.LABEL_WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.S18_1
@@ -28,7 +30,13 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     lateinit var fragment: WheelChargeFragment
 
     @Mock
+    lateinit var mockedEditKm: EditText
+
+    @Mock
     lateinit var mockedTextName: TextView
+
+    @Mock
+    lateinit var mockedTextVoltageRequired: TextView
 
     @Mock
     lateinit var mockedTextWhPerKm: TextView
@@ -75,15 +83,37 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         assertThat(fragment.wheel, equalTo(S18_1))
 
-        assertThat(fragment.textName, equalTo(mockedTextName))
-        assertThat(fragment.textWhPerKm, equalTo(mockedTextWhPerKm))
+        verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
+        verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
+        verifyFieldAssignment(R.id.view_required_voltage, fragment.textVoltageRequired, mockedTextVoltageRequired)
+        verifyFieldAssignment(R.id.view_wh_per_km, fragment.textWhPerKm, mockedTextWhPerKm)
 
         verify(mockedTextName).text = NAME
         verify(mockedTextWhPerKm).text = "$WH_PER_KM $LABEL_WH_PER_KM"
+
+        verifyOnUpdateText(mockedEditKm, "onUpdateKm")
+    }
+
+    @Test
+    fun onUpdateKm() {
+        // Given
+        injectMocks()
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verify(mockedTextVoltageRequired).text = "89.2"
+    }
+
+    private fun injectMocks() {
+        fragment.textVoltageRequired = mockedTextVoltageRequired
     }
 
     private fun mockFields() {
+        mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.view_name, mockedTextName)
+        mockField(R.id.view_required_voltage, mockedTextVoltageRequired)
         mockField(R.id.view_wh_per_km, mockedTextWhPerKm)
     }
 }

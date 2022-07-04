@@ -16,6 +16,7 @@ Feature: Wheel Charging
     And I set the starting voltage to 100.4V
     And I set the actual voltage to 91.9V
     And I set the distance to 42 km
-    When I charge the wheel
-    Then it displays an estimated wh/km of 28.9 wh/km
-    # FIXME-1 Enter a distance, get a voltage to charge to
+    And I charge the wheel
+    And it displays an estimated wh/km of 28.9 wh/km
+    When I request to charge for 20 km
+    Then it displays a required voltage of 89.2V

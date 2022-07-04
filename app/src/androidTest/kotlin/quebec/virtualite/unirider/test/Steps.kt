@@ -339,6 +339,11 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
+    @Then("^it displays a required voltage of (.*?)$")
+    fun displaysRequiredVoltage(expectedVoltage: String) {
+        assertThat(R.id.view_required_voltage, hasText(strip(expectedVoltage, "V")))
+    }
+
     @Then("it displays blank estimated values")
     fun displaysBlankEstimatedValues() {
         assertThat(R.id.view_remaining_range, isEmpty())
@@ -511,6 +516,11 @@ class Steps {
     @When("I reconnect to the wheel")
     fun whenReconnectToWheel() {
         click(R.id.button_connect)
+    }
+
+    @When("^I request to charge for (.*?)$")
+    fun whenRequestChargeFor(km: String) {
+        setText(R.id.edit_km, strip(km, "km"))
     }
 
     @When("^I select the (.*?)$")

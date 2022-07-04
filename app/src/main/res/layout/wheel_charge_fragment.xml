@@ -28,7 +28,7 @@
             </TableRow>
 
             <!-- wh/km -->
-            <TableRow android:layout_marginTop="10dp">
+            <TableRow android:layout_marginTop="15dp">
                 <TextView
                         android:labelFor="@+id/view_wh_per_km"
                         android:layout_weight="1"
@@ -45,6 +45,68 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+            </TableRow>
+
+            <!-- km -->
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/edit_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_distance"
+                />
+
+                <EditText
+                        android:id="@+id/edit_km"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                        android:inputType="text"
+                />
+
+                <TextView
+                        android:labelFor="@+id/edit_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_km"
+                />
+            </TableRow>
+
+            <!-- Required voltage -->
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/view_required_voltage"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage"
+                />
+
+                <TextView
+                        android:id="@+id/view_required_voltage"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+                <TextView
+                        android:labelFor="@+id/view_required_voltage"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_abbr"
                 />
             </TableRow>
         </TableLayout>

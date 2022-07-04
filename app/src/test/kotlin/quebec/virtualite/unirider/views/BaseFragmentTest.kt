@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ListView
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
 import org.mockito.ArgumentCaptor
@@ -150,8 +151,24 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         captorRunWithWaitDialog.value.invoke()
     }
 
+    fun <T : View?> verifyFieldAssignment(id: Int, field: T, mock: T) {
+        verify(mockedView).findViewById<T>(id)
+        assertThat(mock, equalTo(field))
+    }
+
     fun verifyInflate(expectedId: Int) {
         verify(mockedInflater).inflate(expectedId, mockedContainer, DONT_ATTACH_TO_ROOT)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T> verifyMultiFieldListAdapter(
+        mockedField: ListView, expectedId: Int, expectedData: List<T>, methodName: String
+    ) {
+        verify(mockedWidgets).multifieldListAdapter(
+            eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData),
+            (captorOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
+        )
+        assertThat(captorOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyOnClick(mockedField: View, methodName: String) {
@@ -186,16 +203,5 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {
         verify(mockedWidgets).stringListAdapter(mockedField, mockedView, expectedData)
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T> verifyMultiFieldListAdapter(
-        mockedField: ListView, expectedId: Int, expectedData: List<T>, methodName: String
-    ) {
-        verify(mockedWidgets).multifieldListAdapter(
-            eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData),
-            (captorOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
-        )
-        assertThat(captorOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 }

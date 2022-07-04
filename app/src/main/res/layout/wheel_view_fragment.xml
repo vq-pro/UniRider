@@ -55,7 +55,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_voltage"
+                        android:text="@string/label_voltage_abbr"
                 />
             </TableRow>
 
@@ -79,7 +79,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_voltage"
+                        android:text="@string/label_voltage_abbr"
                 />
 
                 <EditText

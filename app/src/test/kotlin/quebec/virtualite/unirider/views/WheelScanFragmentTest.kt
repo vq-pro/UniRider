@@ -86,8 +86,9 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         val connectionPayload = BluetoothDevice(DEVICE_NAME, DEVICE_ADDR)
 
         assertThat(fragment.devices, equalTo(emptyList()))
-        assertThat(fragment.lvWheels, equalTo(mockedLvWheels))
         assertThat(fragment.wheel, equalTo(SHERMAN_MAX_3))
+
+        verifyFieldAssignment(R.id.devices, fragment.lvWheels, mockedLvWheels)
 
         verifyOnItemClick(mockedLvWheels, "onSelectDevice")
 

@@ -16,13 +16,15 @@
     <string name="label_battery">Battery</string>
     <string name="label_bt_name">Bluetooth</string>
     <string name="label_devices">Devices</string>
+    <string name="label_distance">Distance</string>
     <string name="label_km">km</string>
     <string name="label_max">max</string>
     <string name="label_min">min</string>
     <string name="label_remaining_range">Remaining</string>
     <string name="label_reserve">reserve</string>
     <string name="label_total_range">Total</string>
-    <string name="label_voltage">V</string>
+    <string name="label_voltage">Voltage</string>
+    <string name="label_voltage_abbr">V</string>
     <string name="label_voltage_start">Start</string>
     <string name="label_wh">wh</string>
     <string name="label_wh_per_km">wh/km</string>
