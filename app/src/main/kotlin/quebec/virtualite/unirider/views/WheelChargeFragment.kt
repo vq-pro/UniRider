@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.services.CalculatorService
 
 open class WheelChargeFragment : BaseFragment() {
 
@@ -20,6 +22,8 @@ open class WheelChargeFragment : BaseFragment() {
     internal var parmWheelId: Long? = 0
     internal var parmWhPerKm: Float? = 0f
     internal var wheel: WheelEntity? = null
+
+    private var calculatorService = CalculatorService()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
@@ -48,6 +52,8 @@ open class WheelChargeFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     fun onUpdateKm() = { km: String ->
-        textVoltageRequired.text = "89.2"
+        val voltage = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
+
+        textVoltageRequired.text = "$voltage"
     }
 }

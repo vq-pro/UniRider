@@ -7,10 +7,12 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.any
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
@@ -19,7 +21,9 @@ import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.LABEL_WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.S18_1
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_REQUIRED
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
+import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WH_PER_KM
 
@@ -28,6 +32,9 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
     @InjectMocks
     lateinit var fragment: WheelChargeFragment
+
+    @Mock
+    lateinit var mockedCalculatorService: CalculatorService
 
     @Mock
     lateinit var mockedEditKm: EditText
@@ -99,11 +106,16 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Given
         injectMocks()
 
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+            .willReturn(VOLTAGE_REQUIRED)
+
         // When
         fragment.onUpdateKm().invoke("$KM ")
 
         // Then
-        verify(mockedTextVoltageRequired).text = "89.2"
+        verify(mockedCalculatorService).requiredVoltage(fragment.wheel, WH_PER_KM, KM)
+
+        verify(mockedTextVoltageRequired).text = "$VOLTAGE_REQUIRED"
     }
 
     private fun injectMocks() {

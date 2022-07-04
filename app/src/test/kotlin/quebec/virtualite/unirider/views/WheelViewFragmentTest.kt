@@ -196,7 +196,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
-        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         // When
@@ -423,7 +423,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
-        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         // When
@@ -444,7 +444,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
-        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         // When
@@ -522,7 +522,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
-        given(mockedCalculatorService.roundedPercentage(any(), anyFloat()))
+        given(mockedCalculatorService.percentage(any(), anyFloat()))
             .willReturn(PERCENTAGE)
 
         // When
@@ -632,7 +632,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun verifyClearPercentage() {
-        verify(mockedCalculatorService, never()).roundedPercentage(any(), anyFloat())
+        verify(mockedCalculatorService, never()).percentage(any(), anyFloat())
         verify(mockedTextBattery).text = ""
     }
 
@@ -649,7 +649,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun verifyUpdatePercentage() {
-        verify(mockedCalculatorService).roundedPercentage(fragment.wheel, VOLTAGE)
+        verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
         verify(mockedTextBattery).text = "$PERCENTAGE%"
     }
 }

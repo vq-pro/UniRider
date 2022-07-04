@@ -189,7 +189,7 @@ open class WheelViewFragment : BaseFragment() {
 
     private fun updatePercentage(voltageActual: String) {
         val percentage: Float? = when {
-            isVoltageWithinRange(voltageActual) -> calculatorService.roundedPercentage(wheel, floatOf(voltageActual))
+            isVoltageWithinRange(voltageActual) -> calculatorService.percentage(wheel, floatOf(voltageActual))
             else -> null
         }
 

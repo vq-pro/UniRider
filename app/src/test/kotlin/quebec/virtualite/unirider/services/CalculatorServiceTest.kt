@@ -51,6 +51,12 @@ class CalculatorServiceTest {
         percentage_whenVoltagesNotSet_zero(1f, -100f)
     }
 
+    @Test
+    fun requiredVoltage() {
+        requiredVoltage(28.9f, 20f, 84.0f)
+        requiredVoltage(35.9f, 40f, 90.1f)
+    }
+
     private fun estimatedValues(
         voltageStart: Float,
         voltageActual: Float,
@@ -72,7 +78,7 @@ class CalculatorServiceTest {
 
     private fun percentage(voltage: Float, expectedPercentage: Float) {
         // When
-        val percentage = service.roundedPercentage(SHERMAN_MAX_3, voltage)
+        val percentage = service.percentage(SHERMAN_MAX_3, voltage)
 
         // Then
         assertThat(percentage, equalTo(expectedPercentage))
@@ -83,9 +89,17 @@ class CalculatorServiceTest {
         val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, voltageMax, voltageMin, 1f, voltageMax)
 
         // When
-        val percentage = service.roundedPercentage(wheel, 108.0f)
+        val percentage = service.percentage(wheel, 108.0f)
 
         // Then
         assertThat(percentage, equalTo(0.0f))
+    }
+
+    private fun requiredVoltage(whPerKm: Float, km: Float, expectedRequiredVoltage: Float) {
+        // When
+        val requiredVoltage = service.requiredVoltage(SHERMAN_MAX_3, whPerKm, km)
+
+        // Then
+        assertThat(requiredVoltage, equalTo(expectedRequiredVoltage))
     }
 }
