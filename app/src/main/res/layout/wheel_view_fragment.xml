@@ -32,7 +32,7 @@
                 <TextView
                         android:labelFor="@+id/edit_voltage_start"
                         android:layout_weight="1"
-                        android:layout_width="0dp"
+                        android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -55,6 +55,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="@string/label_voltage_abbr"
                 />
@@ -109,7 +110,7 @@
                 <TextView
                         android:labelFor="@+id/view_battery"
                         android:layout_weight="1"
-                        android:layout_width="0dp"
+                        android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -121,7 +122,18 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+                <TextView
+                        android:labelFor="@+id/view_battery"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_percentage_abbr"
                 />
             </TableRow>
 
@@ -130,7 +142,7 @@
                 <TextView
                         android:labelFor="@+id/view_remaining_range"
                         android:layout_weight="1"
-                        android:layout_width="0dp"
+                        android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -142,7 +154,19 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                />
+
+                <TextView
+                        android:labelFor="@+id/view_remaining_range"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_km"
                 />
             </TableRow>
 
@@ -151,7 +175,7 @@
                 <TextView
                         android:labelFor="@+id/view_remaining_range"
                         android:layout_weight="1"
-                        android:layout_width="0dp"
+                        android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -163,7 +187,18 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+                <TextView
+                        android:labelFor="@+id/view_total_range"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_km"
                 />
             </TableRow>
 
@@ -172,11 +207,11 @@
                 <TextView
                         android:labelFor="@+id/view_wh_per_km"
                         android:layout_weight="1"
-                        android:layout_width="0dp"
+                        android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_wh_per_km"
+                        android:text="@string/label_rate"
                 />
 
                 <TextView
@@ -184,7 +219,18 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+                <TextView
+                        android:labelFor="@+id/view_wh_per_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_wh_per_km"
                 />
             </TableRow>
 
@@ -213,7 +259,18 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+                <TextView
+                        android:labelFor="@+id/view_mileage"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_km"
                 />
             </TableRow>
 

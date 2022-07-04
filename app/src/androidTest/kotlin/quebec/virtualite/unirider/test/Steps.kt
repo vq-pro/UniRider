@@ -114,13 +114,13 @@ class Steps {
 
     @Then("^the mileage is updated to (.*?) km$")
     fun mileageUpdatedTo(expectedMileage: Int) {
-        assertThat(R.id.view_mileage, hasText("$expectedMileage km"))
+        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
         assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
-        assertThat(R.id.view_battery, hasText("$expectedBattery%"))
+        assertThat(R.id.view_battery, hasText("$expectedBattery"))
     }
 
     @When("the wh/km is available")
@@ -322,7 +322,7 @@ class Steps {
         longClick(R.id.button_delete)
     }
 
-    @Then("^the details view shows the (.*) with a mileage of (.*) and a starting voltage of (.*)V$")
+    @Then("^the details view shows the (.*) with a mileage of (.*) km and a starting voltage of (.*)V$")
     fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String, expectedStartingVoltage: Float) {
         assertThat(R.id.view_name, hasText(expectedName))
         assertThat(R.id.view_mileage, hasText(expectedMileage))
@@ -334,7 +334,7 @@ class Steps {
         assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
     }
 
-    @Then("^it displays a percentage of (.*?)$")
+    @Then("^it displays a percentage of (.*?)%$")
     fun displaysPercentage(percentage: String) {
         assertThat(R.id.view_battery, hasText(percentage))
     }
@@ -351,12 +351,12 @@ class Steps {
         assertThat(R.id.view_wh_per_km, isEmpty())
     }
 
-    @Then("^it displays an estimated remaining range of (.*?)$")
+    @Then("^it displays an estimated remaining range of (.*?) km$")
     fun displaysRemainingRange(range: String) {
         assertThat(R.id.view_remaining_range, hasText(range))
     }
 
-    @Then("^it displays an estimated total range of (.*?)$")
+    @Then("^it displays an estimated total range of (.*?) km$")
     fun displaysTotalRange(range: String) {
         assertThat(R.id.view_total_range, hasText(range))
     }

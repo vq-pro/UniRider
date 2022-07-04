@@ -27,8 +27,6 @@ import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.KM_NEW
 import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.LABEL_KM
-import quebec.virtualite.unirider.TestDomain.LABEL_WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
@@ -169,7 +167,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextName).text = NAME
         verify(mockedTextBtName).text = DEVICE_NAME
         verify(mockedEditVoltageStart).setText("$VOLTAGE_START")
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE} $LABEL_KM"
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
 
         verifyOnUpdateText(mockedEditVoltageStart, "onUpdateVoltageStart")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
@@ -279,7 +277,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             )
         )
         verify(mockedEditKm).setText("$KM_NEW")
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW} $LABEL_KM"
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
         verifyNoInteractions(mockedEditVoltageStart)
     }
@@ -307,7 +305,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             )
         )
         verify(mockedEditKm).setText("0.0")
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW} $LABEL_KM"
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
         verify(mockedEditVoltageStart).setText("$VOLTAGE_NEW")
     }
@@ -639,9 +637,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     private fun verifyUpdateEstimatedValues(voltage: Float, remainingRange: String) {
         verify(mockedCalculatorService).estimatedValues(fragment.wheel, voltage, KM)
 
-        verify(mockedTextRemainingRange).text = "$remainingRange $LABEL_KM"
-        verify(mockedTextTotalRange).text = "$TOTAL_RANGE $LABEL_KM"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM $LABEL_WH_PER_KM"
+        verify(mockedTextRemainingRange).text = remainingRange
+        verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM"
 
         verify(mockedButtonCharge).isEnabled = true
 
@@ -650,6 +648,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun verifyUpdatePercentage() {
         verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
-        verify(mockedTextBattery).text = "$PERCENTAGE%"
+        verify(mockedTextBattery).text = "$PERCENTAGE"
     }
 }

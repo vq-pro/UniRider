@@ -22,31 +22,22 @@ open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
     }
 
     protected fun textPercentageWithDecimal(percentage: Float?) = when {
-        percentage != null && percentage in 0f..100f -> "%.1f%%".format(ENGLISH, percentage)
+        percentage != null && percentage in 0f..100f -> "%.1f".format(ENGLISH, percentage)
         else -> ""
     }
 
     protected fun textKm(value: Int?) = when {
-        value != null -> {
-            val labelKm = fragments.string(R.string.label_km)
-            "$value $labelKm"
-        }
+        value != null -> "$value"
         else -> ""
     }
 
     protected fun textKmWithDecimal(value: Float?) = when {
-        value != null -> {
-            val labelKm = fragments.string(R.string.label_km)
-            "$value $labelKm".replace("0.0", "0")
-        }
+        value != null -> "$value".replace("0.0", "0")
         else -> ""
     }
 
     protected fun textWhPerKm(value: Float?) = when {
-        value != null -> {
-            val labelWhPerKm = fragments.string(R.string.label_wh_per_km)
-            "$value $labelWhPerKm"
-        }
+        value != null -> "$value"
         else -> ""
     }
 }
