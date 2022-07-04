@@ -15,3 +15,6 @@ Feature: Wheel Charging
     And it displays an estimated wh/km of 28.9 wh/km
     When I request to charge for 20 km
     Then it displays a required voltage of 85.5V
+
+    # FIXME-1 Verify a maximum voltage of 99.3V (100.8V - 1.5V) or blank
+    # FIXME-1 Verify a blank voltage for invalid distances
