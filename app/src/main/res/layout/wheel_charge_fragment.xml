@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".views.WheelEditFragment">
+        tools:context=".views.WheelChargeFragment">
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_wh_per_km"
+                        android:text="@string/label_rate"
                 />
 
                 <TextView
@@ -44,7 +44,18 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+                <TextView
+                        android:labelFor="@+id/view_wh_per_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_wh_per_km"
                 />
             </TableRow>
 
@@ -62,9 +73,10 @@
 
                 <EditText
                         android:id="@+id/edit_km"
-                        android:layout_weight="2"
+                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:autofillHints=""
                         android:inputType="text"
@@ -75,6 +87,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="@string/label_km"
                 />
@@ -97,7 +110,9 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        tools:ignore="RtlHardcoded"
                 />
 
                 <TextView
@@ -105,6 +120,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="@string/label_voltage_abbr"
                 />

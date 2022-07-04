@@ -18,7 +18,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.KM
-import quebec.virtualite.unirider.TestDomain.LABEL_WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_REQUIRED
@@ -96,7 +95,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         verifyFieldAssignment(R.id.view_wh_per_km, fragment.textWhPerKm, mockedTextWhPerKm)
 
         verify(mockedTextName).text = NAME
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM $LABEL_WH_PER_KM"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM"
 
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
     }

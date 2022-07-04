@@ -31,7 +31,6 @@ open class WheelChargeFragment : BaseFragment() {
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -46,7 +45,7 @@ open class WheelChargeFragment : BaseFragment() {
             wheel = it.getWheel(parmWheelId!!)
 
             textName.text = wheel!!.name
-            textWhPerKm.text = "$parmWhPerKm ${fragments.string(R.string.label_wh_per_km)}"
+            textWhPerKm.text = "$parmWhPerKm"
         }
     }
 

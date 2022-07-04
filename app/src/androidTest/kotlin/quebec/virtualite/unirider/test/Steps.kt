@@ -361,7 +361,7 @@ class Steps {
         assertThat(R.id.view_total_range, hasText(range))
     }
 
-    @Then("^it displays an estimated wh/km of (.*?)$")
+    @Then("^it displays an estimated wh/km of (.*?) wh/km$")
     fun displaysEstimatedWhPerKm(whPerKm: String) {
         assertThat(R.id.view_wh_per_km, hasText(whPerKm))
     }
