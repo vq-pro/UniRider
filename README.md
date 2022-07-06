@@ -1,6 +1,7 @@
 # Features
 
 * [Main Screen](app/src/androidTest/assets/features/Main_Screen.feature)
+* [Wheel Charging](app/src/androidTest/assets/features/Wheel_Charging.feature)
 * [Wheel Connecting](app/src/androidTest/assets/features/Wheel_Connecting_integration.feature)
 * [Wheel Connecting - End2End](app/src/androidTest/assets/features/Wheel_Connecting_e2e.feature)
 * [Wheel Editing & Adding](app/src/androidTest/assets/features/Wheel_Editing_and_Adding.feature)
