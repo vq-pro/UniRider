@@ -10,6 +10,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.any
@@ -115,6 +116,20 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         verify(mockedCalculatorService).requiredVoltage(fragment.wheel, WH_PER_KM, KM)
 
         verify(mockedTextVoltageRequired).text = "$VOLTAGE_REQUIRED"
+    }
+
+    @Test
+    fun onUpdateKm_whenEmpty_noVoltage() {
+        // Given
+        injectMocks()
+
+        // When
+        fragment.onUpdateKm().invoke(" ")
+
+        // Then
+        verifyNoInteractions(mockedCalculatorService)
+
+        verify(mockedTextVoltageRequired).text = ""
     }
 
     private fun injectMocks() {

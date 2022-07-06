@@ -1,3 +1,4 @@
+@WIP
 Feature: Wheel Charging
 
   Background:
@@ -16,5 +17,20 @@ Feature: Wheel Charging
     When I request to charge for 20 km
     Then it displays a required voltage of 85.5V
 
-    # FIXME-1 Verify a maximum voltage of 99.3V (100.8V - 1.5V) or blank
-    # FIXME-1 Verify a blank voltage for invalid distances
+  # FIXME-0 Verify a blank voltage for invalid distances
+  Scenario Outline: Charging a wheel - ERROR [<distance>]
+    Given I select the Sherman Max
+    And I set the starting voltage to 100.4V
+    And I set the actual voltage to 91.9V
+    And I set the distance to 42 km
+    And I charge the wheel
+    And it displays an estimated wh/km of 28.9 wh/km
+    When I request to charge for <distance>
+    Then it displays a required voltage of <voltage>
+    Examples:
+      | distance | voltage |
+      |          |         |
+      | aa       |         |
+
+    # FIXME-1 Verify a maximum voltage of 99.3V (100.8V - 1.5V)
+#      | 200 km   | 99.3V   |
