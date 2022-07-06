@@ -1,6 +1,7 @@
 package quebec.virtualite.unirider.services
 
 import quebec.virtualite.unirider.database.WheelEntity
+import java.lang.Float.min
 import kotlin.math.max
 
 open class CalculatorService {
@@ -45,9 +46,12 @@ open class CalculatorService {
         val whTotalRequired = whRequiredToReserve + whReserve
         val percentage = whTotalRequired / wheel.wh
         val voltageRange = wheel.voltageMax - wheel.voltageMin
-        val voltageRequired = percentage * voltageRange + wheel.voltageMin
+        val voltageRequired = min(
+            percentage * voltageRange + wheel.voltageMin + CHARGER_OFFSET,
+            wheel.voltageMax - CHARGER_OFFSET
+        )
 
-        return round(voltageRequired + CHARGER_OFFSET, NUM_DECIMALS)
+        return round(voltageRequired, NUM_DECIMALS)
     }
 
     private fun rawPercentage(value: Float, range: Float): Float {

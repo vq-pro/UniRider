@@ -56,6 +56,7 @@ class CalculatorServiceTest {
     fun requiredVoltage() {
         requiredVoltage(28.9f, 20f, 84.0f + CHARGER_OFFSET)
         requiredVoltage(35.9f, 40f, 90.1f + CHARGER_OFFSET)
+        requiredVoltage(28.9f, 200f, SHERMAN_MAX_3.voltageMax - CHARGER_OFFSET)
     }
 
     private fun estimatedValues(
