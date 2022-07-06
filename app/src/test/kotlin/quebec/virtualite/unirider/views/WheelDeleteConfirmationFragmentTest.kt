@@ -74,9 +74,9 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
 
         assertThat(fragment.wheel, equalTo(wheel))
 
-        assertThat(fragment.textName, equalTo(mockedTextName))
-        assertThat(fragment.buttonDeleteConfirmation, equalTo(mockedButtonDeleteConfirmation))
-        assertThat(fragment.buttonDeleteCancel, equalTo(mockedButtonDeleteCancel))
+        verifyFieldAssignment(R.id.button_delete_cancel, fragment.buttonDeleteCancel, mockedButtonDeleteCancel)
+        verifyFieldAssignment(R.id.button_delete_confirmation, fragment.buttonDeleteConfirmation, mockedButtonDeleteConfirmation)
+        verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
 
         verify(fragment.textName).text = NAME
 

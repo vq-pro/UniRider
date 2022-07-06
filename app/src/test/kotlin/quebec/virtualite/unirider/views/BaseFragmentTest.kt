@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ListView
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
 import org.mockito.ArgumentCaptor
@@ -19,9 +20,6 @@ import org.mockito.Mockito.verify
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.views.CommonFragmentServices
 import quebec.virtualite.commons.android.views.CommonWidgetServices
-import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.LABEL_KM
-import quebec.virtualite.unirider.TestDomain.LABEL_WH_PER_KM
 import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelDb
@@ -82,6 +80,13 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     @Captor
     private lateinit var captorRunWithWaitDialog: ArgumentCaptor<() -> Unit>
 
+    fun mockArgument(fragment: BaseFragment, param: String, value: Float) {
+        given(mockedBundle.getFloat(param))
+            .willReturn(value)
+
+        fragment.arguments = mockedBundle
+    }
+
     fun mockArgument(fragment: BaseFragment, param: String, value: Long) {
         given(mockedBundle.getLong(param))
             .willReturn(value)
@@ -121,11 +126,11 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
             .`when`(mockedFragments).runUI(any())
 
-        lenient().doReturn(LABEL_KM)
-            .`when`(mockedFragments).string(R.string.label_km)
+//        lenient().doReturn(LABEL_KM)
+//            .`when`(mockedFragments).string(R.string.label_km)
 
-        lenient().doReturn(LABEL_WH_PER_KM)
-            .`when`(mockedFragments).string(R.string.label_wh_per_km)
+//        lenient().doReturn(LABEL_WH_PER_KM)
+//            .`when`(mockedFragments).string(R.string.label_wh_per_km)
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {
@@ -143,8 +148,24 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         captorRunWithWaitDialog.value.invoke()
     }
 
+    fun <T : View?> verifyFieldAssignment(id: Int, field: T, mock: T) {
+        verify(mockedView).findViewById<T>(id)
+        assertThat(mock, equalTo(field))
+    }
+
     fun verifyInflate(expectedId: Int) {
         verify(mockedInflater).inflate(expectedId, mockedContainer, DONT_ATTACH_TO_ROOT)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T> verifyMultiFieldListAdapter(
+        mockedField: ListView, expectedId: Int, expectedData: List<T>, methodName: String
+    ) {
+        verify(mockedWidgets).multifieldListAdapter(
+            eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData),
+            (captorOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
+        )
+        assertThat(captorOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyOnClick(mockedField: View, methodName: String) {
@@ -179,16 +200,5 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {
         verify(mockedWidgets).stringListAdapter(mockedField, mockedView, expectedData)
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T> verifyMultiFieldListAdapter(
-        mockedField: ListView, expectedId: Int, expectedData: List<T>, methodName: String
-    ) {
-        verify(mockedWidgets).multifieldListAdapter(
-            eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData),
-            (captorOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
-        )
-        assertThat(captorOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 }

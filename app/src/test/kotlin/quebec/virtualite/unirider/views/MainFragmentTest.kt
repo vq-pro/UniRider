@@ -91,6 +91,9 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
             WHEEL_ROW_NEW
         )
 
+        verifyFieldAssignment(R.id.wheels, fragment.lvWheels, mockedLVWheels)
+        verifyFieldAssignment(R.id.total_mileage, fragment.textTotalMileage, mockedTextTotalMileage)
+
         verify(mockedWidgets).enable(mockedLVWheels)
         verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
         verifyOnItemClick(mockedLVWheels, "onSelectWheel")

@@ -20,8 +20,8 @@ open class MainFragment : BaseFragment() {
 
     internal val wheelList = ArrayList<WheelRow>()
 
-    private lateinit var lvWheels: ListView
-    private lateinit var textTotalMileage: TextView
+    lateinit var lvWheels: ListView
+    lateinit var textTotalMileage: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.main_fragment, container, false)

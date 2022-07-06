@@ -39,6 +39,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import quebec.virtualite.unirider.views.MainActivity
 import quebec.virtualite.unirider.views.MainFragment
+import quebec.virtualite.unirider.views.WheelChargeFragment
 import quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
@@ -84,6 +85,17 @@ class Steps {
         assertThat(R.id.wheels, not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))))
     }
 
+    @Then("I can charge the wheel")
+    fun canChargeWheel() {
+        click(R.id.button_charge)
+        assertThat(currentFragment(mainActivity), equalTo(WheelChargeFragment::class.java))
+    }
+
+    @Then("I cannot charge the wheel")
+    fun cannotChargeWheel() {
+        assertThat(R.id.button_charge, isDisabled())
+    }
+
     @Then("it shows that every field is editable")
     fun itShowsThatEveryFieldIsEditable() {
         assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
@@ -102,13 +114,24 @@ class Steps {
 
     @Then("^the mileage is updated to (.*?) km$")
     fun mileageUpdatedTo(expectedMileage: Int) {
-        assertThat(R.id.view_mileage, hasText("$expectedMileage km"))
+        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
         assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
-        assertThat(R.id.view_battery, hasText("$expectedBattery%"))
+        assertThat(R.id.view_battery, hasText("$expectedBattery"))
+    }
+
+    @When("the wh/km is available")
+    fun whPerKmIsAvailable() {
+        setActualVoltageTo("90")
+        setDistanceTo("40")
+    }
+
+    @When("the wh/km is not available")
+    fun whPerKmIsNotAvailable() {
+        // Nothing to do, values are already cleared
     }
 
     @When("^I reuse the name (.*?)$")
@@ -233,13 +256,13 @@ class Steps {
         setText(R.id.edit_wh, " ")
     }
 
-    @Then("^the wheel's Bluetooth name is undefined$")
+    @Then("the wheel's Bluetooth name is undefined")
     fun bluetoothNameUndefined() {
         assertThat(selectedWheel.btName, equalTo(null))
         assertThat(selectedWheel.btAddr, equalTo(null))
     }
 
-    @Then("^the wheel's Bluetooth name is updated$")
+    @Then("the wheel's Bluetooth name is updated")
     fun bluetoothNameUpdated() {
         assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
     }
@@ -299,7 +322,7 @@ class Steps {
         longClick(R.id.button_delete)
     }
 
-    @Then("^the details view shows the (.*) with a mileage of (.*) and a starting voltage of (.*)V$")
+    @Then("^the details view shows the (.*) with a mileage of (.*) km and a starting voltage of (.*)V$")
     fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String, expectedStartingVoltage: Float) {
         assertThat(R.id.view_name, hasText(expectedName))
         assertThat(R.id.view_mileage, hasText(expectedMileage))
@@ -311,9 +334,14 @@ class Steps {
         assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
     }
 
-    @Then("^it displays a percentage of (.*?)$")
+    @Then("^it displays a percentage of (.*?)%$")
     fun displaysPercentage(percentage: String) {
         assertThat(R.id.view_battery, hasText(percentage))
+    }
+
+    @Then("^it displays a required voltage of (.*?)$")
+    fun displaysRequiredVoltage(expectedVoltage: String) {
+        assertThat(R.id.view_required_voltage, hasText(strip(expectedVoltage, "V")))
     }
 
     @Then("it displays blank estimated values")
@@ -323,25 +351,29 @@ class Steps {
         assertThat(R.id.view_wh_per_km, isEmpty())
     }
 
-    @Then("^it displays an estimated remaining range of \"(.*?)\"$")
+    @Then("^it displays an estimated remaining range of (.*?) km$")
     fun displaysRemainingRange(range: String) {
         assertThat(R.id.view_remaining_range, hasText(range))
     }
 
-    @Then("^it displays an estimated total range of \"(.*?)\"$")
+    @Then("^it displays an estimated total range of (.*?) km$")
     fun displaysTotalRange(range: String) {
         assertThat(R.id.view_total_range, hasText(range))
     }
 
-    @Then("^it displays an estimated wh/km of \"(.*?)\"$")
-    fun displaysWhPerKm(whPerKm: String) {
+    @Then("^it displays an estimated wh/km of (.*?) wh/km$")
+    fun displaysEstimatedWhPerKm(whPerKm: String) {
         assertThat(R.id.view_wh_per_km, hasText(whPerKm))
+    }
+
+    @When("I charge the wheel")
+    fun chargeWheel() {
+        click(R.id.button_charge)
     }
 
     @When("I edit the wheel")
     fun editWheel() {
         click(R.id.button_edit)
-        assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
     }
 
     @Given("this connected wheel:")
@@ -418,19 +450,19 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
-    @Given("^I set the distance to (.*?)$")
-    fun setDistanceTo(km: String) {
-        setText(R.id.edit_km, km)
-    }
-
-    @Given("^I set the current voltage to (.*?)$")
-    fun setCurrentVoltageTo(voltage: String) {
+    @Given("^I set the actual voltage to (.*?)V$")
+    fun setActualVoltageTo(voltage: String) {
         setText(R.id.edit_voltage_actual, voltage)
     }
 
-    @Given("^I set the starting voltage to (.*)V$")
+    @Given("^I set the distance to (.*?)$")
+    fun setDistanceTo(km: String) {
+        setText(R.id.edit_km, strip(km, "km"))
+    }
+
+    @Given("^I set the starting voltage to (.*)$")
     fun setStartingVoltageTo(startingVoltage: String) {
-        setText(R.id.edit_voltage_start, startingVoltage)
+        setText(R.id.edit_voltage_start, strip(startingVoltage, "V"))
     }
 
     @Then("the wheel can be saved")
@@ -477,16 +509,18 @@ class Steps {
     }
 
     @When("^I enter an actual voltage of (.*?)$")
-    fun whenEnterActualVoltage(voltageParm: String) {
-        enter(
-            R.id.edit_voltage_actual,
-            if (voltageParm.endsWith("V")) voltageParm.substring(0, voltageParm.length - 1) else voltageParm
-        )
+    fun whenEnterActualVoltage(voltage: String) {
+        enter(R.id.edit_voltage_actual, strip(voltage, "V"))
     }
 
     @When("I reconnect to the wheel")
     fun whenReconnectToWheel() {
         click(R.id.button_connect)
+    }
+
+    @When("^I request to charge for (.*?)$")
+    fun whenRequestChargeFor(km: String) {
+        setText(R.id.edit_km, strip(km, "km"))
     }
 
     @When("^I select the (.*?)$")
@@ -513,6 +547,13 @@ class Steps {
         BluetoothServicesSim.setKm(floatOf(deviceFields[2]))
         BluetoothServicesSim.setMileage(floatOf(deviceFields[3]))
         BluetoothServicesSim.setVoltage(voltageOf(deviceFields[4]))
+    }
+
+    private fun strip(value: String, stripValue: String): String {
+        return when {
+            value.endsWith(stripValue) -> value.substring(0, value.length - stripValue.length).trim()
+            else -> value.trim()
+        }
     }
 
     private fun updateMapWheels() {

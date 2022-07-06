@@ -33,8 +33,13 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         }
     }
 
-    open fun navigateTo(id: Int, param: Pair<String, Any>) {
-        runUI { fragment.findNavController().navigate(id, bundleOf(param.first to param.second)) }
+    open fun navigateTo(id: Int, vararg params: Pair<String, Any?>) {
+        runUI {
+            fragment.findNavController().navigate(
+                id,
+                bundleOf(*params)
+            )
+        }
     }
 
     open fun runBackground(function: (() -> Unit)?) {

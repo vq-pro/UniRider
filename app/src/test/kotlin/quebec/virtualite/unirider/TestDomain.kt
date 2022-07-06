@@ -14,8 +14,9 @@ object TestDomain {
     const val ID = 1111L
     const val ID2 = 1112L
     const val ID3 = 1113L
-    const val LABEL_KM = "km"
-    const val LABEL_WH_PER_KM = "wh/km"
+
+    //    const val LABEL_KM = "km"
+//    const val LABEL_WH_PER_KM = "wh/km"
     const val KM = 4444f
     const val KM_NEW = 4445f
     const val KM_NEW_RAW = 4445.012f
@@ -48,6 +49,7 @@ object TestDomain {
     const val VOLTAGE_MIN2 = 90.0f
     const val VOLTAGE_MIN3 = 75.6f
     const val VOLTAGE_MIN_NEW = 74.5f
+    const val VOLTAGE_REQUIRED = 90.5f
     const val VOLTAGE_RESERVE = 70.0f
     const val VOLTAGE_RESERVE2 = 95.0f
     const val VOLTAGE_RESERVE3 = 80.0f

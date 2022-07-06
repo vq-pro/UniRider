@@ -9,11 +9,10 @@ Feature: Wheel Connecting - End-2-End
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      |
       | 14S         | 950     | 840  | 48V         | 55V             | 67.2V       |
       | S18         | 3143    | 1110 | 60V         | 68V             | 84V         |
-      | V8F         | 0       | 480  | 65V         | 70V             | 84V         |
       | V10F        | 1600    | 960  | 65V         | 70V             | 84V         |
-      | Sherman     | 10000   | 3200 | 75.6V       | 80V             | 100.8V      |
-      | Sherman Max | 2434    | 3600 | 75.6V       | 80V             | 100.8V      |
-      | S18-SE      | 269     | 900  | 60V         | 64V             | 84V         |
+      | Sherman     | 10000   | 3200 | 75.6V       | 82V             | 100.8V      |
+      | Sherman Max | 2434    | 3600 | 75.6V       | 82V             | 100.8V      |
+      | S18-SE      | 269     | 900  | 60V         | 66V             | 84V         |
     And the Sherman has a previous mileage of 3600 km
     And I start the app
 
@@ -24,8 +23,8 @@ Feature: Wheel Connecting - End-2-End
     And the wheel's Bluetooth name is updated
     Examples:
       | wheel   | bt name      | mileage |
-      | 14S     | KS-14SMD2107 | 1067    |
-      | Sherman | LK1149       | 19713   |
+      | 14S     | KS-14SMD2107 | 1078    |
+      | Sherman | LK1149       | 20351   |
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
     Given I select the Sherman
@@ -33,21 +32,20 @@ Feature: Wheel Connecting - End-2-End
     When I connect to the LK1149
     Then the wheel's Bluetooth name is updated
 
-  Scenario Outline: Connecting to a previously connected wheel - <wheel>
+  Scenario Outline: Connecting to a previously connected wheel [<wheel>]
     Given these wheels are connected:
       | Name        | Bt Name      | Bt Address        |
-      | V8F         | V8F-F8D10065 | 00:35:FF:1F:61:EA |
       | 14S         | KS-14SMD2107 | FC:69:47:68:79:8A |
       | S18-SE      | KSS18-9135   | 00:00:00:00:00:00 |
       | Sherman     | LK1149       | 88:25:83:F1:C9:8B |
       | Sherman Max | LK4142       | 88:25:83:F3:61:20 |
     And I select the <wheel>
     When I reconnect to the wheel
-    Then the mileage is updated to <mileage> km
+    Then the mileage is updated to <mileage>
     Examples:
-      | wheel   | mileage |
-      | 14S     | 1067    |
-      | Sherman | 19713   |
+      | wheel   | mileage  |
+      | 14S     | 1078 km  |
+      | Sherman | 20351 km |
 
   Scenario: Connecting to a previously connected wheel - ERROR - Connection following failure to connect
     Given these wheels are connected:
@@ -62,4 +60,4 @@ Feature: Wheel Connecting - End-2-End
     And I cancel the scan and go back
     And I select the Sherman
     When I reconnect to the wheel
-    Then the mileage is updated to 19713 km
+    Then the mileage is updated to 20351 km

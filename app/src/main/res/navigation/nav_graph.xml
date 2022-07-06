@@ -27,6 +27,11 @@
             tools:layout="@layout/wheel_view_fragment">
 
         <action
+                android:id="@+id/action_WheelViewFragment_to_WheelChargeFragment"
+                app:destination="@+id/WheelChargeFragment"
+        />
+
+        <action
                 android:id="@+id/action_WheelViewFragment_to_WheelEditFragment"
                 app:destination="@+id/WheelEditFragment"
         />
@@ -35,6 +40,12 @@
                 android:id="@+id/action_WheelViewFragment_to_WheelScanFragment"
                 app:destination="@+id/WheelScanFragment"
         />
+    </fragment>
+
+    <fragment
+            android:id="@+id/WheelChargeFragment"
+            android:name="quebec.virtualite.unirider.views.WheelChargeFragment"
+            tools:layout="@layout/wheel_charge_fragment">
     </fragment>
 
     <fragment
