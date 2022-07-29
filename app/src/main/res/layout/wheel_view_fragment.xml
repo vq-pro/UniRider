@@ -10,25 +10,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
     >
+        <TextView
+                android:id="@+id/view_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textStyle="bold"
+        />
+
         <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
         >
-            <!-- Name-->
-            <TableRow>
-                <TextView
-                        android:id="@+id/view_name"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textStyle="bold"
-                />
-            </TableRow>
-
             <!-- Starting Voltage -->
-            <TableRow android:layout_marginTop="15dp">
+            <TableRow android:layout_marginTop="30dp">
                 <TextView
                         android:labelFor="@+id/edit_voltage_start"
                         android:layout_weight="1"
