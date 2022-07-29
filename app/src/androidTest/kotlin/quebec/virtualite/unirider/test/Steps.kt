@@ -51,6 +51,7 @@ class Steps {
 
     private val NEW_WHEEL_ENTRY = "<New>"
 
+    @JvmField
     @Rule
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
