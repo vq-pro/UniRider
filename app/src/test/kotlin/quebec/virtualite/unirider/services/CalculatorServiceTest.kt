@@ -23,40 +23,34 @@ class CalculatorServiceTest {
     lateinit var service: CalculatorService
 
     @Test
-    fun estimatedValues() {
-        estimatedValues(100.8f, 91.9f, 42f, 56.2f, 98.2f, 30.3f)
-        estimatedValues(98.2f, 91.9f, 42f, 79.3f, 121.3f, 21.4f)
+    fun convertConsumption() {
+        convertConsumption(29.8f, 25)
+        convertConsumption(29.9f, 25)
+        convertConsumption(30.0f, 30)
+        convertConsumption(30.1f, 30)
+        convertConsumption(30.2f, 30)
+        convertConsumption(32.5f, 30)
+        convertConsumption(16.8f, 15)
+    }
 
-        estimatedValues(100.8f, 83.5f, 81f, 16.4f, 97.4f, 30.5f)
-        estimatedValues(100.4f, 83.5f, 81f, 16.8f, 97.8f, 29.8f)
+    private fun convertConsumption(rawConsumption: Float, expectedConsumption: Int) {
+        // When
+        val result = service.convertConsumption(rawConsumption)
+
+        // Then
+        assertThat(result, equalTo(expectedConsumption))
+    }
+
+    @Test
+    fun estimatedValues() {
+        estimatedValues(100.4f, 91.9f, 42f, 56.7f, 98.7f, 25)
+        estimatedValues(98.2f, 91.0f, 42f, 62.9f, 104.9f, 20)
+
+        estimatedValues(100.8f, 83.5f, 81f, 14.3f, 95.3f, 30)
+        estimatedValues(100.4f, 83.5f, 81f, 16.7f, 97.7f, 25)
 
         // Voltage lower than reserve
-        estimatedValues(100.8f, 79.5f, 81.2f, 0f, 81.2f, 37.5f)
-    }
-
-    @Test
-    fun percentage() {
-        percentage(100.8f, 100.0f)
-        percentage(75.6f, 0.0f)
-        percentage(88.2f, 50.0f)
-        percentage(92.5f, 67.1f)
-    }
-
-    @Test
-    fun percentage_whenVoltagesNotSet_zero() {
-        percentage_whenVoltagesNotSet_zero(0f, 1f)
-        percentage_whenVoltagesNotSet_zero(-1f, 1f)
-        percentage_whenVoltagesNotSet_zero(-100f, 1f)
-        percentage_whenVoltagesNotSet_zero(1f, 0f)
-        percentage_whenVoltagesNotSet_zero(1f, -1f)
-        percentage_whenVoltagesNotSet_zero(1f, -100f)
-    }
-
-    @Test
-    fun requiredVoltage() {
-        requiredVoltage(28.9f, 20f, 84.0f + CHARGER_OFFSET)
-        requiredVoltage(35.9f, 40f, 90.1f + CHARGER_OFFSET)
-        requiredVoltage(28.9f, 200f, SHERMAN_MAX_3.voltageMax - CHARGER_OFFSET)
+        estimatedValues(100.8f, 79.5f, 81.2f, 0f, 81.2f, 35)
     }
 
     private fun estimatedValues(
@@ -65,7 +59,7 @@ class CalculatorServiceTest {
         km: Float,
         expectedRemainingRange: Float,
         expectedTotalRange: Float,
-        expectedWhPerKm: Float
+        expectedWhPerKm: Int
     ) {
         // When
         val values = service.estimatedValues(
@@ -78,12 +72,30 @@ class CalculatorServiceTest {
         assertThat(values.whPerKm, equalTo(expectedWhPerKm))
     }
 
+    @Test
+    fun percentage() {
+        percentage(100.8f, 100.0f)
+        percentage(75.6f, 0.0f)
+        percentage(88.2f, 50.0f)
+        percentage(92.5f, 67.1f)
+    }
+
     private fun percentage(voltage: Float, expectedPercentage: Float) {
         // When
         val percentage = service.percentage(SHERMAN_MAX_3, voltage)
 
         // Then
         assertThat(percentage, equalTo(expectedPercentage))
+    }
+
+    @Test
+    fun percentage_whenVoltagesNotSet_zero() {
+        percentage_whenVoltagesNotSet_zero(0f, 1f)
+        percentage_whenVoltagesNotSet_zero(-1f, 1f)
+        percentage_whenVoltagesNotSet_zero(-100f, 1f)
+        percentage_whenVoltagesNotSet_zero(1f, 0f)
+        percentage_whenVoltagesNotSet_zero(1f, -1f)
+        percentage_whenVoltagesNotSet_zero(1f, -100f)
     }
 
     private fun percentage_whenVoltagesNotSet_zero(voltageMin: Float, voltageMax: Float) {
@@ -97,7 +109,14 @@ class CalculatorServiceTest {
         assertThat(percentage, equalTo(0.0f))
     }
 
-    private fun requiredVoltage(whPerKm: Float, km: Float, expectedRequiredVoltage: Float) {
+    @Test
+    fun requiredVoltage() {
+        requiredVoltage(25, 20f, 84.2f + CHARGER_OFFSET)
+        requiredVoltage(35, 40f, 91.2f + CHARGER_OFFSET)
+        requiredVoltage(25, 200f, SHERMAN_MAX_3.voltageMax - CHARGER_OFFSET)
+    }
+
+    private fun requiredVoltage(whPerKm: Int, km: Float, expectedRequiredVoltage: Float) {
         // When
         val requiredVoltage = service.requiredVoltage(SHERMAN_MAX_3, whPerKm, km)
 

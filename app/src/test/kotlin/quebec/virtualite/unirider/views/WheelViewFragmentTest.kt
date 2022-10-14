@@ -639,7 +639,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         verify(mockedTextRemainingRange).text = remainingRange
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM+"
 
         verify(mockedButtonCharge).isEnabled = true
 

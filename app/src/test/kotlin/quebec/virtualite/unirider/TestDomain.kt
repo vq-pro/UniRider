@@ -62,7 +62,7 @@ object TestDomain {
     const val WH2 = 2220
     const val WH3 = 3600
     const val WH_NEW = 9999
-    const val WH_PER_KM = 7777f
+    const val WH_PER_KM = 7777
     val WHEEL_ROW_1_123 = WheelRow(ID, NAME, PREMILEAGE + MILEAGE)
     val WHEEL_ROW_2_456 = WheelRow(ID2, NAME2, PREMILEAGE2 + MILEAGE2)
     val WHEEL_ROW_3_123 = WheelRow(ID3, NAME3, PREMILEAGE3 + MILEAGE3)

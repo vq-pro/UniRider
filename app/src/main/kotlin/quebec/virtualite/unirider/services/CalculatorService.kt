@@ -14,21 +14,22 @@ open class CalculatorService {
     data class EstimatedValues(
         val remainingRange: Float,
         val totalRange: Float,
-        val whPerKm: Float
+        val whPerKm: Int
     )
 
     open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Float): EstimatedValues {
         val whConsumedAfterStart = wh(wheel!!, wheel.voltageStart, voltage)
         val whRemainingToReserve = wh(wheel, voltage, wheel.voltageReserve)
 
-        val whPerKm = whConsumedAfterStart / km
-        val remainingRange = max(whRemainingToReserve / whPerKm, 0f)
+        val whPerKm = convertConsumption(whConsumedAfterStart / km)
+        val whPerKmTopOfTheRange = whPerKm + 5
+        val remainingRange = max(whRemainingToReserve / whPerKmTopOfTheRange, 0f)
         val totalRange = remainingRange + km
 
         return EstimatedValues(
             round(remainingRange, NUM_DECIMALS),
             round(totalRange, NUM_DECIMALS),
-            round(whPerKm, NUM_DECIMALS)
+            whPerKm
         )
     }
 
@@ -40,8 +41,9 @@ open class CalculatorService {
         return round(rawPercentage(wheel, voltage!!) * 100, NUM_DECIMALS)
     }
 
-    open fun requiredVoltage(wheel: WheelEntity?, whPerKm: Float, km: Float): Float {
-        val whRequiredToReserve = whPerKm * km
+    open fun requiredVoltage(wheel: WheelEntity?, whPerKm: Int, km: Float): Float {
+        val whPerKmTopOfTheRange = whPerKm + 5
+        val whRequiredToReserve = whPerKmTopOfTheRange * km
         val whReserve = wh(wheel!!, wheel.voltageReserve, wheel.voltageMin)
         val whTotalRequired = whRequiredToReserve + whReserve
         val percentage = whTotalRequired / wheel.wh
@@ -52,6 +54,11 @@ open class CalculatorService {
         )
 
         return round(voltageRequired, NUM_DECIMALS)
+    }
+
+    internal fun convertConsumption(rawConsumption: Float): Int {
+        val consumption = rawConsumption / 5
+        return consumption.toInt() * 5
     }
 
     private fun rawPercentage(value: Float, range: Float): Float {

@@ -12,14 +12,12 @@ Feature: Wheel Charging
     And I set the actual voltage to 91.9V
     And I set the distance to 42 km
     And I charge the wheel
-    And it displays an estimated wh/km of 28.9 wh/km
+    And it displays an estimated rate of 25+ wh/km
     When I request to charge for <distance>
     Then it displays a required voltage of <voltage>
-    When I request to charge for 20 km
-    Then it displays a required voltage of 85.5V
     Examples:
       | distance | voltage |
-      | 20 km    | 85.5V   |
+      | 20 km    | 85.7V   |
       | 200 km   | 99.3V   |
       |          |         |
       | aa       |         |
