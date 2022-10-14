@@ -27,7 +27,7 @@
                 />
             </TableRow>
 
-            <!-- wh/km -->
+            <!-- Rate -->
             <TableRow android:layout_marginTop="15dp">
                 <TextView
                         android:labelFor="@+id/view_wh_per_km"

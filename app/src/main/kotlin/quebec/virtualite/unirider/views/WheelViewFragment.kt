@@ -136,7 +136,7 @@ open class WheelViewFragment : BaseFragment() {
         updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, voltageStart)
     }
 
-    private fun goto(id: Int, wheel: WheelEntity, whPerKm: Float) {
+    private fun goto(id: Int, wheel: WheelEntity, whPerKm: Int) {
         fragments.navigateTo(
             id,
             Pair(PARAMETER_WHEEL_ID, wheel.id),

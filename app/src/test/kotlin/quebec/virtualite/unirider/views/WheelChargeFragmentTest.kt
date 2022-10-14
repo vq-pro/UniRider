@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verifyNoInteractions
@@ -96,7 +97,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         verifyFieldAssignment(R.id.view_wh_per_km, fragment.textWhPerKm, mockedTextWhPerKm)
 
         verify(mockedTextName).text = NAME
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM"
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM+"
 
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
     }
@@ -106,7 +107,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Given
         injectMocks()
 
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyInt(), anyFloat()))
             .willReturn(VOLTAGE_REQUIRED)
 
         // When

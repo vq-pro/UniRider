@@ -87,6 +87,13 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         fragment.arguments = mockedBundle
     }
 
+    fun mockArgument(fragment: BaseFragment, param: String, value: Int) {
+        given(mockedBundle.getInt(param))
+            .willReturn(value)
+
+        fragment.arguments = mockedBundle
+    }
+
     fun mockArgument(fragment: BaseFragment, param: String, value: Long) {
         given(mockedBundle.getLong(param))
             .willReturn(value)

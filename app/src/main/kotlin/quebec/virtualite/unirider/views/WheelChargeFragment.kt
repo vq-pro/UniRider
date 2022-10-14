@@ -22,17 +22,18 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var textWhPerKm: TextView
 
     internal var parmWheelId: Long? = 0
-    internal var parmWhPerKm: Float? = 0f
+    internal var parmWhPerKm: Int? = 0
     internal var wheel: WheelEntity? = null
 
     private var calculatorService = CalculatorService()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
-        parmWhPerKm = arguments?.getFloat(PARAMETER_WH_PER_KM)
+        parmWhPerKm = arguments?.getInt(PARAMETER_WH_PER_KM)
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -47,7 +48,7 @@ open class WheelChargeFragment : BaseFragment() {
             wheel = it.getWheel(parmWheelId!!)
 
             textName.text = wheel!!.name
-            textWhPerKm.text = "$parmWhPerKm"
+            textWhPerKm.text = textWhPerKm(parmWhPerKm)
         }
     }
 

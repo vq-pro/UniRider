@@ -36,8 +36,8 @@ open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
         else -> ""
     }
 
-    protected fun textWhPerKm(value: Float?) = when {
-        value != null -> "$value"
+    protected fun textWhPerKm(value: Int?) = when {
+        value != null -> "$value+"
         else -> ""
     }
 }
