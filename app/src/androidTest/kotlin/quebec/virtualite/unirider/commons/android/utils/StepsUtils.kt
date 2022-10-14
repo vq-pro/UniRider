@@ -42,7 +42,7 @@ import java.lang.Thread.sleep
 object StepsUtils {
 
     private val INTERVAL = 250L
-    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 10000L else 5000L
+    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
 
     fun assertThat(id: Int, assertion: Matcher<View>) {
         poll {

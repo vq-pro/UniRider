@@ -25,6 +25,7 @@ Feature: Wheel Connecting - End-2-End
     Examples:
       | wheel   | bt name      | mileage |
       | 14S     | KS-14SMD2107 | 1300    |
+#      | S18-SE  | KSS18-9135   | 718     |
       | Sherman | LK1149       | 22610   |
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
@@ -37,23 +38,24 @@ Feature: Wheel Connecting - End-2-End
     Given these wheels are connected:
       | Name        | Bt Name      | Bt Address        |
       | 14S         | KS-14SMD2107 | FC:69:47:68:79:8A |
-      | S18-SE      | KSS18-9135   | 00:00:00:00:00:00 |
+      | S18-SE      | KSS18-9135   | 48:70:1E:4D:E7:3F |
       | Sherman     | LK1149       | 88:25:83:F1:C9:8B |
       | Sherman Max | LK4142       | 88:25:83:F3:61:20 |
     And I select the <wheel>
     When I reconnect to the wheel
-    Then the mileage is updated to <mileage>
+    Then the mileage is updated to <mileage> km
     Examples:
-      | wheel   | mileage  |
-      | 14S     | 1300 km  |
-      | Sherman | 22610 km |
+      | wheel   | mileage |
+      | 14S     | 1300    |
+#      | S18-SE  | 718     |
+      | Sherman | 22610   |
 
   Scenario: Connecting to a previously connected wheel - ERROR - Connection following failure to connect
     Given these wheels are connected:
       | Name        | Bt Name      | Bt Address        |
       | Nikola+     | GOTWAY       | 00:00:00:00:00:00 |
       | 14S         | KS-14SMD2107 | FC:69:47:68:79:8A |
-      | S18-SE      | KSS18-9135   | 00:00:00:00:00:00 |
+      | S18-SE      | KSS18-9135   | 48:70:1E:4D:E7:3F |
       | Sherman     | LK1149       | 88:25:83:F1:C9:8B |
       | Sherman Max | LK4142       | 88:25:83:F3:61:20 |
     And I select the Nikola+
