@@ -41,13 +41,13 @@ Feature: Wheel Viewing
     And it displays an estimated total range of <total>
     And it displays an estimated rate of <wh/km>
     Examples:
-      | wheel       | starting voltage | km      | voltage | remaining | total    | wh/km     |
-      | Sherman Max | 100.4V           | 42.0 km | 91.9V   | 56.7 km   | 98.7 km  | 25+ wh/km |
-      | Sherman Max | 100.4V           | 81.0 km | 83.5V   | 16.7 km   | 97.7 km  | 25+ wh/km |
-      | Sherman Max | 100.4V           | 42.0 km | 91V     | 44.9 km   | 86.9 km  | 30+ wh/km |
-      | Sherman Max | 98.2V            | 42.0 km | 91V     | 62.9 km   | 104.9 km | 20+ wh/km |
-      | S18         | 84V              | 21.0 km | 72V     | 6.2 km    | 27.2 km  | 25+ wh/km |
-      | S18         | 84V              | 42.0 km | 67V     | 0 km      | 42.0 km  | 15+ wh/km |
+      | wheel       | starting voltage | km      | voltage | remaining | total   | wh/km     |
+      | Sherman Max | 100.4V           | 42.0 km | 91.9V   | 47.1 km   | 89.1 km | 25+ wh/km |
+      | Sherman Max | 100.4V           | 81.0 km | 83.5V   | 7.1 km    | 88.1 km | 25+ wh/km |
+      | Sherman Max | 100.4V           | 42.0 km | 91V     | 36.7 km   | 78.7 km | 30+ wh/km |
+      | Sherman Max | 98.2V            | 42.0 km | 91V     | 51.4 km   | 93.4 km | 20+ wh/km |
+      | S18         | 84V              | 21.0 km | 72V     | 3.1 km    | 24.1 km | 25+ wh/km |
+      | S18         | 84V              | 42.0 km | 67V     | 0 km      | 42.0 km | 15+ wh/km |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
@@ -89,10 +89,10 @@ Feature: Wheel Viewing
     Given I select the Sherman Max
     And I set the distance to 42 km
     And I set the actual voltage to 91.9V
-    And it displays an estimated remaining range of 48.6 km
+    And it displays an estimated remaining range of 40.4 km
     When I edit the wheel
     And I go back to view the wheel
     Then it displays a percentage of 64.7%
-    And it displays an estimated remaining range of 48.6 km
-    And it displays an estimated total range of 90.6 km
+    And it displays an estimated remaining range of 40.4 km
+    And it displays an estimated total range of 82.4 km
     And it displays an estimated rate of 30+ wh/km

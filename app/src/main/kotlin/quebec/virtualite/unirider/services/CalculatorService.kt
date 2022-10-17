@@ -18,11 +18,13 @@ open class CalculatorService {
     )
 
     open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Float): EstimatedValues {
+
         val whConsumedAfterStart = wh(wheel!!, wheel.voltageStart, voltage)
-        val whRemainingToReserve = wh(wheel, voltage, wheel.voltageReserve)
+        val whRemainingToReserve = wh(wheel, voltage, adjustedReserve(wheel))
 
         val whPerKm = convertConsumption(whConsumedAfterStart / km)
         val whPerKmTopOfTheRange = whPerKm + 5
+
         val remainingRange = max(whRemainingToReserve / whPerKmTopOfTheRange, 0f)
         val totalRange = remainingRange + km
 
@@ -42,9 +44,12 @@ open class CalculatorService {
     }
 
     open fun requiredVoltage(wheel: WheelEntity?, whPerKm: Int, km: Float): Float {
+
+        val whReserve = wh(wheel!!, adjustedReserve(wheel), wheel.voltageMin)
+
         val whPerKmTopOfTheRange = whPerKm + 5
         val whRequiredToReserve = whPerKmTopOfTheRange * km
-        val whReserve = wh(wheel!!, wheel.voltageReserve, wheel.voltageMin)
+
         val whTotalRequired = whRequiredToReserve + whReserve
         val percentage = whTotalRequired / wheel.wh
         val voltageRange = wheel.voltageMax - wheel.voltageMin
@@ -54,6 +59,10 @@ open class CalculatorService {
         )
 
         return round(voltageRequired, NUM_DECIMALS)
+    }
+
+    internal fun adjustedReserve(wheel: WheelEntity): Float {
+        return wheel.voltageReserve + 2
     }
 
     internal fun convertConsumption(rawConsumption: Float): Int {

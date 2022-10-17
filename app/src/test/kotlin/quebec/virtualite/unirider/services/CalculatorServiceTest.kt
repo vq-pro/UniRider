@@ -23,6 +23,15 @@ class CalculatorServiceTest {
     lateinit var service: CalculatorService
 
     @Test
+    fun adjustedReserve() {
+        // When
+        val result = service.adjustedReserve(SHERMAN_MAX_3)
+
+        // Then
+        assertThat(result, equalTo(SHERMAN_MAX_3.voltageReserve + 2))
+    }
+
+    @Test
     fun convertConsumption() {
         convertConsumption(29.8f, 25)
         convertConsumption(29.9f, 25)
@@ -43,11 +52,10 @@ class CalculatorServiceTest {
 
     @Test
     fun estimatedValues() {
-        estimatedValues(100.4f, 91.9f, 42f, 56.7f, 98.7f, 25)
-        estimatedValues(98.2f, 91.0f, 42f, 62.9f, 104.9f, 20)
-
-        estimatedValues(100.8f, 83.5f, 81f, 14.3f, 95.3f, 30)
-        estimatedValues(100.4f, 83.5f, 81f, 16.7f, 97.7f, 25)
+        estimatedValues(100.4f, 91.9f, 42f, 47.1f, 89.1f, 25)
+        estimatedValues(100.4f, 83.5f, 81f, 7.1f, 88.1f, 25)
+        estimatedValues(98.2f, 91.0f, 42f, 51.4f, 93.4f, 20)
+        estimatedValues(100.8f, 83.5f, 81f, 6.1f, 87.1f, 30)
 
         // Voltage lower than reserve
         estimatedValues(100.8f, 79.5f, 81.2f, 0f, 81.2f, 35)
@@ -111,8 +119,8 @@ class CalculatorServiceTest {
 
     @Test
     fun requiredVoltage() {
-        requiredVoltage(25, 20f, 84.2f + CHARGER_OFFSET)
-        requiredVoltage(35, 40f, 91.2f + CHARGER_OFFSET)
+        requiredVoltage(25, 20f, 86.2f + CHARGER_OFFSET)
+        requiredVoltage(35, 40f, 93.2f + CHARGER_OFFSET)
         requiredVoltage(25, 200f, SHERMAN_MAX_3.voltageMax - CHARGER_OFFSET)
     }
 

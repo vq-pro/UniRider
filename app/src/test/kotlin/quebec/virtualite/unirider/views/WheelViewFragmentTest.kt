@@ -323,20 +323,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
-    fun onUpdateKm() {
-        // Given
-        injectMocks()
-        mockVoltageActual(" ")
-        mockVoltageStart(" ")
-
-        // When
-        fragment.onUpdateKm().invoke("$KM ")
-
-        // Then
-        verifyClearEstimatedValues()
-    }
-
-    @Test
     fun onUpdateKm_whenBlank_noDisplay() {
         // Given
         injectMocks()
@@ -409,6 +395,20 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyUpdateEstimatedValues(voltage, "$REMAINING_RANGE_ZERO")
+    }
+
+    @Test
+    fun onUpdateKm_withoutVoltageSet_noDisplay() {
+        // Given
+        injectMocks()
+        mockVoltageActual(" ")
+        mockVoltageStart(" ")
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verifyClearEstimatedValues()
     }
 
     @Test

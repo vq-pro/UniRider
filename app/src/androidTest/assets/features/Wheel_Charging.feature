@@ -17,7 +17,7 @@ Feature: Wheel Charging
     Then it displays a required voltage of <voltage>
     Examples:
       | distance | voltage |
-      | 20 km    | 85.7V   |
+      | 20 km    | 87.7V   |
       | 200 km   | 99.3V   |
       |          |         |
       | aa       |         |
