@@ -8,7 +8,7 @@ Feature: Wheel Charging
 
   Scenario Outline: Charging a wheel [<distance>]
     Given I select the Sherman Max
-    And I set the starting voltage to 100.4V
+    And I set the starting voltage to 100.6V
     And I set the actual voltage to 91.9V
     And I set the distance to 42 km
     And I charge the wheel
@@ -19,6 +19,7 @@ Feature: Wheel Charging
     Examples:
       | distance | voltage |
       | 20 km    | Go!     |
+      | 40 km    | Go!     |
       | 50 km    | 94.0V   |
       | 200 km   | 99.3V   |
       |          |         |
