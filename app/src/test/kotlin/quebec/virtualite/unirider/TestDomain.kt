@@ -38,7 +38,7 @@ object TestDomain {
     const val REMAINING_RANGE_ZERO = 0
     const val TEMPERATURE_NEW_RAW = 3333f
     const val TOTAL_RANGE = 6666f
-    const val VOLTAGE = 76f
+    const val VOLTAGE = 82f
     const val VOLTAGE_MAX = 84.0f
     const val VOLTAGE_MAX2 = 126.0f
     const val VOLTAGE_MAX3 = 100.8f

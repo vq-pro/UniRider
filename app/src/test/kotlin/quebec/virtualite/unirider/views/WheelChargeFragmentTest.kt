@@ -143,6 +143,35 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         verify(mockedTextVoltageRequired).text = ""
     }
 
+    @Test
+    fun onUpdateKm_whenVoltageIsEnough_go() {
+        // Given
+        injectMocks()
+
+        given(mockedCalculatorService.requiredVoltage(any(), anyInt(), anyFloat()))
+            .willReturn(VOLTAGE - 1f)
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verify(mockedTextVoltageRequired).text = "Go!"
+    }
+
+    @Test
+    fun onUpdateKm_withNegativeKm_noVoltage() {
+        // Given
+        injectMocks()
+
+        // When
+        fragment.onUpdateKm().invoke("-$KM ")
+
+        // Then
+        verifyNoInteractions(mockedCalculatorService)
+
+        verify(mockedTextVoltageRequired).text = ""
+    }
+
     private fun injectMocks() {
         fragment.textVoltageRequired = mockedTextVoltageRequired
     }

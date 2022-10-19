@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import org.apache.http.util.TextUtils.isEmpty
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
+import quebec.virtualite.commons.android.utils.NumberUtils.isEmpty
 import quebec.virtualite.commons.android.utils.NumberUtils.isPositive
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -60,7 +60,14 @@ open class WheelChargeFragment : BaseFragment() {
     @SuppressLint("SetTextI18n")
     fun onUpdateKm() = { km: String ->
         textVoltageRequired.text = when {
-            !isEmpty(km) && isPositive(km) -> "${calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))}"
+            !isEmpty(km) && isPositive(km) -> {
+                val requiredVoltage = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
+                when {
+                    requiredVoltage > parmVoltage!! -> "$requiredVoltage"
+                    else -> "Go!"
+                }
+            }
+
             else -> ""
         }
     }
