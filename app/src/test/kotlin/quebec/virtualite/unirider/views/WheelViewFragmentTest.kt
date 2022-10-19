@@ -53,6 +53,7 @@ import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_VOLTAGE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WH_PER_KM
 
@@ -226,6 +227,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Given
         fragment.estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM)
 
+        mockVoltageActual("$VOLTAGE ")
+
         // When
         fragment.onCharge().invoke(mockedView)
 
@@ -233,6 +236,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedFragments).navigateTo(
             R.id.action_WheelViewFragment_to_WheelChargeFragment,
             Pair(PARAMETER_WHEEL_ID, ID),
+            Pair(PARAMETER_VOLTAGE, VOLTAGE),
             Pair(PARAMETER_WH_PER_KM, WH_PER_KM)
         )
     }
@@ -323,20 +327,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
-    fun onUpdateKm() {
-        // Given
-        injectMocks()
-        mockVoltageActual(" ")
-        mockVoltageStart(" ")
-
-        // When
-        fragment.onUpdateKm().invoke("$KM ")
-
-        // Then
-        verifyClearEstimatedValues()
-    }
-
-    @Test
     fun onUpdateKm_whenBlank_noDisplay() {
         // Given
         injectMocks()
@@ -409,6 +399,20 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyUpdateEstimatedValues(voltage, "$REMAINING_RANGE_ZERO")
+    }
+
+    @Test
+    fun onUpdateKm_withoutVoltageSet_noDisplay() {
+        // Given
+        injectMocks()
+        mockVoltageActual(" ")
+        mockVoltageStart(" ")
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verifyClearEstimatedValues()
     }
 
     @Test

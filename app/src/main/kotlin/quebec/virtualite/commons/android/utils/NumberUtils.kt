@@ -1,5 +1,6 @@
 package quebec.virtualite.commons.android.utils
 
+import org.apache.http.util.TextUtils
 import org.apache.http.util.TextUtils.isBlank
 import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
@@ -11,6 +12,10 @@ object NumberUtils {
     fun floatOf(string: String): Float = if (isBlank(string.trim())) 0.0f else parseFloat(string.trim())
 
     fun intOf(string: String): Int = if (isBlank(string.trim())) 0 else parseInt(string.trim())
+
+    fun isEmpty(value: String): Boolean {
+        return TextUtils.isEmpty(value.trim())
+    }
 
     fun isNumeric(value: String): Boolean {
         return value.trim().matches("^[0-9.]*$".toRegex())

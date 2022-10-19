@@ -15,6 +15,7 @@
     <string name="fragment_label_total_mileage">Total</string>
     <string name="label_battery">Battery</string>
     <string name="label_bt_name">Bluetooth</string>
+    <string name="label_charging">Charging</string>
     <string name="label_devices">Devices</string>
     <string name="label_distance">Distance</string>
     <string name="label_km">km</string>
@@ -27,6 +28,7 @@
     <string name="label_total_range">Total</string>
     <string name="label_voltage">Voltage</string>
     <string name="label_voltage_abbr">V</string>
+    <string name="label_voltage_required">Required</string>
     <string name="label_voltage_start">Start</string>
     <string name="label_wh">wh</string>
     <string name="label_wh_per_km">wh/km</string>

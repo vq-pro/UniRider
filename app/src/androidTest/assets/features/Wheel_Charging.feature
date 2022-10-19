@@ -14,10 +14,12 @@ Feature: Wheel Charging
     And I charge the wheel
     And it displays an estimated rate of 25+ wh/km
     When I request to charge for <distance>
-    Then it displays a required voltage of <voltage>
+    Then it displays an actual voltage of 91.9V
+    And it displays a required voltage of <voltage>
     Examples:
       | distance | voltage |
-      | 20 km    | 85.7V   |
+      | 20 km    | Go!     |
+      | 50 km    | 94.0V   |
       | 200 km   | 99.3V   |
       |          |         |
       | aa       |         |
