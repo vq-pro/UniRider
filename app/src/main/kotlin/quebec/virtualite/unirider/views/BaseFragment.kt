@@ -9,6 +9,7 @@ import java.util.Locale.ENGLISH
 open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait) {
 
     companion object {
+        const val PARAMETER_VOLTAGE = "voltage"
         const val PARAMETER_WHEEL_ID = "wheelID"
         const val PARAMETER_WH_PER_KM = "whPerKm"
     }

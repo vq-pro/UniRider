@@ -18,10 +18,12 @@ open class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var editKm: EditText
     internal lateinit var textName: TextView
+    internal lateinit var textVoltageActual: TextView
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var textWhPerKm: TextView
 
     internal var parmWheelId: Long? = 0
+    internal var parmVoltage: Float? = 0f
     internal var parmWhPerKm: Int? = 0
     internal var wheel: WheelEntity? = null
 
@@ -29,6 +31,7 @@ open class WheelChargeFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
+        parmVoltage = arguments?.getFloat(PARAMETER_VOLTAGE)
         parmWhPerKm = arguments?.getInt(PARAMETER_WH_PER_KM)
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
@@ -39,6 +42,7 @@ open class WheelChargeFragment : BaseFragment() {
 
         editKm = view.findViewById(R.id.edit_km)
         textName = view.findViewById(R.id.view_name)
+        textVoltageActual = view.findViewById(R.id.view_actual_voltage)
         textVoltageRequired = view.findViewById(R.id.view_required_voltage)
         textWhPerKm = view.findViewById(R.id.view_wh_per_km)
 
@@ -48,6 +52,7 @@ open class WheelChargeFragment : BaseFragment() {
             wheel = it.getWheel(parmWheelId!!)
 
             textName.text = wheel!!.name
+            textVoltageActual.text = "$parmVoltage"
             textWhPerKm.text = textWhPerKm(parmWhPerKm)
         }
     }

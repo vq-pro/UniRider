@@ -335,6 +335,11 @@ class Steps {
         assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
     }
 
+    @Then("^it displays an actual voltage of (.*?)$")
+    fun displaysActualVoltage(expectedVoltage: String) {
+        assertThat(R.id.view_actual_voltage, hasText(strip(expectedVoltage, "V")))
+    }
+
     @Then("^it displays a percentage of (.*?)%$")
     fun displaysPercentage(percentage: String) {
         assertThat(R.id.view_battery, hasText(percentage))

@@ -92,6 +92,7 @@ open class WheelViewFragment : BaseFragment() {
         goto(
             R.id.action_WheelViewFragment_to_WheelChargeFragment,
             wheel!!,
+            floatOf(widgets.text(editVoltageActual)),
             estimates!!.whPerKm
         )
     }
@@ -136,10 +137,11 @@ open class WheelViewFragment : BaseFragment() {
         updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, voltageStart)
     }
 
-    private fun goto(id: Int, wheel: WheelEntity, whPerKm: Int) {
+    private fun goto(id: Int, wheel: WheelEntity, voltage: Float, whPerKm: Int) {
         fragments.navigateTo(
             id,
             Pair(PARAMETER_WHEEL_ID, wheel.id),
+            Pair(PARAMETER_VOLTAGE, voltage),
             Pair(PARAMETER_WH_PER_KM, whPerKm)
         )
     }
@@ -174,6 +176,7 @@ open class WheelViewFragment : BaseFragment() {
                     && isVoltageWithinRange(voltageStart) ->
 
                 calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km))
+
             else ->
                 null
         }
