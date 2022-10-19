@@ -42,6 +42,7 @@ import java.lang.Thread.sleep
 object StepsUtils {
 
     private val INTERVAL = 250L
+    private val PAUSE = if (BLUETOOTH_ACTUAL) 1000L else 0L
     private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
 
     fun assertThat(id: Int, assertion: Matcher<View>) {
@@ -171,6 +172,8 @@ object StepsUtils {
                 onData(hasEntry(equalTo(fieldName), `is`(value)))
                     .inAdapterView(withId(id))
                     .perform(click())
+
+                sleep(PAUSE)
 
             } catch (e: Exception) {
                 throw AssertionError(e)
