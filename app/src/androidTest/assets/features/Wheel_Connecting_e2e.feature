@@ -13,7 +13,7 @@ Feature: Wheel Connecting - End-2-End
       | Sherman     | 10000   | 3200 | 75.6V       | 80V             | 100.8V      |
       | Sherman Max | 2434    | 3600 | 75.6V       | 80V             | 100.8V      |
       | S18-SE      | 269     | 900  | 60V         | 66V             | 84V         |
-      | Sherman-S   | 0434    | 3600 | 75.6V       | 80V             | 100.8V      |
+      | Sherman-S   | 0       | 3600 | 75.6V       | 80V             | 100.8V      |
     And the Sherman has a previous mileage of 3600 km
     And I start the app
 
