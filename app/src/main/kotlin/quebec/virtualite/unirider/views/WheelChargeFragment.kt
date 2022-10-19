@@ -24,7 +24,7 @@ open class WheelChargeFragment : BaseFragment() {
 
     internal var parmWheelId: Long? = 0
     internal var parmVoltage: Float? = 0f
-    internal var parmWhPerKm: Int? = 0
+    internal var parmWhPerKm: Float? = 0f
     internal var wheel: WheelEntity? = null
 
     private var calculatorService = CalculatorService()
@@ -32,7 +32,7 @@ open class WheelChargeFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
         parmVoltage = arguments?.getFloat(PARAMETER_VOLTAGE)
-        parmWhPerKm = arguments?.getInt(PARAMETER_WH_PER_KM)
+        parmWhPerKm = arguments?.getFloat(PARAMETER_WH_PER_KM)
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
 

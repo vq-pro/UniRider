@@ -8,7 +8,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verifyNoInteractions
@@ -25,6 +24,7 @@ import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_REQUIRED
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_DISPLAY
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_VOLTAGE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
@@ -107,7 +107,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         verify(mockedTextName).text = NAME
         verify(mockedTextVoltageActual).text = "$VOLTAGE"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM+"
+        verify(mockedTextWhPerKm).text = WH_PER_KM_DISPLAY
 
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
     }
@@ -117,7 +117,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Given
         injectMocks()
 
-        given(mockedCalculatorService.requiredVoltage(any(), anyInt(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
             .willReturn(VOLTAGE_REQUIRED)
 
         // When
@@ -148,7 +148,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Given
         injectMocks()
 
-        given(mockedCalculatorService.requiredVoltage(any(), anyInt(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
             .willReturn(VOLTAGE - 1f)
 
         // When

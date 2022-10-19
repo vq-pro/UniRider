@@ -14,7 +14,7 @@ open class CalculatorService {
     data class EstimatedValues(
         val remainingRange: Float,
         val totalRange: Float,
-        val whPerKm: Int
+        val whPerKm: Float
     )
 
     open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Float): EstimatedValues {
@@ -22,16 +22,14 @@ open class CalculatorService {
         val whConsumedAfterStart = wh(wheel!!, wheel.voltageStart, voltage)
         val whRemainingToReserve = wh(wheel, voltage, adjustedReserve(wheel))
 
-        val whPerKm = convertConsumption(whConsumedAfterStart / km)
-        val whPerKmTopOfTheRange = whPerKm + 5
-
-        val remainingRange = max(whRemainingToReserve / whPerKmTopOfTheRange, 0f)
+        val whPerKm = whConsumedAfterStart / km
+        val remainingRange = max(whRemainingToReserve / whPerKm, 0f)
         val totalRange = remainingRange + km
 
         return EstimatedValues(
             round(remainingRange, NUM_DECIMALS),
             round(totalRange, NUM_DECIMALS),
-            whPerKm
+            round(whPerKm, NUM_DECIMALS)
         )
     }
 
@@ -43,13 +41,11 @@ open class CalculatorService {
         return round(rawPercentage(wheel, voltage!!) * 100, NUM_DECIMALS)
     }
 
-    open fun requiredVoltage(wheel: WheelEntity?, whPerKm: Int, km: Float): Float {
+    open fun requiredVoltage(wheel: WheelEntity?, whPerKm: Float, km: Float): Float {
 
         val whReserve = wh(wheel!!, adjustedReserve(wheel), wheel.voltageMin)
 
-        val whPerKmTopOfTheRange = whPerKm + 5
-        val whRequiredToReserve = whPerKmTopOfTheRange * km
-
+        val whRequiredToReserve = whPerKm * km
         val whTotalRequired = whRequiredToReserve + whReserve
         val percentage = whTotalRequired / wheel.wh
         val voltageRange = wheel.voltageMax - wheel.voltageMin
@@ -63,11 +59,6 @@ open class CalculatorService {
 
     internal fun adjustedReserve(wheel: WheelEntity): Float {
         return wheel.voltageReserve + 2
-    }
-
-    internal fun convertConsumption(rawConsumption: Float): Int {
-        val consumption = rawConsumption / 5
-        return consumption.toInt() * 5
     }
 
     private fun rawPercentage(value: Float, range: Float): Float {

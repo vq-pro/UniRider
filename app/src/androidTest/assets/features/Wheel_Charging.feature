@@ -9,18 +9,18 @@ Feature: Wheel Charging
   Scenario Outline: Charging a wheel [<distance>]
     Given I select the Sherman Max
     And I set the starting voltage to 100.6V
-    And I set the actual voltage to 91.9V
-    And I set the distance to 42 km
+    And I set the actual voltage to 92.5V
+    And I set the distance to 38 km
     And I charge the wheel
-    And it displays an estimated rate of 25+ wh/km
+    And it displays an estimated rate of 30+ wh/km
     When I request to charge for <distance>
-    Then it displays an actual voltage of 91.9V
+    Then it displays an actual voltage of 92.5V
     And it displays a required voltage of <voltage>
     Examples:
       | distance | voltage |
       | 20 km    | Go!     |
       | 40 km    | Go!     |
-      | 50 km    | 94.0V   |
+      | 50 km    | 94.2V   |
       | 200 km   | 99.3V   |
       |          |         |
       | aa       |         |

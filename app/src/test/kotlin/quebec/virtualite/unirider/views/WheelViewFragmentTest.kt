@@ -49,6 +49,7 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_START
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_START_NEW
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_DISPLAY
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
@@ -643,7 +644,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         verify(mockedTextRemainingRange).text = remainingRange
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM+"
+        verify(mockedTextWhPerKm).text = WH_PER_KM_DISPLAY
 
         verify(mockedButtonCharge).isEnabled = true
 

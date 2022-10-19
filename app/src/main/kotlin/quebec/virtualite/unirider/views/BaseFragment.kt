@@ -22,23 +22,23 @@ open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
         return ExternalServices(this)
     }
 
-    protected fun textPercentageWithDecimal(percentage: Float?) = when {
-        percentage != null && percentage in 0f..100f -> "%.1f".format(ENGLISH, percentage)
-        else -> ""
-    }
-
-    protected fun textKm(value: Int?) = when {
+    internal fun textKm(value: Int?) = when {
         value != null -> "$value"
         else -> ""
     }
 
-    protected fun textKmWithDecimal(value: Float?) = when {
+    internal fun textKmWithDecimal(value: Float?) = when {
         value != null -> "$value".replace("0.0", "0")
         else -> ""
     }
 
-    protected fun textWhPerKm(value: Int?) = when {
-        value != null -> "$value+"
+    internal fun textPercentageWithDecimal(percentage: Float?) = when {
+        percentage != null && percentage in 0f..100f -> "%.1f".format(ENGLISH, percentage)
+        else -> ""
+    }
+
+    internal fun textWhPerKm(value: Float?) = when {
+        value != null -> "${(value / 5).toInt() * 5}+"
         else -> ""
     }
 }
