@@ -13,6 +13,7 @@ import quebec.virtualite.commons.android.utils.NumberUtils.isPositive
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
+import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
 
 open class WheelChargeFragment : BaseFragment() {
 
@@ -61,11 +62,13 @@ open class WheelChargeFragment : BaseFragment() {
     fun onUpdateKm() = { km: String ->
         textVoltageRequired.text = when {
             !isEmpty(km) && isPositive(km) -> {
-                val requiredVoltage = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
-                when {
-                    requiredVoltage > parmVoltage!! -> "$requiredVoltage"
-                    else -> "Go!"
-                }
+                val requiredVoltageOnCharger = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
+                val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
+
+                if (requiredVoltage > parmVoltage!!)
+                    "$requiredVoltageOnCharger"
+                else
+                    "Go!"
             }
 
             else -> ""

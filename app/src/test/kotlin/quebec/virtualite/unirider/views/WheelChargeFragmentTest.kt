@@ -26,6 +26,7 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_REQUIRED
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_DISPLAY
 import quebec.virtualite.unirider.services.CalculatorService
+import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_VOLTAGE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WH_PER_KM
@@ -149,13 +150,43 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         injectMocks()
 
         given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
-            .willReturn(VOLTAGE - 1f)
+            .willReturn(VOLTAGE + CHARGER_OFFSET - 0.1f)
 
         // When
         fragment.onUpdateKm().invoke("$KM ")
 
         // Then
         verify(mockedTextVoltageRequired).text = "Go!"
+    }
+
+    @Test
+    fun onUpdateKm_whenVoltageIsLimit_go() {
+        // Given
+        injectMocks()
+
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+            .willReturn(VOLTAGE + CHARGER_OFFSET)
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verify(mockedTextVoltageRequired).text = "Go!"
+    }
+
+    @Test
+    fun onUpdateKm_whenVoltageIsNotEnough_displayValue() {
+        // Given
+        injectMocks()
+
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+            .willReturn(VOLTAGE + CHARGER_OFFSET + 0.1f)
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verify(mockedTextVoltageRequired).text = "${VOLTAGE + CHARGER_OFFSET + 0.1f}"
     }
 
     @Test
