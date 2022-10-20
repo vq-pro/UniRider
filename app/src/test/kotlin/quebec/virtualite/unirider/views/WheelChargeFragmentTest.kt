@@ -21,7 +21,9 @@ import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.S18_1
+import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_REQUIRED
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_DISPLAY
@@ -47,9 +49,6 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     lateinit var mockedTextName: TextView
 
     @Mock
-    lateinit var mockedTextVoltageActual: TextView
-
-    @Mock
     lateinit var mockedTextVoltageRequired: TextView
 
     @Mock
@@ -60,7 +59,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.parmWheelId = ID
         fragment.parmVoltage = VOLTAGE
         fragment.parmWhPerKm = WH_PER_KM
-        fragment.wheel = S18_1
+        fragment.wheel = SHERMAN_MAX_3
 
         mockExternal()
         mockFields()
@@ -102,12 +101,10 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
-        verifyFieldAssignment(R.id.view_actual_voltage, fragment.textVoltageActual, mockedTextVoltageActual)
         verifyFieldAssignment(R.id.view_required_voltage, fragment.textVoltageRequired, mockedTextVoltageRequired)
         verifyFieldAssignment(R.id.view_wh_per_km, fragment.textWhPerKm, mockedTextWhPerKm)
 
         verify(mockedTextName).text = NAME
-        verify(mockedTextVoltageActual).text = "$VOLTAGE"
         verify(mockedTextWhPerKm).text = WH_PER_KM_DISPLAY
 
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
@@ -127,7 +124,8 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Then
         verify(mockedCalculatorService).requiredVoltage(fragment.wheel, WH_PER_KM, KM)
 
-        verify(mockedTextVoltageRequired).text = "$VOLTAGE_REQUIRED"
+        val diff = VOLTAGE_REQUIRED - VOLTAGE - CHARGER_OFFSET
+        verify(mockedTextVoltageRequired).text = "${VOLTAGE_REQUIRED}V (+$diff)"
     }
 
     @Test
@@ -145,7 +143,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     @Test
-    fun onUpdateKm_whenVoltageIsEnough_go() {
+    fun onUpdateKm_whenVoltageIsEnough_displayGo() {
         // Given
         injectMocks()
 
@@ -160,7 +158,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     @Test
-    fun onUpdateKm_whenVoltageIsLimit_go() {
+    fun onUpdateKm_whenVoltageIsLimit_displayGo() {
         // Given
         injectMocks()
 
@@ -186,7 +184,23 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onUpdateKm().invoke("$KM ")
 
         // Then
-        verify(mockedTextVoltageRequired).text = "${VOLTAGE + CHARGER_OFFSET + 0.1f}"
+        verify(mockedTextVoltageRequired).text = "${VOLTAGE + CHARGER_OFFSET + 0.1f}V (+0.1)"
+    }
+
+    @Test
+    fun onUpdateKm_whenFullChargeIsNeeded_displayFillUp() {
+        // Given
+        injectMocks()
+
+        val maxVoltageBeforeBalancing = VOLTAGE_MAX3 - CHARGER_OFFSET
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+            .willReturn(maxVoltageBeforeBalancing)
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verify(mockedTextVoltageRequired).text = "Fill up!"
     }
 
     @Test
@@ -210,7 +224,6 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     private fun mockFields() {
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.view_name, mockedTextName)
-        mockField(R.id.view_actual_voltage, mockedTextVoltageActual)
         mockField(R.id.view_required_voltage, mockedTextVoltageRequired)
         mockField(R.id.view_wh_per_km, mockedTextWhPerKm)
     }

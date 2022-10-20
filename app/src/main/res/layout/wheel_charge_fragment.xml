@@ -14,7 +14,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
-        >
+                tools:ignore="UselessParent">
+
             <!-- Name-->
             <TableRow>
                 <TextView
@@ -106,39 +107,6 @@
                 />
             </TableRow>
 
-            <!-- Actual voltage -->
-            <TableRow android:layout_marginTop="10dp">
-                <TextView
-                        android:labelFor="@+id/view_actual_voltage"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_voltage"
-                />
-
-                <TextView
-                        android:id="@+id/view_actual_voltage"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        tools:ignore="RtlHardcoded"
-                />
-
-                <TextView
-                        android:labelFor="@+id/view_actual_voltage"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_voltage_abbr"
-                />
-            </TableRow>
-
             <!-- Required voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
@@ -148,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_voltage_required"
+                        android:text="@string/label_voltage"
                 />
 
                 <TextView
@@ -156,19 +124,10 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAlignment="viewEnd"
+                        android:textAlignment="viewStart"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
                         tools:ignore="RtlHardcoded"
-                />
-
-                <TextView
-                        android:labelFor="@+id/view_required_voltage"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_voltage_abbr"
                 />
             </TableRow>
         </TableLayout>

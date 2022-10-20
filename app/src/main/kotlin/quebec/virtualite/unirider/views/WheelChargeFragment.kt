@@ -10,6 +10,7 @@ import android.widget.TextView
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isEmpty
 import quebec.virtualite.commons.android.utils.NumberUtils.isPositive
+import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
@@ -19,7 +20,6 @@ open class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var editKm: EditText
     internal lateinit var textName: TextView
-    internal lateinit var textVoltageActual: TextView
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var textWhPerKm: TextView
 
@@ -43,7 +43,6 @@ open class WheelChargeFragment : BaseFragment() {
 
         editKm = view.findViewById(R.id.edit_km)
         textName = view.findViewById(R.id.view_name)
-        textVoltageActual = view.findViewById(R.id.view_actual_voltage)
         textVoltageRequired = view.findViewById(R.id.view_required_voltage)
         textWhPerKm = view.findViewById(R.id.view_wh_per_km)
 
@@ -53,7 +52,6 @@ open class WheelChargeFragment : BaseFragment() {
             wheel = it.getWheel(parmWheelId!!)
 
             textName.text = wheel!!.name
-            textVoltageActual.text = "$parmVoltage"
             textWhPerKm.text = textWhPerKm(parmWhPerKm)
         }
     }
@@ -64,11 +62,14 @@ open class WheelChargeFragment : BaseFragment() {
             !isEmpty(km) && isPositive(km) -> {
                 val requiredVoltageOnCharger = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
                 val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
+                val maxCharge = wheel!!.voltageMax - CHARGER_OFFSET
+                val diff = round(requiredVoltage - parmVoltage!!, 1)
 
-                if (requiredVoltage > parmVoltage!!)
-                    "$requiredVoltageOnCharger"
-                else
-                    "Go!"
+                when {
+                    requiredVoltageOnCharger >= maxCharge -> "Fill up!"
+                    requiredVoltage > parmVoltage!! -> "${requiredVoltageOnCharger}V (+$diff)"
+                    else -> "Go!"
+                }
             }
 
             else -> ""
