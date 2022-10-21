@@ -521,14 +521,14 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageActual_whenWhPerKmLessThan1_noDisplay() {
+    fun onUpdateVoltageActual_whenWhPerKmLessThan5_noDisplay() {
         // Given
         injectMocks()
         mockKm("$KM")
         mockVoltageStart("83.4")
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
-            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, 0.5f))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, 4.9f))
 
         // When
         fragment.onUpdateVoltageActual().invoke("83.3")

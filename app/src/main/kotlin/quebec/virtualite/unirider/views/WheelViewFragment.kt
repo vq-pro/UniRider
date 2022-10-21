@@ -182,7 +182,7 @@ open class WheelViewFragment : BaseFragment() {
                 null
         }
 
-        if (estimates != null && estimates!!.whPerKm < 1.0f)
+        if (estimates != null && estimates!!.whPerKm < 5.0f)
             estimates = null
 
         textRemainingRange.text = textKmWithDecimal(estimates?.remainingRange)
