@@ -521,6 +521,23 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun onUpdateVoltageActual_whenWhPerKmLessThan1_noDisplay() {
+        // Given
+        injectMocks()
+        mockKm("$KM")
+        mockVoltageStart("83.4")
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, 0.5f))
+
+        // When
+        fragment.onUpdateVoltageActual().invoke("83.3")
+
+        // Then
+        verifyEstimateButClearEstimatedValues()
+    }
+
+    @Test
     fun onUpdateVoltageActual_whenNonNumeric_noDisplay() {
         // Given
         injectMocks()
@@ -643,7 +660,15 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun verifyClearEstimatedValues() {
         verify(mockedCalculatorService, never()).estimatedValues(any(), anyFloat(), anyFloat())
+        verifyEstimateButClearEstimatedValues()
+    }
 
+    private fun verifyClearPercentage() {
+        verify(mockedCalculatorService, never()).percentage(any(), anyFloat())
+        verify(mockedTextBattery).text = ""
+    }
+
+    private fun verifyEstimateButClearEstimatedValues() {
         verify(mockedTextRemainingRange).text = ""
         verify(mockedTextTotalRange).text = ""
         verify(mockedTextWhPerKm).text = ""
@@ -651,11 +676,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedButtonCharge).isEnabled = false
 
         assertThat(fragment.estimates, equalTo(null))
-    }
-
-    private fun verifyClearPercentage() {
-        verify(mockedCalculatorService, never()).percentage(any(), anyFloat())
-        verify(mockedTextBattery).text = ""
     }
 
     private fun verifyUpdateEstimatedValues(voltage: Float, remainingRange: String) {
