@@ -173,7 +173,8 @@ open class WheelViewFragment : BaseFragment() {
         estimates = when {
             !isEmpty(km) && isPositive(km)
                     && isVoltageWithinRange(voltageActual)
-                    && isVoltageWithinRange(voltageStart) ->
+                    && isVoltageWithinRange(voltageStart)
+                    && floatOf(voltageActual) <= floatOf(voltageStart) ->
 
                 calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km))
 

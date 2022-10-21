@@ -24,6 +24,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
+import quebec.virtualite.unirider.TestDomain.ID3
 import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.KM_NEW
 import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
@@ -37,6 +38,7 @@ import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE
 import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE_ZERO
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.S18_DISCONNECTED
+import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.TOTAL_RANGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
@@ -498,6 +500,23 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyClearPercentage()
+        verifyClearEstimatedValues()
+    }
+
+    @Test
+    fun onUpdateVoltageActual_whenVoltageActualHigherThanStart_noDisplay() {
+        // Given
+        fragment.parmWheelId = ID3
+        fragment.wheel = SHERMAN_MAX_3
+
+        injectMocks()
+        mockKm("$KM")
+        mockVoltageStart("99.5")
+
+        // When
+        fragment.onUpdateVoltageActual().invoke("100.2")
+
+        // Then
         verifyClearEstimatedValues()
     }
 
