@@ -49,6 +49,9 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     lateinit var mockedTextName: TextView
 
     @Mock
+    lateinit var mockedTextRemainingTime: TextView
+
+    @Mock
     lateinit var mockedTextVoltageRequired: TextView
 
     @Mock
@@ -101,6 +104,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
+        verifyFieldAssignment(R.id.view_remaining_time, fragment.textRemainingTime, mockedTextRemainingTime)
         verifyFieldAssignment(R.id.view_required_voltage, fragment.textVoltageRequired, mockedTextVoltageRequired)
         verifyFieldAssignment(R.id.view_wh_per_km, fragment.textWhPerKm, mockedTextWhPerKm)
 
@@ -129,7 +133,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     @Test
-    fun onUpdateKm_whenEmpty_noVoltage() {
+    fun onUpdateKm_whenEmpty_noDisplay() {
         // Given
         injectMocks()
 
@@ -138,8 +142,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         // Then
         verifyNoInteractions(mockedCalculatorService)
-
-        verify(mockedTextVoltageRequired).text = ""
+        verifyNoDisplay()
     }
 
     @Test
@@ -154,7 +157,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onUpdateKm().invoke("$KM ")
 
         // Then
-        verify(mockedTextVoltageRequired).text = "Go!"
+        verifyDisplayGo()
     }
 
     @Test
@@ -169,7 +172,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onUpdateKm().invoke("$KM ")
 
         // Then
-        verify(mockedTextVoltageRequired).text = "Go!"
+        verifyDisplayGo()
     }
 
     @Test
@@ -201,10 +204,12 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         // Then
         verify(mockedTextVoltageRequired).text = "Fill up!"
+        // FIXME-0 Use the right time
+        verify(mockedTextRemainingTime).text = ""
     }
 
     @Test
-    fun onUpdateKm_withNegativeKm_noVoltage() {
+    fun onUpdateKm_withNegativeKm_noDisplay() {
         // Given
         injectMocks()
 
@@ -213,18 +218,29 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         // Then
         verifyNoInteractions(mockedCalculatorService)
-
-        verify(mockedTextVoltageRequired).text = ""
+        verifyNoDisplay()
     }
 
     private fun injectMocks() {
+        fragment.textRemainingTime = mockedTextRemainingTime
         fragment.textVoltageRequired = mockedTextVoltageRequired
     }
 
     private fun mockFields() {
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.view_name, mockedTextName)
+        mockField(R.id.view_remaining_time, mockedTextRemainingTime)
         mockField(R.id.view_required_voltage, mockedTextVoltageRequired)
         mockField(R.id.view_wh_per_km, mockedTextWhPerKm)
+    }
+
+    private fun verifyNoDisplay() {
+        verify(mockedTextVoltageRequired).text = ""
+        verify(mockedTextRemainingTime).text = ""
+    }
+
+    private fun verifyDisplayGo() {
+        verify(mockedTextVoltageRequired).text = "Go!"
+        verify(mockedTextRemainingTime).text = ""
     }
 }

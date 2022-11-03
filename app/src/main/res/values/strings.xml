@@ -24,6 +24,7 @@
     <string name="label_percentage_abbr">%</string>
     <string name="label_rate">Rate</string>
     <string name="label_remaining_range">Remaining</string>
+    <string name="label_remaining_time">Time</string>
     <string name="label_reserve">reserve</string>
     <string name="label_total_range">Total</string>
     <string name="label_voltage">Voltage</string>

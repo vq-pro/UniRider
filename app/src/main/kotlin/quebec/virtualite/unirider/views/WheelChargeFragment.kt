@@ -20,6 +20,7 @@ open class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var editKm: EditText
     internal lateinit var textName: TextView
+    internal lateinit var textRemainingTime: TextView
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var textWhPerKm: TextView
 
@@ -43,6 +44,7 @@ open class WheelChargeFragment : BaseFragment() {
 
         editKm = view.findViewById(R.id.edit_km)
         textName = view.findViewById(R.id.view_name)
+        textRemainingTime = view.findViewById(R.id.view_remaining_time)
         textVoltageRequired = view.findViewById(R.id.view_required_voltage)
         textWhPerKm = view.findViewById(R.id.view_wh_per_km)
 
@@ -58,21 +60,26 @@ open class WheelChargeFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     fun onUpdateKm() = { km: String ->
-        textVoltageRequired.text = when {
+        when {
             !isEmpty(km) && isPositive(km) -> {
                 val requiredVoltageOnCharger = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
                 val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
                 val maxCharge = wheel!!.voltageMax - CHARGER_OFFSET
                 val diff = round(requiredVoltage - parmVoltage!!, 1)
 
-                when {
+                textVoltageRequired.text = when {
                     requiredVoltageOnCharger >= maxCharge -> "Fill up!"
                     requiredVoltage > parmVoltage!! -> "${requiredVoltageOnCharger}V (+$diff)"
                     else -> "Go!"
                 }
+
+                textRemainingTime.text = ""
             }
 
-            else -> ""
+            else -> {
+                textVoltageRequired.text = ""
+                textRemainingTime.text = ""
+            }
         }
     }
 }
