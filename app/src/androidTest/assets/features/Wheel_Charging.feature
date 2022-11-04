@@ -6,7 +6,6 @@ Feature: Wheel Charging
       | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
     And I start the app
 
-  @WIP
   Scenario Outline: Charging a wheel [<distance>]
     Given I select the Sherman Max
     And I set the starting voltage to 100.6V

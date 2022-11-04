@@ -205,7 +205,7 @@ class Steps {
             floatOf(mapEntity["Voltage Min"]!!),
             floatOf(mapEntity["Voltage Reserve"]!!),
             floatOf(mapEntity["Voltage Max"]!!),
-            floatOf(mapEntity["Charge Rate"]!!)
+            0f
         )
 
         click(R.id.button_save)

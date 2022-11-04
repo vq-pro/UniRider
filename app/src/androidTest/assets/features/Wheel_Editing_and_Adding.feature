@@ -1,13 +1,12 @@
 Feature: Wheel Editing & Adding
 
-  # FIXME-1 Edit Charge Rate as value
-
+  # FIXME-0 Edit Charge Rate as value
   Background:
     Given these wheels:
-      | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max |
-      | Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      |
-      | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      |
-      | S18     | 2850    | 1110 | 60V         | 68V             | 84V         |
+      | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate |
+      | Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        |
+      | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 8V/h        |
+      | S18     | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        |
     And I start the app
 
   Scenario: Adding a wheel in full
