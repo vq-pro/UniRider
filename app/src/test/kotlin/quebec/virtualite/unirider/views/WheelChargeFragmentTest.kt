@@ -225,6 +225,8 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     fun timeDisplay() {
         timeDisplay(2.75f, "2h45")
         timeDisplay(0.1625f, "10m")
+        timeDisplay(9f / 8f, "1h08")
+        timeDisplay(0.08f, "5m")
     }
 
     private fun timeDisplay(rawHours: Float, expectedDisplay: String) {

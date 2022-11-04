@@ -15,6 +15,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
+import java.lang.String.format
 import kotlin.math.roundToInt
 
 open class WheelChargeFragment : BaseFragment() {
@@ -93,10 +94,11 @@ open class WheelChargeFragment : BaseFragment() {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     internal fun timeDisplay(rawHours: Float): String {
         val hours = rawHours.toInt()
         val minutes = ((rawHours - hours) * 60).roundToInt()
 
-        return if (hours > 0) "${hours}h$minutes" else "${minutes}m"
+        return if (hours > 0) "${hours}h${format("%02d", minutes)}" else "${minutes}m"
     }
 }
