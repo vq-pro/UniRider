@@ -15,4 +15,3 @@ Feature: Wheel Charging - ERROR
   Scenario: Update the voltage - ERROR - Never connected
     When I request to charge for 40 km
     Then I cannot connect to the wheel on the charge screen
-
