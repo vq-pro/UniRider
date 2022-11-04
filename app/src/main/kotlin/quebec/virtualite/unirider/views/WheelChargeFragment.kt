@@ -62,6 +62,10 @@ open class WheelChargeFragment : BaseFragment() {
 
             textName.text = wheel!!.name
             textWhPerKm.text = textWhPerKm(parmWhPerKm)
+
+            if (wheel!!.btName == null || wheel!!.btAddr == null) {
+                widgets.disable(buttonConnect)
+            }
         }
     }
 

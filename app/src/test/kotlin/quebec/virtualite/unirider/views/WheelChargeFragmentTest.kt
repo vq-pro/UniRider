@@ -129,6 +129,20 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     @Test
+    fun onViewCreated_whenWheelHasNeverBeenConnected_disableConnectButton() {
+        // Given
+        fragment.wheel = null
+        given(mockedDb.getWheel(anyLong()))
+            .willReturn(S18_1.copy(btName = null, btAddr = null))
+
+        // When
+        fragment.onViewCreated(mockedView, mockedBundle)
+
+        // Then
+        verify(mockedWidgets).disable(mockedButtonConnect)
+    }
+
+    @Test
     fun onConnect() {
         // Given
         injectMocks()

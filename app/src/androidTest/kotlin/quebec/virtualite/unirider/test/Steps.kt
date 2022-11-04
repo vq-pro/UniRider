@@ -97,6 +97,11 @@ class Steps {
         assertThat(R.id.button_charge, isDisabled())
     }
 
+    @Then("I cannot connect to the wheel on the charge screen")
+    fun cannotConnectToWheelOnChargeScreen() {
+        assertThat(R.id.button_connect_charge, isDisabled())
+    }
+
     @Then("it shows that every field is editable")
     fun itShowsThatEveryFieldIsEditable() {
         assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))

@@ -74,52 +74,29 @@ object TestDomain {
     val DEVICE2 = BluetoothDevice(DEVICE_NAME2, DEVICE_ADDR2)
     val DEVICE3 = BluetoothDevice(DEVICE_NAME3, DEVICE_ADDR3)
 
-    val S18_1 =
-        WheelEntity(
-            ID,
-            NAME,
-            DEVICE_NAME,
-            DEVICE_ADDR,
-            PREMILEAGE,
-            MILEAGE,
-            WH,
-            VOLTAGE_MAX,
-            VOLTAGE_MIN,
-            VOLTAGE_RESERVE,
-            VOLTAGE_START,
-            CHARGE_RATE
-        )
-    val S20_2 =
-        WheelEntity(
-            ID2,
-            NAME2,
-            DEVICE_NAME2,
-            DEVICE_ADDR2,
-            PREMILEAGE2,
-            MILEAGE2,
-            WH2,
-            VOLTAGE_MAX2,
-            VOLTAGE_MIN2,
-            VOLTAGE_RESERVE2,
-            VOLTAGE_START2,
-            CHARGE_RATE2
-        )
-    val SHERMAN_MAX_3 =
-        WheelEntity(
-            ID3,
-            NAME3,
-            DEVICE_NAME3,
-            DEVICE_ADDR3,
-            PREMILEAGE3,
-            MILEAGE3,
-            WH3,
-            VOLTAGE_MAX3,
-            VOLTAGE_MIN3,
-            VOLTAGE_RESERVE3,
-            VOLTAGE_START3,
-            CHARGE_RATE3
-        )
+    val S18_1 = WheelEntity(
+        ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+        PREMILEAGE, MILEAGE, WH,
+        VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
+        CHARGE_RATE
+    )
+    val S20_2 = WheelEntity(
+        ID2, NAME2, DEVICE_NAME2, DEVICE_ADDR2,
+        PREMILEAGE2, MILEAGE2, WH2,
+        VOLTAGE_MAX2, VOLTAGE_MIN2, VOLTAGE_RESERVE2, VOLTAGE_START2,
+        CHARGE_RATE2
+    )
+    val SHERMAN_MAX_3 = WheelEntity(
+        ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
+        PREMILEAGE3, MILEAGE3, WH3,
+        VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3, VOLTAGE_START3,
+        CHARGE_RATE3
+    )
 
-    val S18_DISCONNECTED =
-        WheelEntity(ID, NAME, null, null, PREMILEAGE, MILEAGE, WH, VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START, CHARGE_RATE)
+    val S18_DISCONNECTED = WheelEntity(
+        ID, NAME, null, null,
+        PREMILEAGE, MILEAGE, WH,
+        VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
+        CHARGE_RATE
+    )
 }
