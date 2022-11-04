@@ -390,7 +390,7 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max")))
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate")))
 
         val wheelEntities = wheels.cells(1)
             .stream()
@@ -401,7 +401,7 @@ class Steps {
                 val voltageMin = voltageOf(row[3])
                 val voltageReserve = voltageOf(row[4])
                 val voltageMax = voltageOf(row[5])
-                val chargeRate = 0f
+                val chargeRate = voltsPerHourOf(row[6])
 
                 WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate)
             }
@@ -573,5 +573,10 @@ class Steps {
     private fun voltageOf(value: String): Float {
         assertThat(value, endsWith("V"))
         return floatOf(value.substring(0, value.length - 1))
+    }
+
+    private fun voltsPerHourOf(value: String): Float {
+        assertThat(value, endsWith("V/h"))
+        return floatOf(value.substring(0, value.length - 3))
     }
 }

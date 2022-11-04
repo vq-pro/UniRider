@@ -1,5 +1,7 @@
 Feature: Wheel Editing & Adding
 
+  # FIXME-1 Edit Charge Rate as value
+
   Background:
     Given these wheels:
       | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max |

@@ -15,6 +15,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
+import kotlin.math.roundToInt
 
 open class WheelChargeFragment : BaseFragment() {
 
@@ -25,7 +26,9 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var textWhPerKm: TextView
 
     internal var parmWheelId: Long? = 0
-    internal var parmVoltage: Float? = 0f
+
+    // FIXME-1 Connect updates this parameter with the new voltage
+    internal var parmVoltageDisconnectedFromCharger: Float? = 0f
     internal var parmWhPerKm: Float? = 0f
     internal var wheel: WheelEntity? = null
 
@@ -33,7 +36,7 @@ open class WheelChargeFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
-        parmVoltage = arguments?.getFloat(PARAMETER_VOLTAGE)
+        parmVoltageDisconnectedFromCharger = arguments?.getFloat(PARAMETER_VOLTAGE)
         parmWhPerKm = arguments?.getFloat(PARAMETER_WH_PER_KM)
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
@@ -60,26 +63,40 @@ open class WheelChargeFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     fun onUpdateKm() = { km: String ->
-        when {
-            !isEmpty(km) && isPositive(km) -> {
-                val requiredVoltageOnCharger = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
-                val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
-                val maxCharge = wheel!!.voltageMax - CHARGER_OFFSET
-                val diff = round(requiredVoltage - parmVoltage!!, 1)
+        if (isEmpty(km) || !isPositive(km)) {
+            textVoltageRequired.text = ""
+            textRemainingTime.text = ""
 
-                textVoltageRequired.text = when {
-                    requiredVoltageOnCharger >= maxCharge -> "Fill up!"
-                    requiredVoltage > parmVoltage!! -> "${requiredVoltageOnCharger}V (+$diff)"
-                    else -> "Go!"
+        } else {
+            val requiredVoltageOnCharger = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
+            val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
+            val maxCharge = wheel!!.voltageMax - CHARGER_OFFSET
+            val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
+            val rawHours = diff / wheel!!.chargeRate
+
+            when {
+                requiredVoltageOnCharger >= maxCharge -> {
+                    textVoltageRequired.text = "Fill up!"
+                    textRemainingTime.text = timeDisplay(rawHours)
                 }
 
-                textRemainingTime.text = ""
-            }
+                requiredVoltage > parmVoltageDisconnectedFromCharger!! -> {
+                    textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
+                    textRemainingTime.text = timeDisplay(rawHours)
+                }
 
-            else -> {
-                textVoltageRequired.text = ""
-                textRemainingTime.text = ""
+                else -> {
+                    textVoltageRequired.text = "Go!"
+                    textRemainingTime.text = ""
+                }
             }
         }
+    }
+
+    internal fun timeDisplay(rawHours: Float): String {
+        val hours = rawHours.toInt()
+        val minutes = ((rawHours - hours) * 60).roundToInt()
+
+        return if (hours > 0) "${hours}h$minutes" else "${minutes}m"
     }
 }
