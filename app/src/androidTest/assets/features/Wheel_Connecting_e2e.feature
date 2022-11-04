@@ -5,15 +5,15 @@ Feature: Wheel Connecting - End-2-End
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max |
-      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      |
-      | 14S         | 950     | 840  | 48V         | 55V             | 67.2V       |
-      | S18         | 3143    | 1110 | 60V         | 68V             | 84V         |
-      | V10F        | 1600    | 960  | 65V         | 70V             | 84V         |
-      | Sherman     | 10000   | 3200 | 75.6V       | 80V             | 100.8V      |
-      | Sherman Max | 2434    | 3600 | 75.6V       | 80V             | 100.8V      |
-      | S18-SE      | 269     | 900  | 60V         | 66V             | 84V         |
-      | Sherman-S   | 0       | 3600 | 75.6V       | 80V             | 100.8V      |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate |
+      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        |
+      | 14S         | 950     | 840  | 48V         | 55V             | 67.2V       | 4V/h        |
+      | S18         | 3143    | 1110 | 60V         | 68V             | 84V         | 4V/h        |
+      | V10F        | 1600    | 960  | 65V         | 70V             | 84V         | 2V/h        |
+      | Sherman     | 10000   | 3200 | 75.6V       | 80V             | 100.8V      | 7.5V/h      |
+      | Sherman Max | 2434    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
+      | S18-SE      | 269     | 900  | 60V         | 66V             | 84V         | 4V/h        |
+      | Sherman-S   | 0       | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
     And the Sherman has a previous mileage of 3600 km
     And I start the app
 
@@ -26,7 +26,7 @@ Feature: Wheel Connecting - End-2-End
       | wheel   | bt name      | mileage |
       | 14S     | KS-14SMD2107 | 1306    |
 #      | S18-SE  | KSS18-9135   | 718     |
-      | Sherman | LK1149       | 22731  |
+      | Sherman | LK1149       | 22731   |
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
     Given I select the Sherman
