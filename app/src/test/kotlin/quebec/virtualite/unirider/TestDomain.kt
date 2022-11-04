@@ -5,6 +5,9 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelRow
 
 object TestDomain {
+    const val CHARGE_RATE = 4f
+    const val CHARGE_RATE2 = 6f
+    const val CHARGE_RATE3 = 8f
     const val DEVICE_ADDR = "AA:BB:CC:DD:EE:FF"
     const val DEVICE_ADDR2 = "BB:CC:DD:EE:FF:GG"
     const val DEVICE_ADDR3 = "CC:DD:EE:FF:GG:HH"
@@ -14,7 +17,6 @@ object TestDomain {
     const val ID = 1111L
     const val ID2 = 1112L
     const val ID3 = 1113L
-
     const val KM = 4444f
     const val KM_NEW = 4445f
     const val KM_NEW_RAW = 4445.012f
@@ -72,11 +74,51 @@ object TestDomain {
     val DEVICE3 = BluetoothDevice(DEVICE_NAME3, DEVICE_ADDR3)
 
     val S18_1 =
-        WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START)
+        WheelEntity(
+            ID,
+            NAME,
+            DEVICE_NAME,
+            DEVICE_ADDR,
+            PREMILEAGE,
+            MILEAGE,
+            WH,
+            VOLTAGE_MAX,
+            VOLTAGE_MIN,
+            VOLTAGE_RESERVE,
+            VOLTAGE_START,
+            CHARGE_RATE
+        )
     val S20_2 =
-        WheelEntity(ID2, NAME2, DEVICE_NAME2, DEVICE_ADDR2, PREMILEAGE2, MILEAGE2, WH2, VOLTAGE_MAX2, VOLTAGE_MIN2, VOLTAGE_RESERVE2, VOLTAGE_START2)
+        WheelEntity(
+            ID2,
+            NAME2,
+            DEVICE_NAME2,
+            DEVICE_ADDR2,
+            PREMILEAGE2,
+            MILEAGE2,
+            WH2,
+            VOLTAGE_MAX2,
+            VOLTAGE_MIN2,
+            VOLTAGE_RESERVE2,
+            VOLTAGE_START2,
+            CHARGE_RATE2
+        )
     val SHERMAN_MAX_3 =
-        WheelEntity(ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3, PREMILEAGE3, MILEAGE3, WH3, VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3, VOLTAGE_START3)
+        WheelEntity(
+            ID3,
+            NAME3,
+            DEVICE_NAME3,
+            DEVICE_ADDR3,
+            PREMILEAGE3,
+            MILEAGE3,
+            WH3,
+            VOLTAGE_MAX3,
+            VOLTAGE_MIN3,
+            VOLTAGE_RESERVE3,
+            VOLTAGE_START3,
+            CHARGE_RATE3
+        )
 
-    val S18_DISCONNECTED = WheelEntity(ID, NAME, null, null, PREMILEAGE, MILEAGE, WH, VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START)
+    val S18_DISCONNECTED =
+        WheelEntity(ID, NAME, null, null, PREMILEAGE, MILEAGE, WH, VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START, CHARGE_RATE)
 }

@@ -6,6 +6,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.MILEAGE
@@ -97,7 +98,7 @@ class CalculatorServiceTest {
 
     private fun percentage_whenVoltagesNotSet_zero(voltageMin: Float, voltageMax: Float) {
         // Given
-        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, voltageMax, voltageMin, 1f, voltageMax)
+        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, voltageMax, voltageMin, 1f, voltageMax, CHARGE_RATE)
 
         // When
         val percentage = service.percentage(wheel, 108.0f)

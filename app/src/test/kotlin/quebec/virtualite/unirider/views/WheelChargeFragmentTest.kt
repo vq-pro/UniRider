@@ -32,6 +32,7 @@ import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_O
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_VOLTAGE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WH_PER_KM
+import kotlin.math.roundToInt
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java) {
@@ -203,9 +204,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onUpdateKm().invoke("$KM ")
 
         // Then
-        verify(mockedTextVoltageRequired).text = "Fill up!"
-        // FIXME-0 Use the right time
-        verify(mockedTextRemainingTime).text = ""
+        verifyDisplayFillUp(maxVoltageBeforeBalancing - VOLTAGE)
     }
 
     @Test
@@ -234,13 +233,28 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         mockField(R.id.view_wh_per_km, mockedTextWhPerKm)
     }
 
-    private fun verifyNoDisplay() {
-        verify(mockedTextVoltageRequired).text = ""
-        verify(mockedTextRemainingTime).text = ""
+    private fun verifyDisplayFillUp(voltageDiff: Float) {
+
+        verify(mockedTextVoltageRequired).text = "Fill up!"
+        verifyDisplayTime(voltageDiff / fragment.wheel!!.chargeRate)
     }
 
     private fun verifyDisplayGo() {
         verify(mockedTextVoltageRequired).text = "Go!"
+        verify(mockedTextRemainingTime).text = ""
+    }
+
+    private fun verifyDisplayTime(rawHours: Float) {
+        val hours = rawHours.toInt()
+        val minutes = ((rawHours - hours) * 60).roundToInt()
+
+        // FIXME-0 Activate time display
+//        verify(mockedTextRemainingTime).text = if (hours > 0) "${hours}h$minutes" else "${minutes}m"
+        verify(mockedTextRemainingTime).text = ""
+    }
+
+    private fun verifyNoDisplay() {
+        verify(mockedTextVoltageRequired).text = ""
         verify(mockedTextRemainingTime).text = ""
     }
 }

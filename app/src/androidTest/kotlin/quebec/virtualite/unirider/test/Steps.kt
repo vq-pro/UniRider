@@ -76,7 +76,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -204,7 +204,8 @@ class Steps {
             floatOf(mapEntity["Voltage Max"]!!),
             floatOf(mapEntity["Voltage Min"]!!),
             floatOf(mapEntity["Voltage Reserve"]!!),
-            floatOf(mapEntity["Voltage Max"]!!)
+            floatOf(mapEntity["Voltage Max"]!!),
+            floatOf(mapEntity["Charge Rate"]!!)
         )
 
         click(R.id.button_save)
@@ -400,8 +401,9 @@ class Steps {
                 val voltageMin = voltageOf(row[3])
                 val voltageReserve = voltageOf(row[4])
                 val voltageMax = voltageOf(row[5])
+                val chargeRate = 0f
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate)
             }
             .collect(toList())
 

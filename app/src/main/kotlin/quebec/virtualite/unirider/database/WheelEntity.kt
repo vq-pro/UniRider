@@ -16,7 +16,8 @@ data class WheelEntity(
     val voltageMax: Float,
     val voltageMin: Float,
     val voltageReserve: Float,
-    val voltageStart: Float
+    val voltageStart: Float,
+    val chargeRate: Float
 ) {
     fun totalMileage() = premileage + mileage
 }

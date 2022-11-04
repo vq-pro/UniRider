@@ -6,6 +6,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
@@ -67,12 +68,14 @@ class SaveComparatorTest {
         val initial = WheelEntity(
             ID, NAME, DEVICE_NAME, DEVICE_ADDR,
             PREMILEAGE, MILEAGE, WH,
-            VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START
+            VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
+            CHARGE_RATE
         )
         val updated = WheelEntity(
             ID, name.trim(), DEVICE_NAME, DEVICE_ADDR,
             premileage, mileage, wh,
-            voltageMax, voltageMin, voltageReserve, VOLTAGE_START
+            voltageMax, voltageMin, voltageReserve, VOLTAGE_START,
+            CHARGE_RATE
         )
 
         // When

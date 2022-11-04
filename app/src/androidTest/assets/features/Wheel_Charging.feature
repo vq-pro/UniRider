@@ -21,10 +21,10 @@ Feature: Wheel Charging
     Examples:
       | distance | voltage | time |
       | 15 km    | Go!     |      |
-#      | 20 km    | 89.2V (+1.3) | 10m   |
+#      | 20 km    | 89.2V (+1.3) | 10m  |
 #      | 40 km    | 94.9V (+7.0) | 53m   |
-#      | 50 km    | 97.7V (+9.8) | 1h14m |
-#      | 60 km    | Fill up!     | 1h37m |
+#      | 50 km    | 97.7V (+9.8) | 1h14 |
+#      | 60 km    | Fill up!     | 1h37 |
       |          |         |      |
       | aa       |         |      |
 
