@@ -174,6 +174,7 @@ class Steps {
     fun setNewWheelValues(newValues: DataTable) {
 
         val mapDetailToId = mapOf(
+            Pair("Charge Rate", R.id.edit_charge_rate),
             Pair("Name", R.id.edit_name),
             Pair("Previous Mileage", R.id.edit_premileage),
             Pair("Mileage", R.id.edit_mileage),
@@ -205,7 +206,7 @@ class Steps {
             floatOf(mapEntity["Voltage Min"]!!),
             floatOf(mapEntity["Voltage Reserve"]!!),
             floatOf(mapEntity["Voltage Max"]!!),
-            0f
+            floatOf(mapEntity["Charge Rate"]!!)
         )
 
         click(R.id.button_save)
@@ -226,6 +227,11 @@ class Steps {
     fun blanksTheDisplays() {
         assertThat(R.id.edit_voltage_actual, isEmpty())
         assertThat(R.id.view_battery, isEmpty())
+    }
+
+    @When("I blank the charge rate")
+    fun blankWheelChargeRate() {
+        setText(R.id.edit_charge_rate, " ")
     }
 
     @When("I blank the mileage")
@@ -296,6 +302,11 @@ class Steps {
     @When("I change the maximum voltage")
     fun changeWheelVoltageMax() {
         setText(R.id.edit_voltage_max, "2.4")
+    }
+
+    @When("I change the charge rate")
+    fun changeWheelChargeRate() {
+        setText(R.id.edit_charge_rate, "3")
     }
 
     @When("I change the name")
@@ -495,6 +506,7 @@ class Steps {
     fun wheelWasAdded() {
         selectedWheel = db.findWheel(updatedWheel.name)!!
 
+        assertThat(selectedWheel.chargeRate, equalTo(updatedWheel.chargeRate))
         assertThat(selectedWheel.name, equalTo(updatedWheel.name))
         assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))
         assertThat(selectedWheel.voltageMax, equalTo(updatedWheel.voltageMax))
@@ -557,6 +569,11 @@ class Steps {
         BluetoothServicesSim.setVoltage(voltageOf(deviceFields[4]))
     }
 
+    private fun floatOfWithSuffix(value: String, suffix: String): Float {
+        assertThat(value, endsWith(suffix))
+        return floatOf(value.substring(0, value.length - suffix.length))
+    }
+
     private fun strip(value: String, stripValue: String): String {
         return when {
             value.endsWith(stripValue) -> value.substring(0, value.length - stripValue.length).trim()
@@ -571,12 +588,10 @@ class Steps {
     }
 
     private fun voltageOf(value: String): Float {
-        assertThat(value, endsWith("V"))
-        return floatOf(value.substring(0, value.length - 1))
+        return floatOfWithSuffix(value, "V")
     }
 
     private fun voltsPerHourOf(value: String): Float {
-        assertThat(value, endsWith("V/h"))
-        return floatOf(value.substring(0, value.length - 3))
+        return floatOfWithSuffix(value, "V/h")
     }
 }

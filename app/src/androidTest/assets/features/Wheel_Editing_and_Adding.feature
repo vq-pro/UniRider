@@ -1,6 +1,5 @@
 Feature: Wheel Editing & Adding
 
-  # FIXME-0 Edit Charge Rate as value
   Background:
     Given these wheels:
       | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate |
@@ -19,6 +18,7 @@ Feature: Wheel Editing & Adding
       | Voltage Max      | 100.8       |
       | Voltage Reserve  | 80.0        |
       | Voltage Min      | 75.6        |
+      | Charge Rate      | 8           |
     Then the wheel was added
     And it shows the updated name and a mileage of 150 on the main view
     And the wheel's Bluetooth name is undefined
@@ -34,6 +34,7 @@ Feature: Wheel Editing & Adding
       | Voltage Max      | 100.9       |
       | Voltage Reserve  | 80.5        |
       | Voltage Min      | 74.5        |
+      | Charge Rate      | 2           |
     Then the wheel was updated
     And I go back to the main view
     And it shows the updated name and a mileage of 200 on the main view
@@ -46,6 +47,7 @@ Feature: Wheel Editing & Adding
     Then the wheel <can or cannot> be saved
     Examples:
       | can or cannot | do something                |
+      | can           | change the charge rate      |
       | can           | change the name             |
       | can           | change the mileage          |
       | can           | blank the mileage           |
@@ -54,6 +56,7 @@ Feature: Wheel Editing & Adding
       | can           | change the previous mileage |
       | can           | blank the previous mileage  |
       | can           | change the wh               |
+      | cannot        | blank the charge rate       |
       | cannot        | blank the name              |
       | cannot        | blank the wh                |
       | cannot        | blank the maximum voltage   |

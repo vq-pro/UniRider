@@ -8,6 +8,7 @@ object TestDomain {
     const val CHARGE_RATE = 4f
     const val CHARGE_RATE2 = 6f
     const val CHARGE_RATE3 = 8f
+    const val CHARGE_RATE_NEW = 10f
     const val DEVICE_ADDR = "AA:BB:CC:DD:EE:FF"
     const val DEVICE_ADDR2 = "BB:CC:DD:EE:FF:GG"
     const val DEVICE_ADDR3 = "CC:DD:EE:FF:GG:HH"
