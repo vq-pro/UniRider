@@ -17,6 +17,8 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
+import quebec.virtualite.unirider.TestDomain.CHARGE_RATE_NEW
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
@@ -50,6 +52,9 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
     @Mock
     lateinit var mockedButtonSave: Button
+
+    @Mock
+    lateinit var mockedEditChargeRate: EditText
 
     @Mock
     lateinit var mockedEditMileage: EditText
@@ -114,6 +119,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         verifyFieldAssignment(R.id.button_delete, fragment.buttonDelete, mockedButtonDelete)
         verifyFieldAssignment(R.id.button_save, fragment.buttonSave, mockedButtonSave)
+        verifyFieldAssignment(R.id.edit_name, fragment.editChargeRate, mockedEditChargeRate)
         verifyFieldAssignment(R.id.edit_mileage, fragment.editMileage, mockedEditMileage)
         verifyFieldAssignment(R.id.edit_name, fragment.editName, mockedEditName)
         verifyFieldAssignment(R.id.edit_premileage, fragment.editPreMileage, mockedEditPreMileage)
@@ -122,15 +128,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_voltage_reserve, fragment.editVoltageReserve, mockedEditVoltageReserve)
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
 
-        verify(mockedEditName).setText(NAME)
-        verify(mockedEditPreMileage).setText("$PREMILEAGE")
-        verify(mockedEditMileage).setText("$MILEAGE")
-        verify(mockedEditVoltageMax).setText("$VOLTAGE_MAX")
-        verify(mockedEditVoltageReserve).setText("$VOLTAGE_RESERVE")
-        verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
-        verify(mockedEditWh).setText("$WH")
-        verify(mockedWidgets).disable(mockedButtonSave)
-
+        verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
         verifyOnUpdateText(mockedEditName, "onUpdateName")
         verifyOnUpdateText(mockedEditPreMileage, "onUpdatePreMileage")
         verifyOnUpdateText(mockedEditMileage, "onUpdateMileage")
@@ -140,12 +138,22 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verifyOnUpdateText(mockedEditWh, "onUpdateWh")
         verifyOnLongClick(mockedButtonDelete, "onDelete")
         verifyOnClick(mockedButtonSave, "onSave")
+
+        verify(mockedEditChargeRate).setText("$CHARGE_RATE")
+        verify(mockedEditName).setText(NAME)
+        verify(mockedEditPreMileage).setText("$PREMILEAGE")
+        verify(mockedEditMileage).setText("$MILEAGE")
+        verify(mockedEditVoltageMax).setText("$VOLTAGE_MAX")
+        verify(mockedEditVoltageReserve).setText("$VOLTAGE_RESERVE")
+        verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
+        verify(mockedEditWh).setText("$WH")
+        verify(mockedWidgets).disable(mockedButtonSave)
     }
 
     @Test
     fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
         // Given
-        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, WH, VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START)
+        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, WH, VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START, CHARGE_RATE)
         given(mockedDb.getWheel(ID))
             .willReturn(wheel)
 
@@ -162,7 +170,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         // Given
         fragment.parmWheelId = 0L
 
-        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f)
+        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -254,6 +262,39 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         // Then
         verify(mockedDb).saveWheel(fragment.updatedWheel)
         verify(mockedFragments).navigateBack()
+    }
+
+    @Test
+    fun onUpdateChargeRate() {
+        // Given
+        initForUpdates(true)
+        injectMocks()
+
+        // When
+        fragment.onUpdateChargeRate().invoke("$CHARGE_RATE_NEW ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedSaveComparator).canSave(any(), any())
+        verify(mockedWidgets).enable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = CHARGE_RATE_NEW)))
+    }
+
+    @Test
+    fun onUpdateChargeRate_whenEmpty_zero() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        // When
+        fragment.onUpdateChargeRate().invoke(" ")
+
+        // Then
+        verify(mockedSaveComparator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = 0f)))
     }
 
     @Test
@@ -479,17 +520,10 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     }
 
     private fun definedWheel() = WheelEntity(
-        ID,
-        NAME,
-        DEVICE_NAME,
-        DEVICE_ADDR,
-        PREMILEAGE,
-        MILEAGE,
-        WH,
-        VOLTAGE_MAX,
-        VOLTAGE_MIN,
-        VOLTAGE_RESERVE,
-        VOLTAGE_START
+        ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+        PREMILEAGE, MILEAGE, WH,
+        VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
+        CHARGE_RATE
     )
 
     private fun initForUpdates(canSave: Boolean) {
@@ -507,6 +541,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     private fun mockFields() {
         mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_save, mockedButtonSave)
+        mockField(R.id.edit_charge_rate, mockedEditChargeRate)
         mockField(R.id.edit_name, mockedEditName)
         mockField(R.id.edit_premileage, mockedEditPreMileage)
         mockField(R.id.edit_mileage, mockedEditMileage)

@@ -76,7 +76,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -174,6 +174,7 @@ class Steps {
     fun setNewWheelValues(newValues: DataTable) {
 
         val mapDetailToId = mapOf(
+            Pair("Charge Rate", R.id.edit_charge_rate),
             Pair("Name", R.id.edit_name),
             Pair("Previous Mileage", R.id.edit_premileage),
             Pair("Mileage", R.id.edit_mileage),
@@ -204,7 +205,8 @@ class Steps {
             floatOf(mapEntity["Voltage Max"]!!),
             floatOf(mapEntity["Voltage Min"]!!),
             floatOf(mapEntity["Voltage Reserve"]!!),
-            floatOf(mapEntity["Voltage Max"]!!)
+            floatOf(mapEntity["Voltage Max"]!!),
+            floatOf(mapEntity["Charge Rate"]!!)
         )
 
         click(R.id.button_save)
@@ -225,6 +227,11 @@ class Steps {
     fun blanksTheDisplays() {
         assertThat(R.id.edit_voltage_actual, isEmpty())
         assertThat(R.id.view_battery, isEmpty())
+    }
+
+    @When("I blank the charge rate")
+    fun blankWheelChargeRate() {
+        setText(R.id.edit_charge_rate, " ")
     }
 
     @When("I blank the mileage")
@@ -297,6 +304,11 @@ class Steps {
         setText(R.id.edit_voltage_max, "2.4")
     }
 
+    @When("I change the charge rate")
+    fun changeWheelChargeRate() {
+        setText(R.id.edit_charge_rate, "3")
+    }
+
     @When("I change the name")
     fun changeWheelName() {
         setText(R.id.edit_name, "Toto")
@@ -345,6 +357,11 @@ class Steps {
         assertThat(R.id.view_required_voltage, hasText(strip(expectedVoltage, "V")))
     }
 
+    @Then("^it displays a remaining time of (.*?)$")
+    fun displaysRemainingTime(expectedTime: String) {
+        assertThat(R.id.view_remaining_time, hasText(expectedTime))
+    }
+
     @Then("it displays blank estimated values")
     fun displaysBlankEstimatedValues() {
         assertThat(R.id.view_remaining_range, isEmpty())
@@ -384,7 +401,7 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max")))
+        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate")))
 
         val wheelEntities = wheels.cells(1)
             .stream()
@@ -395,8 +412,9 @@ class Steps {
                 val voltageMin = voltageOf(row[3])
                 val voltageReserve = voltageOf(row[4])
                 val voltageMax = voltageOf(row[5])
+                val chargeRate = voltsPerHourOf(row[6])
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate)
             }
             .collect(toList())
 
@@ -488,6 +506,7 @@ class Steps {
     fun wheelWasAdded() {
         selectedWheel = db.findWheel(updatedWheel.name)!!
 
+        assertThat(selectedWheel.chargeRate, equalTo(updatedWheel.chargeRate))
         assertThat(selectedWheel.name, equalTo(updatedWheel.name))
         assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))
         assertThat(selectedWheel.voltageMax, equalTo(updatedWheel.voltageMax))
@@ -503,7 +522,7 @@ class Steps {
 
     @When("^I connect to the (.*?)$")
     fun whenConnectTo(deviceName: String) {
-        click(R.id.button_connect)
+        click(R.id.button_connect_view)
         selectListViewItem(R.id.devices, deviceName)
 
         expectedDeviceName = deviceName
@@ -516,7 +535,12 @@ class Steps {
 
     @When("I reconnect to the wheel")
     fun whenReconnectToWheel() {
-        click(R.id.button_connect)
+        click(R.id.button_connect_view)
+    }
+
+    @When("I reconnect to update the voltage$")
+    fun whenReconnectToUpdateVoltage() {
+        click(R.id.button_connect_charge)
     }
 
     @When("^I request to charge for (.*?)$")
@@ -534,7 +558,7 @@ class Steps {
 
     @When("^I do a scan and see the (.*?) but go back without connecting$")
     fun whenTryingToConnectTo(deviceName: String) {
-        click(R.id.button_connect)
+        click(R.id.button_connect_view)
         assertThat(R.id.devices, hasRow(deviceName))
         goBackToViewWheel()
     }
@@ -548,6 +572,11 @@ class Steps {
         BluetoothServicesSim.setKm(floatOf(deviceFields[2]))
         BluetoothServicesSim.setMileage(floatOf(deviceFields[3]))
         BluetoothServicesSim.setVoltage(voltageOf(deviceFields[4]))
+    }
+
+    private fun floatOfWithSuffix(value: String, suffix: String): Float {
+        assertThat(value, endsWith(suffix))
+        return floatOf(value.substring(0, value.length - suffix.length))
     }
 
     private fun strip(value: String, stripValue: String): String {
@@ -564,7 +593,10 @@ class Steps {
     }
 
     private fun voltageOf(value: String): Float {
-        assertThat(value, endsWith("V"))
-        return floatOf(value.substring(0, value.length - 1))
+        return floatOfWithSuffix(value, "V")
+    }
+
+    private fun voltsPerHourOf(value: String): Float {
+        return floatOfWithSuffix(value, "V/h")
     }
 }

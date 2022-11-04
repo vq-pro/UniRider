@@ -21,6 +21,7 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
@@ -148,7 +149,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         assertThat(fragment.wheel, equalTo(S18_1))
 
         verifyFieldAssignment(R.id.button_charge, fragment.buttonCharge, mockedButtonCharge)
-        verifyFieldAssignment(R.id.button_connect, fragment.buttonConnect, mockedButtonConnect)
+        verifyFieldAssignment(R.id.button_connect_view, fragment.buttonConnect, mockedButtonConnect)
         verifyFieldAssignment(R.id.button_edit, fragment.buttonEdit, mockedButtonEdit)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
@@ -266,12 +267,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
+        val connectionPayload = WheelInfo(KM_NEW_RAW, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
+
         // When
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        val connectionPayload = WheelInfo(KM_NEW_RAW, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
-
         verifyRunWithWaitDialog()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)
         verifyDoneWaiting(connectionPayload)
@@ -280,7 +281,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             WheelEntity(
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
-                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START
+                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
+                CHARGE_RATE
             )
         )
         verify(mockedEditKm).setText("$KM_NEW")
@@ -308,7 +310,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
             WheelEntity(
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
-                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_NEW
+                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_NEW,
+                CHARGE_RATE
             )
         )
         verify(mockedEditKm).setText("0.0")
@@ -623,7 +626,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun mockFields() {
         mockField(R.id.button_charge, mockedButtonCharge)
-        mockField(R.id.button_connect, mockedButtonConnect)
+        mockField(R.id.button_connect_view, mockedButtonConnect)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)

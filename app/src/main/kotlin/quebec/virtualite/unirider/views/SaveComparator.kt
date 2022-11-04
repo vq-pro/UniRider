@@ -12,6 +12,7 @@ open class SaveComparator {
             || updatedWheel.voltageMin == 0f
             || updatedWheel.voltageMax == 0f
             || updatedWheel.voltageReserve == 0f
+            || updatedWheel.chargeRate == 0f
         )
             return false
 
@@ -21,6 +22,7 @@ open class SaveComparator {
                 (updatedWheel.wh != initialWheel.wh) ||
                 (updatedWheel.voltageMax != initialWheel.voltageMax) ||
                 (updatedWheel.voltageMin != initialWheel.voltageMin) ||
-                (updatedWheel.voltageReserve != initialWheel.voltageReserve)
+                (updatedWheel.voltageReserve != initialWheel.voltageReserve) ||
+                (updatedWheel.chargeRate != initialWheel.chargeRate)
     }
 }

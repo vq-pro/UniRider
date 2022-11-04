@@ -14,10 +14,11 @@ import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f)
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
+    internal lateinit var editChargeRate: EditText
     internal lateinit var editMileage: EditText
     internal lateinit var editName: EditText
     internal lateinit var editPreMileage: EditText
@@ -41,6 +42,7 @@ open class WheelEditFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        editChargeRate = view.findViewById(R.id.edit_charge_rate)
         editName = view.findViewById(R.id.edit_name)
         editPreMileage = view.findViewById(R.id.edit_premileage)
         editMileage = view.findViewById(R.id.edit_mileage)
@@ -51,6 +53,7 @@ open class WheelEditFragment : BaseFragment() {
         buttonDelete = view.findViewById(R.id.button_delete)
         buttonSave = view.findViewById(R.id.button_save)
 
+        widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
         widgets.addTextChangedListener(editName, onUpdateName())
         widgets.addTextChangedListener(editPreMileage, onUpdatePreMileage())
         widgets.addTextChangedListener(editMileage, onUpdateMileage())
@@ -66,6 +69,7 @@ open class WheelEditFragment : BaseFragment() {
                 initialWheel = it.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
                 updatedWheel = initialWheel
 
+                editChargeRate.setText("${initialWheel.chargeRate}")
                 editName.setText(initialWheel.name)
                 editVoltageMax.setText("${initialWheel.voltageMax}")
                 editVoltageMin.setText("${initialWheel.voltageMin}")
@@ -104,6 +108,11 @@ open class WheelEditFragment : BaseFragment() {
     fun onSave(): (View) -> Unit = {
         external.runDB { it.saveWheel(updatedWheel) }
         fragments.navigateBack()
+    }
+
+    fun onUpdateChargeRate() = { newChargeRate: String ->
+        updatedWheel = updatedWheel.copy(chargeRate = floatOf(newChargeRate))
+        enableSaveIfChanged()
     }
 
     fun onUpdateMileage() = { newMileage: String ->
