@@ -23,7 +23,6 @@ class CalculatorServiceTest {
     @InjectMocks
     lateinit var service: CalculatorService
 
-    // FIXME-2 Adjust value to 1.5V more instead of 2V more
     @Test
     fun adjustedReserve() {
         // When

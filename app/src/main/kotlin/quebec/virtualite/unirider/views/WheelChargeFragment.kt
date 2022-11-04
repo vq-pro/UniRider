@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
@@ -20,6 +21,7 @@ import kotlin.math.roundToInt
 
 open class WheelChargeFragment : BaseFragment() {
 
+    internal lateinit var buttonConnect: Button
     internal lateinit var editKm: EditText
     internal lateinit var textName: TextView
     internal lateinit var textRemainingTime: TextView
@@ -28,7 +30,6 @@ open class WheelChargeFragment : BaseFragment() {
 
     internal var parmWheelId: Long? = 0
 
-    // FIXME-1 Connect updates this parameter with the new voltage
     internal var parmVoltageDisconnectedFromCharger: Float? = 0f
     internal var parmWhPerKm: Float? = 0f
     internal var wheel: WheelEntity? = null
@@ -46,12 +47,14 @@ open class WheelChargeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        buttonConnect = view.findViewById(R.id.button_connect_charge)
         editKm = view.findViewById(R.id.edit_km)
         textName = view.findViewById(R.id.view_name)
         textRemainingTime = view.findViewById(R.id.view_remaining_time)
         textVoltageRequired = view.findViewById(R.id.view_required_voltage)
         textWhPerKm = view.findViewById(R.id.view_wh_per_km)
 
+        widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
 
         external.runDB {
@@ -59,6 +62,18 @@ open class WheelChargeFragment : BaseFragment() {
 
             textName.text = wheel!!.name
             textWhPerKm.text = textWhPerKm(parmWhPerKm)
+        }
+    }
+
+    fun onConnect(): (View) -> Unit = {
+        fragments.runWithWait {
+            external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
+                fragments.doneWaiting(it) {
+                    parmVoltageDisconnectedFromCharger = round(it!!.voltage, NB_DECIMALS) - CHARGER_OFFSET
+
+                    onUpdateKm().invoke(widgets.text(editKm))
+                }
+            }
         }
     }
 

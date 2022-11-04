@@ -20,7 +20,6 @@ import kotlin.math.roundToInt
 
 open class WheelViewFragment : BaseFragment() {
 
-    private val NB_DECIMALS = 1
     private val READ_KM = null
     private val READ_VOLTAGE_ACTUAL = null
     private val READ_VOLTAGE_START = null
@@ -54,7 +53,7 @@ open class WheelViewFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonCharge = view.findViewById(R.id.button_charge)
-        buttonConnect = view.findViewById(R.id.button_connect)
+        buttonConnect = view.findViewById(R.id.button_connect_view)
         buttonEdit = view.findViewById(R.id.button_edit)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)

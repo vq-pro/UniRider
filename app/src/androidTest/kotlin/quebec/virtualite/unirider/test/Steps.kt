@@ -522,7 +522,7 @@ class Steps {
 
     @When("^I connect to the (.*?)$")
     fun whenConnectTo(deviceName: String) {
-        click(R.id.button_connect)
+        click(R.id.button_connect_view)
         selectListViewItem(R.id.devices, deviceName)
 
         expectedDeviceName = deviceName
@@ -535,7 +535,12 @@ class Steps {
 
     @When("I reconnect to the wheel")
     fun whenReconnectToWheel() {
-        click(R.id.button_connect)
+        click(R.id.button_connect_view)
+    }
+
+    @When("I reconnect to update the voltage$")
+    fun whenReconnectToUpdateVoltage() {
+        click(R.id.button_connect_charge)
     }
 
     @When("^I request to charge for (.*?)$")
@@ -553,7 +558,7 @@ class Steps {
 
     @When("^I do a scan and see the (.*?) but go back without connecting$")
     fun whenTryingToConnectTo(deviceName: String) {
-        click(R.id.button_connect)
+        click(R.id.button_connect_view)
         assertThat(R.id.devices, hasRow(deviceName))
         goBackToViewWheel()
     }

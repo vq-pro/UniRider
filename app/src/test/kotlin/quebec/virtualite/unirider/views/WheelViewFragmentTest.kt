@@ -149,7 +149,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         assertThat(fragment.wheel, equalTo(S18_1))
 
         verifyFieldAssignment(R.id.button_charge, fragment.buttonCharge, mockedButtonCharge)
-        verifyFieldAssignment(R.id.button_connect, fragment.buttonConnect, mockedButtonConnect)
+        verifyFieldAssignment(R.id.button_connect_view, fragment.buttonConnect, mockedButtonConnect)
         verifyFieldAssignment(R.id.button_edit, fragment.buttonEdit, mockedButtonEdit)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
@@ -267,12 +267,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
+        val connectionPayload = WheelInfo(KM_NEW_RAW, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
+
         // When
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        val connectionPayload = WheelInfo(KM_NEW_RAW, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
-
         verifyRunWithWaitDialog()
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)
         verifyDoneWaiting(connectionPayload)
@@ -626,7 +626,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun mockFields() {
         mockField(R.id.button_charge, mockedButtonCharge)
-        mockField(R.id.button_connect, mockedButtonConnect)
+        mockField(R.id.button_connect_view, mockedButtonConnect)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
