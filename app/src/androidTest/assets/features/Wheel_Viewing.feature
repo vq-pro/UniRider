@@ -10,15 +10,6 @@ Feature: Wheel Viewing
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        |
     And I start the app
 
-  Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
-    Given the Sherman has a previous mileage of <previous mileage>
-    When I select the Sherman
-    Then the details view shows the Sherman with a mileage of <expected mileage> and a starting voltage of 100.8V
-    Examples:
-      | previous mileage | expected mileage |
-      | 0 km             | 17622 km         |
-      | 10000 km         | 27622 km         |
-
   Scenario Outline: Calculating percentage [<wheel> / <voltage>]
     Given I select the <wheel>
     When I enter an actual voltage of <voltage>
@@ -96,3 +87,12 @@ Feature: Wheel Viewing
     And it displays an estimated remaining range of 46.7 km
     And it displays an estimated total range of 88.7 km
     And it displays an estimated rate of 30+ wh/km
+
+  Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
+    Given the Sherman has a previous mileage of <previous mileage>
+    When I select the Sherman
+    Then the details view shows the Sherman with a mileage of <expected mileage> and a starting voltage of 100.8V
+    Examples:
+      | previous mileage | expected mileage |
+      | 0 km             | 17622 km         |
+      | 10000 km         | 27622 km         |
