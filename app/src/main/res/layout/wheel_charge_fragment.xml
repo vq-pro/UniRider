@@ -107,10 +107,10 @@
                 />
             </TableRow>
 
-            <!-- Required voltage -->
+            <!-- Actual voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:labelFor="@+id/view_required_voltage"
+                        android:labelFor="@+id/view_actual_voltage"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -120,7 +120,30 @@
                 />
 
                 <TextView
-                        android:id="@+id/view_required_voltage"
+                        android:id="@+id/view_voltage_actual"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewStart"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        tools:ignore="RtlHardcoded"
+                />
+            </TableRow>
+
+            <!-- Required voltage -->
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/view_required_voltage"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_required"
+                />
+
+                <TextView
+                        android:id="@+id/view_voltage_required"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
