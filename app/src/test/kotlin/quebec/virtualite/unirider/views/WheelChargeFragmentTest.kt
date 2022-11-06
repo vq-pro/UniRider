@@ -189,10 +189,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         // Then
         verify(mockedCalculatorService).requiredVoltage(fragment.wheel, WH_PER_KM, KM)
-
-        val diff = VOLTAGE_REQUIRED - VOLTAGE - CHARGER_OFFSET
-        verify(mockedTextVoltageRequired).text = "${VOLTAGE_REQUIRED}V (+$diff)"
-        verifyDisplayTime(diff)
+        verifyVoltageRequired(VOLTAGE_REQUIRED)
     }
 
     @Test
@@ -206,6 +203,22 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Then
         verifyNoInteractions(mockedCalculatorService)
         verifyNoDisplay()
+    }
+
+    @Test
+    fun onUpdateKm_whenFullChargeIsNeeded_displayValue() {
+        // Given
+        injectMocks()
+
+        val maxVoltageBeforeBalancing = VOLTAGE_MAX3 - CHARGER_OFFSET
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+            .willReturn(maxVoltageBeforeBalancing)
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verifyVoltageRequired(maxVoltageBeforeBalancing)
     }
 
     @Test
@@ -252,23 +265,6 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Then
         verify(mockedTextVoltageRequired).text = "${VOLTAGE + CHARGER_OFFSET + 0.1f}V (+0.1)"
         verify(mockedTextRemainingTime).text = "1m"
-    }
-
-    @Test
-    fun onUpdateKm_whenFullChargeIsNeeded_displayFillUp() {
-        // Given
-        injectMocks()
-
-        val maxVoltageBeforeBalancing = VOLTAGE_MAX3 - CHARGER_OFFSET
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
-            .willReturn(maxVoltageBeforeBalancing)
-
-        // When
-        fragment.onUpdateKm().invoke("$KM ")
-
-        // Then
-        verify(mockedTextVoltageRequired).text = "Fill up!"
-        verifyDisplayTime(maxVoltageBeforeBalancing - CHARGER_OFFSET - VOLTAGE)
     }
 
     @Test
@@ -329,5 +325,11 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     private fun verifyNoDisplay() {
         verify(mockedTextVoltageRequired).text = ""
         verify(mockedTextRemainingTime).text = ""
+    }
+
+    private fun verifyVoltageRequired(voltageRequired: Float) {
+        val diff = round(voltageRequired - (VOLTAGE + CHARGER_OFFSET), 1)
+        verify(mockedTextVoltageRequired).text = "${voltageRequired}V (+$diff)"
+        verifyDisplayTime(diff)
     }
 }

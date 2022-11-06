@@ -94,26 +94,19 @@ open class WheelChargeFragment : BaseFragment() {
         } else {
             val requiredVoltageOnCharger = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
             val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
-            val maxCharge = wheel!!.voltageMax - CHARGER_OFFSET
-            val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
-            val rawHours = diff / wheel!!.chargeRate
 
-            when {
-                requiredVoltageOnCharger >= maxCharge -> {
-                    textVoltageRequired.text = "Fill up!"
-                    textRemainingTime.text = timeDisplay(rawHours)
-                }
+            if (requiredVoltage > parmVoltageDisconnectedFromCharger!!) {
+                val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
+                val rawHours = diff / wheel!!.chargeRate
 
-                requiredVoltage > parmVoltageDisconnectedFromCharger!! -> {
-                    textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
-                    textRemainingTime.text = timeDisplay(rawHours)
-                }
+                textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
+                textRemainingTime.text = timeDisplay(rawHours)
 
-                else -> {
-                    textVoltageRequired.text = "Go!"
-                    textRemainingTime.text = ""
-                }
+            } else {
+                textVoltageRequired.text = "Go!"
+                textRemainingTime.text = ""
             }
+
         }
     }
 
