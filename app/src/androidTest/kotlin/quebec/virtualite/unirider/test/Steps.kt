@@ -359,12 +359,17 @@ class Steps {
 
     @Then("^it displays a required voltage of (.*?)$")
     fun displaysRequiredVoltage(expectedVoltage: String) {
-        assertThat(R.id.view_required_voltage, hasText(strip(expectedVoltage, "V")))
+        assertThat(R.id.view_voltage_required, hasText(strip(expectedVoltage, "V")))
     }
 
     @Then("^it displays a remaining time of (.*?)$")
     fun displaysRemainingTime(expectedTime: String) {
         assertThat(R.id.view_remaining_time, hasText(expectedTime))
+    }
+
+    @Then("^it displays an actual voltage of (.*?)$")
+    fun displaysActualVoltage(expectedVoltage: String) {
+        assertThat(R.id.view_voltage_actual, hasText(strip(expectedVoltage, "V")))
     }
 
     @Then("it displays blank estimated values")

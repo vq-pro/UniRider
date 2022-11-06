@@ -25,6 +25,7 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var editKm: EditText
     internal lateinit var textName: TextView
     internal lateinit var textRemainingTime: TextView
+    internal lateinit var textVoltageActual: TextView
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var textWhPerKm: TextView
 
@@ -51,7 +52,8 @@ open class WheelChargeFragment : BaseFragment() {
         editKm = view.findViewById(R.id.edit_km)
         textName = view.findViewById(R.id.view_name)
         textRemainingTime = view.findViewById(R.id.view_remaining_time)
-        textVoltageRequired = view.findViewById(R.id.view_required_voltage)
+        textVoltageActual = view.findViewById(R.id.view_voltage_actual)
+        textVoltageRequired = view.findViewById(R.id.view_voltage_required)
         textWhPerKm = view.findViewById(R.id.view_wh_per_km)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
@@ -62,6 +64,7 @@ open class WheelChargeFragment : BaseFragment() {
 
             textName.text = wheel!!.name
             textWhPerKm.text = textWhPerKm(parmWhPerKm)
+            displayVoltageActual()
 
             if (wheel!!.btName == null || wheel!!.btAddr == null) {
                 widgets.disable(buttonConnect)
@@ -74,6 +77,7 @@ open class WheelChargeFragment : BaseFragment() {
             external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
                 fragments.doneWaiting(it) {
                     parmVoltageDisconnectedFromCharger = round(it!!.voltage, NB_DECIMALS) - CHARGER_OFFSET
+                    displayVoltageActual()
 
                     onUpdateKm().invoke(widgets.text(editKm))
                 }
@@ -90,26 +94,19 @@ open class WheelChargeFragment : BaseFragment() {
         } else {
             val requiredVoltageOnCharger = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
             val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
-            val maxCharge = wheel!!.voltageMax - CHARGER_OFFSET
-            val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
-            val rawHours = diff / wheel!!.chargeRate
 
-            when {
-                requiredVoltageOnCharger >= maxCharge -> {
-                    textVoltageRequired.text = "Fill up!"
-                    textRemainingTime.text = timeDisplay(rawHours)
-                }
+            if (requiredVoltage > parmVoltageDisconnectedFromCharger!!) {
+                val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
+                val rawHours = diff / wheel!!.chargeRate
 
-                requiredVoltage > parmVoltageDisconnectedFromCharger!! -> {
-                    textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
-                    textRemainingTime.text = timeDisplay(rawHours)
-                }
+                textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
+                textRemainingTime.text = timeDisplay(rawHours)
 
-                else -> {
-                    textVoltageRequired.text = "Go!"
-                    textRemainingTime.text = ""
-                }
+            } else {
+                textVoltageRequired.text = "Go!"
+                textRemainingTime.text = ""
             }
+
         }
     }
 
@@ -119,5 +116,9 @@ open class WheelChargeFragment : BaseFragment() {
         val minutes = ((rawHours - hours) * 60).roundToInt()
 
         return if (hours > 0) "${hours}h${format("%02d", minutes)}" else "${minutes}m"
+    }
+
+    private fun displayVoltageActual() {
+        textVoltageActual.text = "${parmVoltageDisconnectedFromCharger?.plus(CHARGER_OFFSET)}"
     }
 }

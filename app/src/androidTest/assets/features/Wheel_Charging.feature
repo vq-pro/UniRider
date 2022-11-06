@@ -17,17 +17,19 @@ Feature: Wheel Charging
 
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
-    Then it displays a required voltage of <voltage>
+    Then it displays an actual voltage of 87.9V
+    And it displays a required voltage of <required voltage>
     And it displays a remaining time of <time>
     Examples:
-      | distance | voltage      | time |
-      | 15 km    | Go!          |      |
-      | 20 km    | 89.2V (+1.3) | 10m  |
-      | 40 km    | 94.9V (+7.0) | 53m  |
-      | 50 km    | 97.7V (+9.8) | 1h14 |
-      | 60 km    | Fill up!     | 1h25 |
-      |          |              |      |
-      | aa       |              |      |
+      | distance | required voltage | time |
+      | 15 km    | Go!              |      |
+      | 20 km    | 89.2V (+1.3)     | 10m  |
+      | 40 km    | 94.9V (+7.0)     | 53m  |
+      | 50 km    | 97.7V (+9.8)     | 1h14 |
+      | 60 km    | 99.3V (+11.4)    | 1h25 |
+      | 200 km   | 99.3V (+11.4)    | 1h25 |
+      |          |                  |      |
+      | aa       |                  |      |
 
   Scenario: Update the voltage
     Given this simulated device:
@@ -35,5 +37,6 @@ Feature: Wheel Charging
       | LK1234  | C0:C1:C2:C3:C4:C5 | 12.218 | 705.615 | 88.5V   |
     And I request to charge for 40 km
     When I reconnect to update the voltage
-    Then it displays a required voltage of 94.9V (+6.4)
+    Then it displays an actual voltage of 88.5V
+    And it displays a required voltage of 94.9V (+6.4)
     And it displays a remaining time of 48m
