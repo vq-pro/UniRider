@@ -12,20 +12,24 @@ open class BluetoothServicesSim : BluetoothServices {
         private var mileage = 123f
         private var voltage = 61.2f
 
-        fun setDevice(device: BluetoothDevice) {
+        fun setDevice(device: BluetoothDevice): Companion {
             Companion.device = device
+            return this
         }
 
-        fun setKm(km: Float) {
+        fun setKm(km: Float): Companion {
             Companion.km = km
+            return this
         }
 
-        fun setMileage(mileage: Float) {
+        fun setMileage(mileage: Float): Companion {
             Companion.mileage = mileage
+            return this
         }
 
-        fun setVoltage(voltage: Float) {
+        fun setVoltage(voltage: Float): Companion {
             Companion.voltage = voltage
+            return this
         }
     }
 

@@ -578,10 +578,11 @@ class Steps {
         assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltage")))
         val deviceFields = device.cells(1)[0]
 
-        BluetoothServicesSim.setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
-        BluetoothServicesSim.setKm(floatOf(deviceFields[2]))
-        BluetoothServicesSim.setMileage(floatOf(deviceFields[3]))
-        BluetoothServicesSim.setVoltage(voltageOf(deviceFields[4]))
+        BluetoothServicesSim
+            .setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
+            .setKm(floatOf(deviceFields[2]))
+            .setMileage(floatOf(deviceFields[3]))
+            .setVoltage(voltageOf(deviceFields[4]))
     }
 
     private fun floatOfWithSuffix(value: String, suffix: String): Float {
