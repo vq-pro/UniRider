@@ -24,7 +24,7 @@ Feature: Wheel Connecting - End-2-End
     And the wheel's Bluetooth name is updated
     Examples:
       | wheel   | bt name      | mileage |
-      | 14S     | KS-14SMD2107 | 1306    |
+      | 14S     | KS-14SMD2107 | 1308    |
 #      | S18-SE  | KSS18-9135   | 718     |
       | Sherman | LK1149       | 22731   |
 
@@ -46,7 +46,7 @@ Feature: Wheel Connecting - End-2-End
     Then the mileage is updated to <mileage> km
     Examples:
       | wheel   | mileage |
-      | 14S     | 1306    |
+      | 14S     | 1308    |
 #      | S18-SE  | 718     |
       | Sherman | 22731   |
 
