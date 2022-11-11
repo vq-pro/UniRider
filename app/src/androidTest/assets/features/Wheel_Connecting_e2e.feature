@@ -15,18 +15,21 @@ Feature: Wheel Connecting - End-2-End
       | S18-SE      | 269     | 900  | 60V         | 66V             | 84V         | 4V/h        |
       | Sherman-S   | 0       | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
     And the Sherman has a previous mileage of 3600 km
+    And the updated mileage for some of these wheels should be:
+      | Name    | Updated mileage |
+      | 14S     | 1322            |
+      | Sherman | 19248           |
     And I start the app
 
   Scenario Outline: Connecting to a wheel for the first time - <wheel>
     Given I select the <wheel>
     When I connect to the <bt name>
-    Then the mileage is updated to <mileage> km
+    Then the mileage is updated to its up-to-date value
     And the wheel's Bluetooth name is updated
     Examples:
-      | wheel   | bt name      | mileage |
-      | 14S     | KS-14SMD2107 | 1308    |
-#      | S18-SE  | KSS18-9135   | 718     |
-      | Sherman | LK1149       | 22731   |
+      | wheel   | bt name      |
+      | 14S     | KS-14SMD2107 |
+      | Sherman | LK1149       |
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
     Given I select the Sherman
@@ -43,12 +46,11 @@ Feature: Wheel Connecting - End-2-End
       | Sherman Max | LK4142       | 88:25:83:F3:61:20 |
     And I select the <wheel>
     When I reconnect to the wheel
-    Then the mileage is updated to <mileage> km
+    Then the mileage is updated to its up-to-date value
     Examples:
-      | wheel   | mileage |
-      | 14S     | 1308    |
-#      | S18-SE  | 718     |
-      | Sherman | 22731   |
+      | wheel   |
+      | 14S     |
+      | Sherman |
 
   Scenario: Connecting to a previously connected wheel - ERROR - Connection following failure to connect
     Given these wheels are connected:
@@ -63,4 +65,4 @@ Feature: Wheel Connecting - End-2-End
     And I cancel the scan and go back
     And I select the Sherman
     When I reconnect to the wheel
-    Then the mileage is updated to 22731 km
+    Then the mileage is updated to its up-to-date value

@@ -56,11 +56,12 @@ class Steps {
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
     private val db = WheelDbImpl(applicationContext())
-    private val mapWheels = HashMap<String, WheelEntity>()
+    private val wheels = HashMap<String, WheelEntity>()
 
     private lateinit var mainActivity: MainActivity
 
     private var expectedDeviceName: String = ""
+    private val expectedLiveWheelMileage = HashMap<String, Int>()
     private lateinit var selectedWheel: WheelEntity
     private lateinit var updatedWheel: WheelEntity
 
@@ -123,6 +124,11 @@ class Steps {
         assertThat(R.id.view_mileage, hasText("$expectedMileage"))
     }
 
+    @Then("the mileage is updated to its up-to-date value")
+    fun mileageUpdatedToUpToDateValue() {
+        assertThat(R.id.view_mileage, hasText("${expectedLiveWheelMileage[selectedWheel.name]}"))
+    }
+
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
         assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
@@ -153,7 +159,7 @@ class Steps {
             .map { row ->
                 val name = row[0]
                 val mileage = intOf(row[1])
-                val id = if (name == NEW_WHEEL_ENTRY) 0 else mapWheels[name]!!.id
+                val id = if (name == NEW_WHEEL_ENTRY) 0 else wheels[name]!!.id
 
                 WheelRow(id, name, mileage)
             }
@@ -165,7 +171,7 @@ class Steps {
     @Then("I see the total mileage")
     fun seeTotalMileage() {
         var totalMileage = 0
-        mapWheels.forEach { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
+        wheels.forEach { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
 
         assertThat(R.id.total_mileage, hasText("$totalMileage"))
     }
@@ -404,6 +410,16 @@ class Steps {
         click(R.id.button_edit)
     }
 
+    @When("the updated mileage for some of these wheels should be:")
+    fun updateMileageForSomeOfTheseWheels(table: DataTable) {
+        for (row in table.cells(1)) {
+            val wheelName = row[0]
+            val expectedMileage = row[1].toInt() + wheels[wheelName]!!.premileage
+
+            expectedLiveWheelMileage.put(wheelName, expectedMileage)
+        }
+    }
+
     @Given("this connected wheel:")
     fun givenThisConnectedWheel(wheel: DataTable) {
         givenTheseWheelsAreConnected(wheel)
@@ -599,7 +615,7 @@ class Steps {
 
     private fun updateMapWheels() {
         db.getWheels().forEach { wheel ->
-            mapWheels[wheel.name] = wheel
+            wheels[wheel.name] = wheel
         }
     }
 
