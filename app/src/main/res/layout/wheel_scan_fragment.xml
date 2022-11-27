@@ -29,16 +29,6 @@
             />
         </FrameLayout>
 
-        <!--        <ProgressBar-->
-        <!--                android:id="@+id/waitCircle"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_centerHorizontal="true"-->
-        <!--                android:indeterminateOnly="true"-->
-        <!--                android:keepScreenOn="true"-->
-        <!--                android:layout_below="@+id/header_scan"-->
-        <!--        />-->
-
         <ListView
                 android:id="@+id/devices"
                 android:layout_width="wrap_content"

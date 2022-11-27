@@ -416,7 +416,7 @@ class Steps {
             val wheelName = row[0]
             val expectedMileage = row[1].toInt() + wheels[wheelName]!!.premileage
 
-            expectedLiveWheelMileage.put(wheelName, expectedMileage)
+            expectedLiveWheelMileage[wheelName] = expectedMileage
         }
     }
 

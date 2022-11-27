@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="Cucumber Tests" type="AndroidTestRunConfigurationType"
+    <configuration default="false" name="Cucumber Tests (no Unit)" type="AndroidTestRunConfigurationType"
                    factoryName="Android Instrumented Tests">
         <module name="UniRider.app"/>
         <option name="TESTING_TYPE" value="0"/>
@@ -28,8 +28,6 @@
         </Profilers>
         <method v="2">
             <option name="Android.Gradle.BeforeRunTask" enabled="true" goal=""/>
-            <option name="RunConfigurationTask" enabled="true" run_configuration_name="Unit Tests"
-                    run_configuration_type="GradleRunConfiguration"/>
         </method>
     </configuration>
 </component>

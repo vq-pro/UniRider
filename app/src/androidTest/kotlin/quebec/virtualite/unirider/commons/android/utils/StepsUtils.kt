@@ -47,11 +47,7 @@ object StepsUtils {
 
     fun assertThat(id: Int, assertion: Matcher<View>) {
         poll {
-            try {
-                element(id)?.check(matches(assertion))
-            } catch (e: Exception) {
-                throw AssertionError(e)
-            }
+            element(id)?.check(matches(assertion))
         }
     }
 
@@ -154,30 +150,22 @@ object StepsUtils {
 
     fun selectListViewItem(id: Int, value: String) {
         poll {
-            try {
-                onData(hasToString(startsWith(value)))
-                    .inAdapterView(withId(id))
-                    .atPosition(0)
-                    .perform(click())
+            onData(hasToString(startsWith(value)))
+                .inAdapterView(withId(id))
+                .atPosition(0)
+                .perform(click())
 
-            } catch (e: Exception) {
-                throw AssertionError(e)
-            }
+            sleep(PAUSE)
         }
     }
 
     fun selectListViewItem(id: Int, fieldName: String, value: Any) {
         poll {
-            try {
-                onData(hasEntry(equalTo(fieldName), `is`(value)))
-                    .inAdapterView(withId(id))
-                    .perform(click())
+            onData(hasEntry(equalTo(fieldName), `is`(value)))
+                .inAdapterView(withId(id))
+                .perform(click())
 
-                sleep(PAUSE)
-
-            } catch (e: Exception) {
-                throw AssertionError(e)
-            }
+            sleep(PAUSE)
         }
     }
 
@@ -227,9 +215,7 @@ object StepsUtils {
                 return
 
             } catch (e: Throwable) {
-                if (exception == null) {
-                    exception = e
-                }
+                exception = e
                 sleep(INTERVAL)
             }
 
