@@ -14,11 +14,12 @@ Feature: Wheel Connecting - End-2-End
       | Sherman Max | 2434    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
       | S18-SE      | 269     | 900  | 60V         | 66V             | 84V         | 4V/h        |
       | Sherman-S   | 0       | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
+      | Abrams      | 0       | 2700 | 74.5V       | 78V             | 100.8V      | 8V/h        |
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name    | Updated mileage |
-      | 14S     | 1322            |
-      | Sherman | 19248           |
+      | 14S     | 1341            |
+      | Sherman | 19279           |
     And I start the app
 
   Scenario Outline: Connecting to a wheel for the first time - <wheel>
