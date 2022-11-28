@@ -32,7 +32,7 @@ open class WheelEditFragment : BaseFragment() {
 
     internal var parmWheelId: Long? = 0
 
-    private var saveComparator = SaveComparator()
+    private var wheelValidator = WheelValidator()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)!!
@@ -90,7 +90,7 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun enableSaveIfChanged() {
-        if (saveComparator.canSave(updatedWheel, initialWheel)) {
+        if (wheelValidator.canSave(updatedWheel, initialWheel)) {
             external.runDB {
                 if (!it.findDuplicate(updatedWheel))
                     widgets.enable(buttonSave)
@@ -141,7 +141,11 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onUpdateVoltageReserve() = { newVoltage: String ->
-        updatedWheel = updatedWheel.copy(voltageReserve = floatOf(newVoltage))
+        var newVoltageReserve = floatOf(newVoltage)
+        if (newVoltageReserve == 0f)
+            newVoltageReserve = floatOf(widgets.text(editVoltageMin))
+
+        updatedWheel = updatedWheel.copy(voltageReserve = newVoltageReserve)
         enableSaveIfChanged()
     }
 

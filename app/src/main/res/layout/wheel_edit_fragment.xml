@@ -154,7 +154,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:hint="@string/label_km"
+                        android:hint="@string/label_wh_per_hour"
                         android:autofillHints=""
                 />
             </TableRow>

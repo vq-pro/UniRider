@@ -49,12 +49,12 @@ object TestDomain {
     const val VOLTAGE_MIN = 60.0f
     const val VOLTAGE_MIN2 = 90.0f
     const val VOLTAGE_MIN3 = 75.6f
-    const val VOLTAGE_MIN_NEW = 74.5f
+    const val VOLTAGE_MIN_NEW = 62.0f
     const val VOLTAGE_REQUIRED = 90.5f
     const val VOLTAGE_RESERVE = 70.0f
     const val VOLTAGE_RESERVE2 = 95.0f
     const val VOLTAGE_RESERVE3 = 80.0f
-    const val VOLTAGE_RESERVE_NEW = 70.1f
+    const val VOLTAGE_RESERVE_NEW = 72.6f
     const val VOLTAGE_START = 83.8f
     const val VOLTAGE_START2 = 124.5f
     const val VOLTAGE_START3 = 100.4f

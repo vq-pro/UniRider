@@ -33,6 +33,7 @@
     <string name="label_voltage_required">Required</string>
     <string name="label_voltage_start">Start</string>
     <string name="label_wh">wh</string>
+    <string name="label_wh_per_hour">wh/h</string>
     <string name="label_wh_per_km">wh/km</string>
     <string name="label_wheel_premileage">Pre-Mileage</string>
     <string name="label_wheel_mileage">Mileage</string>

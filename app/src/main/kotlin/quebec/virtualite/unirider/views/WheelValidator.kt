@@ -3,8 +3,9 @@ package quebec.virtualite.unirider.views
 import quebec.virtualite.unirider.database.WheelEntity
 import java.util.Objects.equals
 
-open class SaveComparator {
+open class WheelValidator {
 
+    // Parameters need to be nullable for unit testing - any()
     open fun canSave(updatedWheel: WheelEntity?, initialWheel: WheelEntity?): Boolean {
         if (equals(updatedWheel, initialWheel)
             || updatedWheel!!.name == ""
@@ -13,6 +14,12 @@ open class SaveComparator {
             || updatedWheel.voltageMax == 0f
             || updatedWheel.voltageReserve == 0f
             || updatedWheel.chargeRate == 0f
+        )
+            return false
+
+        if (updatedWheel.voltageMin > updatedWheel.voltageMax ||
+            updatedWheel.voltageReserve > updatedWheel.voltageMax ||
+            updatedWheel.voltageReserve < updatedWheel.voltageMin
         )
             return false
 

@@ -5,11 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBackUnconditionally
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
@@ -18,12 +21,14 @@ import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
+import org.apache.http.util.TextUtils.isBlank
 import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -45,8 +50,18 @@ object StepsUtils {
     private val PAUSE = if (BLUETOOTH_ACTUAL) 3000L else 0L
     private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
 
+    fun applicationContext(): Context {
+        return ApplicationProvider.getApplicationContext()!!
+    }
+
     fun assertThat(id: Int, assertion: Matcher<View>) {
         poll {
+            element(id)?.check(matches(assertion))
+        }
+    }
+
+    fun assertThat(message: String, id: Int, assertion: Matcher<View>) {
+        poll(message) {
             element(id)?.check(matches(assertion))
         }
     }
@@ -63,7 +78,7 @@ object StepsUtils {
     }
 
     fun click(id: Int) {
-        assertThat(id, isEnabled())
+        assertThat("Cannot click button $id", id, isEnabled())
         element(id)?.perform(click())
     }
 
@@ -83,8 +98,23 @@ object StepsUtils {
         element?.perform(typeText(text))
     }
 
-    fun applicationContext(): Context {
-        return ApplicationProvider.getApplicationContext()!!
+    fun getText(id: Int): String {
+        var text = ""
+        element(id)?.perform(object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return isAssignableFrom(TextView::class.java)
+            }
+
+            override fun getDescription(): String {
+                return "Text of the view"
+            }
+
+            override fun perform(uiController: UiController?, view: View?) {
+                val tv = view as TextView
+                text = tv.text.toString()
+            }
+        })
+        return text
     }
 
     fun hasMinimumRows(expected: Int): Matcher<View> {
@@ -144,7 +174,7 @@ object StepsUtils {
     }
 
     fun longClick(id: Int) {
-        assertThat(id, isEnabled())
+        assertThat("Cannot long click button $id", id, isEnabled())
         element(id)?.perform(longClick())
     }
 
@@ -175,7 +205,7 @@ object StepsUtils {
     }
 
     fun setText(id: Int, newText: String) {
-        assertThat(id, isEnabled())
+        assertThat("Cannot set text for $id", id, isEnabled())
         element(id)?.perform(replaceText(newText))
     }
 
@@ -205,6 +235,10 @@ object StepsUtils {
     }
 
     private fun poll(callback: () -> Unit) {
+        poll("", callback)
+    }
+
+    private fun poll(message: String, callback: () -> Unit) {
 
         var exception: Throwable? = null
         val start = currentTimeMillis()
@@ -223,6 +257,9 @@ object StepsUtils {
 
         } while (elapsed < TIMEOUT)
 
-        throw exception!!
+        throw when {
+            !isBlank(message) -> AssertionError(message, exception!!)
+            else -> exception!!
+        }
     }
 }

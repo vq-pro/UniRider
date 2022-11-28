@@ -24,6 +24,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.currentFragment
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.enter
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSelectedText
@@ -84,7 +85,10 @@ class Steps {
     @Then("I am back at the main screen and the wheel is gone")
     fun backOnMainScreenAndWheelIsGone() {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
-        assertThat(R.id.wheels, not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))))
+        assertThat(
+            "The wheel is not gone", R.id.wheels,
+            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
+        )
     }
 
     @Then("I can charge the wheel")
@@ -95,12 +99,12 @@ class Steps {
 
     @Then("I cannot charge the wheel")
     fun cannotChargeWheel() {
-        assertThat(R.id.button_charge, isDisabled())
+        assertThat("Charge button is not disabled", R.id.button_charge, isDisabled())
     }
 
     @Then("I cannot connect to the wheel on the charge screen")
     fun cannotConnectToWheelOnChargeScreen() {
-        assertThat(R.id.button_connect_charge, isDisabled())
+        assertThat("Connect button is not disabled", R.id.button_connect_charge, isDisabled())
     }
 
     @Then("it shows that every field is editable")
@@ -270,6 +274,11 @@ class Steps {
         setText(R.id.edit_premileage, " ")
     }
 
+    @When("I blank the reserve voltage")
+    fun blankWheelReserveVoltage() {
+        setText(R.id.edit_voltage_reserve, " ")
+    }
+
     @When("I blank the wh")
     fun blankWheelWh() {
         setText(R.id.edit_wh, " ")
@@ -307,12 +316,12 @@ class Steps {
 
     @When("I change the minimum voltage")
     fun changeWheelVoltageMin() {
-        setText(R.id.edit_voltage_min, "1.2")
+        setText(R.id.edit_voltage_min, "${getVoltageMin() + 0.1f}")
     }
 
     @When("I change the maximum voltage")
     fun changeWheelVoltageMax() {
-        setText(R.id.edit_voltage_max, "2.4")
+        setText(R.id.edit_voltage_max, "${getVoltageMax() + 0.1f}")
     }
 
     @When("I change the charge rate")
@@ -328,6 +337,11 @@ class Steps {
     @When("I change the previous mileage")
     fun changeWheelPreMileage() {
         setText(R.id.edit_premileage, "123")
+    }
+
+    @When("I change the reserve voltage")
+    fun changeWheelReserveVoltage() {
+        setText(R.id.edit_voltage_reserve, "${getVoltageReserve() + 0.1f}")
     }
 
     @When("I change the wh")
@@ -408,6 +422,21 @@ class Steps {
     @When("I edit the wheel")
     fun editWheel() {
         click(R.id.button_edit)
+    }
+
+    @When("I set the maximum voltage lower than the minimum")
+    fun setMaximumVoltageLowerThanMinimum() {
+        setText(R.id.edit_voltage_max, "${getVoltageMin() - 0.1f}")
+    }
+
+    @When("I set the reserve voltage higher than the maximum")
+    fun setReserveVoltageHigherThanMaximum() {
+        setText(R.id.edit_voltage_reserve, "${getVoltageMax() + 0.1f}")
+    }
+
+    @When("I set the reserve voltage lower than the minimum")
+    fun setReserveVoltageLowerThanMinimum() {
+        setText(R.id.edit_voltage_reserve, "${getVoltageMin() - 0.1f}")
     }
 
     @When("the updated mileage for some of these wheels should be:")
@@ -512,12 +541,12 @@ class Steps {
 
     @Then("the wheel can be saved")
     fun wheelCanBeSaved() {
-        assertThat(R.id.button_save, isEnabled())
+        assertThat("Save button should be enabled", R.id.button_save, isEnabled())
     }
 
     @Then("the wheel cannot be saved")
     fun wheelCannotBeSaved() {
-        assertThat(R.id.button_save, isDisabled())
+        assertThat("Save button should be disabled", R.id.button_save, isDisabled())
     }
 
     @Given("^the (.*?) has a previous mileage of (.*?) km$")
@@ -605,6 +634,12 @@ class Steps {
         assertThat(value, endsWith(suffix))
         return floatOf(value.substring(0, value.length - suffix.length))
     }
+
+    private fun getVoltageMax() = floatOf(getText(R.id.edit_voltage_max))
+
+    private fun getVoltageMin() = floatOf(getText(R.id.edit_voltage_min))
+
+    private fun getVoltageReserve() = floatOf(getText(R.id.edit_voltage_reserve))
 
     private fun strip(value: String, stripValue: String): String {
         return when {

@@ -132,12 +132,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
             .`when`(mockedFragments).runUI(any())
-
-//        lenient().doReturn(LABEL_KM)
-//            .`when`(mockedFragments).string(R.string.label_km)
-
-//        lenient().doReturn(LABEL_WH_PER_KM)
-//            .`when`(mockedFragments).string(R.string.label_wh_per_km)
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {

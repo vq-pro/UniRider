@@ -46,23 +46,28 @@ Feature: Wheel Editing & Adding
     And I <do something>
     Then the wheel <can or cannot> be saved
     Examples:
-      | can or cannot | do something                |
-      | can           | change the charge rate      |
-      | can           | change the name             |
-      | can           | change the mileage          |
-      | can           | blank the mileage           |
-      | can           | change the maximum voltage  |
-      | can           | change the minimum voltage  |
-      | can           | change the previous mileage |
-      | can           | blank the previous mileage  |
-      | can           | change the wh               |
-      | cannot        | blank the charge rate       |
-      | cannot        | blank the name              |
-      | cannot        | blank the wh                |
-      | cannot        | blank the maximum voltage   |
-      | cannot        | blank the minimum voltage   |
-      | cannot        | change nothing              |
-      | cannot        | reuse the name S18          |
+      | can or cannot | do something                                    |
+      | can           | change the charge rate                          |
+      | can           | change the name                                 |
+      | can           | change the mileage                              |
+      | can           | blank the mileage                               |
+      | can           | change the maximum voltage                      |
+      | can           | change the minimum voltage                      |
+      | can           | change the previous mileage                     |
+      | can           | change the reserve voltage                      |
+      | can           | blank the previous mileage                      |
+      | can           | blank the reserve voltage                       |
+      | can           | change the wh                                   |
+      | cannot        | blank the charge rate                           |
+      | cannot        | blank the name                                  |
+      | cannot        | blank the wh                                    |
+      | cannot        | blank the maximum voltage                       |
+      | cannot        | blank the minimum voltage                       |
+      | cannot        | change nothing                                  |
+      | cannot        | reuse the name S18                              |
+      | cannot        | set the maximum voltage lower than the minimum  |
+      | cannot        | set the reserve voltage higher than the maximum |
+      | cannot        | set the reserve voltage lower than the minimum  |
 
   Scenario: => Deleting the wheel
     Given I select the Nikola+

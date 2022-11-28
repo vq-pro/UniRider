@@ -29,36 +29,53 @@ import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
-class SaveComparatorTest {
+class WheelValidatorTest {
 
     @InjectMocks
-    lateinit var comparator: SaveComparator
+    lateinit var comparator: WheelValidator
 
     @Test
     fun canSave() {
+        // No change
         canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE, false)
 
+        // Name
         canSave(NAME_NEW, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE, true)
         canSave("", PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, CHARGE_RATE_NEW, false)
 
+        // Pre-mileage
         canSave(NAME, PREMILEAGE_NEW, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE, true)
         canSave(NAME_NEW, 0, MILEAGE, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, CHARGE_RATE_NEW, true)
 
+        // Mileage
         canSave(NAME, PREMILEAGE, MILEAGE_NEW, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE, true)
         canSave(NAME_NEW, PREMILEAGE_NEW, 0, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, CHARGE_RATE_NEW, true)
 
+        // Wh
         canSave(NAME, PREMILEAGE, MILEAGE, WH_NEW, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE, true)
         canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, 0, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, CHARGE_RATE_NEW, false)
 
+        // Voltage min
         canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE, true)
         canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, 0f, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, CHARGE_RATE_NEW, false)
+        // Min higher than max
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MAX + 0.1f, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE, false)
 
+        // Voltage reserve
         canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX, CHARGE_RATE, true)
         canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, VOLTAGE_MIN, 0f, VOLTAGE_MAX_NEW, CHARGE_RATE_NEW, false)
+        // Reserve higher than max
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MAX + 0.1f, VOLTAGE_MAX, CHARGE_RATE, false)
+        // Reserve lower than min
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_MIN - 0.1f, VOLTAGE_MAX, CHARGE_RATE, false)
 
+        // Voltage max
         canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX_NEW, CHARGE_RATE, true)
         canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, 0f, CHARGE_RATE_NEW, false)
+        // Max lower than min
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MIN - 0.1f, CHARGE_RATE, false)
 
+        // Charge rate
         canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE_NEW, true)
         canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, 0f, false)
     }
