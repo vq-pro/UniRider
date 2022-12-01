@@ -413,6 +413,17 @@ class Steps {
         assertThat(R.id.view_wh_per_km, hasText(whPerKm))
     }
 
+    @Then("it displays these estimates:")
+    fun displaysTheseEstimates(expectedEstimates: DataTable) {
+        assertThat(expectedEstimates.cells(0).size, equalTo(2))
+        assertThat(expectedEstimates.topCells(), equalTo(listOf("range", "total range", "wh/km")))
+
+        val row = expectedEstimates.cells(1).get(0)
+        displaysRemainingRange(row[0])
+        displaysTotalRange(row[1])
+        displaysEstimatedRate(row[2])
+    }
+
     @When("I charge the wheel")
     fun chargeWheel() {
         click(R.id.button_charge)
