@@ -14,11 +14,9 @@ import androidx.test.espresso.Espresso.pressBackUnconditionally
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
@@ -89,13 +87,6 @@ object StepsUtils {
             .childFragmentManager
             .fragments[0]
             .javaClass
-    }
-
-    fun enter(id: Int, text: String) {
-        val element = element(id)
-
-        element?.perform(clearText())
-        element?.perform(typeText(text))
     }
 
     fun getText(id: Int): String {

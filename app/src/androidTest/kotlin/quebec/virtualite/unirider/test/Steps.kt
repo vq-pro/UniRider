@@ -23,7 +23,6 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.currentFragment
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.enter
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
@@ -585,7 +584,7 @@ class Steps {
 
     @When("^I enter an actual voltage of (.*?)$")
     fun whenEnterActualVoltage(voltage: String) {
-        enter(R.id.edit_voltage_actual, strip(voltage, "V"))
+        setText(R.id.edit_voltage_actual, strip(voltage, "V"))
     }
 
     @When("I reconnect to the wheel")
