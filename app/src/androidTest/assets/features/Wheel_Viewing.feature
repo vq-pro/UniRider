@@ -32,13 +32,13 @@ Feature: Wheel Viewing
     And it displays an estimated total range of <total>
     And it displays an estimated rate of <wh/km>
     Examples:
-      | wheel       | starting voltage | km      | voltage | remaining | total   | wh/km     |
-      | Sherman Max | 100.6V           | 38.0 km | 91.9V   | 43.2 km   | 81.2 km | 30+ wh/km |
-      | Sherman Max | 100.4V           | 81.0 km | 83.5V   | 7.2 km    | 88.2 km | 25+ wh/km |
-      | Sherman Max | 100.4V           | 42.0 km | 91V     | 40.2 km   | 82.2 km | 30+ wh/km |
-      | Sherman Max | 98.2V            | 42.0 km | 91V     | 52.5 km   | 94.5 km | 20+ wh/km |
-      | S18         | 84V              | 21.0 km | 72V     | 3.5 km    | 24.5 km | 25+ wh/km |
-      | S18         | 84V              | 42.0 km | 67V     | 0 km      | 42.0 km | 15+ wh/km |
+      | wheel       | starting voltage | km      | voltage | remaining | total   | wh/km      |
+      | Sherman Max | 100.6V           | 38.0 km | 91.9V   | 43.2 km   | 81.2 km | 32.7 wh/km |
+      | Sherman Max | 100.4V           | 81.0 km | 83.5V   | 7.2 km    | 88.2 km | 29.8 wh/km |
+      | Sherman Max | 100.4V           | 42.0 km | 91V     | 40.2 km   | 82.2 km | 32.0 wh/km |
+      | Sherman Max | 98.2V            | 42.0 km | 91V     | 52.5 km   | 94.5 km | 24.5 wh/km |
+      | S18         | 84V              | 21.0 km | 72V     | 3.5 km    | 24.5 km | 26.4 wh/km |
+      | S18         | 84V              | 42.0 km | 67V     | 0 km      | 42.0 km | 18.7 wh/km |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
@@ -86,7 +86,7 @@ Feature: Wheel Viewing
     Then it displays a percentage of 64.7%
     And it displays an estimated remaining range of 46.7 km
     And it displays an estimated total range of 88.7 km
-    And it displays an estimated rate of 30+ wh/km
+    And it displays an estimated rate of 30.3 wh/km
 
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
     Given the Sherman has a previous mileage of <previous mileage>

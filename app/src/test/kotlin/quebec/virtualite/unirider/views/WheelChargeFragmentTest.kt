@@ -34,7 +34,6 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_REQUIRED
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
-import quebec.virtualite.unirider.TestDomain.WH_PER_KM_DISPLAY
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
@@ -130,7 +129,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         verify(mockedTextName).text = NAME
         verify(mockedTextVoltageActual).text = "${VOLTAGE + CHARGER_OFFSET}"
-        verify(mockedTextWhPerKm).text = WH_PER_KM_DISPLAY
+        verify(mockedTextWhPerKm).text = "$WH_PER_KM"
     }
 
     @Test

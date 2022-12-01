@@ -13,7 +13,7 @@ Feature: Wheel Charging
     And I set the actual voltage to 86.4V
     And I set the distance to 50 km
     And I charge the wheel
-    And it displays an estimated rate of 40+ wh/km
+    And it displays an estimated rate of 40.6 wh/km
 
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>

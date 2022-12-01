@@ -39,7 +39,7 @@ open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
     }
 
     internal fun textWhPerKm(value: Float?) = when {
-        value != null -> "${(value / 5).toInt() * 5}+"
+        value != null -> "$value"
         else -> ""
     }
 }

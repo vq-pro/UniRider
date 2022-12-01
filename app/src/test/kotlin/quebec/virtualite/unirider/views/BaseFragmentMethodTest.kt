@@ -15,9 +15,9 @@ open class BaseFragmentMethodTest {
 
     @Test
     fun textWhPerKm() {
-        textWhPerKm(32.5f, "30+")
-        textWhPerKm(30.0f, "30+")
-        textWhPerKm(29.9f, "25+")
+        textWhPerKm(32.5f, "32.5")
+        textWhPerKm(30.0f, "30.0")
+        textWhPerKm(29.9f, "29.9")
     }
 
     private fun textWhPerKm(whPerKm: Float, expectedDisplay: String) {
