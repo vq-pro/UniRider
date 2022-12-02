@@ -15,6 +15,7 @@ Feature: Wheel Charging
     And I charge the wheel
     And it displays an estimated rate of 40.6 wh/km
 
+  @Ignore
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V
@@ -31,6 +32,7 @@ Feature: Wheel Charging
       |          |                  |      |
       | aa       |                  |      |
 
+  @Ignore
   Scenario: Update the voltage
     Given this simulated device:
       | Bt Name | Bt Address        | Km     | Mileage | Voltage |

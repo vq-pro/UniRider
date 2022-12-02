@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ListView
+import android.widget.Spinner
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.lenient
@@ -73,6 +75,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
     @Captor
     private lateinit var captorOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
+
+    @Captor
+    private lateinit var captorOnItemSelected: ArgumentCaptor<(View, Int, String) -> Unit>
 
     @Captor
     private lateinit var captorOnUpdateText: ArgumentCaptor<(String) -> Unit>
@@ -179,6 +184,11 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         assertThat(captorOnItemClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
+    fun verifyOnItemSelected(mockedField: Spinner, methodName: String) {
+        verify(mockedWidgets).setOnItemSelectedListener(eq(mockedField), captorOnItemSelected.capture())
+        assertThat(captorOnItemSelected.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    }
+
     fun verifyOnLongClick(mockedField: View, methodName: String) {
         verify(mockedWidgets).setOnLongClickListener(eq(mockedField), captorOnClick.capture())
         assertThat(captorOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
@@ -201,5 +211,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {
         verify(mockedWidgets).stringListAdapter(mockedField, mockedView, expectedData)
+    }
+
+    fun verifyStringListAdapter(mockedField: Spinner, expectedData: List<String>) {
+        verify(mockedWidgets).stringListAdapter(eq(mockedField), eq(mockedView), anyInt(), eq(expectedData))
     }
 }

@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import org.apache.http.util.TextUtils.isEmpty
+import quebec.virtualite.commons.android.utils.ArrayListUtils.indexOf
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
 import quebec.virtualite.commons.android.utils.NumberUtils.isPositive
@@ -23,6 +25,7 @@ open class WheelViewFragment : BaseFragment() {
     private val READ_KM = null
     private val READ_VOLTAGE_ACTUAL = null
     private val READ_VOLTAGE_START = null
+    private val SPINNER_SIZE = 22
 
     internal lateinit var buttonCharge: Button
     internal lateinit var buttonConnect: Button
@@ -30,16 +33,19 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
     internal lateinit var editVoltageStart: EditText
+    internal lateinit var listWhPerKm: Spinner
     internal lateinit var textBattery: TextView
     internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
     internal lateinit var textName: TextView
     internal lateinit var textRemainingRange: TextView
     internal lateinit var textTotalRange: TextView
-    internal lateinit var textWhPerKm: TextView
+
+    internal val listOfRates = ArrayList<String>()
 
     internal var estimates: EstimatedValues? = null
     internal var parmWheelId: Long? = 0
+    internal var rateOverride: Float? = null
     internal var wheel: WheelEntity? = null
 
     private var calculatorService = CalculatorService()
@@ -58,13 +64,15 @@ open class WheelViewFragment : BaseFragment() {
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         editVoltageStart = view.findViewById(R.id.edit_voltage_start)
+
+        listWhPerKm = view.findViewById(R.id.view_wh_per_km)
+
         textBattery = view.findViewById(R.id.view_battery)
         textBtName = view.findViewById(R.id.view_bt_name)
         textMileage = view.findViewById(R.id.view_mileage)
         textName = view.findViewById(R.id.view_name)
         textRemainingRange = view.findViewById(R.id.view_remaining_range)
         textTotalRange = view.findViewById(R.id.view_total_range)
-        textWhPerKm = view.findViewById(R.id.view_wh_per_km)
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
@@ -76,15 +84,22 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonCharge, onCharge())
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
+                widgets.setOnItemSelectedListener(listWhPerKm, onChangeRate())
+                widgets.stringListAdapter(listWhPerKm, view, SPINNER_SIZE, listOfRates)
 
-                textName.text = wheel!!.name
                 editVoltageStart.setText("${wheel!!.voltageStart}")
+                textName.text = wheel!!.name
                 textBtName.text = wheel!!.btName
                 textMileage.text = textKm(wheel!!.totalMileage())
 
                 updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
             }
         }
+    }
+
+    fun onChangeRate(): (View, Int, String) -> Unit = { _, position, text ->
+        rateOverride = floatOf(text)
+        updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
     }
 
     fun onCharge(): (View) -> Unit = {
@@ -116,14 +131,17 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onEdit(): (View) -> Unit = {
+        rateOverride = null
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment, wheel!!)
     }
 
     fun onUpdateKm() = { km: String ->
+        rateOverride = null
         updateCalculatedValues(km, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
     }
 
     fun onUpdateVoltageActual() = { voltageActual: String ->
+        rateOverride = null
         updateCalculatedValues(READ_KM, voltageActual, READ_VOLTAGE_START)
     }
 
@@ -175,20 +193,21 @@ open class WheelViewFragment : BaseFragment() {
                     && isVoltageWithinRange(voltageStart)
                     && floatOf(voltageActual) <= floatOf(voltageStart) ->
 
-                calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km))
+                calculatorService.estimatedValues(
+                    wheel, floatOf(voltageActual), floatOf(km), rateOverride
+                )
 
-            else ->
-                null
+            else -> null
         }
 
         if (estimates != null && estimates!!.whPerKm < 5.0f)
             estimates = null
 
-        textRemainingRange.text = textKmWithDecimal(estimates?.remainingRange)
-        textTotalRange.text = textKmWithDecimal(estimates?.totalRange)
-        textWhPerKm.text = textWhPerKm(estimates?.whPerKm)
-
         fragments.runUI {
+            updateRates(estimates?.whPerKm)
+            textRemainingRange.text = textKmWithDecimal(estimates?.remainingRange)
+            textTotalRange.text = textKmWithDecimal(estimates?.totalRange)
+
             buttonCharge.isEnabled = estimates != null
         }
     }
@@ -200,6 +219,32 @@ open class WheelViewFragment : BaseFragment() {
         }
 
         textBattery.text = textPercentageWithDecimal(percentage)
+    }
+
+    private fun updateRates(actualWhPerKm: Float?) {
+        listOfRates.clear()
+        if (actualWhPerKm == null) {
+            widgets.clearSelection(listWhPerKm)
+            return
+        }
+
+        listOfRates.add(textWhPerKm(actualWhPerKm))
+
+        val stepDown = (actualWhPerKm / 5).toInt() * 5
+        for (i in stepDown - 10..stepDown + 15 step 5) {
+            listOfRates.add(i.toString())
+        }
+
+        listOfRates.sort()
+
+        val index = indexOf(
+            listOfRates,
+            if (rateOverride == null)
+                "$actualWhPerKm"
+            else
+                "${rateOverride!!.toInt()}"
+        )
+        widgets.setSelection(listWhPerKm, index)
     }
 
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {

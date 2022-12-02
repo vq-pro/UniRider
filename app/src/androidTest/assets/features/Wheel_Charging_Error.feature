@@ -12,6 +12,7 @@ Feature: Wheel Charging - ERROR
     And I charge the wheel
     And it displays an estimated rate of 40.6 wh/km
 
+  @Ignore
   Scenario: Update the voltage - ERROR - Never connected
     When I request to charge for 40 km
     Then I cannot connect to the wheel on the charge screen

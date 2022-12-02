@@ -34,34 +34,40 @@ class CalculatorServiceTest {
 
     @Test
     fun estimatedAndRequired() {
-        estimatedValues(100.6f, 91.9f, 38f, 43.2f, 81.2f, 32.7f)
+        estimatedValues(100.6f, 91.9f, 38f, null, 43.2f, 81.2f, 32.7f)
         requiredVoltage(100.6f, 32.7f, 43f, 91.8f + CHARGER_OFFSET)
         requiredVoltage(100.6f, 32.7f, 40f, 91.2f + CHARGER_OFFSET)
     }
 
     @Test
     fun estimatedValues() {
-        estimatedValues(100.6f, 91.9f, 40f, 45.5f, 85.5f, 31.1f)
-        estimatedValues(100.4f, 83.5f, 81f, 7.2f, 88.2f, 29.8f)
-        estimatedValues(98.2f, 91.0f, 42f, 52.5f, 94.5f, 24.5f)
-        estimatedValues(100.8f, 83.5f, 81f, 7.0f, 88.0f, 30.5f)
+        estimatedValues(100.6f, 91.9f, 40f, null, 45.5f, 85.5f, 31.1f)
+        estimatedValues(100.4f, 83.5f, 81f, null, 7.2f, 88.2f, 29.8f)
+        estimatedValues(98.2f, 91.0f, 42f, null, 52.5f, 94.5f, 24.5f)
+        estimatedValues(100.8f, 83.5f, 81f, null, 7.0f, 88.0f, 30.5f)
+        estimatedValues(100.6f, 91.9f, 40f, 35f, 40.4f, 80.4f, 31.1f)
+        estimatedValues(100.4f, 83.5f, 81f, 35f, 6.1f, 87.1f, 29.8f)
+        estimatedValues(98.2f, 91.0f, 42f, 35f, 36.7f, 78.7f, 24.5f)
+        estimatedValues(100.8f, 83.5f, 81f, 35f, 6.1f, 87.1f, 30.5f)
 
         // Voltage lower than reserve
-        estimatedValues(100.8f, 79.5f, 81.2f, 0f, 81.2f, 37.5f)
+        estimatedValues(100.8f, 79.5f, 81.2f, null, 0f, 81.2f, 37.5f)
     }
 
     private fun estimatedValues(
         voltageStart: Float,
         voltageActual: Float,
         km: Float,
+        rateOverride: Float?,
         expectedRemainingRange: Float,
         expectedTotalRange: Float,
         expectedWhPerKm: Float
     ) {
+        // Given
+        val wheel = SHERMAN_MAX_3.copy(voltageStart = voltageStart)
+
         // When
-        val values = service.estimatedValues(
-            SHERMAN_MAX_3.copy(voltageStart = voltageStart), voltageActual, km
-        )
+        val values = service.estimatedValues(wheel, voltageActual, km, rateOverride)
 
         // Then
         assertThat(values.remainingRange, equalTo(expectedRemainingRange))

@@ -10,19 +10,7 @@ Feature: Wheel Viewing
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        |
     And I start the app
 
-  Scenario Outline: Calculating percentage [<wheel> / <voltage>]
-    Given I select the <wheel>
-    When I enter an actual voltage of <voltage>
-    Then it displays a percentage of <battery>
-    Examples:
-      | wheel       | voltage | battery |
-      | Nikola+     | 96.4V   | 80.7%   |
-      | Nikola+     | 89.1V   | 48.7%   |
-      | 14S         | 63.5V   | 80.7%   |
-      | S18         | 71.4V   | 47.5%   |
-      | Sherman     | 96.5V   | 82.9%   |
-      | Sherman Max | 91.9V   | 64.7%   |
-
+  @Ignore
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
     Given I select the <wheel>
     And I set the starting voltage to <starting voltage>V
@@ -40,6 +28,7 @@ Feature: Wheel Viewing
       | S18         | 84               | 21.0 | 72      | 3.5       | 24.5  | 26.4  |
       | S18         | 84               | 42.0 | 67      | 0         | 42.0  | 18.7  |
 
+  @Ignore
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And I set the distance to <km>
@@ -54,13 +43,31 @@ Feature: Wheel Viewing
       | Sherman |         | bb      |
       | Sherman | aa      | bb      |
 
-  Scenario: Saving the starting voltage
-    Given I select the Sherman
-    And the starting voltage is 100.8V
-    When I set the starting voltage to 98.5V
-    And I go back to the main view
-    And I select the Sherman
-    Then the starting voltage is 98.5V
+  Scenario: Calculating estimated values when changing rate
+    Given I select the Sherman Max
+    And I set the starting voltage to 100.6V
+    And I set the distance to 20 km
+    And I enter an actual voltage of 94.1V
+    And it displays these estimates:
+      | remaining | total range | wh/km |
+      | 37.3      | 57.3        | 46.4  |
+    When I change the rate to 35 wh/km
+    Then it displays these estimates:
+      | remaining | total range | wh/km |
+      | 49.4      | 69.4        | 35    |
+
+  Scenario Outline: Calculating percentage [<wheel> / <voltage>]
+    Given I select the <wheel>
+    When I enter an actual voltage of <voltage>
+    Then it displays a percentage of <battery>
+    Examples:
+      | wheel       | voltage | battery |
+      | Nikola+     | 96.4V   | 80.7%   |
+      | Nikola+     | 89.1V   | 48.7%   |
+      | 14S         | 63.5V   | 80.7%   |
+      | S18         | 71.4V   | 47.5%   |
+      | Sherman     | 96.5V   | 82.9%   |
+      | Sherman Max | 91.9V   | 64.7%   |
 
   Scenario Outline: => Charging the wheel [when <available>]
     Given I select the Sherman
@@ -76,6 +83,7 @@ Feature: Wheel Viewing
     When I edit the wheel
     Then it shows that every field is editable
 
+  @Ignore
   Scenario: => Editing the wheel with estimated values
     Given I select the Sherman Max
     And I set the distance to 42 km
@@ -87,6 +95,14 @@ Feature: Wheel Viewing
     And it displays these estimates:
       | range | total range | wh/km |
       | 46.7  | 88.7        | 30.3  |
+
+  Scenario: Saving the starting voltage
+    Given I select the Sherman
+    And the starting voltage is 100.8V
+    When I set the starting voltage to 98.5V
+    And I go back to the main view
+    And I select the Sherman
+    Then the starting voltage is 98.5V
 
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
     Given the Sherman has a previous mileage of <previous mileage>

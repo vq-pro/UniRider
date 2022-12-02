@@ -36,9 +36,11 @@ object TestDomain {
     const val PREMILEAGE3 = 10000
     const val PREMILEAGE_NEW = 20000
     const val REMAINING_RANGE = 5555f
+    const val REMAINING_RANGE_UP = 5554f
     const val REMAINING_RANGE_ZERO = 0
     const val TEMPERATURE_NEW_RAW = 3333f
     const val TOTAL_RANGE = 6666f
+    const val TOTAL_RANGE_UP = 6665f
     const val VOLTAGE = 82f
     const val VOLTAGE_MAX = 84.0f
     const val VOLTAGE_MAX2 = 126.0f
@@ -64,6 +66,10 @@ object TestDomain {
     const val WH3 = 3600
     const val WH_NEW = 9999
     const val WH_PER_KM = 30.5f
+    const val WH_PER_KM_INDEX = 3
+    const val WH_PER_KM_UP = 35f
+    const val WH_PER_KM_UP_INDEX = 4
+    val WHS_PER_KM = listOf("20", "25", "30", "30.5", "35", "40", "45")
     val WHEEL_ROW_1_123 = WheelRow(ID, NAME, PREMILEAGE + MILEAGE)
     val WHEEL_ROW_2_456 = WheelRow(ID2, NAME2, PREMILEAGE2 + MILEAGE2)
     val WHEEL_ROW_3_123 = WheelRow(ID3, NAME3, PREMILEAGE3 + MILEAGE3)

@@ -23,15 +23,18 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.currentFragment
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getSpinnerText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSelectedText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSpinnerText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
@@ -308,6 +311,11 @@ class Steps {
     fun changeNothing() {
     }
 
+    @When("^I change the rate to (.*) wh/km$")
+    fun changeRate(newRate: Int) {
+        selectSpinnerItem(R.id.view_wh_per_km, "$newRate")
+    }
+
     @When("I change the mileage")
     fun changeWheelMileage() {
         setText(R.id.edit_mileage, "123")
@@ -410,18 +418,21 @@ class Steps {
 
     @Then("^it displays an estimated rate of (.*?) wh/km$")
     fun displaysEstimatedRate(whPerKm: String) {
-        assertThat(R.id.view_wh_per_km, hasText(whPerKm))
+        assertThat(R.id.view_wh_per_km, hasSpinnerText(whPerKm))
     }
 
     @Then("it displays these estimates:")
     fun displaysTheseEstimates(expectedEstimates: DataTable) {
-        assertThat(expectedEstimates.cells(0).size, equalTo(2))
-        assertThat(expectedEstimates.topCells(), equalTo(listOf("range", "total range", "wh/km")))
-
-        val row = expectedEstimates.cells(1).get(0)
-        displaysRemainingRange(row[0])
-        displaysTotalRange(row[1])
-        displaysEstimatedRate(row[2])
+        DataTable.create(
+            listOf(
+                listOf("remaining", "total range", "wh/km"),
+                listOf(
+                    getText(R.id.view_remaining_range),
+                    getText(R.id.view_total_range),
+                    getSpinnerText(R.id.view_wh_per_km)
+                )
+            )
+        ).diff(expectedEstimates)
     }
 
     @When("I charge the wheel")

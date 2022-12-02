@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.test.core.app.ApplicationProvider
@@ -34,6 +35,7 @@ import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
 import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.hasToString
+import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.startsWith
@@ -89,6 +91,24 @@ object StepsUtils {
             .javaClass
     }
 
+    fun getSpinnerText(id: Int): String {
+        var text = ""
+        element(id)?.perform(object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return isAssignableFrom(Spinner::class.java)
+            }
+
+            override fun getDescription(): String {
+                return "Text of the view"
+            }
+
+            override fun perform(uiController: UiController?, view: View?) {
+                text = "${(view as Spinner).selectedItem}"
+            }
+        })
+        return text
+    }
+
     fun getText(id: Int): String {
         var text = ""
         element(id)?.perform(object : ViewAction {
@@ -101,8 +121,7 @@ object StepsUtils {
             }
 
             override fun perform(uiController: UiController?, view: View?) {
-                val tv = view as TextView
-                text = tv.text.toString()
+                text = (view as TextView).text.toString()
             }
         })
         return text
@@ -190,9 +209,15 @@ object StepsUtils {
         }
     }
 
-    fun selectSpinnerItem(id: Int, entry: String) {
+    fun selectSpinnerItem(id: Int, value: String) {
         click(id)
-        onData(`is`(entry)).perform(click())
+
+        poll {
+            onData(allOf(`is`(instanceOf(String::class.java)), `is`(value)))
+                .perform(click())
+
+            sleep(PAUSE)
+        }
     }
 
     fun setText(id: Int, newText: String) {

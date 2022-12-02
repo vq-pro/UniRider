@@ -3,13 +3,14 @@ package quebec.virtualite.commons.android.views
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Adapter
+import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.ListAdapter
 import android.widget.ListView
-import android.widget.SpinnerAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.core.view.isVisible
 import quebec.virtualite.commons.android.views.impl.CustomListAdapter
 
@@ -29,6 +30,10 @@ open class CommonWidgetServices {
                 callback?.invoke(text.toString())
             }
         })
+    }
+
+    open fun clearSelection(spinner: Spinner) {
+        notifyOnChanged(spinner)
     }
 
     open fun disable(widget: View) {
@@ -72,11 +77,28 @@ open class CommonWidgetServices {
         }
     }
 
+    open fun setOnItemSelectedListener(spinner: Spinner?, callback: ((View, Int, String) -> Unit)?) {
+        spinner!!.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val text = spinner.getItemAtPosition(position) as String
+                callback!!(view!!, position, text)
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+        }
+    }
+
     open fun setOnLongClickListener(widget: View?, callback: ((View) -> Unit)?) {
         widget!!.setOnLongClickListener { view ->
             callback!!(view)
             true
         }
+    }
+
+    open fun setSelection(spinner: Spinner, index: Int) {
+        notifyOnChanged(spinner)
+        spinner.setSelection(index, true)
     }
 
     open fun show(widget: View) {
@@ -88,14 +110,25 @@ open class CommonWidgetServices {
     }
 
     open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {
-        listView.adapter = arrayAdapter(view!!, android.R.layout.simple_list_item_1, contents!!) as ListAdapter
+        listView.adapter = ArrayAdapter(view!!.context, android.R.layout.simple_list_item_1, contents!!)
     }
 
-    private fun <T> arrayAdapter(view: View, id: Int, contents: List<T>): Adapter {
-        return ArrayAdapter(view.context, id, contents)
+    open fun stringListAdapter(spinner: Spinner?, view: View?, textSize: Int, contents: List<String>?) {
+        val spinnerAdapter = object : ArrayAdapter<String>(view!!.context, android.R.layout.simple_spinner_item, contents!!) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val resultingView = super.getView(position, convertView, parent)
+                (resultingView as TextView).textSize = textSize.toFloat()
+                return resultingView
+            }
+        }
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spinner!!.adapter = spinnerAdapter
     }
 
-    private fun spinnerAdapter(view: View?, id: Int?, contents: List<String>?): SpinnerAdapter {
-        return arrayAdapter(view!!, id!!, contents!!) as SpinnerAdapter
+    private fun notifyOnChanged(spinner: Spinner) {
+        @Suppress("UNCHECKED_CAST")
+        val spinnerAdapter: ArrayAdapter<String> = spinner.adapter as ArrayAdapter<String>
+        spinnerAdapter.notifyDataSetChanged()
     }
 }

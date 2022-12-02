@@ -17,19 +17,19 @@ open class CalculatorService {
         val whPerKm: Float
     )
 
-    open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Float): EstimatedValues {
-
+    open fun estimatedValues(wheel: WheelEntity?, voltage: Float, km: Float, whPerKmOverride: Float?): EstimatedValues {
         val whConsumedAfterStart = wh(wheel!!, wheel.voltageStart, voltage)
-        val whRemainingToReserve = wh(wheel, voltage, adjustedReserve(wheel))
+        val whPerKmActual = (whConsumedAfterStart / km)
+        val whPerKm = whPerKmOverride ?: whPerKmActual
 
-        val whPerKm = whConsumedAfterStart / km
+        val whRemainingToReserve = wh(wheel, voltage, adjustedReserve(wheel))
         val remainingRange = max(whRemainingToReserve / whPerKm, 0f)
         val totalRange = remainingRange + km
 
         return EstimatedValues(
             round(remainingRange, NUM_DECIMALS),
             round(totalRange, NUM_DECIMALS),
-            round(whPerKm, NUM_DECIMALS)
+            round(whPerKmActual, NUM_DECIMALS)
         )
     }
 

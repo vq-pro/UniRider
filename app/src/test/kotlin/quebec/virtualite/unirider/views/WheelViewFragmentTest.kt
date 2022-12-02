@@ -2,6 +2,7 @@ package quebec.virtualite.unirider.views
 
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.not
@@ -11,8 +12,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyFloat
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
@@ -36,6 +39,7 @@ import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE
+import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE_UP
 import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE_ZERO
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.S18_DISCONNECTED
@@ -51,7 +55,11 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_START
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_START_NEW
 import quebec.virtualite.unirider.TestDomain.WH
+import quebec.virtualite.unirider.TestDomain.WHS_PER_KM
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_INDEX
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP_INDEX
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
@@ -88,6 +96,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     lateinit var mockedEditVoltageStart: EditText
 
     @Mock
+    lateinit var mockedListWhPerKm: Spinner
+
+    @Mock
     lateinit var mockedTextBattery: TextView
 
     @Mock
@@ -104,9 +115,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     @Mock
     lateinit var mockedTextTotalRange: TextView
-
-    @Mock
-    lateinit var mockedTextWhPerKm: TextView
 
     @Before
     fun before() {
@@ -153,25 +161,20 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.edit_voltage_start, fragment.editVoltageStart, mockedEditVoltageStart)
+        verifyFieldAssignment(R.id.view_wh_per_km, fragment.listWhPerKm, mockedListWhPerKm)
         verifyFieldAssignment(R.id.view_battery, fragment.textBattery, mockedTextBattery)
         verifyFieldAssignment(R.id.view_bt_name, fragment.textBtName, mockedTextBtName)
         verifyFieldAssignment(R.id.view_mileage, fragment.textMileage, mockedTextMileage)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_remaining_range, fragment.textRemainingRange, mockedTextRemainingRange)
         verifyFieldAssignment(R.id.view_total_range, fragment.textTotalRange, mockedTextTotalRange)
-        verifyFieldAssignment(R.id.view_wh_per_km, fragment.textWhPerKm, mockedTextWhPerKm)
 
+        assertThat(fragment.listWhPerKm, equalTo(mockedListWhPerKm))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
         assertThat(fragment.textName, equalTo(mockedTextName))
         assertThat(fragment.textRemainingRange, equalTo(mockedTextRemainingRange))
         assertThat(fragment.textTotalRange, equalTo(mockedTextTotalRange))
-        assertThat(fragment.textWhPerKm, equalTo(mockedTextWhPerKm))
-
-        verify(mockedTextName).text = NAME
-        verify(mockedTextBtName).text = DEVICE_NAME
-        verify(mockedEditVoltageStart).setText("$VOLTAGE_START")
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
 
         verifyOnUpdateText(mockedEditVoltageStart, "onUpdateVoltageStart")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
@@ -179,6 +182,16 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyOnClick(mockedButtonCharge, "onCharge")
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
+        verifyOnItemSelected(mockedListWhPerKm, "onChangeRate")
+        verifyStringListAdapter(mockedListWhPerKm, listOf())
+
+        assertThat(fragment.listOfRates, equalTo(emptyList()))
+        verify(mockedListWhPerKm, never()).setSelection(anyInt())
+
+        verify(mockedTextName).text = NAME
+        verify(mockedTextBtName).text = DEVICE_NAME
+        verify(mockedEditVoltageStart).setText("$VOLTAGE_START")
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
 
         verify(mockedDb, never()).saveWheel(any())
     }
@@ -195,7 +208,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedDb.getWheel(anyLong()))
             .willReturn(S18_1.copy(voltageStart = VOLTAGE_MAX))
 
-        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
         given(mockedCalculatorService.percentage(any(), anyFloat()))
@@ -223,6 +236,25 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextName, never()).text = anyString()
         verify(mockedTextBtName, never()).text = anyString()
         verify(mockedTextMileage, never()).text = anyString()
+    }
+
+    @Test
+    fun onChangeRate() {
+        // Given
+        injectMocks()
+        mockKm("$KM ")
+        mockVoltageActual("$VOLTAGE ")
+        mockVoltageStart("$VOLTAGE_START ")
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), anyFloat()))
+            .willReturn(EstimatedValues(REMAINING_RANGE_UP, TOTAL_RANGE, WH_PER_KM))
+
+        // When
+        fragment.onChangeRate().invoke(mockedView, WH_PER_KM_UP_INDEX, WH_PER_KM_UP.toString())
+
+        // Then
+        assertThat(fragment.rateOverride, equalTo(WH_PER_KM_UP))
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE_UP", WH_PER_KM_UP, WH_PER_KM_UP_INDEX)
     }
 
     @Test
@@ -321,10 +353,14 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     @Test
     fun onEdit() {
+        // Given
+        fragment.rateOverride = WH_PER_KM_UP
+
         // When
         fragment.onEdit().invoke(mockedView)
 
         // Then
+        assertThat(fragment.rateOverride, equalTo(null))
         verify(mockedFragments).navigateTo(
             R.id.action_WheelViewFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
@@ -377,13 +413,16 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockVoltageActual("$VOLTAGE ")
         mockVoltageStart("$VOLTAGE_START ")
 
-        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+        fragment.rateOverride = WH_PER_KM_UP
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
         // When
         fragment.onUpdateKm().invoke("$KM ")
 
         // Then
+        assertThat(fragment.rateOverride, equalTo(null))
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
     }
 
@@ -396,7 +435,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockVoltageActual("$voltage ")
         mockVoltageStart("$VOLTAGE_START ")
 
-        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(0f, TOTAL_RANGE, WH_PER_KM))
 
         // When
@@ -427,7 +466,9 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockKm("$KM ")
         mockVoltageStart("$VOLTAGE_START ")
 
-        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+        fragment.rateOverride = WH_PER_KM_UP
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
         given(mockedCalculatorService.percentage(any(), anyFloat()))
@@ -437,6 +478,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateVoltageActual().invoke("$VOLTAGE ")
 
         // Then
+        assertThat(fragment.rateOverride, equalTo(null))
         verifyUpdatePercentage()
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
     }
@@ -448,7 +490,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockKm("$KM ")
         mockVoltageStart("$VOLTAGE_START ")
 
-        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
         given(mockedCalculatorService.percentage(any(), anyFloat()))
@@ -529,7 +571,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockKm("$KM")
         mockVoltageStart("83.4")
 
-        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, 4.9f))
 
         // When
@@ -560,7 +602,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockKm("$KM ")
         mockVoltageStart("$VOLTAGE_START ")
 
-        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
         given(mockedCalculatorService.percentage(any(), anyFloat()))
@@ -581,7 +623,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockKm("$KM ")
         mockVoltageActual("$VOLTAGE ")
 
-        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
 
         // When
@@ -615,12 +657,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.editKm = mockedEditKm
         fragment.editVoltageActual = mockedEditVoltageActual
         fragment.editVoltageStart = mockedEditVoltageStart
+        fragment.listWhPerKm = mockedListWhPerKm
         fragment.textBattery = mockedTextBattery
         fragment.textBtName = mockedTextBtName
         fragment.textMileage = mockedTextMileage
         fragment.textRemainingRange = mockedTextRemainingRange
         fragment.textTotalRange = mockedTextTotalRange
-        fragment.textWhPerKm = mockedTextWhPerKm
     }
 
     private fun mockFields() {
@@ -630,13 +672,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
         mockField(R.id.edit_voltage_start, mockedEditVoltageStart)
+        mockField(R.id.view_wh_per_km, mockedListWhPerKm)
         mockField(R.id.view_battery, mockedTextBattery)
         mockField(R.id.view_bt_name, mockedTextBtName)
         mockField(R.id.view_mileage, mockedTextMileage)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_remaining_range, mockedTextRemainingRange)
         mockField(R.id.view_total_range, mockedTextTotalRange)
-        mockField(R.id.view_wh_per_km, mockedTextWhPerKm)
     }
 
     private fun mockKm(km: String) {
@@ -661,7 +703,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun verifyClearEstimatedValues() {
-        verify(mockedCalculatorService, never()).estimatedValues(any(), anyFloat(), anyFloat())
+        verify(mockedCalculatorService, never()).estimatedValues(any(), anyFloat(), anyFloat(), anyFloat())
         verifyEstimateButClearEstimatedValues()
     }
 
@@ -671,9 +713,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun verifyEstimateButClearEstimatedValues() {
+        assertThat(fragment.listOfRates, equalTo(emptyList()))
+        verify(mockedListWhPerKm, never()).setSelection(anyInt())
+        verify(mockedWidgets).clearSelection(mockedListWhPerKm)
+
         verify(mockedTextRemainingRange).text = ""
         verify(mockedTextTotalRange).text = ""
-        verify(mockedTextWhPerKm).text = ""
 
         verify(mockedButtonCharge).isEnabled = false
 
@@ -681,11 +726,17 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun verifyUpdateEstimatedValues(voltage: Float, remainingRange: String) {
-        verify(mockedCalculatorService).estimatedValues(fragment.wheel, voltage, KM)
+        verifyUpdateEstimatedValues(voltage, remainingRange, null, WH_PER_KM_INDEX)
+    }
+
+    private fun verifyUpdateEstimatedValues(voltage: Float, remainingRange: String, whPerKmOverride: Float?, whPerKmIndex: Int) {
+        verify(mockedCalculatorService).estimatedValues(fragment.wheel, voltage, KM, whPerKmOverride)
+
+        assertThat(fragment.listOfRates, equalTo(WHS_PER_KM))
+        verify(mockedWidgets).setSelection(mockedListWhPerKm, whPerKmIndex)
 
         verify(mockedTextRemainingRange).text = remainingRange
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM"
 
         verify(mockedButtonCharge).isEnabled = true
 
