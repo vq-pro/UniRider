@@ -10,25 +10,23 @@ Feature: Wheel Viewing
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        |
     And I start the app
 
-  @Ignore
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
     Given I select the <wheel>
     And I set the starting voltage to <starting voltage>V
     And I set the distance to <km> km
     When I enter an actual voltage of <voltage>V
     Then it displays these estimates:
-      | range       | total range | wh/km   |
+      | remaining   | total range | wh/km   |
       | <remaining> | <total>     | <wh/km> |
     Examples:
       | wheel       | starting voltage | km   | voltage | remaining | total | wh/km |
-      | Sherman Max | 100.6            | 38.0 | 91.9    | 43.2      | 81.2  | 32.7  |
+      | Sherman Max | 100.6            | 38.0 | 91.9    | 43.3      | 81.3  | 32.7  |
       | Sherman Max | 100.4            | 81.0 | 83.5    | 7.2       | 88.2  | 29.8  |
       | Sherman Max | 100.4            | 42.0 | 91      | 40.2      | 82.2  | 32.0  |
       | Sherman Max | 98.2             | 42.0 | 91      | 52.5      | 94.5  | 24.5  |
       | S18         | 84               | 21.0 | 72      | 3.5       | 24.5  | 26.4  |
       | S18         | 84               | 42.0 | 67      | 0         | 42.0  | 18.7  |
 
-  @Ignore
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And I set the distance to <km>

@@ -401,9 +401,14 @@ class Steps {
 
     @Then("it displays blank estimated values")
     fun displaysBlankEstimatedValues() {
-        assertThat(R.id.view_remaining_range, isEmpty())
-        assertThat(R.id.view_total_range, isEmpty())
-        assertThat(R.id.view_wh_per_km, isEmpty())
+        displaysTheseEstimates(
+            DataTable.create(
+                listOf(
+                    listOf("remaining", "total range", "wh/km"),
+                    listOf("", "", "")
+                )
+            )
+        )
     }
 
     @Then("^it displays an estimated remaining range of (.*?) km$")

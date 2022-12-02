@@ -103,7 +103,11 @@ object StepsUtils {
             }
 
             override fun perform(uiController: UiController?, view: View?) {
-                text = "${(view as Spinner).selectedItem}"
+                val spinner = view as Spinner
+                text = when {
+                    spinner.selectedItemPosition == -1 -> ""
+                    else -> "${spinner.selectedItem}"
+                }
             }
         })
         return text
