@@ -81,18 +81,19 @@ Feature: Wheel Viewing
     When I edit the wheel
     Then it shows that every field is editable
 
-  @Ignore
   Scenario: => Editing the wheel with estimated values
     Given I select the Sherman Max
-    And I set the distance to 42 km
+    And I set the distance to 38 km
     And I set the actual voltage to 91.9V
-    And it displays an estimated remaining range of 46.7 km
+    And it displays these estimates:
+      | remaining | total range | wh/km |
+      | 42.2      | 80.2        | 33.5  |
     When I edit the wheel
     And I go back to view the wheel
     Then it displays a percentage of 64.7%
     And it displays these estimates:
-      | range | total range | wh/km |
-      | 46.7  | 88.7        | 30.3  |
+      | remaining | total range | wh/km |
+      | 42.2      | 80.2        | 33.5  |
 
   Scenario: Saving the starting voltage
     Given I select the Sherman

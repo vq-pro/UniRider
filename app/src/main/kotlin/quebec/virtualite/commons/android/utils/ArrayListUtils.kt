@@ -12,7 +12,7 @@ object ArrayListUtils {
 
     fun <T> indexOf(list: List<T>, item: T): Int {
         for (i in list.indices) {
-            if (list[i]!!.equals(item)) {
+            if (item!! == list[i]!!) {
                 return i
             }
         }

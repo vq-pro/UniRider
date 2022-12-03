@@ -220,6 +220,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         verifyUpdatePercentage()
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
+        verifyUpdateRate()
     }
 
     @Test
@@ -254,7 +255,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         assertThat(fragment.rateOverride, equalTo(WH_PER_KM_UP))
-        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE_UP", WH_PER_KM_UP, WH_PER_KM_UP_INDEX)
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE_UP", WH_PER_KM_UP)
     }
 
     @Test
@@ -424,6 +425,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         assertThat(fragment.rateOverride, equalTo(null))
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
+        verifyUpdateRate()
     }
 
     @Test
@@ -443,6 +445,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyUpdateEstimatedValues(voltage, "$REMAINING_RANGE_ZERO")
+        verifyUpdateRate()
     }
 
     @Test
@@ -481,6 +484,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         assertThat(fragment.rateOverride, equalTo(null))
         verifyUpdatePercentage()
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
+        verifyUpdateRate()
     }
 
     @Test
@@ -502,6 +506,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         verifyUpdatePercentage()
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
+        verifyUpdateRate()
     }
 
     @Test
@@ -614,6 +619,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         verifyUpdatePercentage()
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
+        verifyUpdateRate()
     }
 
     @Test
@@ -631,6 +637,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
+        verifyUpdateRate()
 
         verify(mockedDb).saveWheel(S18_1.copy(voltageStart = VOLTAGE_START_NEW))
     }
@@ -726,14 +733,11 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     private fun verifyUpdateEstimatedValues(voltage: Float, remainingRange: String) {
-        verifyUpdateEstimatedValues(voltage, remainingRange, null, WH_PER_KM_INDEX)
+        verifyUpdateEstimatedValues(voltage, remainingRange, null)
     }
 
-    private fun verifyUpdateEstimatedValues(voltage: Float, remainingRange: String, whPerKmOverride: Float?, whPerKmIndex: Int) {
+    private fun verifyUpdateEstimatedValues(voltage: Float, remainingRange: String, whPerKmOverride: Float?) {
         verify(mockedCalculatorService).estimatedValues(fragment.wheel, voltage, KM, whPerKmOverride)
-
-        assertThat(fragment.listOfRates, equalTo(WHS_PER_KM))
-        verify(mockedWidgets).setSelection(mockedListWhPerKm, whPerKmIndex)
 
         verify(mockedTextRemainingRange).text = remainingRange
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
@@ -746,5 +750,10 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     private fun verifyUpdatePercentage() {
         verify(mockedCalculatorService).percentage(fragment.wheel, VOLTAGE)
         verify(mockedTextBattery).text = "$PERCENTAGE"
+    }
+
+    private fun verifyUpdateRate() {
+        assertThat(fragment.listOfRates, equalTo(WHS_PER_KM))
+        verify(mockedWidgets).setSelection(mockedListWhPerKm, WH_PER_KM_INDEX)
     }
 }

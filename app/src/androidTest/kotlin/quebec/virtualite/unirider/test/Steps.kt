@@ -48,6 +48,7 @@ import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
 import java.lang.Integer.parseInt
+import java.lang.Thread.sleep
 import java.util.stream.Collectors.toList
 
 class Steps {
@@ -563,6 +564,11 @@ class Steps {
     @Given("^I set the starting voltage to (.*)$")
     fun setStartingVoltageTo(startingVoltage: String) {
         setText(R.id.edit_voltage_start, strip(startingVoltage, "V"))
+    }
+
+    @When("I wait")
+    fun waitABit() {
+        sleep(5000)
     }
 
     @Then("the wheel can be saved")

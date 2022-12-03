@@ -18,6 +18,8 @@ open class CommonWidgetServices {
 
     private val POST_DELAY = 10L
 
+//    val updatingSpinners = HashMap<Spinner, Boolean>()
+
     open fun addTextChangedListener(widget: EditText?, callback: ((text: String) -> Unit)?) {
 
         widget?.addTextChangedListener(object : TextWatcher {
@@ -80,6 +82,11 @@ open class CommonWidgetServices {
     open fun setOnItemSelectedListener(spinner: Spinner?, callback: ((View, Int, String) -> Unit)?) {
         spinner!!.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                if (updatingSpinners[spinner] == true) {
+//                    updatingSpinners[spinner] = false
+//                    return
+//                }
+
                 val text = spinner.getItemAtPosition(position) as String
                 callback!!(view!!, position, text)
             }
@@ -97,6 +104,7 @@ open class CommonWidgetServices {
     }
 
     open fun setSelection(spinner: Spinner, index: Int) {
+//        updatingSpinners[spinner] = true
         notifyOnChanged(spinner)
         spinner.setSelection(index, true)
     }

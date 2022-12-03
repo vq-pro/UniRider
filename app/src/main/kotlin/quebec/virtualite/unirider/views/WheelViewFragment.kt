@@ -93,11 +93,12 @@ open class WheelViewFragment : BaseFragment() {
                 textMileage.text = textKm(wheel!!.totalMileage())
 
                 updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
+                updateRates()
             }
         }
     }
 
-    fun onChangeRate(): (View, Int, String) -> Unit = { _, position, text ->
+    fun onChangeRate(): (View, Int, String) -> Unit = { view, position, text ->
         rateOverride = floatOf(text)
         updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
     }
@@ -138,11 +139,13 @@ open class WheelViewFragment : BaseFragment() {
     fun onUpdateKm() = { km: String ->
         rateOverride = null
         updateCalculatedValues(km, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
+        updateRates()
     }
 
     fun onUpdateVoltageActual() = { voltageActual: String ->
         rateOverride = null
         updateCalculatedValues(READ_KM, voltageActual, READ_VOLTAGE_START)
+        updateRates()
     }
 
     fun onUpdateVoltageStart() = { voltageStart: String ->
@@ -152,6 +155,7 @@ open class WheelViewFragment : BaseFragment() {
         }
 
         updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, voltageStart)
+        updateRates()
     }
 
     private fun goto(id: Int, wheel: WheelEntity, voltage: Float, whPerKm: Float) {
@@ -199,12 +203,10 @@ open class WheelViewFragment : BaseFragment() {
 
             else -> null
         }
-
         if (estimates != null && estimates!!.whPerKm < 5.0f)
             estimates = null
 
         fragments.runUI {
-            updateRates(estimates?.whPerKm)
             textRemainingRange.text = textKmWithDecimal(estimates?.remainingRange)
             textTotalRange.text = textKmWithDecimal(estimates?.totalRange)
 
@@ -221,7 +223,10 @@ open class WheelViewFragment : BaseFragment() {
         textBattery.text = textPercentageWithDecimal(percentage)
     }
 
-    private fun updateRates(actualWhPerKm: Float?) {
+    private fun updateRates() {
+
+        val actualWhPerKm = estimates?.whPerKm
+
         listOfRates.clear()
         if (actualWhPerKm == null) {
             widgets.clearSelection(listWhPerKm)
