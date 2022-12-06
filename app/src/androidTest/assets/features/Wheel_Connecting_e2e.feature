@@ -18,7 +18,7 @@ Feature: Wheel Connecting - End-2-End
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name    | Updated mileage |
-      | 14S     | 1341            |
+      | 14S     | 1348            |
       | Sherman | 19279           |
     And I start the app
 
