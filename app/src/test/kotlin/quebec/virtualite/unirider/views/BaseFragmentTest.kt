@@ -113,6 +113,13 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         fragment.arguments = mockedBundle
     }
 
+    fun mockArgument(fragment: BaseFragment, param: String, value: List<String>) {
+        given(mockedBundle.getStringArrayList(param))
+            .willReturn(ArrayList(value))
+
+        fragment.arguments = mockedBundle
+    }
+
     @Suppress("UNCHECKED_CAST")
     fun mockExternal() {
         lenient().doReturn(mockedConnector)

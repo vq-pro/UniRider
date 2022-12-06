@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
+import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isEmpty
 import quebec.virtualite.commons.android.utils.NumberUtils.isPositive
@@ -23,24 +25,26 @@ open class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var buttonConnect: Button
     internal lateinit var editKm: EditText
+    internal lateinit var listRates: Spinner
     internal lateinit var textName: TextView
     internal lateinit var textRemainingTime: TextView
     internal lateinit var textVoltageActual: TextView
     internal lateinit var textVoltageRequired: TextView
-    internal lateinit var textWhPerKm: TextView
 
     internal var parmWheelId: Long? = 0
 
+    internal val parmRates: ArrayList<String> = ArrayList()
+    internal var parmSelectedRate: Int = -1
     internal var parmVoltageDisconnectedFromCharger: Float? = 0f
-    internal var parmWhPerKm: Float? = 0f
     internal var wheel: WheelEntity? = null
 
     private var calculatorService = CalculatorService()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
+        setList(parmRates, arguments?.getStringArrayList(PARAMETER_RATES)!!)
+        parmSelectedRate = arguments?.getInt(PARAMETER_SELECTED_RATE)!!
         parmVoltageDisconnectedFromCharger = arguments?.getFloat(PARAMETER_VOLTAGE)
-        parmWhPerKm = arguments?.getFloat(PARAMETER_WH_PER_KM)
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
 
@@ -50,20 +54,22 @@ open class WheelChargeFragment : BaseFragment() {
 
         buttonConnect = view.findViewById(R.id.button_connect_charge)
         editKm = view.findViewById(R.id.edit_km)
+        listRates = view.findViewById(R.id.view_wh_per_km)
         textName = view.findViewById(R.id.view_name)
         textRemainingTime = view.findViewById(R.id.view_remaining_time)
         textVoltageActual = view.findViewById(R.id.view_voltage_actual)
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
-        textWhPerKm = view.findViewById(R.id.view_wh_per_km)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
+        widgets.stringListAdapter(listRates, view, SPINNER_SIZE, parmRates)
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
 
+            val toto = parmSelectedRate
+            widgets.setSelection(listRates, parmSelectedRate)
             textName.text = wheel!!.name
-            textWhPerKm.text = textWhPerKm(parmWhPerKm)
             displayVoltageActual()
 
             if (wheel!!.btName == null || wheel!!.btAddr == null) {
@@ -92,7 +98,9 @@ open class WheelChargeFragment : BaseFragment() {
             textRemainingTime.text = ""
 
         } else {
-            val requiredVoltageOnCharger = calculatorService.requiredVoltage(wheel, parmWhPerKm!!, floatOf(km))
+            val requiredVoltageOnCharger = calculatorService
+                .requiredVoltage(wheel, floatOf(parmRates[parmSelectedRate]), floatOf(km))
+
             val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
 
             if (requiredVoltage > parmVoltageDisconnectedFromCharger!!) {

@@ -68,9 +68,10 @@ import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_RATES
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_SELECTED_RATE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_VOLTAGE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WH_PER_KM
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
@@ -187,7 +188,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
         verifyOnItemSelected(mockedListWhPerKm, "onChangeRate")
-        verifyStringListAdapter(mockedListWhPerKm, listOf())
+        verifyStringListAdapter(mockedListWhPerKm, emptyList())
 
         assertThat(fragment.listOfRates, equalTo(emptyList()))
         verify(mockedListWhPerKm, never()).setSelection(anyInt())
@@ -267,7 +268,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     @Test
     fun onCharge() {
         // Given
-        fragment.estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM)
+        setList(fragment.listOfRates, WHS_PER_KM)
+        fragment.selectedRate = WH_PER_KM_INDEX
 
         mockVoltageActual("$VOLTAGE ")
 
@@ -277,9 +279,10 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Then
         verify(mockedFragments).navigateTo(
             R.id.action_WheelViewFragment_to_WheelChargeFragment,
+            Pair(PARAMETER_RATES, WHS_PER_KM),
+            Pair(PARAMETER_SELECTED_RATE, WH_PER_KM_INDEX),
             Pair(PARAMETER_WHEEL_ID, ID),
-            Pair(PARAMETER_VOLTAGE, VOLTAGE),
-            Pair(PARAMETER_WH_PER_KM, WH_PER_KM)
+            Pair(PARAMETER_VOLTAGE, VOLTAGE)
         )
     }
 

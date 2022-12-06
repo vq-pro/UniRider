@@ -10,9 +10,11 @@ open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
 
     companion object {
         const val NB_DECIMALS = 1
+        const val PARAMETER_RATES = "rates"
+        const val PARAMETER_SELECTED_RATE = "selectedRate"
         const val PARAMETER_VOLTAGE = "voltage"
         const val PARAMETER_WHEEL_ID = "wheelID"
-        const val PARAMETER_WH_PER_KM = "whPerKm"
+        const val SPINNER_SIZE = 22
     }
 
     fun goto(id: Int, wheel: WheelEntity) {

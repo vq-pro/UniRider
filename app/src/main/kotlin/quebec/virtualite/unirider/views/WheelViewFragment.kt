@@ -25,7 +25,6 @@ open class WheelViewFragment : BaseFragment() {
     private val READ_KM = null
     private val READ_VOLTAGE_ACTUAL = null
     private val READ_VOLTAGE_START = null
-    private val SPINNER_SIZE = 22
 
     internal lateinit var buttonCharge: Button
     internal lateinit var buttonConnect: Button
@@ -104,11 +103,12 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onCharge(): (View) -> Unit = {
-        goto(
+        fragments.navigateTo(
             R.id.action_WheelViewFragment_to_WheelChargeFragment,
-            wheel!!,
-            floatOf(widgets.text(editVoltageActual)),
-            estimates!!.whPerKm
+            Pair(PARAMETER_RATES, listOfRates),
+            Pair(PARAMETER_SELECTED_RATE, selectedRate),
+            Pair(PARAMETER_WHEEL_ID, wheel!!.id),
+            Pair(PARAMETER_VOLTAGE, floatOf(widgets.text(editVoltageActual)))
         )
     }
 
@@ -156,15 +156,6 @@ open class WheelViewFragment : BaseFragment() {
 
         updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, voltageStart)
         updateRates()
-    }
-
-    private fun goto(id: Int, wheel: WheelEntity, voltage: Float, whPerKm: Float) {
-        fragments.navigateTo(
-            id,
-            Pair(PARAMETER_WHEEL_ID, wheel.id),
-            Pair(PARAMETER_VOLTAGE, voltage),
-            Pair(PARAMETER_WH_PER_KM, whPerKm)
-        )
     }
 
     private fun isVoltageWithinRange(voltageParm: String): Boolean {

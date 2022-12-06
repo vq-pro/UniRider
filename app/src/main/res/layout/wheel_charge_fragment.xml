@@ -87,14 +87,12 @@
                         android:text="@string/label_rate"
                 />
 
-                <TextView
+                <Spinner
                         android:id="@+id/view_wh_per_km"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                />
+                        android:visibility="visible">
+                </Spinner>
 
                 <TextView
                         android:labelFor="@+id/view_wh_per_km"

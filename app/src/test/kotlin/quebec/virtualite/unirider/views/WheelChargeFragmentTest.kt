@@ -2,6 +2,7 @@ package quebec.virtualite.unirider.views
 
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -17,6 +18,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.any
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR3
@@ -33,13 +35,16 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_REQUIRED
+import quebec.virtualite.unirider.TestDomain.WHS_PER_KM
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_INDEX
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_RATES
+import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_SELECTED_RATE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_VOLTAGE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WH_PER_KM
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java) {
@@ -57,6 +62,9 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     lateinit var mockedEditKm: EditText
 
     @Mock
+    lateinit var mockedListRates: Spinner
+
+    @Mock
     lateinit var mockedTextName: TextView
 
     @Mock
@@ -68,14 +76,12 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     @Mock
     lateinit var mockedTextVoltageRequired: TextView
 
-    @Mock
-    lateinit var mockedTextWhPerKm: TextView
-
     @Before
     fun before() {
         fragment.parmWheelId = ID
         fragment.parmVoltageDisconnectedFromCharger = VOLTAGE
-        fragment.parmWhPerKm = WH_PER_KM
+        setList(fragment.parmRates, WHS_PER_KM)
+        fragment.parmSelectedRate = WH_PER_KM_INDEX
         fragment.wheel = SHERMAN_MAX_3
 
         mockExternal()
@@ -87,8 +93,9 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     fun onCreateView() {
         // Given
         mockArgument(fragment, PARAMETER_WHEEL_ID, ID)
+        mockArgument(fragment, PARAMETER_RATES, WHS_PER_KM)
+        mockArgument(fragment, PARAMETER_SELECTED_RATE, WH_PER_KM_INDEX)
         mockArgument(fragment, PARAMETER_VOLTAGE, VOLTAGE)
-        mockArgument(fragment, PARAMETER_WH_PER_KM, WH_PER_KM)
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
@@ -97,8 +104,8 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         verifyInflate(R.layout.wheel_charge_fragment)
 
         assertThat(fragment.parmWheelId, equalTo(ID))
+        assertThat(fragment.parmSelectedRate, equalTo(WH_PER_KM_INDEX))
         assertThat(fragment.parmVoltageDisconnectedFromCharger, equalTo(VOLTAGE))
-        assertThat(fragment.parmWhPerKm, equalTo(WH_PER_KM))
     }
 
     @Test
@@ -107,6 +114,9 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.wheel = null
         given(mockedDb.getWheel(anyLong()))
             .willReturn(S18_1)
+
+        setList(fragment.parmRates, WHS_PER_KM)
+        fragment.parmSelectedRate = WH_PER_KM_INDEX
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -118,18 +128,21 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         verifyFieldAssignment(R.id.button_connect_charge, fragment.buttonConnect, mockedButtonConnect)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
+        verifyFieldAssignment(R.id.view_wh_per_km, fragment.listRates, mockedListRates)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_remaining_time, fragment.textRemainingTime, mockedTextRemainingTime)
         verifyFieldAssignment(R.id.view_voltage_actual, fragment.textVoltageActual, mockedTextVoltageActual)
         verifyFieldAssignment(R.id.view_voltage_required, fragment.textVoltageRequired, mockedTextVoltageRequired)
-        verifyFieldAssignment(R.id.view_wh_per_km, fragment.textWhPerKm, mockedTextWhPerKm)
+
+        assertThat(fragment.listRates, equalTo(mockedListRates))
 
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
+        verifyStringListAdapter(mockedListRates, WHS_PER_KM)
 
         verify(mockedTextName).text = NAME
         verify(mockedTextVoltageActual).text = "${VOLTAGE + CHARGER_OFFSET}"
-        verify(mockedTextWhPerKm).text = "$WH_PER_KM"
+        verify(mockedWidgets).setSelection(mockedListRates, WH_PER_KM_INDEX)
     }
 
     @Test
@@ -304,11 +317,11 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     private fun mockFields() {
         mockField(R.id.button_connect_charge, mockedButtonConnect)
         mockField(R.id.edit_km, mockedEditKm)
+        mockField(R.id.view_wh_per_km, mockedListRates)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_remaining_time, mockedTextRemainingTime)
         mockField(R.id.view_voltage_actual, mockedTextVoltageActual)
         mockField(R.id.view_voltage_required, mockedTextVoltageRequired)
-        mockField(R.id.view_wh_per_km, mockedTextWhPerKm)
     }
 
     private fun verifyDisplayGo() {

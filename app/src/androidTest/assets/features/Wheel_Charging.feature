@@ -15,7 +15,6 @@ Feature: Wheel Charging
     And I charge the wheel
     And it displays an estimated rate of 40.6 wh/km
 
-  @Ignore
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V
@@ -31,6 +30,8 @@ Feature: Wheel Charging
       | 200 km   | 99.3V (+11.4)    | 1h25 |
       |          |                  |      |
       | aa       |                  |      |
+
+#    FIXME-1 Change rate scenario
 
   @Ignore
   Scenario: Update the voltage
