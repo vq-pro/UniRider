@@ -33,7 +33,6 @@ Feature: Wheel Charging
 
 #    FIXME-1 Change rate scenario
 
-  @Ignore
   Scenario: Update the voltage
     Given this simulated device:
       | Bt Name | Bt Address        | Km     | Mileage | Voltage |
