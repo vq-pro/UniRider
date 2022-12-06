@@ -86,10 +86,12 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnItemSelectedListener(listWhPerKm, onChangeRate())
                 widgets.stringListAdapter(listWhPerKm, view, SPINNER_SIZE, listOfRates)
 
-                editVoltageStart.setText("${wheel!!.voltageStart}")
-                textName.text = wheel!!.name
-                textBtName.text = wheel!!.btName
-                textMileage.text = textKm(wheel!!.totalMileage())
+                fragments.runUI {
+                    editVoltageStart.setText("${wheel!!.voltageStart}")
+                    textName.text = wheel!!.name
+                    textBtName.text = wheel!!.btName
+                    textMileage.text = textKm(wheel!!.totalMileage())
+                }
 
                 updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
                 updateRates()

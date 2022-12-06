@@ -38,6 +38,8 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_REQUIRED
 import quebec.virtualite.unirider.TestDomain.WHS_PER_KM
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_INDEX
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP_INDEX
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
@@ -138,6 +140,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
+        verifyOnItemSelected(mockedListRates, "onChangeRate")
         verifyStringListAdapter(mockedListRates, WHS_PER_KM)
 
         verify(mockedTextName).text = NAME
@@ -157,6 +160,26 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         // Then
         verify(mockedWidgets).disable(mockedButtonConnect)
+    }
+
+    @Test
+    fun onChangeRate() {
+        // Given
+        injectMocks()
+        mockKm("$KM ")
+
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+            .willReturn(VOLTAGE_REQUIRED)
+
+        fragment.parmSelectedRate = WH_PER_KM_INDEX
+
+        // When
+        fragment.onChangeRate().invoke(mockedView, WH_PER_KM_UP_INDEX, WH_PER_KM_UP.toString())
+
+        // Then
+        assertThat(fragment.parmSelectedRate, equalTo(WH_PER_KM_UP_INDEX))
+        verify(mockedCalculatorService).requiredVoltage(fragment.wheel, WH_PER_KM_UP, KM)
+        verifyVoltageRequired(VOLTAGE_REQUIRED)
     }
 
     @Test
@@ -322,6 +345,13 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         mockField(R.id.view_remaining_time, mockedTextRemainingTime)
         mockField(R.id.view_voltage_actual, mockedTextVoltageActual)
         mockField(R.id.view_voltage_required, mockedTextVoltageRequired)
+    }
+
+    private fun mockKm(km: String) {
+        fragment.editKm = mockedEditKm
+
+        given(mockedWidgets.text(mockedEditKm))
+            .willReturn(km.trim())
     }
 
     private fun verifyDisplayGo() {

@@ -385,16 +385,6 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
-    @Then("^it displays a required voltage of (.*?)$")
-    fun displaysRequiredVoltage(expectedVoltage: String) {
-        assertThat(R.id.view_voltage_required, hasText(strip(expectedVoltage, "V")))
-    }
-
-    @Then("^it displays a remaining time of (.*?)$")
-    fun displaysRemainingTime(expectedTime: String) {
-        assertThat(R.id.view_remaining_time, hasText(expectedTime))
-    }
-
     @Then("^it displays an actual voltage of (.*?)$")
     fun displaysActualVoltage(expectedVoltage: String) {
         assertThat(R.id.view_voltage_actual, hasText(strip(expectedVoltage, "V")))
@@ -425,6 +415,19 @@ class Steps {
     @Then("^it displays an estimated rate of (.*?) wh/km$")
     fun displaysEstimatedRate(whPerKm: String) {
         assertThat(R.id.view_wh_per_km, hasSpinnerText(whPerKm))
+    }
+
+    @Then("it displays these charging estimates:")
+    fun displaysTheseChargingEstimates(expectedEstimates: DataTable) {
+        DataTable.create(
+            listOf(
+                listOf("required voltage", "time"),
+                listOf(
+                    getText(R.id.view_voltage_required),
+                    getText(R.id.view_remaining_time)
+                )
+            )
+        ).diff(expectedEstimates)
     }
 
     @Then("it displays these estimates:")

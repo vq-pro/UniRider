@@ -15,11 +15,23 @@ Feature: Wheel Charging
     And I charge the wheel
     And it displays an estimated rate of 40.6 wh/km
 
+  Scenario: Calculating required voltage and estimated time when changing rate
+    Given I request to charge for 40 km
+    And it displays an actual voltage of 87.9V
+    And it displays these charging estimates:
+      | required voltage | time |
+      | 94.9V (+7.0)     | 53m  |
+    When I change the rate to 35 wh/km
+    Then it displays these charging estimates:
+      | required voltage | time |
+      | 93.3V (+5.4)     | 41m  |
+
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V
-    And it displays a required voltage of <required voltage>
-    And it displays a remaining time of <time>
+    And it displays these charging estimates:
+      | required voltage   | time   |
+      | <required voltage> | <time> |
     Examples:
       | distance | required voltage | time |
       | 15 km    | Go!              |      |
@@ -31,8 +43,6 @@ Feature: Wheel Charging
       |          |                  |      |
       | aa       |                  |      |
 
-#    FIXME-1 Change rate scenario
-
   Scenario: Update the voltage
     Given this simulated device:
       | Bt Name | Bt Address        | Km     | Mileage | Voltage |
@@ -40,5 +50,6 @@ Feature: Wheel Charging
     And I request to charge for 40 km
     When I reconnect to update the voltage
     Then it displays an actual voltage of 88.5V
-    And it displays a required voltage of 94.9V (+6.4)
-    And it displays a remaining time of 48m
+    And it displays these charging estimates:
+      | required voltage | time |
+      | 94.9V (+6.4)     | 48m  |

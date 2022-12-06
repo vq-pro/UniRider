@@ -62,20 +62,27 @@ open class WheelChargeFragment : BaseFragment() {
 
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
+        widgets.setOnItemSelectedListener(listRates, onChangeRate())
         widgets.stringListAdapter(listRates, view, SPINNER_SIZE, parmRates)
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
 
-            val toto = parmSelectedRate
-            widgets.setSelection(listRates, parmSelectedRate)
-            textName.text = wheel!!.name
-            displayVoltageActual()
+            fragments.runUI {
+                textName.text = wheel!!.name
+                widgets.setSelection(listRates, parmSelectedRate)
+                displayVoltageActual()
 
-            if (wheel!!.btName == null || wheel!!.btAddr == null) {
-                widgets.disable(buttonConnect)
+                if (wheel!!.btName == null || wheel!!.btAddr == null) {
+                    widgets.disable(buttonConnect)
+                }
             }
         }
+    }
+
+    fun onChangeRate(): (View, Int, String) -> Unit = { view, position, text ->
+        parmSelectedRate = position
+        updateEstimatesWith(widgets.text(editKm))
     }
 
     fun onConnect(): (View) -> Unit = {
@@ -93,6 +100,22 @@ open class WheelChargeFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     fun onUpdateKm() = { km: String ->
+        updateEstimatesWith(km)
+    }
+
+    @SuppressLint("DefaultLocale")
+    internal fun timeDisplay(rawHours: Float): String {
+        val hours = rawHours.toInt()
+        val minutes = ((rawHours - hours) * 60).roundToInt()
+
+        return if (hours > 0) "${hours}h${format("%02d", minutes)}" else "${minutes}m"
+    }
+
+    private fun displayVoltageActual() {
+        textVoltageActual.text = "${parmVoltageDisconnectedFromCharger?.plus(CHARGER_OFFSET)}"
+    }
+
+    private fun updateEstimatesWith(km: String) {
         if (isEmpty(km) || !isPositive(km)) {
             textVoltageRequired.text = ""
             textRemainingTime.text = ""
@@ -114,19 +137,6 @@ open class WheelChargeFragment : BaseFragment() {
                 textVoltageRequired.text = "Go!"
                 textRemainingTime.text = ""
             }
-
         }
-    }
-
-    @SuppressLint("DefaultLocale")
-    internal fun timeDisplay(rawHours: Float): String {
-        val hours = rawHours.toInt()
-        val minutes = ((rawHours - hours) * 60).roundToInt()
-
-        return if (hours > 0) "${hours}h${format("%02d", minutes)}" else "${minutes}m"
-    }
-
-    private fun displayVoltageActual() {
-        textVoltageActual.text = "${parmVoltageDisconnectedFromCharger?.plus(CHARGER_OFFSET)}"
     }
 }
