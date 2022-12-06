@@ -42,10 +42,10 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textTotalRange: TextView
 
     internal val listOfRates = ArrayList<String>()
+    internal var selectedRate: Int = -1
 
     internal var estimates: EstimatedValues? = null
     internal var parmWheelId: Long? = 0
-    internal var rateOverride: Float? = null
     internal var wheel: WheelEntity? = null
 
     private var calculatorService = CalculatorService()
@@ -99,7 +99,7 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onChangeRate(): (View, Int, String) -> Unit = { view, position, text ->
-        rateOverride = floatOf(text)
+        selectedRate = position
         updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
     }
 
@@ -132,18 +132,18 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onEdit(): (View) -> Unit = {
-        rateOverride = null
+        selectedRate = -1
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment, wheel!!)
     }
 
     fun onUpdateKm() = { km: String ->
-        rateOverride = null
+        selectedRate = -1
         updateCalculatedValues(km, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
         updateRates()
     }
 
     fun onUpdateVoltageActual() = { voltageActual: String ->
-        rateOverride = null
+        selectedRate = -1
         updateCalculatedValues(READ_KM, voltageActual, READ_VOLTAGE_START)
         updateRates()
     }
@@ -195,11 +195,11 @@ open class WheelViewFragment : BaseFragment() {
             !isEmpty(km) && isPositive(km)
                     && isVoltageWithinRange(voltageActual)
                     && isVoltageWithinRange(voltageStart)
-                    && floatOf(voltageActual) <= floatOf(voltageStart) ->
+                    && floatOf(voltageActual) <= floatOf(voltageStart) -> {
 
-                calculatorService.estimatedValues(
-                    wheel, floatOf(voltageActual), floatOf(km), rateOverride
-                )
+                val rateOverride = if (selectedRate == -1) null else floatOf(listOfRates[selectedRate])
+                calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km), rateOverride)
+            }
 
             else -> null
         }
@@ -224,32 +224,31 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateRates() {
+        val actualRate = estimates?.whPerKm
 
-        val actualWhPerKm = estimates?.whPerKm
-
+        selectedRate = -1
         listOfRates.clear()
-        if (actualWhPerKm == null) {
+
+        if (actualRate == null) {
             widgets.clearSelection(listWhPerKm)
             return
         }
 
-        listOfRates.add(textWhPerKm(actualWhPerKm))
+        val displayActualRate = textWhPerKm(actualRate)
+        listOfRates.add(displayActualRate)
 
-        val stepDown = (actualWhPerKm / 5).toInt() * 5
+        val stepDown = (actualRate / 5).toInt() * 5
         for (i in stepDown - 10..stepDown + 15 step 5) {
+            if (i < 10)
+                continue
+
             listOfRates.add(i.toString())
         }
 
         listOfRates.sort()
 
-        val index = indexOf(
-            listOfRates,
-            if (rateOverride == null)
-                "$actualWhPerKm"
-            else
-                "${rateOverride!!.toInt()}"
-        )
-        widgets.setSelection(listWhPerKm, index)
+        selectedRate = indexOf(listOfRates, displayActualRate)
+        widgets.setSelection(listWhPerKm, selectedRate)
     }
 
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {

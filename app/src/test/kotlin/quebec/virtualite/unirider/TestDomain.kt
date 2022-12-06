@@ -67,9 +67,12 @@ object TestDomain {
     const val WH_NEW = 9999
     const val WH_PER_KM = 30.3f
     const val WH_PER_KM_INDEX = 3
+    const val WH_PER_KM_SMALL_INDEX = 2
+    const val WH_PER_KM_SMALL = 18.7f
     const val WH_PER_KM_UP = 35f
     const val WH_PER_KM_UP_INDEX = 4
     val WHS_PER_KM = listOf("20", "25", "30", "30.3", "35", "40", "45")
+    val WHS_PER_KM_SMALL = listOf("10", "15", "18.7", "20", "25", "30")
     val WHEEL_ROW_1_123 = WheelRow(ID, NAME, PREMILEAGE + MILEAGE)
     val WHEEL_ROW_2_456 = WheelRow(ID2, NAME2, PREMILEAGE2 + MILEAGE2)
     val WHEEL_ROW_3_123 = WheelRow(ID3, NAME3, PREMILEAGE3 + MILEAGE3)

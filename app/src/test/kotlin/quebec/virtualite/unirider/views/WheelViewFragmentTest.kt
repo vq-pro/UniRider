@@ -23,6 +23,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
@@ -56,8 +57,11 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_START
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_START_NEW
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WHS_PER_KM
+import quebec.virtualite.unirider.TestDomain.WHS_PER_KM_SMALL
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_INDEX
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_SMALL
+import quebec.virtualite.unirider.TestDomain.WH_PER_KM_SMALL_INDEX
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP_INDEX
 import quebec.virtualite.unirider.bluetooth.WheelInfo
@@ -250,11 +254,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), anyFloat()))
             .willReturn(EstimatedValues(REMAINING_RANGE_UP, TOTAL_RANGE, WH_PER_KM))
 
+        setList(fragment.listOfRates, WHS_PER_KM)
+
         // When
         fragment.onChangeRate().invoke(mockedView, WH_PER_KM_UP_INDEX, WH_PER_KM_UP.toString())
 
         // Then
-        assertThat(fragment.rateOverride, equalTo(WH_PER_KM_UP))
+        assertThat(fragment.selectedRate, equalTo(WH_PER_KM_UP_INDEX))
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE_UP", WH_PER_KM_UP)
     }
 
@@ -355,13 +361,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     @Test
     fun onEdit() {
         // Given
-        fragment.rateOverride = WH_PER_KM_UP
+        fragment.selectedRate = WH_PER_KM_UP_INDEX
 
         // When
         fragment.onEdit().invoke(mockedView)
 
         // Then
-        assertThat(fragment.rateOverride, equalTo(null))
+        assertThat(fragment.selectedRate, equalTo(-1))
         verify(mockedFragments).navigateTo(
             R.id.action_WheelViewFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, ID)
@@ -414,7 +420,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockVoltageActual("$VOLTAGE ")
         mockVoltageStart("$VOLTAGE_START ")
 
-        fragment.rateOverride = WH_PER_KM_UP
+        fragment.selectedRate = WH_PER_KM_UP_INDEX
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
@@ -423,7 +429,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateKm().invoke("$KM ")
 
         // Then
-        assertThat(fragment.rateOverride, equalTo(null))
+        assertThat(fragment.selectedRate, equalTo(WH_PER_KM_INDEX))
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
         verifyUpdateRate()
     }
@@ -469,7 +475,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockKm("$KM ")
         mockVoltageStart("$VOLTAGE_START ")
 
-        fragment.rateOverride = WH_PER_KM_UP
+        fragment.selectedRate = WH_PER_KM_UP_INDEX
 
         given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
             .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
@@ -481,10 +487,30 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onUpdateVoltageActual().invoke("$VOLTAGE ")
 
         // Then
-        assertThat(fragment.rateOverride, equalTo(null))
+        assertThat(fragment.selectedRate, equalTo(WH_PER_KM_INDEX))
         verifyUpdatePercentage()
         verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
         verifyUpdateRate()
+    }
+
+    @Test
+    fun onUpdateVoltageActual_withSmallRate() {
+        // Given
+        injectMocks()
+        mockKm("$KM ")
+        mockVoltageStart("$VOLTAGE_START ")
+
+        fragment.selectedRate = WH_PER_KM_INDEX
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM_SMALL))
+
+        // When
+        fragment.onUpdateVoltageActual().invoke("$VOLTAGE ")
+
+        // Then
+        assertThat(fragment.listOfRates, equalTo(WHS_PER_KM_SMALL))
+        assertThat(fragment.selectedRate, equalTo(WH_PER_KM_SMALL_INDEX))
     }
 
     @Test
