@@ -52,6 +52,9 @@ class CalculatorServiceTest {
 
         // Voltage lower than reserve
         estimatedValues(100.8f, 79.5f, 81.2f, null, 0f, 81.2f, 37.5f)
+
+        // Voltage higher than max
+        estimatedValues(101.6f, 100.9f, 3f, null, 81.0f, 84.0f, 33.3f)
     }
 
     private fun estimatedValues(
@@ -81,6 +84,7 @@ class CalculatorServiceTest {
         percentage(75.6f, 0.0f)
         percentage(88.2f, 50.0f)
         percentage(92.5f, 67.1f)
+        percentage(101.6f, 103.2f)
     }
 
     private fun percentage(voltage: Float, expectedPercentage: Float) {

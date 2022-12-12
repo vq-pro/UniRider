@@ -70,6 +70,10 @@ object StepsUtils {
         org.hamcrest.MatcherAssert.assertThat(actual, matcher)
     }
 
+    fun <T> assertThat(message: String, actual: T, matcher: Matcher<T>) {
+        org.hamcrest.MatcherAssert.assertThat(message, actual, matcher)
+    }
+
     fun back(nb: Int = 1) {
         var i = nb
         while (i-- > 0) {
@@ -236,6 +240,10 @@ object StepsUtils {
 
     fun <T : Activity> stop(activityTestRule: ActivityTestRule<T>) {
         activityTestRule.finishActivity()
+    }
+
+    fun <T> throwAssert(message: String): T {
+        throw AssertionError(message)
     }
 
     @Suppress("UNCHECKED_CAST")

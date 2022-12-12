@@ -11,7 +11,6 @@ import cucumber.api.java.en.When
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
-import org.hamcrest.Matchers.notNullValue
 import org.junit.Rule
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
@@ -38,6 +37,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinner
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.throwAssert
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import quebec.virtualite.unirider.views.MainActivity
@@ -640,8 +640,8 @@ class Steps {
 
     @When("^I select the (.*?)$")
     fun whenSelect(wheelName: String) {
-        selectedWheel = db.findWheel(wheelName)!!
-        assertThat(selectedWheel, notNullValue())
+        selectedWheel = db.findWheel(wheelName)
+            ?: throwAssert("$wheelName is not defined")
 
         selectListViewItem(R.id.wheels, "name", wheelName)
     }

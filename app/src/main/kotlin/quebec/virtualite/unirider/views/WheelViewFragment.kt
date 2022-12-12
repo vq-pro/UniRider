@@ -168,7 +168,7 @@ open class WheelViewFragment : BaseFragment() {
             return false
 
         val voltage = floatOf(voltageParm)
-        if (voltage < wheel!!.voltageMin || wheel!!.voltageMax < voltage)
+        if (voltage < wheel!!.voltageMin || (wheel!!.voltageMax + 3f) < voltage)
             return false
 
         return true

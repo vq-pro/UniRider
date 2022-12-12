@@ -14,6 +14,20 @@ open class BaseFragmentMethodTest {
     lateinit var base: BaseFragment
 
     @Test
+    fun textPercentageWithDecimal() {
+        textPercentageWithDecimal(55.6f, "55.6")
+        textPercentageWithDecimal(102.3f, "102.3")
+    }
+
+    private fun textPercentageWithDecimal(percentage: Float, expectedDisplay: String) {
+        // When
+        val result = base.textPercentageWithDecimal(percentage)
+
+        // Then
+        assertThat(result, equalTo(expectedDisplay))
+    }
+
+    @Test
     fun textWhPerKm() {
         textWhPerKm(32.5f, "32.5")
         textWhPerKm(30.0f, "30.0")

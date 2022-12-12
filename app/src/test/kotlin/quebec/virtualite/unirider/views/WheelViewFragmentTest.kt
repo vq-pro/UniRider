@@ -458,6 +458,46 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun onUpdateKm_withVoltageHigherThanMax_updateEstimatedValues() {
+        // Given
+        val voltageActual = VOLTAGE_MAX + 0.5f
+
+        injectMocks()
+        mockVoltageActual("$voltageActual ")
+        mockVoltageStart("${voltageActual + 0.2f} ")
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verifyUpdateEstimatedValues(voltageActual, "$REMAINING_RANGE")
+        verifyUpdateRate()
+    }
+
+    @Test
+    fun onUpdateKm_withVoltageStartHigherThanMax_updateEstimatedValues() {
+        // Given
+        val voltageStart = VOLTAGE_MAX + 0.5f
+
+        injectMocks()
+        mockVoltageActual("$VOLTAGE ")
+        mockVoltageStart("$voltageStart ")
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        // When
+        fragment.onUpdateKm().invoke("$KM ")
+
+        // Then
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
+        verifyUpdateRate()
+    }
+
+    @Test
     fun onUpdateKm_withoutVoltageSet_noDisplay() {
         // Given
         injectMocks()
@@ -568,20 +608,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageActual_whenHighVoltage_noDisplay() {
-        // Given
-        injectMocks()
-        mockKm("$KM")
-
-        // When
-        fragment.onUpdateVoltageActual().invoke("${fragment.wheel!!.voltageMax + 0.1f} ")
-
-        // Then
-        verifyClearPercentage()
-        verifyClearEstimatedValues()
-    }
-
-    @Test
     fun onUpdateVoltageActual_whenVoltageActualHigherThanStart_noDisplay() {
         // Given
         fragment.parmWheelId = ID3
@@ -685,6 +711,28 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyClearEstimatedValues()
 
         verify(mockedDb, never()).saveWheel(any())
+    }
+
+    @Test
+    fun onUpdateVoltageStart_whenHigherThanMax_updateEstimatedValues() {
+        // Given
+        val voltageStart = VOLTAGE_MAX + 0.5f
+
+        injectMocks()
+        mockKm("$KM ")
+        mockVoltageActual("$VOLTAGE ")
+
+        given(mockedCalculatorService.estimatedValues(any(), anyFloat(), anyFloat(), eq(null)))
+            .willReturn(EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM))
+
+        // When
+        fragment.onUpdateVoltageStart().invoke("$voltageStart ")
+
+        // Then
+        verifyUpdateEstimatedValues(VOLTAGE, "$REMAINING_RANGE")
+        verifyUpdateRate()
+
+        verify(mockedDb).saveWheel(S18_1.copy(voltageStart = voltageStart))
     }
 
     private fun injectMocks() {

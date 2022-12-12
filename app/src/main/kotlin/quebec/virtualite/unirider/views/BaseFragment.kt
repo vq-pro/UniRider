@@ -36,7 +36,7 @@ open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
     }
 
     internal fun textPercentageWithDecimal(percentage: Float?) = when {
-        percentage != null && percentage in 0f..100f -> "%.1f".format(ENGLISH, percentage)
+        percentage != null && percentage in 0f..110f -> "%.1f".format(ENGLISH, percentage)
         else -> ""
     }
 
