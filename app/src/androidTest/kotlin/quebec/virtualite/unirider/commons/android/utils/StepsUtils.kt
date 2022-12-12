@@ -46,9 +46,9 @@ import java.lang.Thread.sleep
 
 object StepsUtils {
 
-    private val INTERVAL = 250L
-    private val PAUSE = if (BLUETOOTH_ACTUAL) 3000L else 0L
-    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
+    val INTERVAL = 250L
+    val PAUSE = if (BLUETOOTH_ACTUAL) 2000L else 0L
+    val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
 
     fun applicationContext(): Context {
         return ApplicationProvider.getApplicationContext()!!

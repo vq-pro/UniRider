@@ -17,6 +17,7 @@ import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.PAUSE
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
@@ -613,6 +614,8 @@ class Steps {
     @When("^I connect to the (.*?)$")
     fun whenConnectTo(deviceName: String) {
         click(R.id.button_connect_view)
+        sleep(PAUSE)
+
         selectListViewItem(R.id.devices, deviceName)
 
         expectedDeviceName = deviceName

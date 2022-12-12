@@ -14,11 +14,11 @@ Feature: Wheel Connecting - End-2-End
       | Sherman Max | 2434    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
       | S18-SE      | 269     | 900  | 60V         | 66V             | 84V         | 4V/h        |
       | Sherman-S   | 0       | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
-      | Abrams      | 0       | 2700 | 74.5V       | 78V             | 100.8V      | 8V/h        |
+      | Abrams      | 50      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       |
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name    | Updated mileage |
-      | 14S     | 1348            |
+      | Abrams  | 148             |
       | Sherman | 19279           |
     And I start the app
 
@@ -29,8 +29,8 @@ Feature: Wheel Connecting - End-2-End
     And the wheel's Bluetooth name is updated
     Examples:
       | wheel   | bt name      |
-      | 14S     | KS-14SMD2107 |
-      | Sherman | LK1149       |
+      | Abrams  | LK3631  |
+      | Sherman | LK1149  |
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
     Given I select the Sherman
@@ -45,12 +45,13 @@ Feature: Wheel Connecting - End-2-End
       | S18-SE      | KSS18-9135   | 48:70:1E:4D:E7:3F |
       | Sherman     | LK1149       | 88:25:83:F1:C9:8B |
       | Sherman Max | LK4142       | 88:25:83:F3:61:20 |
+      | Abrams      | LK3631       | 88:25:83:F3:5B:1F |
     And I select the <wheel>
     When I reconnect to the wheel
     Then the mileage is updated to its up-to-date value
     Examples:
       | wheel   |
-      | 14S     |
+      | Abrams  |
       | Sherman |
 
   Scenario: Connecting to a previously connected wheel - ERROR - Connection following failure to connect
@@ -61,6 +62,7 @@ Feature: Wheel Connecting - End-2-End
       | S18-SE      | KSS18-9135   | 48:70:1E:4D:E7:3F |
       | Sherman     | LK1149       | 88:25:83:F1:C9:8B |
       | Sherman Max | LK4142       | 88:25:83:F3:61:20 |
+      | Abrams      | LK3631       | 88:25:83:F3:5B:1F |
     And I select the Nikola+
     And I reconnect to the wheel
     And I cancel the scan and go back
