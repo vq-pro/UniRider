@@ -14,7 +14,6 @@ open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
         const val PARAMETER_SELECTED_RATE = "selectedRate"
         const val PARAMETER_VOLTAGE = "voltage"
         const val PARAMETER_WHEEL_ID = "wheelID"
-        const val SPINNER_SIZE = 22
     }
 
     fun goto(id: Int, wheel: WheelEntity) {

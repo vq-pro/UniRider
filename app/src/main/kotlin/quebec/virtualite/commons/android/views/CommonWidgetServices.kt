@@ -113,12 +113,12 @@ open class CommonWidgetServices {
         listView.adapter = ArrayAdapter(view!!.context, android.R.layout.simple_list_item_1, contents!!)
     }
 
-    open fun stringListAdapter(spinner: Spinner?, view: View?, textSize: Int, contents: List<String>?) {
+    open fun stringListAdapter(spinner: Spinner?, view: View?, contents: List<String>?) {
         val spinnerAdapter = object : ArrayAdapter<String>(view!!.context, android.R.layout.simple_spinner_item, contents!!) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val resultingView = super.getView(position, convertView, parent)
-                (resultingView as TextView).textSize = textSize.toFloat()
-                return resultingView
+                val textView = super.getView(position, convertView, parent) as TextView
+                textView.ellipsize = null
+                return textView
             }
         }
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

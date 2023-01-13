@@ -63,7 +63,7 @@ open class WheelChargeFragment : BaseFragment() {
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.setOnItemSelectedListener(listRates, onChangeRate())
-        widgets.stringListAdapter(listRates, view, SPINNER_SIZE, parmRates)
+        widgets.stringListAdapter(listRates, view, parmRates)
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)

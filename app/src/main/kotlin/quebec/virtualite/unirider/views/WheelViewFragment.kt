@@ -84,7 +84,7 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
                 widgets.setOnItemSelectedListener(listWhPerKm, onChangeRate())
-                widgets.stringListAdapter(listWhPerKm, view, SPINNER_SIZE, listOfRates)
+                widgets.stringListAdapter(listWhPerKm, view, listOfRates)
 
                 fragments.runUI {
                     editVoltageStart.setText("${wheel!!.voltageStart}")

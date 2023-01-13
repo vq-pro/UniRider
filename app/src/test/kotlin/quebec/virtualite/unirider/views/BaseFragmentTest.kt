@@ -12,7 +12,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.lenient
@@ -221,6 +220,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun verifyStringListAdapter(mockedField: Spinner, expectedData: List<String>) {
-        verify(mockedWidgets).stringListAdapter(eq(mockedField), eq(mockedView), anyInt(), eq(expectedData))
+        verify(mockedWidgets).stringListAdapter(eq(mockedField), eq(mockedView), eq(expectedData))
     }
 }
