@@ -15,7 +15,7 @@ Feature: Wheel Charging
     And I charge the wheel
     And it displays an estimated rate of 40.6 wh/km
 
-  Scenario: Calculating required voltage and estimated time when changing rate
+  Scenario: Changing the rate
     Given I request to charge for 40 km
     And it displays an actual voltage of 87.9V
     And it displays these charging estimates:
@@ -26,7 +26,7 @@ Feature: Wheel Charging
       | required voltage | time |
       | 93.3V (+5.4)     | 41m  |
 
-  Scenario: Calculating required voltage and estimated time when changing voltage
+  Scenario: Changing the voltage
     Given I request to charge for 40 km
     And it displays an actual voltage of 87.9V
     And I change the rate to 35 wh/km

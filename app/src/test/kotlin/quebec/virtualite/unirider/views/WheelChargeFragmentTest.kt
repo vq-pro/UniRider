@@ -336,6 +336,44 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     @Test
+    fun onUpdateVoltageActual_whenBlank_noDisplay() {
+        // Given
+        injectMocks()
+        mockKm("$KM ")
+
+        // When
+        fragment.onUpdateVoltageActual().invoke(" ")
+
+        // Then
+        assertThat(
+            "Voltage actual not reset",
+            fragment.parmVoltageDisconnectedFromCharger, equalTo(null)
+        )
+
+        verify(mockedCalculatorService).requiredVoltage(fragment.wheel, WH_PER_KM, KM)
+        verifyNoDisplay()
+    }
+
+    @Test
+    fun onUpdateVoltageActual_whenNonDigits_noDisplay() {
+        // Given
+        injectMocks()
+        mockKm("$KM ")
+
+        // When
+        fragment.onUpdateVoltageActual().invoke("abc ")
+
+        // Then
+        assertThat(
+            "Voltage actual not reset",
+            fragment.parmVoltageDisconnectedFromCharger, equalTo(null)
+        )
+
+        verify(mockedCalculatorService).requiredVoltage(fragment.wheel, WH_PER_KM, KM)
+        verifyNoDisplay()
+    }
+
+    @Test
     fun timeDisplay() {
         timeDisplay(2.75f, "2h45")
         timeDisplay(0.1625f, "10m")

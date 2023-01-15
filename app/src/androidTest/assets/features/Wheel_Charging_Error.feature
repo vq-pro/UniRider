@@ -12,6 +12,18 @@ Feature: Wheel Charging - ERROR
     And I charge the wheel
     And it displays an estimated rate of 40.6 wh/km
 
+  Scenario Outline: Changing the voltage - ERROR [<voltage>]
+    When I change the voltage to <voltage>
+    Then it displays these charging estimates:
+      | required voltage | time |
+      |                  |      |
+    Examples:
+      | voltage |
+      |         |
+      | 1V      |
+      | 99.4V   |
+      | aa      |
+
   Scenario: Update the voltage - ERROR - Never connected
     When I request to charge for 40 km
     Then I cannot connect to the wheel on the charge screen

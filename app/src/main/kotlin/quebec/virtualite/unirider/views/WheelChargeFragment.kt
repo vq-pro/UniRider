@@ -12,6 +12,7 @@ import android.widget.TextView
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isEmpty
+import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
 import quebec.virtualite.commons.android.utils.NumberUtils.isPositive
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
@@ -106,7 +107,11 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     fun onUpdateVoltageActual() = { voltage: String ->
-        parmVoltageDisconnectedFromCharger = parseFloat(voltage) - CHARGER_OFFSET
+        parmVoltageDisconnectedFromCharger = when {
+            isNumeric(voltage) -> parseFloat(voltage) - CHARGER_OFFSET
+            else -> null
+        }
+
         updateEstimatesWith(widgets.text(editKm))
     }
 
@@ -134,16 +139,24 @@ open class WheelChargeFragment : BaseFragment() {
 
             val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
 
-            if (requiredVoltage > parmVoltageDisconnectedFromCharger!!) {
-                val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
-                val rawHours = diff / wheel!!.chargeRate
+            when {
+                parmVoltageDisconnectedFromCharger == null -> {
+                    textVoltageRequired.text = ""
+                    textRemainingTime.text = ""
+                }
 
-                textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
-                textRemainingTime.text = timeDisplay(rawHours)
+                requiredVoltage > parmVoltageDisconnectedFromCharger!! -> {
+                    val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
+                    val rawHours = diff / wheel!!.chargeRate
 
-            } else {
-                textVoltageRequired.text = "Go!"
-                textRemainingTime.text = ""
+                    textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
+                    textRemainingTime.text = timeDisplay(rawHours)
+                }
+
+                else -> {
+                    textVoltageRequired.text = "Go!"
+                    textRemainingTime.text = ""
+                }
             }
         }
     }

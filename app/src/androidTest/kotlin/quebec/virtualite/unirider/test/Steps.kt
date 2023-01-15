@@ -311,9 +311,9 @@ class Steps {
         selectSpinnerItem(R.id.view_wh_per_km, "$newRate")
     }
 
-    @When("^I change the voltage to (.*)V$")
-    fun changeVoltage(newVoltage: Int) {
-        setText(R.id.edit_voltage_actual, "$newVoltage")
+    @When("^I change the voltage to (.*)$")
+    fun changeVoltage(newVoltage: String) {
+        setText(R.id.edit_voltage_actual, strip(newVoltage, "V"))
     }
 
     @When("I change the mileage")
@@ -384,8 +384,7 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
-    // FIXME-1 Really need strip?
-    @Then("^it displays an actual voltage of (.*?)$")
+    @Then("^it displays an actual voltage of (.*?)V$")
     fun displaysActualVoltage(expectedVoltage: String) {
         assertThat(R.id.edit_voltage_actual, hasText(strip(expectedVoltage, "V")))
     }
