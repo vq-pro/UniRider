@@ -26,6 +26,18 @@ Feature: Wheel Charging
       | required voltage | time |
       | 93.3V (+5.4)     | 41m  |
 
+  Scenario: Calculating required voltage and estimated time when changing voltage
+    Given I request to charge for 40 km
+    And it displays an actual voltage of 87.9V
+    And I change the rate to 35 wh/km
+    And it displays these charging estimates:
+      | required voltage | time |
+      | 93.3V (+5.4)     | 41m  |
+    When I change the voltage to 90V
+    Then it displays these charging estimates:
+      | required voltage | time |
+      | 93.3V (+3.3)     | 25m  |
+
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V

@@ -117,14 +117,25 @@
                         android:text="@string/label_voltage"
                 />
 
-                <TextView
-                        android:id="@+id/view_voltage_actual"
+                <EditText
+                        android:id="@+id/edit_voltage_actual_on_charge"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        tools:ignore="RtlHardcoded"
+                        android:autofillHints=""
+                        android:inputType="text"
+                />
+
+                <TextView
+                        android:labelFor="@+id/edit_voltage_actual_on_charge"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_abbr"
                 />
             </TableRow>
 

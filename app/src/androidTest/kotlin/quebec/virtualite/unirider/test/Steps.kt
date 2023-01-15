@@ -31,7 +31,6 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSelectedTe
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSpinnerText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
@@ -139,7 +138,7 @@ class Steps {
 
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
-        assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
+        assertThat(R.id.edit_voltage_actual_on_view, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery"))
     }
 
@@ -242,12 +241,6 @@ class Steps {
         assertThat(R.id.view_name, hasText(selectedWheel.name))
     }
 
-    @Then("it blanks the displays")
-    fun blanksTheDisplays() {
-        assertThat(R.id.edit_voltage_actual, isEmpty())
-        assertThat(R.id.view_battery, isEmpty())
-    }
-
     @When("I blank the charge rate")
     fun blankWheelChargeRate() {
         setText(R.id.edit_charge_rate, " ")
@@ -318,6 +311,12 @@ class Steps {
         selectSpinnerItem(R.id.view_wh_per_km, "$newRate")
     }
 
+    @When("^I change the voltage to (.*)V$")
+    fun changeVoltage(newVoltage: Int) {
+        // FIXME-1 Put back common resource for both charge and view
+        setText(R.id.edit_voltage_actual_on_charge, "$newVoltage")
+    }
+
     @When("I change the mileage")
     fun changeWheelMileage() {
         setText(R.id.edit_mileage, "123")
@@ -386,9 +385,10 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
+    // FIXME-1 Really need strip?
     @Then("^it displays an actual voltage of (.*?)$")
     fun displaysActualVoltage(expectedVoltage: String) {
-        assertThat(R.id.view_voltage_actual, hasText(strip(expectedVoltage, "V")))
+        assertThat(R.id.edit_voltage_actual_on_charge, hasText(strip(expectedVoltage, "V")))
     }
 
     @Then("it displays blank estimated values")
@@ -420,29 +420,33 @@ class Steps {
 
     @Then("it displays these charging estimates:")
     fun displaysTheseChargingEstimates(expectedEstimates: DataTable) {
-        DataTable.create(
-            listOf(
-                listOf("required voltage", "time"),
+        expectedEstimates.diff(
+            DataTable.create(
                 listOf(
-                    getText(R.id.view_voltage_required),
-                    getText(R.id.view_remaining_time)
+                    listOf("required voltage", "time"),
+                    listOf(
+                        getText(R.id.view_voltage_required),
+                        getText(R.id.view_remaining_time)
+                    )
                 )
             )
-        ).diff(expectedEstimates)
+        )
     }
 
     @Then("it displays these estimates:")
     fun displaysTheseEstimates(expectedEstimates: DataTable) {
-        DataTable.create(
-            listOf(
-                listOf("remaining", "total range", "wh/km"),
+        expectedEstimates.diff(
+            DataTable.create(
                 listOf(
-                    getText(R.id.view_remaining_range),
-                    getText(R.id.view_total_range),
-                    getSpinnerText(R.id.view_wh_per_km)
+                    listOf("remaining", "total range", "wh/km"),
+                    listOf(
+                        getText(R.id.view_remaining_range),
+                        getText(R.id.view_total_range),
+                        getSpinnerText(R.id.view_wh_per_km)
+                    )
                 )
             )
-        ).diff(expectedEstimates)
+        )
     }
 
     @When("I charge the wheel")
@@ -557,7 +561,7 @@ class Steps {
 
     @Given("^I set the actual voltage to (.*?)V$")
     fun setActualVoltageTo(voltage: String) {
-        setText(R.id.edit_voltage_actual, voltage)
+        setText(R.id.edit_voltage_actual_on_view, voltage)
     }
 
     @Given("^I set the distance to (.*?)$")
@@ -623,7 +627,7 @@ class Steps {
 
     @When("^I enter an actual voltage of (.*?)$")
     fun whenEnterActualVoltage(voltage: String) {
-        setText(R.id.edit_voltage_actual, strip(voltage, "V"))
+        setText(R.id.edit_voltage_actual_on_view, strip(voltage, "V"))
     }
 
     @When("I reconnect to the wheel")

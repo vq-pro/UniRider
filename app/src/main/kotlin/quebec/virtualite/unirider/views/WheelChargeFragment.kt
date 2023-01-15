@@ -18,6 +18,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
+import java.lang.Float.parseFloat
 import java.lang.String.format
 import kotlin.math.roundToInt
 
@@ -25,10 +26,10 @@ open class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var buttonConnect: Button
     internal lateinit var editKm: EditText
+    internal lateinit var editVoltageActual: EditText
     internal lateinit var listRates: Spinner
     internal lateinit var textName: TextView
     internal lateinit var textRemainingTime: TextView
-    internal lateinit var textVoltageActual: TextView
     internal lateinit var textVoltageRequired: TextView
 
     internal var parmWheelId: Long? = 0
@@ -54,14 +55,15 @@ open class WheelChargeFragment : BaseFragment() {
 
         buttonConnect = view.findViewById(R.id.button_connect_charge)
         editKm = view.findViewById(R.id.edit_km)
+        editVoltageActual = view.findViewById(R.id.edit_voltage_actual_on_charge)
         listRates = view.findViewById(R.id.view_wh_per_km)
         textName = view.findViewById(R.id.view_name)
         textRemainingTime = view.findViewById(R.id.view_remaining_time)
-        textVoltageActual = view.findViewById(R.id.view_voltage_actual)
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
+        widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
         widgets.setOnItemSelectedListener(listRates, onChangeRate())
         widgets.stringListAdapter(listRates, view, parmRates)
 
@@ -103,6 +105,11 @@ open class WheelChargeFragment : BaseFragment() {
         updateEstimatesWith(km)
     }
 
+    fun onUpdateVoltageActual() = { voltage: String ->
+        parmVoltageDisconnectedFromCharger = parseFloat(voltage) - CHARGER_OFFSET
+        updateEstimatesWith(widgets.text(editKm))
+    }
+
     @SuppressLint("DefaultLocale")
     internal fun timeDisplay(rawHours: Float): String {
         val hours = rawHours.toInt()
@@ -112,9 +119,10 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     private fun displayVoltageActual() {
-        textVoltageActual.text = "${parmVoltageDisconnectedFromCharger?.plus(CHARGER_OFFSET)}"
+        editVoltageActual.setText("${parmVoltageDisconnectedFromCharger?.plus(CHARGER_OFFSET)}")
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateEstimatesWith(km: String) {
         if (isEmpty(km) || !isPositive(km)) {
             textVoltageRequired.text = ""

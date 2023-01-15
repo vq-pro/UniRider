@@ -64,6 +64,9 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     lateinit var mockedEditKm: EditText
 
     @Mock
+    lateinit var mockedEditVoltageActual: EditText
+
+    @Mock
     lateinit var mockedListRates: Spinner
 
     @Mock
@@ -71,9 +74,6 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
     @Mock
     lateinit var mockedTextRemainingTime: TextView
-
-    @Mock
-    lateinit var mockedTextVoltageActual: TextView
 
     @Mock
     lateinit var mockedTextVoltageRequired: TextView
@@ -130,21 +130,22 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         verifyFieldAssignment(R.id.button_connect_charge, fragment.buttonConnect, mockedButtonConnect)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
+        verifyFieldAssignment(R.id.edit_voltage_actual_on_charge, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.view_wh_per_km, fragment.listRates, mockedListRates)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_remaining_time, fragment.textRemainingTime, mockedTextRemainingTime)
-        verifyFieldAssignment(R.id.view_voltage_actual, fragment.textVoltageActual, mockedTextVoltageActual)
         verifyFieldAssignment(R.id.view_voltage_required, fragment.textVoltageRequired, mockedTextVoltageRequired)
 
         assertThat(fragment.listRates, equalTo(mockedListRates))
 
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
+        verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
         verifyOnItemSelected(mockedListRates, "onChangeRate")
         verifyStringListAdapter(mockedListRates, WHS_PER_KM)
 
         verify(mockedTextName).text = NAME
-        verify(mockedTextVoltageActual).text = "${VOLTAGE + CHARGER_OFFSET}"
+        verify(mockedEditVoltageActual).setText("${VOLTAGE + CHARGER_OFFSET}")
         verify(mockedWidgets).setSelection(mockedListRates, WH_PER_KM_INDEX)
     }
 
@@ -206,7 +207,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         assertThat(fragment.parmVoltageDisconnectedFromCharger, equalTo(VOLTAGE_NEW - CHARGER_OFFSET))
 
         val diff = round(VOLTAGE_REQUIRED - VOLTAGE_NEW, 1)
-        verify(mockedTextVoltageActual).text = "$VOLTAGE_NEW"
+        verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
         verify(mockedTextVoltageRequired).text = "${VOLTAGE_REQUIRED}V (+$diff)"
         verifyDisplayTime(diff)
     }
@@ -316,6 +317,25 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     @Test
+    fun onUpdateVoltageActual() {
+        // Given
+        injectMocks()
+        mockKm("$KM ")
+
+        // When
+        fragment.onUpdateVoltageActual().invoke("$VOLTAGE_NEW ")
+
+        // Then
+        assertThat(
+            "Voltage actual not reset",
+            fragment.parmVoltageDisconnectedFromCharger, equalTo(VOLTAGE_NEW - CHARGER_OFFSET)
+        )
+
+        verify(mockedCalculatorService).requiredVoltage(fragment.wheel, WH_PER_KM, KM)
+        verifyDisplayGo()
+    }
+
+    @Test
     fun timeDisplay() {
         timeDisplay(2.75f, "2h45")
         timeDisplay(0.1625f, "10m")
@@ -332,18 +352,19 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     private fun injectMocks() {
+        fragment.editKm = mockedEditKm
+        fragment.editVoltageActual = mockedEditVoltageActual
         fragment.textRemainingTime = mockedTextRemainingTime
-        fragment.textVoltageActual = mockedTextVoltageActual
         fragment.textVoltageRequired = mockedTextVoltageRequired
     }
 
     private fun mockFields() {
         mockField(R.id.button_connect_charge, mockedButtonConnect)
         mockField(R.id.edit_km, mockedEditKm)
+        mockField(R.id.edit_voltage_actual_on_charge, mockedEditVoltageActual)
         mockField(R.id.view_wh_per_km, mockedListRates)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_remaining_time, mockedTextRemainingTime)
-        mockField(R.id.view_voltage_actual, mockedTextVoltageActual)
         mockField(R.id.view_voltage_required, mockedTextVoltageRequired)
     }
 
