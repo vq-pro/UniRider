@@ -55,7 +55,7 @@ open class WheelChargeFragment : BaseFragment() {
 
         buttonConnect = view.findViewById(R.id.button_connect_charge)
         editKm = view.findViewById(R.id.edit_km)
-        editVoltageActual = view.findViewById(R.id.edit_voltage_actual_on_charge)
+        editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         listRates = view.findViewById(R.id.view_wh_per_km)
         textName = view.findViewById(R.id.view_name)
         textRemainingTime = view.findViewById(R.id.view_remaining_time)

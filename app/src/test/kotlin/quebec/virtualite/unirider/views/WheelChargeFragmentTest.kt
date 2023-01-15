@@ -130,7 +130,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         verifyFieldAssignment(R.id.button_connect_charge, fragment.buttonConnect, mockedButtonConnect)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
-        verifyFieldAssignment(R.id.edit_voltage_actual_on_charge, fragment.editVoltageActual, mockedEditVoltageActual)
+        verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.view_wh_per_km, fragment.listRates, mockedListRates)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_remaining_time, fragment.textRemainingTime, mockedTextRemainingTime)
@@ -361,7 +361,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     private fun mockFields() {
         mockField(R.id.button_connect_charge, mockedButtonConnect)
         mockField(R.id.edit_km, mockedEditKm)
-        mockField(R.id.edit_voltage_actual_on_charge, mockedEditVoltageActual)
+        mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
         mockField(R.id.view_wh_per_km, mockedListRates)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_remaining_time, mockedTextRemainingTime)

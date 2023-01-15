@@ -62,7 +62,7 @@
             <!-- Km & Current Voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <EditText
-                        android:id="@+id/edit_voltage_actual_on_view"
+                        android:id="@+id/edit_voltage_actual"
                         android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -74,7 +74,7 @@
                 />
 
                 <TextView
-                        android:labelFor="@+id/edit_voltage_actual_on_view"
+                        android:labelFor="@+id/edit_voltage_actual"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

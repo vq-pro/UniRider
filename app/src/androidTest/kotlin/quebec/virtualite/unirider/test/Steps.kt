@@ -138,7 +138,7 @@ class Steps {
 
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
-        assertThat(R.id.edit_voltage_actual_on_view, hasText("$expectedVoltage"))
+        assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery"))
     }
 
@@ -313,8 +313,7 @@ class Steps {
 
     @When("^I change the voltage to (.*)V$")
     fun changeVoltage(newVoltage: Int) {
-        // FIXME-1 Put back common resource for both charge and view
-        setText(R.id.edit_voltage_actual_on_charge, "$newVoltage")
+        setText(R.id.edit_voltage_actual, "$newVoltage")
     }
 
     @When("I change the mileage")
@@ -388,7 +387,7 @@ class Steps {
     // FIXME-1 Really need strip?
     @Then("^it displays an actual voltage of (.*?)$")
     fun displaysActualVoltage(expectedVoltage: String) {
-        assertThat(R.id.edit_voltage_actual_on_charge, hasText(strip(expectedVoltage, "V")))
+        assertThat(R.id.edit_voltage_actual, hasText(strip(expectedVoltage, "V")))
     }
 
     @Then("it displays blank estimated values")
@@ -561,7 +560,7 @@ class Steps {
 
     @Given("^I set the actual voltage to (.*?)V$")
     fun setActualVoltageTo(voltage: String) {
-        setText(R.id.edit_voltage_actual_on_view, voltage)
+        setText(R.id.edit_voltage_actual, voltage)
     }
 
     @Given("^I set the distance to (.*?)$")
@@ -627,7 +626,7 @@ class Steps {
 
     @When("^I enter an actual voltage of (.*?)$")
     fun whenEnterActualVoltage(voltage: String) {
-        setText(R.id.edit_voltage_actual_on_view, strip(voltage, "V"))
+        setText(R.id.edit_voltage_actual, strip(voltage, "V"))
     }
 
     @When("I reconnect to the wheel")

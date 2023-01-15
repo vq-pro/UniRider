@@ -118,7 +118,7 @@
                 />
 
                 <EditText
-                        android:id="@+id/edit_voltage_actual_on_charge"
+                        android:id="@+id/edit_voltage_actual"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
                 />
 
                 <TextView
-                        android:labelFor="@+id/edit_voltage_actual_on_charge"
+                        android:labelFor="@+id/edit_voltage_actual"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
