@@ -18,7 +18,7 @@ Feature: Wheel Connecting - End-2-End
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name    | Updated mileage |
-      | Abrams  | 148             |
+      | Abrams  | 1351            |
       | Sherman | 19279           |
     And I start the app
 
@@ -28,7 +28,7 @@ Feature: Wheel Connecting - End-2-End
     Then the mileage is updated to its up-to-date value
     And the wheel's Bluetooth name is updated
     Examples:
-      | wheel   | bt name      |
+      | wheel   | bt name |
       | Abrams  | LK3631  |
       | Sherman | LK1149  |
 
