@@ -45,15 +45,13 @@ open class MainFragment : BaseFragment() {
             if (wheelsDeleted.isNotEmpty()) {
                 wheelEntries = addTo(
                     wheelEntries,
-                    WheelRow(0, DELETED_ENTRY, wheelsDeleted
-                        .map { it.premileage + it.mileage }
-                        .sum()),
+                    WheelRow(0, DELETED_ENTRY, wheelsDeleted.map { it.totalMileage() }.sum()),
                 )
             }
             wheelEntries = addTo(wheelEntries, WheelRow(0, NEW_ENTRY, 0))
 
             setList(wheelList, wheelEntries)
-            textTotalMileage.text = "${calculateTotalMileage()}"
+            textTotalMileage.text = "${wheelList.map { it.mileage() }.sum()}"
         }
     }
 
@@ -77,16 +75,6 @@ open class MainFragment : BaseFragment() {
             R.id.action_MainFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, 0L)
         )
-    }
-
-    private fun calculateTotalMileage(): Int {
-        // FIXME-0 Refactor to use sum()
-        var totalMileage = 0
-        wheelList.forEach { wheel ->
-            totalMileage += wheel.mileage()
-        }
-
-        return totalMileage
     }
 
     private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
