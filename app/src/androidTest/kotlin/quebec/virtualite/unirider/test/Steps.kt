@@ -171,7 +171,11 @@ class Steps {
                     SOLD_WHEEL_ENTRY,
                     NEW_WHEEL_ENTRY -> 0
 
-                    else -> wheels[name]!!.id
+                    else ->
+                        if (wheels[name] != null)
+                            wheels[name]!!.id
+                        else
+                            wheels[name.substring(2)]!!.id
                 }
 
                 WheelRow(id, name, mileage)
@@ -638,6 +642,11 @@ class Steps {
     @When("^I enter an actual voltage of (.*?)$")
     fun whenEnterActualVoltage(voltage: String) {
         setText(R.id.edit_voltage_actual, strip(voltage, "V"))
+    }
+
+    @When("I open up the sold wheels")
+    fun whenOpenSoldWheels() {
+        selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
     }
 
     @When("I reconnect to the wheel")

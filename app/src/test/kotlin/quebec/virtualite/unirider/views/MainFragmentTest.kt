@@ -2,6 +2,8 @@ package quebec.virtualite.unirider.views
 
 import android.widget.ListView
 import android.widget.TextView
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -9,6 +11,7 @@ import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
+import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
@@ -37,6 +40,7 @@ import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_I
 class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
     @InjectMocks
+    @Spy
     lateinit var fragment: MainFragment
 
     @Mock
@@ -171,6 +175,25 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         // Then
         verify(mockedTextName).text = NAME_NEW
         verify(mockedTextMileage).text = ""
+    }
+
+    @Test
+    fun onOpenSoldWheel() {
+        // Given
+        fragment.showSoldWheels = false
+        fragment.wheelList += listOf(
+            WHEEL_ROW_S18_1_123,
+            WHEEL_ROW_S20_2_123,
+            WheelRow(0, NAME_SOLD, 1),
+            WHEEL_ROW_NEW
+        )
+
+        // When
+        fragment.onSelectWheel().invoke(mockedView, 2)
+
+        // Then
+        assertThat(fragment.showSoldWheels, equalTo(true))
+        verify(fragment).showWheels()
     }
 
     @Test

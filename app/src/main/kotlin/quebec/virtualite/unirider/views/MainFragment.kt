@@ -23,6 +23,8 @@ open class MainFragment : BaseFragment() {
     lateinit var lvWheels: ListView
     lateinit var textTotalMileage: TextView
 
+    var showSoldWheels = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
@@ -66,8 +68,16 @@ open class MainFragment : BaseFragment() {
     fun onSelectWheel() = { _: View, index: Int ->
         when (wheelList[index].name()) {
             NEW_ENTRY -> addWheel()
+            SOLD_ENTRY -> {
+                showSoldWheels = true
+                showWheels()
+            }
+
             else -> viewWheel(wheelList[index])
         }
+    }
+
+    open fun showWheels() {
     }
 
     private fun addWheel() {

@@ -89,6 +89,8 @@ object TestDomain {
     val WHS_PER_KM_SMALL = listOf("10", "15", "18.7", "20", "25", "30")
     val WHEEL_ROW_S18_1_123 = WheelRow(ID, NAME, PREMILEAGE + MILEAGE)
     val WHEEL_ROW_S20_2_123 = WheelRow(ID2, NAME2, PREMILEAGE2 + MILEAGE2)
+    val WHEEL_ROW_SHERMAN_MAX_3 = WheelRow(ID3, "- $NAME3", PREMILEAGE3 + MILEAGE3)
+    val WHEEL_ROW_ABRAMS_4 = WheelRow(ID4, "- $NAME4", PREMILEAGE4 + MILEAGE4)
     val WHEEL_ROW_NEW = WheelRow(0, NAME_NEW, 0)
 
     val DEVICE = BluetoothDevice(DEVICE_NAME, DEVICE_ADDR)

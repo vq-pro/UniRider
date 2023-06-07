@@ -25,6 +25,7 @@ Feature: Main Screen
     When I select the Sherman
     Then the details view shows the details for that wheel
 
+#    FIXME-0 Do this next
   @Ignore
   Scenario: Viewing sold wheels
     Given I start the app
