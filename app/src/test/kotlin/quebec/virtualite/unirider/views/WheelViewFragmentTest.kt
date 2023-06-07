@@ -37,7 +37,7 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.NAME
-import quebec.virtualite.unirider.TestDomain.NOT_DELETED
+import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE
@@ -324,7 +324,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, NOT_DELETED
+                CHARGE_RATE, NOT_SOLD
             )
         )
         verify(mockedEditKm).setText("$KM_NEW")
@@ -353,7 +353,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_NEW,
-                CHARGE_RATE, NOT_DELETED
+                CHARGE_RATE, NOT_SOLD
             )
         )
         verify(mockedEditKm).setText("0.0")

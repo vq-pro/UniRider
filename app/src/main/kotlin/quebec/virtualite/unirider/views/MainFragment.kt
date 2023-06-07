@@ -15,7 +15,7 @@ import java.util.stream.Collectors.toList
 
 open class MainFragment : BaseFragment() {
 
-    private val DELETED_ENTRY = "<Deleted>"
+    private val SOLD_ENTRY = "<Sold>"
     private val NEW_ENTRY = "<New>"
 
     internal val wheelList = ArrayList<WheelRow>()
@@ -39,13 +39,13 @@ open class MainFragment : BaseFragment() {
 
         external.runDB { db ->
             val wheels = db.getWheels()
-            var wheelEntries = getSortedWheelItems(wheels.filter { !it.isDeleted })
+            var wheelEntries = getSortedWheelItems(wheels.filter { !it.isSold })
 
-            val wheelsDeleted = wheels.filter { it.isDeleted }
-            if (wheelsDeleted.isNotEmpty()) {
+            val soldWheels = wheels.filter { it.isSold }
+            if (soldWheels.isNotEmpty()) {
                 wheelEntries = addTo(
                     wheelEntries,
-                    WheelRow(0, DELETED_ENTRY, wheelsDeleted.map { it.totalMileage() }.sum()),
+                    WheelRow(0, SOLD_ENTRY, soldWheels.map { it.totalMileage() }.sum()),
                 )
             }
             wheelEntries = addTo(wheelEntries, WheelRow(0, NEW_ENTRY, 0))

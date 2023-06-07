@@ -2,12 +2,13 @@ Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
-      | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate |
-      | Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        |
-      | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 8V/h        |
-      | S18     | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        |
+      | Name      | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Sold |
+      | x Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | Yes  |
+      | Sherman   | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 8V/h        | No   |
+      | S18       | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | No   |
     And I start the app
 
+#    FIXME-1 Support the 'Sold' field
   Scenario: Adding a wheel in full
     When I add a new wheel
     And I set these new values:
@@ -19,6 +20,7 @@ Feature: Wheel Editing & Adding
       | Voltage Reserve  | 80.0        |
       | Voltage Min      | 75.6        |
       | Charge Rate      | 8           |
+#      | Sold             | No          |
     Then the wheel was added
     And it shows the updated name and a mileage of 150 on the main view
     And the wheel's Bluetooth name is undefined
@@ -70,8 +72,14 @@ Feature: Wheel Editing & Adding
       | cannot        | set the reserve voltage lower than the minimum  |
 
   Scenario: => Deleting the wheel
-    Given I select the Nikola+
+    Given I select the S18
     And I edit the wheel
     When I delete the wheel
     And I confirm the deletion
     Then I am back at the main screen and the wheel is gone
+
+  @Ignore
+  Scenario: => Selling a wheel
+
+  @Ignore
+  Scenario: => Unselling a wheel

@@ -11,7 +11,7 @@ import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.NAME
-import quebec.virtualite.unirider.TestDomain.NOT_DELETED
+import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.WH
@@ -109,7 +109,7 @@ class CalculatorServiceTest {
     private fun percentage_whenVoltagesNotSet_zero(voltageMin: Float, voltageMax: Float) {
         // Given
         val wheel =
-            WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, voltageMax, voltageMin, 1f, voltageMax, CHARGE_RATE, NOT_DELETED)
+            WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, voltageMax, voltageMin, 1f, voltageMax, CHARGE_RATE, NOT_SOLD)
 
         // When
         val percentage = service.percentage(wheel, 108.0f)

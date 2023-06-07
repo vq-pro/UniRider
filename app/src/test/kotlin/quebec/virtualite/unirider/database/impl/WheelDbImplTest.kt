@@ -24,7 +24,7 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE2
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.NAME2
-import quebec.virtualite.unirider.TestDomain.NOT_DELETED
+import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.S20_2
 import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
@@ -84,7 +84,7 @@ class WheelDbImplTest {
                 ID2, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, NOT_DELETED
+                CHARGE_RATE, NOT_SOLD
             )
         )
 
@@ -105,7 +105,7 @@ class WheelDbImplTest {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, NOT_DELETED
+                CHARGE_RATE, NOT_SOLD
             )
         )
 
@@ -212,14 +212,14 @@ class WheelDbImplTest {
                 0, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, NOT_DELETED
+                CHARGE_RATE, NOT_SOLD
             )
         val wheel2 =
             WheelEntity(
                 0, NAME2, DEVICE_NAME2, DEVICE_ADDR2,
                 PREMILEAGE, MILEAGE2, WH2,
                 VOLTAGE_MAX2, VOLTAGE_MIN2, VOLTAGE_RESERVE2, VOLTAGE_START2,
-                CHARGE_RATE2, NOT_DELETED
+                CHARGE_RATE2, NOT_SOLD
             )
 
         // When

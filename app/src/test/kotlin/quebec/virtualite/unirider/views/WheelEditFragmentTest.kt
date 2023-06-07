@@ -26,7 +26,7 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.NAME_NEW
-import quebec.virtualite.unirider.TestDomain.NOT_DELETED
+import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.S18_1
@@ -168,7 +168,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
                 VOLTAGE_RESERVE,
                 VOLTAGE_START,
                 CHARGE_RATE,
-                NOT_DELETED
+                NOT_SOLD
             )
         given(mockedDb.getWheel(ID))
             .willReturn(wheel)
@@ -543,7 +543,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         ID, NAME, DEVICE_NAME, DEVICE_ADDR,
         PREMILEAGE, MILEAGE, WH,
         VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-        CHARGE_RATE, NOT_DELETED
+        CHARGE_RATE, NOT_SOLD
     )
 
     private fun initForUpdates(canSave: Boolean) {

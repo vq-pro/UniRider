@@ -15,7 +15,6 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE3
-import quebec.virtualite.unirider.TestDomain.DELETED
 import quebec.virtualite.unirider.TestDomain.DEVICE
 import quebec.virtualite.unirider.TestDomain.DEVICE2
 import quebec.virtualite.unirider.TestDomain.DEVICE3
@@ -34,6 +33,7 @@ import quebec.virtualite.unirider.TestDomain.NAME3
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
+import quebec.virtualite.unirider.TestDomain.SOLD
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
@@ -153,7 +153,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
                 ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
                 PREMILEAGE3, MILEAGE_NEW, WH3,
                 VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3, VOLTAGE_START3,
-                CHARGE_RATE3, DELETED
+                CHARGE_RATE3, SOLD
             )
         )
         verify(mockedFragments).navigateBack()

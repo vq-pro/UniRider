@@ -10,7 +10,6 @@ object TestDomain {
     const val CHARGE_RATE3 = 8f
     const val CHARGE_RATE4 = 10f
     const val CHARGE_RATE_NEW = 10f
-    const val DELETED = true
     const val DEVICE_ADDR = "AA:BB:CC:DD:EE:FF"
     const val DEVICE_ADDR2 = "BB:CC:DD:EE:FF:GG"
     const val DEVICE_ADDR3 = "CC:DD:EE:FF:GG:HH"
@@ -36,9 +35,9 @@ object TestDomain {
     const val NAME2 = "S20"
     const val NAME3 = "Sherman Max"
     const val NAME4 = "Abrams"
-    const val NAME_DELETED = "<Deleted>"
     const val NAME_NEW = "<New>"
-    const val NOT_DELETED = false
+    const val NAME_SOLD = "<Sold>"
+    const val NOT_SOLD = false
     const val PERCENTAGE = 100.0f
     const val PREMILEAGE = 10000
     const val PREMILEAGE2 = 10000
@@ -48,6 +47,7 @@ object TestDomain {
     const val REMAINING_RANGE = 5555f
     const val REMAINING_RANGE_UP = 5554f
     const val REMAINING_RANGE_ZERO = 0
+    const val SOLD = true
     const val TEMPERATURE_NEW_RAW = 3333f
     const val TOTAL_RANGE = 6666f
     const val VOLTAGE = 82f
@@ -99,31 +99,31 @@ object TestDomain {
         ID, NAME, DEVICE_NAME, DEVICE_ADDR,
         PREMILEAGE, MILEAGE, WH,
         VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-        CHARGE_RATE, NOT_DELETED
+        CHARGE_RATE, NOT_SOLD
     )
     val S20_2 = WheelEntity(
         ID2, NAME2, DEVICE_NAME2, DEVICE_ADDR2,
         PREMILEAGE2, MILEAGE2, WH2,
         VOLTAGE_MAX2, VOLTAGE_MIN2, VOLTAGE_RESERVE2, VOLTAGE_START2,
-        CHARGE_RATE2, NOT_DELETED
+        CHARGE_RATE2, NOT_SOLD
     )
     val SHERMAN_MAX_3 = WheelEntity(
         ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
         PREMILEAGE3, MILEAGE3, WH3,
         VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3, VOLTAGE_START3,
-        CHARGE_RATE3, DELETED
+        CHARGE_RATE3, SOLD
     )
     val ABRAMS_4 = WheelEntity(
         ID4, NAME4, DEVICE_NAME4, DEVICE_ADDR4,
         PREMILEAGE4, MILEAGE4, WH4,
         VOLTAGE_MAX4, VOLTAGE_MIN4, VOLTAGE_RESERVE4, VOLTAGE_START4,
-        CHARGE_RATE4, DELETED
+        CHARGE_RATE4, SOLD
     )
 
     val S18_DISCONNECTED = WheelEntity(
         ID, NAME, null, null,
         PREMILEAGE, MILEAGE, WH,
         VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-        CHARGE_RATE, NOT_DELETED
+        CHARGE_RATE, NOT_SOLD
     )
 }

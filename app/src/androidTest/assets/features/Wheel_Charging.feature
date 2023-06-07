@@ -2,8 +2,8 @@ Feature: Wheel Charging
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Sold |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | No   |
     And these wheels are connected:
       | Name        | Bt Name | Bt Address        |
       | Sherman Max | LK1234  | C0:C1:C2:C3:C4:C5 |

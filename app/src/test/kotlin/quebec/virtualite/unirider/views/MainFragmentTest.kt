@@ -19,8 +19,8 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE2
 import quebec.virtualite.unirider.TestDomain.MILEAGE3
 import quebec.virtualite.unirider.TestDomain.MILEAGE4
 import quebec.virtualite.unirider.TestDomain.NAME
-import quebec.virtualite.unirider.TestDomain.NAME_DELETED
 import quebec.virtualite.unirider.TestDomain.NAME_NEW
+import quebec.virtualite.unirider.TestDomain.NAME_SOLD
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE2
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
@@ -67,48 +67,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated_withDeletedWheels() {
-        // Given
-        given(mockedDb.getWheels())
-            .willReturn(
-                listOf(
-                    SHERMAN_MAX_3,
-                    S20_2,
-                    ABRAMS_4,
-                    S18_1,
-                )
-            )
-
-        mockField(R.id.wheels, mockedLVWheels)
-        mockField(R.id.total_mileage, mockedTextTotalMileage)
-
-        setList(fragment.wheelList, listOf(WheelRow(999, "some previous content", 999)))
-
-        // When
-        fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
-
-        // Then
-        val expectedEntries = listOf(
-            WHEEL_ROW_S18_1_123,
-            WHEEL_ROW_S20_2_123,
-            WheelRow(0, NAME_DELETED, PREMILEAGE3 + MILEAGE3 + PREMILEAGE4 + MILEAGE4),
-            WHEEL_ROW_NEW
-        )
-
-        verifyFieldAssignment(R.id.wheels, fragment.lvWheels, mockedLVWheels)
-        verifyFieldAssignment(R.id.total_mileage, fragment.textTotalMileage, mockedTextTotalMileage)
-
-        verify(mockedWidgets).enable(mockedLVWheels)
-        verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
-        verifyOnItemClick(mockedLVWheels, "onSelectWheel")
-
-        verify(mockedDb).getWheels()
-        verify(mockedTextTotalMileage).text =
-            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4}"
-    }
-
-    @Test
-    fun onViewCreated_withoutDeletedWheels() {
+    fun onViewCreated() {
         // Given
         given(mockedDb.getWheels())
             .willReturn(
@@ -143,6 +102,47 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         verify(mockedDb).getWheels()
         verify(mockedTextTotalMileage).text =
             "${PREMILEAGE + PREMILEAGE2 + MILEAGE + MILEAGE2}"
+    }
+
+    @Test
+    fun onViewCreated_withSoldWheels() {
+        // Given
+        given(mockedDb.getWheels())
+            .willReturn(
+                listOf(
+                    SHERMAN_MAX_3,
+                    S20_2,
+                    ABRAMS_4,
+                    S18_1,
+                )
+            )
+
+        mockField(R.id.wheels, mockedLVWheels)
+        mockField(R.id.total_mileage, mockedTextTotalMileage)
+
+        setList(fragment.wheelList, listOf(WheelRow(999, "some previous content", 999)))
+
+        // When
+        fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
+
+        // Then
+        val expectedEntries = listOf(
+            WHEEL_ROW_S18_1_123,
+            WHEEL_ROW_S20_2_123,
+            WheelRow(0, NAME_SOLD, PREMILEAGE3 + MILEAGE3 + PREMILEAGE4 + MILEAGE4),
+            WHEEL_ROW_NEW
+        )
+
+        verifyFieldAssignment(R.id.wheels, fragment.lvWheels, mockedLVWheels)
+        verifyFieldAssignment(R.id.total_mileage, fragment.textTotalMileage, mockedTextTotalMileage)
+
+        verify(mockedWidgets).enable(mockedLVWheels)
+        verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
+        verifyOnItemClick(mockedLVWheels, "onSelectWheel")
+
+        verify(mockedDb).getWheels()
+        verify(mockedTextTotalMileage).text =
+            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4}"
     }
 
     @Test

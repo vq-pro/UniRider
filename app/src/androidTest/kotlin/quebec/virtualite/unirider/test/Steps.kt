@@ -53,8 +53,8 @@ import java.util.stream.Collectors.toList
 
 class Steps {
 
-    private val DELETED_WHEEL_ENTRY = "<Deleted>"
     private val NEW_WHEEL_ENTRY = "<New>"
+    private val SOLD_WHEEL_ENTRY = "<Sold>"
 
     @JvmField
     @Rule
@@ -168,7 +168,7 @@ class Steps {
                 val name = row[0]
                 val mileage = intOf(row[1])
                 val id = when (name) {
-                    DELETED_WHEEL_ENTRY,
+                    SOLD_WHEEL_ENTRY,
                     NEW_WHEEL_ENTRY -> 0
 
                     else -> wheels[name]!!.id
@@ -231,7 +231,8 @@ class Steps {
             floatOf(mapEntity["Voltage Reserve"]!!),
             floatOf(mapEntity["Voltage Max"]!!),
             floatOf(mapEntity["Charge Rate"]!!),
-            "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
+            false
+//            "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
         )
 
         click(R.id.button_save)
@@ -498,7 +499,7 @@ class Steps {
     fun givenTheseWheels(wheels: DataTable) {
         assertThat(
             wheels.topCells(),
-            equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate", "Deleted"))
+            equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate", "Sold"))
         )
 
         val wheelEntities = wheels.cells(1)
@@ -511,9 +512,9 @@ class Steps {
                 val voltageReserve = voltageOf(row[4])
                 val voltageMax = voltageOf(row[5])
                 val chargeRate = voltsPerHourOf(row[6])
-                val isDeleted = parseYesNo(row[7])
+                val isSold = parseYesNo(row[7])
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate, isDeleted)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate, isSold)
             }
             .collect(toList())
 
