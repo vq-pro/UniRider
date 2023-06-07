@@ -14,7 +14,7 @@ import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button

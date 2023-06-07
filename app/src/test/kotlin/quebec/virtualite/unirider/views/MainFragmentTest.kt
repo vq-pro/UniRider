@@ -12,22 +12,25 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.ABRAMS_4
 import quebec.virtualite.unirider.TestDomain.ID2
 import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE2
 import quebec.virtualite.unirider.TestDomain.MILEAGE3
+import quebec.virtualite.unirider.TestDomain.MILEAGE4
 import quebec.virtualite.unirider.TestDomain.NAME
+import quebec.virtualite.unirider.TestDomain.NAME_DELETED
 import quebec.virtualite.unirider.TestDomain.NAME_NEW
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE2
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
+import quebec.virtualite.unirider.TestDomain.PREMILEAGE4
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.S20_2
 import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
-import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_1_123
-import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_2_456
-import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_3_123
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_NEW
+import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_S18_1_123
+import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_S20_2_123
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
@@ -64,14 +67,15 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated() {
+    fun onViewCreated_withDeletedWheels() {
         // Given
         given(mockedDb.getWheels())
             .willReturn(
                 listOf(
                     SHERMAN_MAX_3,
-                    S18_1,
                     S20_2,
+                    ABRAMS_4,
+                    S18_1,
                 )
             )
 
@@ -85,9 +89,9 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
         // Then
         val expectedEntries = listOf(
-            WHEEL_ROW_2_456,
-            WHEEL_ROW_3_123,
-            WHEEL_ROW_1_123,
+            WHEEL_ROW_S18_1_123,
+            WHEEL_ROW_S20_2_123,
+            WheelRow(0, NAME_DELETED, PREMILEAGE3 + MILEAGE3 + PREMILEAGE4 + MILEAGE4),
             WHEEL_ROW_NEW
         )
 
@@ -100,7 +104,45 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
         verify(mockedDb).getWheels()
         verify(mockedTextTotalMileage).text =
-            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + MILEAGE + MILEAGE2 + MILEAGE3}"
+            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4}"
+    }
+
+    @Test
+    fun onViewCreated_withoutDeletedWheels() {
+        // Given
+        given(mockedDb.getWheels())
+            .willReturn(
+                listOf(
+                    S20_2,
+                    S18_1,
+                )
+            )
+
+        mockField(R.id.wheels, mockedLVWheels)
+        mockField(R.id.total_mileage, mockedTextTotalMileage)
+
+        setList(fragment.wheelList, listOf(WheelRow(999, "some previous content", 999)))
+
+        // When
+        fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
+
+        // Then
+        val expectedEntries = listOf(
+            WHEEL_ROW_S18_1_123,
+            WHEEL_ROW_S20_2_123,
+            WHEEL_ROW_NEW
+        )
+
+        verifyFieldAssignment(R.id.wheels, fragment.lvWheels, mockedLVWheels)
+        verifyFieldAssignment(R.id.total_mileage, fragment.textTotalMileage, mockedTextTotalMileage)
+
+        verify(mockedWidgets).enable(mockedLVWheels)
+        verifyMultiFieldListAdapter(mockedLVWheels, R.layout.wheels_item, expectedEntries, "onDisplayWheel")
+        verifyOnItemClick(mockedLVWheels, "onSelectWheel")
+
+        verify(mockedDb).getWheels()
+        verify(mockedTextTotalMileage).text =
+            "${PREMILEAGE + PREMILEAGE2 + MILEAGE + MILEAGE2}"
     }
 
     @Test
@@ -110,7 +152,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         mockField(R.id.row_mileage, mockedTextMileage)
 
         // When
-        fragment.onDisplayWheel().invoke(mockedView, WHEEL_ROW_1_123)
+        fragment.onDisplayWheel().invoke(mockedView, WHEEL_ROW_S18_1_123)
 
         // Then
         verify(mockedTextName).text = NAME
@@ -134,7 +176,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     @Test
     fun onSelectWheel() {
         // Given
-        fragment.wheelList += listOf(WHEEL_ROW_1_123, WHEEL_ROW_2_456, WHEEL_ROW_NEW)
+        fragment.wheelList += listOf(WHEEL_ROW_S18_1_123, WHEEL_ROW_S20_2_123, WHEEL_ROW_NEW)
 
         // When
         fragment.onSelectWheel().invoke(mockedView, 1)
@@ -149,7 +191,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     @Test
     fun onSelectWheel_withNewEntry_straightToEditInAddMode() {
         // Given
-        fragment.wheelList += listOf(WHEEL_ROW_1_123, WHEEL_ROW_2_456, WHEEL_ROW_NEW)
+        fragment.wheelList += listOf(WHEEL_ROW_S18_1_123, WHEEL_ROW_S20_2_123, WHEEL_ROW_NEW)
 
         // When
         fragment.onSelectWheel().invoke(mockedView, 2)

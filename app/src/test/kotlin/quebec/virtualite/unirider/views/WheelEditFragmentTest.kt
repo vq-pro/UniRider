@@ -26,6 +26,7 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.NAME_NEW
+import quebec.virtualite.unirider.TestDomain.NOT_DELETED
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.S18_1
@@ -153,7 +154,22 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     @Test
     fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
         // Given
-        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, WH, VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START, CHARGE_RATE)
+        val wheel =
+            WheelEntity(
+                ID,
+                NAME,
+                DEVICE_NAME,
+                DEVICE_ADDR,
+                0,
+                0,
+                WH,
+                VOLTAGE_MAX,
+                VOLTAGE_MIN,
+                VOLTAGE_RESERVE,
+                VOLTAGE_START,
+                CHARGE_RATE,
+                NOT_DELETED
+            )
         given(mockedDb.getWheel(ID))
             .willReturn(wheel)
 
@@ -170,7 +186,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         // Given
         fragment.parmWheelId = 0L
 
-        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f)
+        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -527,7 +543,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         ID, NAME, DEVICE_NAME, DEVICE_ADDR,
         PREMILEAGE, MILEAGE, WH,
         VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-        CHARGE_RATE
+        CHARGE_RATE, NOT_DELETED
     )
 
     private fun initForUpdates(canSave: Boolean) {

@@ -53,6 +53,7 @@ import java.util.stream.Collectors.toList
 
 class Steps {
 
+    private val DELETED_WHEEL_ENTRY = "<Deleted>"
     private val NEW_WHEEL_ENTRY = "<New>"
 
     @JvmField
@@ -81,7 +82,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -166,7 +167,12 @@ class Steps {
             .map { row ->
                 val name = row[0]
                 val mileage = intOf(row[1])
-                val id = if (name == NEW_WHEEL_ENTRY) 0 else wheels[name]!!.id
+                val id = when (name) {
+                    DELETED_WHEEL_ENTRY,
+                    NEW_WHEEL_ENTRY -> 0
+
+                    else -> wheels[name]!!.id
+                }
 
                 WheelRow(id, name, mileage)
             }
@@ -224,7 +230,8 @@ class Steps {
             floatOf(mapEntity["Voltage Min"]!!),
             floatOf(mapEntity["Voltage Reserve"]!!),
             floatOf(mapEntity["Voltage Max"]!!),
-            floatOf(mapEntity["Charge Rate"]!!)
+            floatOf(mapEntity["Charge Rate"]!!),
+            "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
         )
 
         click(R.id.button_save)
@@ -489,7 +496,10 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate")))
+        assertThat(
+            wheels.topCells(),
+            equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate", "Deleted"))
+        )
 
         val wheelEntities = wheels.cells(1)
             .stream()
@@ -501,8 +511,9 @@ class Steps {
                 val voltageReserve = voltageOf(row[4])
                 val voltageMax = voltageOf(row[5])
                 val chargeRate = voltsPerHourOf(row[6])
+                val isDeleted = parseYesNo(row[7])
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate, isDeleted)
             }
             .collect(toList())
 
@@ -680,6 +691,10 @@ class Steps {
     private fun getVoltageMin() = floatOf(getText(R.id.edit_voltage_min))
 
     private fun getVoltageReserve() = floatOf(getText(R.id.edit_voltage_reserve))
+
+    private fun parseYesNo(value: String): Boolean {
+        return "yes".equals(value, ignoreCase = true)
+    }
 
     private fun strip(value: String, stripValue: String): String {
         return when {

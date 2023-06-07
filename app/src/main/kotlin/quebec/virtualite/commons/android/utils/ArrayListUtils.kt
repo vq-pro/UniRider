@@ -2,10 +2,12 @@ package quebec.virtualite.commons.android.utils
 
 object ArrayListUtils {
 
-    fun <T> addTo(list: List<T>, newEntry: T): ArrayList<T> {
+    fun <T> addTo(list: List<T>, vararg newEntries: T): ArrayList<T> {
         val newList = ArrayList<T>()
         newList.addAll(list)
-        newList.add(newEntry)
+        for (newEntry in newEntries) {
+            newList.add(newEntry)
+        }
 
         return newList
     }

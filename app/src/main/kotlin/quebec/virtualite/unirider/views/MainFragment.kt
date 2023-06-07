@@ -15,8 +15,8 @@ import java.util.stream.Collectors.toList
 
 open class MainFragment : BaseFragment() {
 
+    private val DELETED_ENTRY = "<Deleted>"
     private val NEW_ENTRY = "<New>"
-    private val NEW_ROW = WheelRow(0, NEW_ENTRY, 0)
 
     internal val wheelList = ArrayList<WheelRow>()
 
@@ -37,14 +37,27 @@ open class MainFragment : BaseFragment() {
         widgets.multifieldListAdapter(lvWheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(lvWheels, onSelectWheel())
 
-        external.runDB {
-            setList(wheelList, addTo(getSortedWheelItems(it.getWheels()), NEW_ROW))
+        external.runDB { db ->
+            val wheels = db.getWheels()
+            var wheelEntries = getSortedWheelItems(wheels.filter { !it.isDeleted })
+
+            val wheelsDeleted = wheels.filter { it.isDeleted }
+            if (wheelsDeleted.isNotEmpty()) {
+                wheelEntries = addTo(
+                    wheelEntries,
+                    WheelRow(0, DELETED_ENTRY, wheelsDeleted
+                        .map { it.premileage + it.mileage }
+                        .sum()),
+                )
+            }
+            wheelEntries = addTo(wheelEntries, WheelRow(0, NEW_ENTRY, 0))
+
+            setList(wheelList, wheelEntries)
             textTotalMileage.text = "${calculateTotalMileage()}"
         }
     }
 
     fun onDisplayWheel() = { view: View, item: WheelRow ->
-
         val textName = view.findViewById<TextView?>(R.id.row_name)
         textName.text = item.name()
 
@@ -67,6 +80,7 @@ open class MainFragment : BaseFragment() {
     }
 
     private fun calculateTotalMileage(): Int {
+        // FIXME-0 Refactor to use sum()
         var totalMileage = 0
         wheelList.forEach { wheel ->
             totalMileage += wheel.mileage()
