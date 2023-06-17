@@ -630,6 +630,11 @@ class Steps {
         assertThat(wheel, equalTo(updatedWheel))
     }
 
+    @When("I collapse the sold wheels")
+    fun whenCollapseSoldWheels() {
+        whenOpenSoldWheels()
+    }
+
     @When("^I connect to the (.*?)$")
     fun whenConnectTo(deviceName: String) {
         click(R.id.button_connect_view)

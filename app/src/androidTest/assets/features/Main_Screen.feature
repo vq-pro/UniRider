@@ -38,8 +38,16 @@ Feature: Main Screen
       | - Sherman Max | 2000    |
       | <New>         |         |
 
-  @Ignore
-  Scenario: Hidding sold wheels
+  Scenario: Hiding sold wheels
+    Given I start the app
+    And I open up the sold wheels
+    When I collapse the sold wheels
+    Then I see my wheels and their mileage:
+      | Name    | Mileage |
+      | Sherman | 21222   |
+      | 14S     | 694     |
+      | <Sold>  | 7777    |
+      | <New>   |         |
 
   Scenario: => Adding a wheel
     Given I start the app

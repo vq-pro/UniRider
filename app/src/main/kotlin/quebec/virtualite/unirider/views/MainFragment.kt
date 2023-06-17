@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
 import quebec.virtualite.commons.android.utils.ArrayListUtils.addTo
-import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import java.util.stream.Collectors.toList
@@ -65,36 +64,35 @@ open class MainFragment : BaseFragment() {
     open fun showWheels() {
         external.runDB { db ->
             val wheels = db.getWheels()
-            var wheelEntries = getSortedWheelItems(wheels.filter { !it.isSold })
+            var newWheelList = getSortedWheelItems(wheels.filter { !it.isSold })
             val soldWheels = getSortedWheelItems(wheels.filter { it.isSold })
 
             if (soldWheels.isNotEmpty()) {
                 if (showSoldWheels) {
-                    wheelEntries = addTo(
-                        wheelEntries,
+                    newWheelList = addTo(
+                        newWheelList,
                         WheelRow(0, SOLD_ENTRY, 0),
                     )
                     for (soldWheel in soldWheels) {
-                        wheelEntries = addTo(
-                            wheelEntries,
+                        newWheelList = addTo(
+                            newWheelList,
                             WheelRow(soldWheel.id(), "- " + soldWheel.name(), soldWheel.mileage())
                         )
                     }
                 } else {
-                    wheelEntries = addTo(
-                        wheelEntries,
+                    newWheelList = addTo(
+                        newWheelList,
                         WheelRow(0, SOLD_ENTRY, soldWheels.map { it.mileage() }.sum()),
                     )
                 }
             }
-            wheelEntries = addTo(wheelEntries, WheelRow(0, NEW_ENTRY, 0))
+            newWheelList = addTo(newWheelList, WheelRow(0, NEW_ENTRY, 0))
 
             fragments.runUI {
-                setList(wheelList, wheelEntries)
-                textTotalMileage.text = "${wheelEntries.map { it.mileage() }.sum()}"
+                widgets.setListViewEntries(lvWheels, wheelList, newWheelList)
+                textTotalMileage.text = "${newWheelList.map { it.mileage() }.sum()}"
             }
         }
-
     }
 
     private fun addWheel() {

@@ -12,6 +12,7 @@ import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.view.isVisible
+import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.commons.android.views.impl.CustomListAdapter
 
 open class CommonWidgetServices {
@@ -55,15 +56,18 @@ open class CommonWidgetServices {
     }
 
     open fun onItemSelectedListener(callback: (index: Int) -> Unit): AdapterView.OnItemSelectedListener {
-
         return object : AdapterView.OnItemSelectedListener {
-
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 callback(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    open fun <T> setListViewEntries(listView: ListView, listViewItems: ArrayList<T>, newItems: List<T>) {
+        setList(listViewItems, newItems)
+        notifyOnChanged(listView)
     }
 
     open fun setOnClickListener(widget: View?, callback: ((View) -> Unit)?) {
@@ -124,6 +128,12 @@ open class CommonWidgetServices {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinner!!.adapter = spinnerAdapter
+    }
+
+    private fun notifyOnChanged(listView: ListView) {
+        @Suppress("UNCHECKED_CAST")
+        val listViewAdapter: ArrayAdapter<String> = listView.adapter as ArrayAdapter<String>
+        listViewAdapter.notifyDataSetChanged()
     }
 
     private fun notifyOnChanged(spinner: Spinner) {

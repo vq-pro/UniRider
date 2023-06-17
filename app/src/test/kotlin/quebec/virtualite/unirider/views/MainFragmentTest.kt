@@ -123,29 +123,6 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     }
 
     @Test
-    fun onOpenSoldWheel() {
-        // Given
-        fragment.textTotalMileage = mockedTextTotalMileage
-
-        fragment.showSoldWheels = false
-        fragment.wheelList += listOf(
-            WHEEL_ROW_S18_1_123,
-            WHEEL_ROW_S20_2_123,
-            WheelRow(0, NAME_SOLD, 1),
-            WHEEL_ROW_NEW
-        )
-
-        // When
-        fragment.onSelectWheel().invoke(mockedView, 2)
-
-        // Then
-        assertThat(fragment.showSoldWheels, equalTo(true))
-        verify(fragment).showWheels()
-    }
-
-    // FIXME-0 onCloseSoldWheel()
-
-    @Test
     fun onSelectWheel() {
         // Given
         fragment.wheelList += listOf(WHEEL_ROW_S18_1_123, WHEEL_ROW_S20_2_123, WHEEL_ROW_NEW)
@@ -212,6 +189,51 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     }
 
     @Test
+    fun onSoldWheelClose() {
+        // Given
+        fragment.showSoldWheels = true
+        doNothing().`when`(fragment).showWheels()
+
+        fragment.wheelList += listOf(
+            WHEEL_ROW_S18_1_123,
+            WHEEL_ROW_S20_2_123,
+            WheelRow(0, NAME_SOLD, 0),
+            WHEEL_ROW_SHERMAN_MAX_3,
+            WHEEL_ROW_NEW
+        )
+
+        // When
+        fragment.onSelectWheel().invoke(mockedView, 2)
+
+        // Then
+        verify(fragment).showWheels()
+
+        assertThat(fragment.showSoldWheels, equalTo(false))
+    }
+
+    @Test
+    fun onSoldWheelOpen() {
+        // Given
+        fragment.showSoldWheels = false
+        doNothing().`when`(fragment).showWheels()
+
+        fragment.wheelList += listOf(
+            WHEEL_ROW_S18_1_123,
+            WHEEL_ROW_S20_2_123,
+            WheelRow(0, NAME_SOLD, 1),
+            WHEEL_ROW_NEW
+        )
+
+        // When
+        fragment.onSelectWheel().invoke(mockedView, 2)
+
+        // Then
+        verify(fragment).showWheels()
+
+        assertThat(fragment.showSoldWheels, equalTo(true))
+    }
+
+    @Test
     fun showWheels_whenSoldWheelsCollapsed() {
         // Given
         fragment.showSoldWheels = false
@@ -232,19 +254,18 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
         // Then
         verify(mockedDb).getWheels()
-        verify(mockedTextTotalMileage).text =
-            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4}"
-
-        assertThat(
-            fragment.wheelList, equalTo(
-                listOf(
-                    WHEEL_ROW_S18_1_123,
-                    WHEEL_ROW_S20_2_123,
-                    WheelRow(0, NAME_SOLD, PREMILEAGE3 + MILEAGE3 + PREMILEAGE4 + MILEAGE4),
-                    WHEEL_ROW_NEW
-                )
+        verify(mockedWidgets).setListViewEntries(
+            mockedLVWheels,
+            fragment.wheelList,
+            listOf(
+                WHEEL_ROW_S18_1_123,
+                WHEEL_ROW_S20_2_123,
+                WheelRow(0, NAME_SOLD, PREMILEAGE3 + MILEAGE3 + PREMILEAGE4 + MILEAGE4),
+                WHEEL_ROW_NEW
             )
         )
+        verify(mockedTextTotalMileage).text =
+            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4}"
     }
 
     @Test
@@ -268,20 +289,19 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
         // Then
         verify(mockedDb).getWheels()
-        verify(mockedTextTotalMileage).text =
-            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4}"
-
-        assertThat(
-            fragment.wheelList, equalTo(
-                listOf(
-                    WHEEL_ROW_S18_1_123,
-                    WHEEL_ROW_S20_2_123,
-                    WheelRow(0, NAME_SOLD, 0),
-                    WHEEL_ROW_SHERMAN_MAX_3,
-                    WHEEL_ROW_ABRAMS_4,
-                    WHEEL_ROW_NEW
-                )
+        verify(mockedWidgets).setListViewEntries(
+            mockedLVWheels,
+            fragment.wheelList,
+            listOf(
+                WHEEL_ROW_S18_1_123,
+                WHEEL_ROW_S20_2_123,
+                WheelRow(0, NAME_SOLD, 0),
+                WHEEL_ROW_SHERMAN_MAX_3,
+                WHEEL_ROW_ABRAMS_4,
+                WHEEL_ROW_NEW
             )
         )
+        verify(mockedTextTotalMileage).text =
+            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4}"
     }
 }
