@@ -46,7 +46,11 @@ open class MainFragment : BaseFragment() {
         textName.text = item.name()
 
         val textMileage = view.findViewById<TextView?>(R.id.row_mileage)
-        textMileage.text = if (item.name() == NEW_ENTRY) "" else "${item.mileage()}"
+        textMileage.text = when {
+            item.name() == NEW_ENTRY -> ""
+            item.name() == SOLD_ENTRY && item.mileage() == 0 -> ""
+            else -> "${item.mileage()}"
+        }
     }
 
     fun onSelectWheel() = { _: View, index: Int ->

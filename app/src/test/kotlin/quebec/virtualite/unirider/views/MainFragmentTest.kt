@@ -123,6 +123,34 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     }
 
     @Test
+    fun onDisplayItem_soldItemWhenCollapsed_showMileage() {
+        // Given
+        mockField(R.id.row_name, mockedTextName)
+        mockField(R.id.row_mileage, mockedTextMileage)
+
+        // When
+        fragment.onDisplayWheel().invoke(mockedView, WheelRow(0, NAME_SOLD, 1))
+
+        // Then
+        verify(mockedTextName).text = NAME_SOLD
+        verify(mockedTextMileage).text = "1"
+    }
+
+    @Test
+    fun onDisplayItem_soldItemWhenOpened_hideMileageZero() {
+        // Given
+        mockField(R.id.row_name, mockedTextName)
+        mockField(R.id.row_mileage, mockedTextMileage)
+
+        // When
+        fragment.onDisplayWheel().invoke(mockedView, WheelRow(0, NAME_SOLD, 0))
+
+        // Then
+        verify(mockedTextName).text = NAME_SOLD
+        verify(mockedTextMileage).text = ""
+    }
+
+    @Test
     fun onSelectWheel() {
         // Given
         fragment.wheelList += listOf(WHEEL_ROW_S18_1_123, WHEEL_ROW_S20_2_123, WHEEL_ROW_NEW)
