@@ -39,22 +39,7 @@ open class MainFragment : BaseFragment() {
         widgets.multifieldListAdapter(lvWheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(lvWheels, onSelectWheel())
 
-        external.runDB { db ->
-            val wheels = db.getWheels()
-            var wheelEntries = getSortedWheelItems(wheels.filter { !it.isSold })
-
-            val soldWheels = wheels.filter { it.isSold }
-            if (soldWheels.isNotEmpty()) {
-                wheelEntries = addTo(
-                    wheelEntries,
-                    WheelRow(0, SOLD_ENTRY, soldWheels.map { it.totalMileage() }.sum()),
-                )
-            }
-            wheelEntries = addTo(wheelEntries, WheelRow(0, NEW_ENTRY, 0))
-
-            setList(wheelList, wheelEntries)
-            textTotalMileage.text = "${wheelList.map { it.mileage() }.sum()}"
-        }
+        showWheels()
     }
 
     fun onDisplayWheel() = { view: View, item: WheelRow ->
@@ -69,7 +54,7 @@ open class MainFragment : BaseFragment() {
         when (wheelList[index].name()) {
             NEW_ENTRY -> addWheel()
             SOLD_ENTRY -> {
-                showSoldWheels = true
+                showSoldWheels = !showSoldWheels
                 showWheels()
             }
 
@@ -78,6 +63,38 @@ open class MainFragment : BaseFragment() {
     }
 
     open fun showWheels() {
+        external.runDB { db ->
+            val wheels = db.getWheels()
+            var wheelEntries = getSortedWheelItems(wheels.filter { !it.isSold })
+            val soldWheels = getSortedWheelItems(wheels.filter { it.isSold })
+
+            if (soldWheels.isNotEmpty()) {
+                if (showSoldWheels) {
+                    wheelEntries = addTo(
+                        wheelEntries,
+                        WheelRow(0, SOLD_ENTRY, 0),
+                    )
+                    for (soldWheel in soldWheels) {
+                        wheelEntries = addTo(
+                            wheelEntries,
+                            WheelRow(soldWheel.id(), "- " + soldWheel.name(), soldWheel.mileage())
+                        )
+                    }
+                } else {
+                    wheelEntries = addTo(
+                        wheelEntries,
+                        WheelRow(0, SOLD_ENTRY, soldWheels.map { it.mileage() }.sum()),
+                    )
+                }
+            }
+            wheelEntries = addTo(wheelEntries, WheelRow(0, NEW_ENTRY, 0))
+
+            fragments.runUI {
+                setList(wheelList, wheelEntries)
+                textTotalMileage.text = "${wheelEntries.map { it.mileage() }.sum()}"
+            }
+        }
+
     }
 
     private fun addWheel() {

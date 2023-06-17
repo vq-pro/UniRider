@@ -8,9 +8,9 @@ Feature: Main Screen
       | 14S         | 694     | 840  | 48V         | 55V             | 67.2V       | 4V/h        | No   |
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | Yes  |
       | S18         | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | Yes  |
+    And the Sherman has a previous mileage of 3600 km
 
   Scenario: On entering, we see a list of registered wheels and their mileage
-    Given the Sherman has a previous mileage of 3600 km
     When I start the app
     Then I see my wheels and their mileage:
       | Name    | Mileage |
@@ -25,8 +25,6 @@ Feature: Main Screen
     When I select the Sherman
     Then the details view shows the details for that wheel
 
-#    FIXME-0 Do this next
-  @Ignore
   Scenario: Viewing sold wheels
     Given I start the app
     When I open up the sold wheels

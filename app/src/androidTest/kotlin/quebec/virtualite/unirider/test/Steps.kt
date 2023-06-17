@@ -509,14 +509,15 @@ class Steps {
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
-                val name = row[0]
-                val mileage = parseInt(row[1])
-                val wh = parseInt(row[2])
-                val voltageMin = voltageOf(row[3])
-                val voltageReserve = voltageOf(row[4])
-                val voltageMax = voltageOf(row[5])
-                val chargeRate = voltsPerHourOf(row[6])
-                val isSold = parseYesNo(row[7])
+                var col = 0
+                val name = row[col++]
+                val mileage = parseInt(row[col++])
+                val wh = parseInt(row[col++])
+                val voltageMin = voltageOf(row[col++])
+                val voltageReserve = voltageOf(row[col++])
+                val voltageMax = voltageOf(row[col++])
+                val chargeRate = voltsPerHourOf(row[col++])
+                val isSold = parseYesNo(row[col++])
 
                 WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate, isSold)
             }
@@ -644,6 +645,9 @@ class Steps {
         setText(R.id.edit_voltage_actual, strip(voltage, "V"))
     }
 
+    /**
+     * Code: [MainFragment.onSelectWheel]
+     */
     @When("I open up the sold wheels")
     fun whenOpenSoldWheels() {
         selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)

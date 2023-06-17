@@ -169,6 +169,12 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         verify(mockedInflater).inflate(expectedId, mockedContainer, DONT_ATTACH_TO_ROOT)
     }
 
+    fun <T> verifyMultiFieldListAdapter(
+        mockedField: ListView, expectedId: Int, methodName: String
+    ) {
+        verifyMultiFieldListAdapter(mockedField, expectedId, emptyList<T>(), methodName)
+    }
+
     @Suppress("UNCHECKED_CAST")
     fun <T> verifyMultiFieldListAdapter(
         mockedField: ListView, expectedId: Int, expectedData: List<T>, methodName: String
