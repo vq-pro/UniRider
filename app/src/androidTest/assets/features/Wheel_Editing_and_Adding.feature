@@ -2,10 +2,10 @@ Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
-      | Name      | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Sold |
-      | x Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | Yes  |
-      | Sherman   | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 8V/h        | No   |
-      | S18       | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | No   |
+      | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Sold |
+      | Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | Yes  |
+      | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 8V/h        | No   |
+      | S18     | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | No   |
     And I start the app
 
 #    FIXME-1 Support the 'Sold' field
