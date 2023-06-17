@@ -28,6 +28,7 @@
 * Gradle
 * Name = Unit Tests
 * Run = :app:testIntegrationDebugUnitTest --tests "quebec.virtualite.unirider.*"
+* Force test tasks execution
 
 ## Cucumber
 

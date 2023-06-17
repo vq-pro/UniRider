@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
 import quebec.virtualite.commons.android.utils.ArrayListUtils.addTo
-import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import java.util.stream.Collectors.toList
@@ -15,13 +14,15 @@ import java.util.stream.Collectors.toList
 
 open class MainFragment : BaseFragment() {
 
+    private val SOLD_ENTRY = "<Sold>"
     private val NEW_ENTRY = "<New>"
-    private val NEW_ROW = WheelRow(0, NEW_ENTRY, 0)
 
     internal val wheelList = ArrayList<WheelRow>()
 
     lateinit var lvWheels: ListView
     lateinit var textTotalMileage: TextView
+
+    var showSoldWheels = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.main_fragment, container, false)
@@ -37,25 +38,64 @@ open class MainFragment : BaseFragment() {
         widgets.multifieldListAdapter(lvWheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(lvWheels, onSelectWheel())
 
-        external.runDB {
-            setList(wheelList, addTo(getSortedWheelItems(it.getWheels()), NEW_ROW))
-            textTotalMileage.text = "${calculateTotalMileage()}"
-        }
+        showWheels()
     }
 
     fun onDisplayWheel() = { view: View, item: WheelRow ->
-
         val textName = view.findViewById<TextView?>(R.id.row_name)
         textName.text = item.name()
 
         val textMileage = view.findViewById<TextView?>(R.id.row_mileage)
-        textMileage.text = if (item.name() == NEW_ENTRY) "" else "${item.mileage()}"
+        textMileage.text = when {
+            item.name() == NEW_ENTRY -> ""
+            item.name() == SOLD_ENTRY && item.mileage() == 0 -> ""
+            else -> "${item.mileage()}"
+        }
     }
 
     fun onSelectWheel() = { _: View, index: Int ->
         when (wheelList[index].name()) {
             NEW_ENTRY -> addWheel()
+            SOLD_ENTRY -> {
+                showSoldWheels = !showSoldWheels
+                showWheels()
+            }
+
             else -> viewWheel(wheelList[index])
+        }
+    }
+
+    open fun showWheels() {
+        external.runDB { db ->
+            val wheels = db.getWheels()
+            var newWheelList = getSortedWheelItems(wheels.filter { !it.isSold })
+            val soldWheels = getSortedWheelItems(wheels.filter { it.isSold })
+
+            if (soldWheels.isNotEmpty()) {
+                if (showSoldWheels) {
+                    newWheelList = addTo(
+                        newWheelList,
+                        WheelRow(0, SOLD_ENTRY, 0),
+                    )
+                    for (soldWheel in soldWheels) {
+                        newWheelList = addTo(
+                            newWheelList,
+                            WheelRow(soldWheel.id(), "- " + soldWheel.name(), soldWheel.mileage())
+                        )
+                    }
+                } else {
+                    newWheelList = addTo(
+                        newWheelList,
+                        WheelRow(0, SOLD_ENTRY, soldWheels.map { it.mileage() }.sum()),
+                    )
+                }
+            }
+            newWheelList = addTo(newWheelList, WheelRow(0, NEW_ENTRY, 0))
+
+            fragments.runUI {
+                widgets.setListViewEntries(lvWheels, wheelList, newWheelList)
+                textTotalMileage.text = "${newWheelList.map { it.mileage() }.sum()}"
+            }
         }
     }
 
@@ -64,15 +104,6 @@ open class MainFragment : BaseFragment() {
             R.id.action_MainFragment_to_WheelEditFragment,
             Pair(PARAMETER_WHEEL_ID, 0L)
         )
-    }
-
-    private fun calculateTotalMileage(): Int {
-        var totalMileage = 0
-        wheelList.forEach { wheel ->
-            totalMileage += wheel.mileage()
-        }
-
-        return totalMileage
     }
 
     private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {

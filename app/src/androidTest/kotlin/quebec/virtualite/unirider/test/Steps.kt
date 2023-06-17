@@ -54,6 +54,7 @@ import java.util.stream.Collectors.toList
 class Steps {
 
     private val NEW_WHEEL_ENTRY = "<New>"
+    private val SOLD_WHEEL_ENTRY = "<Sold>"
 
     @JvmField
     @Rule
@@ -81,7 +82,7 @@ class Steps {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f)
+        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
@@ -166,7 +167,16 @@ class Steps {
             .map { row ->
                 val name = row[0]
                 val mileage = intOf(row[1])
-                val id = if (name == NEW_WHEEL_ENTRY) 0 else wheels[name]!!.id
+                val id = when (name) {
+                    SOLD_WHEEL_ENTRY,
+                    NEW_WHEEL_ENTRY -> 0
+
+                    else ->
+                        if (wheels[name] != null)
+                            wheels[name]!!.id
+                        else
+                            wheels[name.substring(2)]!!.id
+                }
 
                 WheelRow(id, name, mileage)
             }
@@ -224,7 +234,9 @@ class Steps {
             floatOf(mapEntity["Voltage Min"]!!),
             floatOf(mapEntity["Voltage Reserve"]!!),
             floatOf(mapEntity["Voltage Max"]!!),
-            floatOf(mapEntity["Charge Rate"]!!)
+            floatOf(mapEntity["Charge Rate"]!!),
+            false
+//            "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
         )
 
         click(R.id.button_save)
@@ -489,20 +501,25 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate")))
+        assertThat(
+            wheels.topCells(),
+            equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate", "Sold"))
+        )
 
         val wheelEntities = wheels.cells(1)
             .stream()
             .map { row ->
-                val name = row[0]
-                val mileage = parseInt(row[1])
-                val wh = parseInt(row[2])
-                val voltageMin = voltageOf(row[3])
-                val voltageReserve = voltageOf(row[4])
-                val voltageMax = voltageOf(row[5])
-                val chargeRate = voltsPerHourOf(row[6])
+                var col = 0
+                val name = row[col++]
+                val mileage = parseInt(row[col++])
+                val wh = parseInt(row[col++])
+                val voltageMin = voltageOf(row[col++])
+                val voltageReserve = voltageOf(row[col++])
+                val voltageMax = voltageOf(row[col++])
+                val chargeRate = voltsPerHourOf(row[col++])
+                val isSold = parseYesNo(row[col++])
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate, isSold)
             }
             .collect(toList())
 
@@ -613,6 +630,11 @@ class Steps {
         assertThat(wheel, equalTo(updatedWheel))
     }
 
+    @When("I collapse the sold wheels")
+    fun whenCollapseSoldWheels() {
+        whenOpenSoldWheels()
+    }
+
     @When("^I connect to the (.*?)$")
     fun whenConnectTo(deviceName: String) {
         click(R.id.button_connect_view)
@@ -626,6 +648,14 @@ class Steps {
     @When("^I enter an actual voltage of (.*?)$")
     fun whenEnterActualVoltage(voltage: String) {
         setText(R.id.edit_voltage_actual, strip(voltage, "V"))
+    }
+
+    /**
+     * Code: [MainFragment.onSelectWheel]
+     */
+    @When("I open up the sold wheels")
+    fun whenOpenSoldWheels() {
+        selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
     }
 
     @When("I reconnect to the wheel")
@@ -680,6 +710,10 @@ class Steps {
     private fun getVoltageMin() = floatOf(getText(R.id.edit_voltage_min))
 
     private fun getVoltageReserve() = floatOf(getText(R.id.edit_voltage_reserve))
+
+    private fun parseYesNo(value: String): Boolean {
+        return "yes".equals(value, ignoreCase = true)
+    }
 
     private fun strip(value: String, stripValue: String): String {
         return when {

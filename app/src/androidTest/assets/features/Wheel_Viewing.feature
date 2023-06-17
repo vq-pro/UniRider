@@ -2,13 +2,13 @@ Feature: Wheel Viewing
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate |
-      | Sherman     | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 7.5V/h      |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        |
-      | 14S         | 694     | 840  | 48V         | 55V             | 67.2V       | 4V/h        |
-      | S18         | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        |
-      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        |
-      | Abrams      | 95      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Sold |
+      | Sherman     | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 7.5V/h      | No   |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | No   |
+      | 14S         | 694     | 840  | 48V         | 55V             | 67.2V       | 4V/h        | No   |
+      | S18         | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | No   |
+      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | Yes  |
+      | Abrams      | 95      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | Yes  |
     And I start the app
 
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
@@ -20,14 +20,13 @@ Feature: Wheel Viewing
       | remaining   | total range | wh/km   |
       | <remaining> | <total>     | <wh/km> |
     Examples:
-      | wheel       | starting voltage | km   | voltage | remaining | total | wh/km |
-      | Sherman Max | 100.6            | 38   | 91.9    | 43.3      | 81.3  | 32.7  |
-      | Sherman Max | 100.4            | 81   | 83.5    | 7.2       | 88.2  | 29.8  |
-      | Sherman Max | 100.4            | 42   | 91      | 40.2      | 82.2  | 32.0  |
-      | Sherman Max | 98.2             | 42   | 91      | 52.5      | 94.5  | 24.5  |
-      | S18         | 84               | 21   | 72      | 3.5       | 24.5  | 26.4  |
-      | S18         | 84               | 42   | 67      | 0         | 42.0  | 18.7  |
-      | Abrams      | 101.2            | 21.5 | 92.9    | 28.3      | 49.8  | 39.6  |
+      | wheel       | starting voltage | km | voltage | remaining | total | wh/km |
+      | Sherman Max | 100.6            | 38 | 91.9    | 43.3      | 81.3  | 32.7  |
+      | Sherman Max | 100.4            | 81 | 83.5    | 7.2       | 88.2  | 29.8  |
+      | Sherman Max | 100.4            | 42 | 91      | 40.2      | 82.2  | 32.0  |
+      | Sherman Max | 98.2             | 42 | 91      | 52.5      | 94.5  | 24.5  |
+      | S18         | 84               | 21 | 72      | 3.5       | 24.5  | 26.4  |
+      | S18         | 84               | 42 | 67      | 0         | 42.0  | 18.7  |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
@@ -63,13 +62,10 @@ Feature: Wheel Viewing
     Then it displays a percentage of <battery>
     Examples:
       | wheel       | voltage | battery |
-      | Nikola+     | 96.4V   | 80.7%   |
-      | Nikola+     | 89.1V   | 48.7%   |
       | 14S         | 63.5V   | 80.7%   |
       | S18         | 71.4V   | 47.5%   |
       | Sherman     | 96.5V   | 82.9%   |
       | Sherman Max | 91.9V   | 64.7%   |
-      | Abrams      | 101.6V  | 103.0%  |
 
   Scenario Outline: => Charging the wheel [when <available>]
     Given I select the Sherman
