@@ -5,15 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import android.widget.TextView
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
+import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
-import java.util.stream.Collectors.toList
 import kotlin.math.roundToInt
 
 open class WheelScanFragment : BaseFragment() {
 
-    internal lateinit var lvWheels: ListView
+    internal lateinit var lvDevices: ListView
 
     internal val devices = ArrayList<BluetoothDevice>()
     internal var parmWheelId: Long? = 0
@@ -27,11 +28,18 @@ open class WheelScanFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lvWheels = view.findViewById(R.id.devices)
-        widgets.setOnItemClickListener(lvWheels, onSelectDevice())
+        lvDevices = view.findViewById(R.id.devices)
+
+        widgets.multifieldListAdapter(lvDevices, view, android.R.layout.simple_list_item_1, devices, onDisplayDevice())
+        widgets.setOnItemClickListener(lvDevices, onSelectDevice())
 
         external.runDB { wheel = it.getWheel(parmWheelId!!) }
         fragments.runWithWaitAndBack { scanForDevices(view) }
+    }
+
+    fun onDisplayDevice() = { view: View, item: BluetoothDevice ->
+        val textName = view.findViewById<TextView?>(android.R.id.text1)
+        textName.text = item.name
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
@@ -62,15 +70,16 @@ open class WheelScanFragment : BaseFragment() {
         }
     }
 
+    // FIXME-1 Remove view parameter
     private fun scanForDevices(view: View) {
         external.bluetooth().scan {
             fragments.doneWaiting(it) {
-                devices.add(it)
+                val updatedDevices = ArrayList<BluetoothDevice>()
+                setList(updatedDevices, devices)
+                updatedDevices.add(it)
 
-                fragments.runUI {
-                    val names = devices.stream().map(BluetoothDevice::name).collect(toList())
-                    widgets.stringListAdapter(lvWheels, view, names)
-                }
+                // FIXME-0 Define new addListViewEntry()
+                fragments.runUI { widgets.setListViewEntries(lvDevices, devices, updatedDevices) }
             }
         }
     }
