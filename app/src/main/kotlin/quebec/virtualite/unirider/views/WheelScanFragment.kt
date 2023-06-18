@@ -33,7 +33,7 @@ open class WheelScanFragment : BaseFragment() {
         widgets.setOnItemClickListener(lvDevices, onSelectDevice())
 
         external.runDB { wheel = it.getWheel(parmWheelId!!) }
-        fragments.runWithWaitAndBack { scanForDevices(view) }
+        fragments.runWithWaitAndBack { scanForDevices() }
     }
 
     fun onDisplayDevice() = { view: View, item: BluetoothDevice ->
@@ -69,8 +69,7 @@ open class WheelScanFragment : BaseFragment() {
         }
     }
 
-    // FIXME-1 Remove view parameter
-    private fun scanForDevices(view: View) {
+    private fun scanForDevices() {
         external.bluetooth().scan {
             fragments.doneWaiting(it) {
                 fragments.runUI { widgets.addListViewEntry(lvDevices, devices, it) }
