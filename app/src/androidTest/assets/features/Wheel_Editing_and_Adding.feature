@@ -8,7 +8,6 @@ Feature: Wheel Editing & Adding
       | S18     | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | No   |
     And I start the app
 
-#    FIXME-1 Support the 'Sold' field
   Scenario: Adding a wheel in full
     When I add a new wheel
     And I set these new values:
@@ -20,6 +19,7 @@ Feature: Wheel Editing & Adding
       | Voltage Reserve  | 80.0        |
       | Voltage Min      | 75.6        |
       | Charge Rate      | 8           |
+# FIXME-1 Implement
 #      | Sold             | No          |
     Then the wheel was added
     And it shows the updated name and a mileage of 150 on the main view
@@ -37,6 +37,8 @@ Feature: Wheel Editing & Adding
       | Voltage Reserve  | 80.5        |
       | Voltage Min      | 74.5        |
       | Charge Rate      | 2           |
+# FIXME-1 Implement
+#      | Sold             | Yes         |
     Then the wheel was updated
     And I go back to the main view
     And it shows the updated name and a mileage of 200 on the main view
@@ -60,6 +62,8 @@ Feature: Wheel Editing & Adding
       | can           | blank the previous mileage                      |
       | can           | blank the reserve voltage                       |
       | can           | change the wh                                   |
+# FIXME-1 Implement
+#      | can           | mark the wheel as sold                          |
       | cannot        | blank the charge rate                           |
       | cannot        | blank the name                                  |
       | cannot        | blank the wh                                    |
@@ -78,8 +82,10 @@ Feature: Wheel Editing & Adding
     And I confirm the deletion
     Then I am back at the main screen and the wheel is gone
 
+  # FIXME-1 Implement
   @Ignore
   Scenario: => Selling a wheel
 
+  # FIXME-1 Implement
   @Ignore
   Scenario: => Unselling a wheel
