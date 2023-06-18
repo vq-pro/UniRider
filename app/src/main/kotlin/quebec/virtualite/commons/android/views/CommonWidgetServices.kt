@@ -19,6 +19,14 @@ open class CommonWidgetServices {
 
     private val POST_DELAY = 10L
 
+    open fun <T> addListViewEntry(listView: ListView, items: ArrayList<T>, entry: T) {
+        val updatedList = ArrayList<T>()
+        setList(updatedList, items)
+        updatedList.add(entry)
+
+        setListViewEntries(listView, items, updatedList)
+    }
+
     open fun addTextChangedListener(widget: EditText?, callback: ((text: String) -> Unit)?) {
 
         widget?.addTextChangedListener(object : TextWatcher {

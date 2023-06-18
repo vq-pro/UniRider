@@ -86,8 +86,6 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        val connectionPayload = DEVICE
-
         assertThat(fragment.devices, equalTo(emptyList()))
         assertThat(fragment.wheel, equalTo(SHERMAN_MAX_3))
 
@@ -98,18 +96,16 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
         verify(mockedDb).getWheel(ID)
 
+        val connectionPayload = DEVICE
         verifyRunWithWaitDialogAndBack()
         verifyConnectorScanWith(connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        verify(mockedWidgets).setListViewEntries(mockedLvDevices, fragment.devices, listOf(DEVICE));
+        verify(mockedWidgets).addListViewEntry(mockedLvDevices, fragment.devices, DEVICE);
     }
 
     @Test
     fun onViewCreated_whenDiscovering2ndDevice_addItToTheDeviceList() {
-        // Given
-        setList(fragment.devices, listOf(DEVICE))
-
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
@@ -120,7 +116,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         verifyConnectorScanWith(connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        verify(mockedWidgets).setListViewEntries(mockedLvDevices, fragment.devices, listOf(DEVICE, DEVICE2));
+        verify(mockedWidgets).addListViewEntry(mockedLvDevices, fragment.devices, DEVICE2);
     }
 
     @Test

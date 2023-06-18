@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
-import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import kotlin.math.roundToInt
@@ -74,12 +73,8 @@ open class WheelScanFragment : BaseFragment() {
     private fun scanForDevices(view: View) {
         external.bluetooth().scan {
             fragments.doneWaiting(it) {
-                val updatedDevices = ArrayList<BluetoothDevice>()
-                setList(updatedDevices, devices)
-                updatedDevices.add(it)
-
-                // FIXME-0 Define new addListViewEntry()
-                fragments.runUI { widgets.setListViewEntries(lvDevices, devices, updatedDevices) }
+                // FIXME-0 Sort list entries
+                fragments.runUI { widgets.addListViewEntry(lvDevices, devices, it) }
             }
         }
     }
