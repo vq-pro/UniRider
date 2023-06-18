@@ -73,7 +73,6 @@ open class WheelScanFragment : BaseFragment() {
     private fun scanForDevices(view: View) {
         external.bluetooth().scan {
             fragments.doneWaiting(it) {
-                // FIXME-0 Sort list entries
                 fragments.runUI { widgets.addListViewEntry(lvDevices, devices, it) }
             }
         }

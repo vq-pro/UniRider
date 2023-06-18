@@ -24,7 +24,7 @@ open class CommonWidgetServices {
         setList(updatedList, items)
         updatedList.add(entry)
 
-        setListViewEntries(listView, items, updatedList)
+        setListViewEntries(listView, items, updatedList.sortedBy { it.toString() })
     }
 
     open fun addTextChangedListener(widget: EditText?, callback: ((text: String) -> Unit)?) {
