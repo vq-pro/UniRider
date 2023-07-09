@@ -19,8 +19,7 @@ Feature: Wheel Editing & Adding
       | Voltage Reserve  | 80.0        |
       | Voltage Min      | 75.6        |
       | Charge Rate      | 8           |
-# FIXME-1 Implement
-#      | Sold             | No          |
+      | Sold             | No          |
     Then the wheel was added
     And it shows the updated name and a mileage of 150 on the main view
     And the wheel's Bluetooth name is undefined
@@ -85,6 +84,10 @@ Feature: Wheel Editing & Adding
   # FIXME-1 Implement
   @Ignore
   Scenario: => Selling a wheel
+    Given I select the S18
+    And I edit the wheel
+    When I mark the wheel as sold
+    Then I am back at the main screen and the wheel is shown as sold
 
   # FIXME-1 Implement
   @Ignore

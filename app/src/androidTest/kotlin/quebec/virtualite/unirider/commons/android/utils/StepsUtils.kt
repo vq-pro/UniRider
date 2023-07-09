@@ -228,6 +228,10 @@ object StepsUtils {
         }
     }
 
+    fun setChecked(id: Int, value: Boolean) {
+        // FIXME-1 Implement
+    }
+
     fun setText(id: Int, newText: String) {
         assertThat("Cannot set text for $id", id, isEnabled())
         element(id)?.perform(replaceText(newText))

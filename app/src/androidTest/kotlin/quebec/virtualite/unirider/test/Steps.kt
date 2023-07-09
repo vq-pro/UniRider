@@ -11,6 +11,7 @@ import cucumber.api.java.en.When
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.nullValue
 import org.junit.Rule
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
@@ -34,6 +35,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setChecked
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
@@ -53,6 +55,7 @@ import java.util.stream.Collectors.toList
 
 class Steps {
 
+    private val IS_SOLD = true
     private val NEW_WHEEL_ENTRY = "<New>"
     private val SOLD_WHEEL_ENTRY = "<Sold>"
 
@@ -92,6 +95,19 @@ class Steps {
         assertThat(
             "The wheel is not gone", R.id.wheels,
             not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
+        )
+    }
+
+    @Then("I am back at the main screen and the wheel is shown as sold")
+    fun backOnMainScreenAndWheelIsSold() {
+        assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
+        assertThat(
+            "The wheel is not gone", R.id.wheels,
+            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
+        )
+        assertThat(
+            "There should be sold wheels", R.id.wheels,
+            not(hasRow(WheelRow(0, SOLD_WHEEL_ENTRY, 0)))
         )
     }
 
@@ -209,7 +225,8 @@ class Steps {
             Pair("Wh", R.id.edit_wh),
             Pair("Voltage Min", R.id.edit_voltage_min),
             Pair("Voltage Reserve", R.id.edit_voltage_reserve),
-            Pair("Voltage Max", R.id.edit_voltage_max)
+            Pair("Voltage Max", R.id.edit_voltage_max),
+            Pair("Sold", R.id.check_sold),
         )
 
         val mapEntity = mutableMapOf<String, String>()
@@ -218,8 +235,14 @@ class Steps {
             val value = row[1]
             mapEntity[field] = value
 
-            val key = mapDetailToId[field]!!
-            setText(key, value)
+            val rawField = mapDetailToId[field]
+            assertThat("Field '$field' is not defined", rawField, not(nullValue()))
+
+            val key = rawField!!
+            if ("Sold".equals(field))
+                setChecked(key, "Yes".equals(value))
+            else
+                setText(key, value)
         }
 
         updatedWheel = WheelEntity(
@@ -648,6 +671,12 @@ class Steps {
     @When("^I enter an actual voltage of (.*?)$")
     fun whenEnterActualVoltage(voltage: String) {
         setText(R.id.edit_voltage_actual, strip(voltage, "V"))
+    }
+
+    @When("I mark the wheel as sold")
+    fun whenMarkWheelAsSold() {
+        setChecked(R.id.check_sold, IS_SOLD)
+        click(R.id.button_save)
     }
 
     /**

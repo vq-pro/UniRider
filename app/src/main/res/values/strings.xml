@@ -38,6 +38,7 @@
     <string name="label_wheel_premileage">Pre-Mileage</string>
     <string name="label_wheel_mileage">Mileage</string>
     <string name="label_wheel_name">Name</string>
+    <string name="label_wheel_sold">Sold</string>
     <string name="label_wheel_voltage_max">Max voltage</string>
     <string name="label_wheel_voltage_min">Min voltage</string>
     <string name="label_wheel_voltage_reserve">Reserve</string>

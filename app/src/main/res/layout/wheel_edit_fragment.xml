@@ -206,6 +206,26 @@
                         android:autofillHints=""
                 />
             </TableRow>
+
+            <!-- Sold-->
+            <TableRow>
+                <TextView
+                        android:labelFor="@+id/check_sold"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_wheel_sold"
+                />
+
+                <CheckBox
+                        android:id="@+id/check_sold"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                />
+            </TableRow>
         </TableLayout>
 
         <!-- Buttons -->

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
@@ -18,6 +19,7 @@ open class WheelEditFragment : BaseFragment() {
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
+    internal lateinit var checkSold: CheckBox
     internal lateinit var editChargeRate: EditText
     internal lateinit var editMileage: EditText
     internal lateinit var editName: EditText
@@ -42,6 +44,7 @@ open class WheelEditFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        checkSold = view.findViewById(R.id.check_sold)
         editChargeRate = view.findViewById(R.id.edit_charge_rate)
         editName = view.findViewById(R.id.edit_name)
         editPreMileage = view.findViewById(R.id.edit_premileage)
@@ -69,6 +72,7 @@ open class WheelEditFragment : BaseFragment() {
                 initialWheel = it.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
                 updatedWheel = initialWheel
 
+                checkSold.setChecked(initialWheel.isSold)
                 editChargeRate.setText("${initialWheel.chargeRate}")
                 editName.setText(initialWheel.name)
                 editVoltageMax.setText("${initialWheel.voltageMax}")
@@ -80,6 +84,7 @@ open class WheelEditFragment : BaseFragment() {
                     editPreMileage.setText("${initialWheel.premileage}")
                 if (initialWheel.mileage != 0)
                     editMileage.setText("${initialWheel.mileage}")
+
             } else {
                 initialWheel = NEW_WHEEL
                 updatedWheel = initialWheel

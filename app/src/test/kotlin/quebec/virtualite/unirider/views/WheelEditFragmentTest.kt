@@ -1,6 +1,7 @@
 package quebec.virtualite.unirider.views
 
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -53,6 +54,9 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
     @Mock
     lateinit var mockedButtonSave: Button
+
+    @Mock
+    lateinit var mockedCheckSold: CheckBox
 
     @Mock
     lateinit var mockedEditChargeRate: EditText
@@ -120,6 +124,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         verifyFieldAssignment(R.id.button_delete, fragment.buttonDelete, mockedButtonDelete)
         verifyFieldAssignment(R.id.button_save, fragment.buttonSave, mockedButtonSave)
+        verifyFieldAssignment(R.id.check_sold, fragment.checkSold, mockedCheckSold)
         verifyFieldAssignment(R.id.edit_name, fragment.editChargeRate, mockedEditChargeRate)
         verifyFieldAssignment(R.id.edit_mileage, fragment.editMileage, mockedEditMileage)
         verifyFieldAssignment(R.id.edit_name, fragment.editName, mockedEditName)
@@ -140,6 +145,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verifyOnLongClick(mockedButtonDelete, "onDelete")
         verifyOnClick(mockedButtonSave, "onSave")
 
+        verify(mockedCheckSold).setChecked(wheel.isSold)
         verify(mockedEditChargeRate).setText("$CHARGE_RATE")
         verify(mockedEditName).setText(NAME)
         verify(mockedEditPreMileage).setText("$PREMILEAGE")
@@ -561,6 +567,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     private fun mockFields() {
         mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_save, mockedButtonSave)
+        mockField(R.id.check_sold, mockedCheckSold)
         mockField(R.id.edit_charge_rate, mockedEditChargeRate)
         mockField(R.id.edit_name, mockedEditName)
         mockField(R.id.edit_premileage, mockedEditPreMileage)
