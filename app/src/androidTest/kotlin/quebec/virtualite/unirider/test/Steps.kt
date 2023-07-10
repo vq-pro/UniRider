@@ -587,6 +587,12 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
+    @When("I save and go back to the main view")
+    fun goSaveAndGoBackToMainView() {
+        click(R.id.button_save)
+        goBackToMainView()
+    }
+
     @Given("^I set the actual voltage to (.*?)V$")
     fun setActualVoltageTo(voltage: String) {
         setText(R.id.edit_voltage_actual, voltage)
@@ -631,9 +637,12 @@ class Steps {
             "The wheel is not gone", R.id.wheels,
             not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
         )
+
+        selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
+
         assertThat(
-            "There should be sold wheels", R.id.wheels,
-            not(hasRow(WheelRow(0, SOLD_WHEEL_ENTRY, 0)))
+            "There should be sold wheel", R.id.wheels,
+            hasRow(WheelRow(selectedWheel.id, "- ${selectedWheel.name}", selectedWheel.mileage))
         )
     }
 

@@ -72,7 +72,6 @@ Feature: Wheel Editing & Adding
       | cannot        | set the reserve voltage higher than the maximum |
       | cannot        | set the reserve voltage lower than the minimum  |
 
-#  @WIP
   Scenario: => Deleting the wheel
     Given I select the S18
     And I edit the wheel
@@ -81,15 +80,12 @@ Feature: Wheel Editing & Adding
     Then I am back at the main screen
     And the wheel is gone
 
-  # FIXME-1 Implement
-#  @WIP
-  @Ignore
   Scenario: => Selling a wheel
     Given I select the S18
     And I edit the wheel
     When I mark the wheel as sold
-    Then I am back at the main screen
-    And the wheel is shown as sold
+    And I save and go back to the main view
+    Then the wheel is shown as sold
 
   # FIXME-1 Implement
   @Ignore
