@@ -87,6 +87,9 @@ Feature: Wheel Editing & Adding
     And I save and go back to the main view
     Then the wheel is shown as sold
 
-  # FIXME-1 Implement
-  @Ignore
   Scenario: => Unselling a wheel
+    Given I select the Nikola+
+    And I edit the wheel
+    When I mark the wheel as unsold
+    And I save and go back to the main view
+    Then the wheel is shown as unsold

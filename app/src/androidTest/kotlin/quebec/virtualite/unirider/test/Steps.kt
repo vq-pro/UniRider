@@ -55,6 +55,7 @@ import java.util.stream.Collectors.toList
 
 class Steps {
 
+    private val IS_NOT_SOLD = false
     private val IS_SOLD = true
     private val NEW_WHEEL_ENTRY = "<New>"
     private val SOLD_WHEEL_ENTRY = "<Sold>"
@@ -646,6 +647,14 @@ class Steps {
         )
     }
 
+    @Then("the wheel is shown as unsold")
+    fun wheelShownAsUnsold() {
+        assertThat(
+            "The wheel is gone", R.id.wheels,
+            hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))
+        )
+    }
+
     @Then("the wheel was added")
     fun wheelWasAdded() {
         selectedWheel = db.findWheel(updatedWheel.name)!!
@@ -689,6 +698,11 @@ class Steps {
         setChecked(R.id.check_sold, IS_SOLD)
     }
 
+    @When("I mark the wheel as unsold")
+    fun whenMarkWheelAsUnsold() {
+        setChecked(R.id.check_sold, IS_NOT_SOLD)
+    }
+
     /**
      * Code: [MainFragment.onSelectWheel]
      */
@@ -717,7 +731,12 @@ class Steps {
         selectedWheel = db.findWheel(wheelName)
             ?: throwAssert("$wheelName is not defined")
 
-        selectListViewItem(R.id.wheels, "name", wheelName)
+        if (selectedWheel.isSold) {
+            selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
+            selectListViewItem(R.id.wheels, "name", "- $wheelName")
+        } else {
+            selectListViewItem(R.id.wheels, "name", wheelName)
+        }
     }
 
     @When("^I do a scan and see the (.*?) but go back without connecting$")
