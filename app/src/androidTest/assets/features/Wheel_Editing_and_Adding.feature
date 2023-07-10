@@ -8,7 +8,6 @@ Feature: Wheel Editing & Adding
       | S18     | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | No   |
     And I start the app
 
-#    FIXME-1 Support the 'Sold' field
   Scenario: Adding a wheel in full
     When I add a new wheel
     And I set these new values:
@@ -20,7 +19,7 @@ Feature: Wheel Editing & Adding
       | Voltage Reserve  | 80.0        |
       | Voltage Min      | 75.6        |
       | Charge Rate      | 8           |
-#      | Sold             | No          |
+      | Sold             | No          |
     Then the wheel was added
     And it shows the updated name and a mileage of 150 on the main view
     And the wheel's Bluetooth name is undefined
@@ -37,6 +36,7 @@ Feature: Wheel Editing & Adding
       | Voltage Reserve  | 80.5        |
       | Voltage Min      | 74.5        |
       | Charge Rate      | 2           |
+      | Sold             | No          |
     Then the wheel was updated
     And I go back to the main view
     And it shows the updated name and a mileage of 200 on the main view
@@ -60,6 +60,7 @@ Feature: Wheel Editing & Adding
       | can           | blank the previous mileage                      |
       | can           | blank the reserve voltage                       |
       | can           | change the wh                                   |
+      | can           | mark the wheel as sold                          |
       | cannot        | blank the charge rate                           |
       | cannot        | blank the name                                  |
       | cannot        | blank the wh                                    |
@@ -76,10 +77,19 @@ Feature: Wheel Editing & Adding
     And I edit the wheel
     When I delete the wheel
     And I confirm the deletion
-    Then I am back at the main screen and the wheel is gone
+    Then I am back at the main screen
+    And the wheel is gone
 
-  @Ignore
   Scenario: => Selling a wheel
+    Given I select the S18
+    And I edit the wheel
+    When I mark the wheel as sold
+    And I save and go back to the main view
+    Then the wheel is shown as sold
 
-  @Ignore
   Scenario: => Unselling a wheel
+    Given I select the Nikola+
+    And I edit the wheel
+    When I mark the wheel as unsold
+    And I save and go back to the main view
+    Then the wheel is shown as unsold

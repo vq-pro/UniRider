@@ -11,6 +11,7 @@ import cucumber.api.java.en.When
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.nullValue
 import org.junit.Rule
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
@@ -34,6 +35,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setChecked
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
@@ -53,6 +55,8 @@ import java.util.stream.Collectors.toList
 
 class Steps {
 
+    private val IS_NOT_SOLD = false
+    private val IS_SOLD = true
     private val NEW_WHEEL_ENTRY = "<New>"
     private val SOLD_WHEEL_ENTRY = "<Sold>"
 
@@ -86,13 +90,9 @@ class Steps {
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
-    @Then("I am back at the main screen and the wheel is gone")
-    fun backOnMainScreenAndWheelIsGone() {
+    @Then("I am back at the main screen")
+    fun backOnMainScreen() {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
-        assertThat(
-            "The wheel is not gone", R.id.wheels,
-            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
-        )
     }
 
     @Then("I can charge the wheel")
@@ -141,6 +141,14 @@ class Steps {
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
         assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery"))
+    }
+
+    @Then("the wheel is gone")
+    fun wheelIsGone() {
+        assertThat(
+            "The wheel is not gone", R.id.wheels,
+            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
+        )
     }
 
     @When("the wh/km is available")
@@ -209,7 +217,8 @@ class Steps {
             Pair("Wh", R.id.edit_wh),
             Pair("Voltage Min", R.id.edit_voltage_min),
             Pair("Voltage Reserve", R.id.edit_voltage_reserve),
-            Pair("Voltage Max", R.id.edit_voltage_max)
+            Pair("Voltage Max", R.id.edit_voltage_max),
+            Pair("Sold", R.id.check_sold),
         )
 
         val mapEntity = mutableMapOf<String, String>()
@@ -218,8 +227,14 @@ class Steps {
             val value = row[1]
             mapEntity[field] = value
 
-            val key = mapDetailToId[field]!!
-            setText(key, value)
+            val rawField = mapDetailToId[field]
+            assertThat("Field '$field' is not defined", rawField, not(nullValue()))
+
+            val key = rawField!!
+            if ("Sold".equals(field))
+                setChecked(key, "Yes".equals(value))
+            else
+                setText(key, value)
         }
 
         updatedWheel = WheelEntity(
@@ -235,8 +250,7 @@ class Steps {
             floatOf(mapEntity["Voltage Reserve"]!!),
             floatOf(mapEntity["Voltage Max"]!!),
             floatOf(mapEntity["Charge Rate"]!!),
-            false
-//            "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
+            "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
         )
 
         click(R.id.button_save)
@@ -574,6 +588,12 @@ class Steps {
         assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
     }
 
+    @When("I save and go back to the main view")
+    fun goSaveAndGoBackToMainView() {
+        click(R.id.button_save)
+        goBackToMainView()
+    }
+
     @Given("^I set the actual voltage to (.*?)V$")
     fun setActualVoltageTo(voltage: String) {
         setText(R.id.edit_voltage_actual, voltage)
@@ -610,6 +630,29 @@ class Steps {
             db.saveWheel(it.copy(premileage = premileage))
             updateMapWheels()
         }
+    }
+
+    @Then("the wheel is shown as sold")
+    fun wheelShownAsSold() {
+        assertThat(
+            "The wheel is not gone", R.id.wheels,
+            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
+        )
+
+        selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
+
+        assertThat(
+            "There should be sold wheel", R.id.wheels,
+            hasRow(WheelRow(selectedWheel.id, "- ${selectedWheel.name}", selectedWheel.mileage))
+        )
+    }
+
+    @Then("the wheel is shown as unsold")
+    fun wheelShownAsUnsold() {
+        assertThat(
+            "The wheel is gone", R.id.wheels,
+            hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))
+        )
     }
 
     @Then("the wheel was added")
@@ -650,6 +693,16 @@ class Steps {
         setText(R.id.edit_voltage_actual, strip(voltage, "V"))
     }
 
+    @When("I mark the wheel as sold")
+    fun whenMarkWheelAsSold() {
+        setChecked(R.id.check_sold, IS_SOLD)
+    }
+
+    @When("I mark the wheel as unsold")
+    fun whenMarkWheelAsUnsold() {
+        setChecked(R.id.check_sold, IS_NOT_SOLD)
+    }
+
     /**
      * Code: [MainFragment.onSelectWheel]
      */
@@ -678,13 +731,18 @@ class Steps {
         selectedWheel = db.findWheel(wheelName)
             ?: throwAssert("$wheelName is not defined")
 
-        selectListViewItem(R.id.wheels, "name", wheelName)
+        if (selectedWheel.isSold) {
+            selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
+            selectListViewItem(R.id.wheels, "name", "- $wheelName")
+        } else {
+            selectListViewItem(R.id.wheels, "name", wheelName)
+        }
     }
 
-    @When("^I do a scan and see the (.*?) but go back without connecting$")
-    fun whenTryingToConnectTo(deviceName: String) {
+    @When("^I do a scan and see the (.*?) \\((.*?)\\) but go back without connecting$")
+    fun whenTryingToConnectTo(deviceName: String, deviceAddr: String) {
         click(R.id.button_connect_view)
-        assertThat(R.id.devices, hasRow(deviceName))
+        assertThat(R.id.devices, hasRow(BluetoothDevice(deviceName, deviceAddr)))
         goBackToViewWheel()
     }
 

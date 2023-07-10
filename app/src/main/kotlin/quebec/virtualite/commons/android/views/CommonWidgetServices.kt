@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Spinner
@@ -19,10 +20,16 @@ open class CommonWidgetServices {
 
     private val POST_DELAY = 10L
 
+    open fun <T> addListViewEntry(listView: ListView, items: ArrayList<T>, entry: T) {
+        val updatedList = ArrayList<T>()
+        setList(updatedList, items)
+        updatedList.add(entry)
+
+        setListViewEntries(listView, items, updatedList.sortedBy { it.toString() })
+    }
+
     open fun addTextChangedListener(widget: EditText?, callback: ((text: String) -> Unit)?) {
-
         widget?.addTextChangedListener(object : TextWatcher {
-
             override fun afterTextChanged(field: Editable?) {}
 
             override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -31,6 +38,12 @@ open class CommonWidgetServices {
                 callback?.invoke(text.toString())
             }
         })
+    }
+
+    open fun setOnCheckedChangeListener(widget: CheckBox?, callback: ((value: Boolean) -> Unit)?) {
+        widget?.setOnCheckedChangeListener { buttonView, isChecked ->
+            callback?.invoke(isChecked)
+        }
     }
 
     open fun clearSelection(spinner: Spinner) {

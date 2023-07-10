@@ -15,8 +15,6 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE3
-import quebec.virtualite.unirider.TestDomain.DEVICE
-import quebec.virtualite.unirider.TestDomain.DEVICE2
 import quebec.virtualite.unirider.TestDomain.DEVICE3
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR2
@@ -47,17 +45,20 @@ import quebec.virtualite.unirider.database.WheelEntity
 @RunWith(MockitoJUnitRunner::class)
 class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
+    private val DEVICE = BluetoothDevice(DEVICE_NAME, DEVICE_ADDR)
+    private val DEVICE2 = BluetoothDevice(DEVICE_NAME2, DEVICE_ADDR2)
+
     @InjectMocks
     lateinit var fragment: WheelScanFragment
 
     @Mock
-    lateinit var mockedLvWheels: ListView
+    lateinit var mockedLvDevices: ListView
 
     @Before
     fun before() {
         fragment.wheel = S18_1
 
-        mockField(R.id.devices, mockedLvWheels)
+        mockField(R.id.devices, mockedLvDevices)
 
         mockExternal()
         mockFragments()
@@ -85,40 +86,37 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        val connectionPayload = BluetoothDevice(DEVICE_NAME, DEVICE_ADDR)
-
         assertThat(fragment.devices, equalTo(emptyList()))
         assertThat(fragment.wheel, equalTo(SHERMAN_MAX_3))
 
-        verifyFieldAssignment(R.id.devices, fragment.lvWheels, mockedLvWheels)
+        verifyFieldAssignment(R.id.devices, fragment.lvDevices, mockedLvDevices)
 
-        verifyOnItemClick(mockedLvWheels, "onSelectDevice")
+        verifyMultiFieldListAdapter<BluetoothDevice>(mockedLvDevices, android.R.layout.simple_list_item_1, "onDisplayDevice")
+        verifyOnItemClick(mockedLvDevices, "onSelectDevice")
 
         verify(mockedDb).getWheel(ID)
 
+        val connectionPayload = DEVICE
         verifyRunWithWaitDialogAndBack()
         verifyConnectorScanWith(connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME))
+        verify(mockedWidgets).addListViewEntry(mockedLvDevices, fragment.devices, DEVICE);
     }
 
     @Test
     fun onViewCreated_whenDiscovering2ndDevice_addItToTheDeviceList() {
-        // Given
-        setList(fragment.devices, listOf(DEVICE))
-
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        val connectionPayload = BluetoothDevice(DEVICE_NAME2, DEVICE_ADDR2)
+        val connectionPayload = DEVICE2
 
         verifyRunWithWaitDialogAndBack()
         verifyConnectorScanWith(connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        verifyStringListAdapter(mockedLvWheels, listOf(DEVICE_NAME, DEVICE_NAME2))
+        verify(mockedWidgets).addListViewEntry(mockedLvDevices, fragment.devices, DEVICE2);
     }
 
     @Test
