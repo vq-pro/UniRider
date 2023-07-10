@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Spinner
@@ -77,6 +78,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
     @Captor
     private lateinit var captorOnItemSelected: ArgumentCaptor<(View, Int, String) -> Unit>
+
+    @Captor
+    private lateinit var captorOnUpdateCheckBox: ArgumentCaptor<(Boolean) -> Unit>
 
     @Captor
     private lateinit var captorOnUpdateText: ArgumentCaptor<(String) -> Unit>
@@ -204,6 +208,11 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     fun verifyOnLongClick(mockedField: View, methodName: String) {
         verify(mockedWidgets).setOnLongClickListener(eq(mockedField), captorOnClick.capture())
         assertThat(captorOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    }
+
+    fun verifyOnUpdateCheckbox(mockedField: CheckBox, methodName: String) {
+        verify(mockedWidgets).setOnCheckedChangeListener(eq(mockedField), captorOnUpdateCheckBox.capture())
+        assertThat(captorOnUpdateCheckBox.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyOnUpdateText(mockedField: EditText, methodName: String) {

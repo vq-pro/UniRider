@@ -89,26 +89,9 @@ class Steps {
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
     }
 
-    @Then("I am back at the main screen and the wheel is gone")
-    fun backOnMainScreenAndWheelIsGone() {
+    @Then("I am back at the main screen")
+    fun backOnMainScreen() {
         assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
-        assertThat(
-            "The wheel is not gone", R.id.wheels,
-            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
-        )
-    }
-
-    @Then("I am back at the main screen and the wheel is shown as sold")
-    fun backOnMainScreenAndWheelIsSold() {
-        assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
-        assertThat(
-            "The wheel is not gone", R.id.wheels,
-            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
-        )
-        assertThat(
-            "There should be sold wheels", R.id.wheels,
-            not(hasRow(WheelRow(0, SOLD_WHEEL_ENTRY, 0)))
-        )
     }
 
     @Then("I can charge the wheel")
@@ -157,6 +140,14 @@ class Steps {
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
         assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery"))
+    }
+
+    @Then("the wheel is gone")
+    fun wheelIsGone() {
+        assertThat(
+            "The wheel is not gone", R.id.wheels,
+            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
+        )
     }
 
     @When("the wh/km is available")
@@ -258,8 +249,7 @@ class Steps {
             floatOf(mapEntity["Voltage Reserve"]!!),
             floatOf(mapEntity["Voltage Max"]!!),
             floatOf(mapEntity["Charge Rate"]!!),
-            false
-//            "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
+            "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
         )
 
         click(R.id.button_save)
@@ -635,6 +625,18 @@ class Steps {
         }
     }
 
+    @Then("the wheel is shown as sold")
+    fun wheelShownAsSold() {
+        assertThat(
+            "The wheel is not gone", R.id.wheels,
+            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
+        )
+        assertThat(
+            "There should be sold wheels", R.id.wheels,
+            not(hasRow(WheelRow(0, SOLD_WHEEL_ENTRY, 0)))
+        )
+    }
+
     @Then("the wheel was added")
     fun wheelWasAdded() {
         selectedWheel = db.findWheel(updatedWheel.name)!!
@@ -676,7 +678,6 @@ class Steps {
     @When("I mark the wheel as sold")
     fun whenMarkWheelAsSold() {
         setChecked(R.id.check_sold, IS_SOLD)
-        click(R.id.button_save)
     }
 
     /**

@@ -56,6 +56,7 @@ open class WheelEditFragment : BaseFragment() {
         buttonDelete = view.findViewById(R.id.button_delete)
         buttonSave = view.findViewById(R.id.button_save)
 
+        widgets.setOnCheckedChangeListener(checkSold, onUpdateSold())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
         widgets.addTextChangedListener(editName, onUpdateName())
         widgets.addTextChangedListener(editPreMileage, onUpdatePreMileage())
@@ -132,6 +133,11 @@ open class WheelEditFragment : BaseFragment() {
 
     fun onUpdatePreMileage() = { newPreMileage: String ->
         updatedWheel = updatedWheel.copy(premileage = intOf(newPreMileage))
+        enableSaveIfChanged()
+    }
+
+    fun onUpdateSold() = { newSold: Boolean ->
+        updatedWheel = updatedWheel.copy(isSold = newSold)
         enableSaveIfChanged()
     }
 

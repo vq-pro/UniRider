@@ -31,6 +31,7 @@ import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.S18_1
+import quebec.virtualite.unirider.TestDomain.SOLD
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
@@ -134,6 +135,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_voltage_reserve, fragment.editVoltageReserve, mockedEditVoltageReserve)
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
 
+        verifyOnUpdateCheckbox(mockedCheckSold, "onUpdateSold")
         verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
         verifyOnUpdateText(mockedEditName, "onUpdateName")
         verifyOnUpdateText(mockedEditPreMileage, "onUpdatePreMileage")
@@ -400,6 +402,23 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(fragment.updatedWheel, equalTo(S18_1.copy(name = NAME_NEW)))
+    }
+
+    @Test
+    fun onUpdateSold() {
+        // Given
+        initForUpdates(true)
+        injectMocks()
+
+        // When
+        fragment.onUpdateSold().invoke(SOLD)
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).enable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(isSold = SOLD)))
     }
 
     @Test

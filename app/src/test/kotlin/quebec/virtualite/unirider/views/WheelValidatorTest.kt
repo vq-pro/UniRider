@@ -18,6 +18,7 @@ import quebec.virtualite.unirider.TestDomain.NAME_NEW
 import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE_NEW
+import quebec.virtualite.unirider.TestDomain.SOLD
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
@@ -79,6 +80,10 @@ class WheelValidatorTest {
         // Charge rate
         canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE_NEW, NOT_SOLD, true)
         canSave(NAME_NEW, PREMILEAGE_NEW, MILEAGE_NEW, WH_NEW, VOLTAGE_MIN_NEW, VOLTAGE_RESERVE_NEW, VOLTAGE_MAX_NEW, 0f, NOT_SOLD, false)
+
+        // Sold indicator
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE, SOLD, true)
+        canSave(NAME, PREMILEAGE, MILEAGE, WH, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_MAX, CHARGE_RATE, NOT_SOLD, false)
     }
 
     private fun canSave(

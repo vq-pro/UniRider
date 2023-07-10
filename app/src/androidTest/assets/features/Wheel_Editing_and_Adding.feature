@@ -36,8 +36,7 @@ Feature: Wheel Editing & Adding
       | Voltage Reserve  | 80.5        |
       | Voltage Min      | 74.5        |
       | Charge Rate      | 2           |
-# FIXME-1 Implement
-#      | Sold             | Yes         |
+      | Sold             | No          |
     Then the wheel was updated
     And I go back to the main view
     And it shows the updated name and a mileage of 200 on the main view
@@ -61,8 +60,7 @@ Feature: Wheel Editing & Adding
       | can           | blank the previous mileage                      |
       | can           | blank the reserve voltage                       |
       | can           | change the wh                                   |
-# FIXME-1 Implement
-#      | can           | mark the wheel as sold                          |
+      | can           | mark the wheel as sold                          |
       | cannot        | blank the charge rate                           |
       | cannot        | blank the name                                  |
       | cannot        | blank the wh                                    |
@@ -74,20 +72,24 @@ Feature: Wheel Editing & Adding
       | cannot        | set the reserve voltage higher than the maximum |
       | cannot        | set the reserve voltage lower than the minimum  |
 
+#  @WIP
   Scenario: => Deleting the wheel
     Given I select the S18
     And I edit the wheel
     When I delete the wheel
     And I confirm the deletion
-    Then I am back at the main screen and the wheel is gone
+    Then I am back at the main screen
+    And the wheel is gone
 
   # FIXME-1 Implement
+#  @WIP
   @Ignore
   Scenario: => Selling a wheel
     Given I select the S18
     And I edit the wheel
     When I mark the wheel as sold
-    Then I am back at the main screen and the wheel is shown as sold
+    Then I am back at the main screen
+    And the wheel is shown as sold
 
   # FIXME-1 Implement
   @Ignore

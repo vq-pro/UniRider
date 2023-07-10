@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Checkable
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -28,6 +29,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
 import org.apache.http.util.TextUtils.isBlank
+import org.hamcrest.BaseMatcher
+import org.hamcrest.Description
 import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -37,6 +40,7 @@ import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.hasToString
 import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.isA
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.startsWith
 import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
@@ -228,8 +232,9 @@ object StepsUtils {
         }
     }
 
-    fun setChecked(id: Int, value: Boolean) {
-        // FIXME-1 Implement
+    fun setChecked(id: Int, checked: Boolean) {
+        assertThat("Cannot set checked $id", id, isEnabled())
+        element(id)?.perform(internalSetChecked(checked))
     }
 
     fun setText(id: Int, newText: String) {
@@ -264,6 +269,30 @@ object StepsUtils {
 
     private fun element(id: Int): ViewInteraction? {
         return onView(withId(id))
+    }
+
+    private fun internalSetChecked(checked: Boolean): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): BaseMatcher<View> {
+                return object : BaseMatcher<View>() {
+                    override fun matches(item: Any): Boolean {
+                        return isA(Checkable::class.java).matches(item)
+                    }
+
+                    override fun describeMismatch(item: Any, mismatchDescription: Description) {}
+                    override fun describeTo(description: Description) {}
+                }
+            }
+
+            override fun getDescription(): String {
+                return ""
+            }
+
+            override fun perform(uiController: UiController, view: View) {
+                val checkableView = view as Checkable
+                checkableView.isChecked = checked
+            }
+        }
     }
 
     private fun poll(callback: () -> Unit) {
