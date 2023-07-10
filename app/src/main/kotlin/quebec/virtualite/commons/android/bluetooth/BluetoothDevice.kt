@@ -4,5 +4,5 @@ data class BluetoothDevice(
     val name: String,
     val address: String
 ) {
-    override fun toString() = name
+    override fun toString() = "$name - $address"
 }

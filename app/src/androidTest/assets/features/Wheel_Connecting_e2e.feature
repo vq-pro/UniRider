@@ -18,8 +18,8 @@ Feature: Wheel Connecting - End-2-End
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name      | Updated mileage |
-      | Sherman-S | 6536            |
-      | Sherman   | 19498           |
+      | Sherman-S | 7721            |
+      | Sherman   | 19545           |
     And I start the app
 
   Scenario Outline: Connecting to a wheel for the first time - <wheel>
@@ -34,7 +34,7 @@ Feature: Wheel Connecting - End-2-End
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
     Given I select the Sherman
-    And I do a scan and see the LK1149 but go back without connecting
+    And I do a scan and see the LK1149 (88:25:83:F1:C9:8B) but go back without connecting
     When I connect to the LK1149
     Then the wheel's Bluetooth name is updated
 

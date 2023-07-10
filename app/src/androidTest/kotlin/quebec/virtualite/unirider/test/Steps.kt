@@ -739,10 +739,10 @@ class Steps {
         }
     }
 
-    @When("^I do a scan and see the (.*?) but go back without connecting$")
-    fun whenTryingToConnectTo(deviceName: String) {
+    @When("^I do a scan and see the (.*?) \\((.*?)\\) but go back without connecting$")
+    fun whenTryingToConnectTo(deviceName: String, deviceAddr: String) {
         click(R.id.button_connect_view)
-        assertThat(R.id.devices, hasRow(deviceName))
+        assertThat(R.id.devices, hasRow(BluetoothDevice(deviceName, deviceAddr)))
         goBackToViewWheel()
     }
 
