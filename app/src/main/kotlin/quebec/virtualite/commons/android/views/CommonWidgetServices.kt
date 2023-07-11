@@ -94,11 +94,11 @@ open class CommonWidgetServices {
         }
     }
 
-    open fun setOnItemSelectedListener(spinner: Spinner?, callback: ((View, Int, String) -> Unit)?) {
+    open fun setOnItemSelectedListener(spinner: Spinner?, callback: ((View?, Int, String) -> Unit)?) {
         spinner!!.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val text = spinner.getItemAtPosition(position) as String
-                callback!!(view!!, position, text)
+                callback!!(view, position, text)
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {

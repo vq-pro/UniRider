@@ -191,6 +191,10 @@ object StepsUtils {
         return hasText("")
     }
 
+    fun isHidden(): Matcher<View> {
+        return not(isDisplayed())
+    }
+
     fun isTrue(): Boolean {
         return true
     }

@@ -22,6 +22,7 @@ object TestDomain {
     const val ID2 = 1112L
     const val ID3 = 1113L
     const val ID4 = 1114L
+    const val ITEM_SOLD = "Sold"
     const val KM = 4444f
     const val KM_NEW = 4445f
     const val KM_NEW_RAW = 4445.012f
@@ -36,7 +37,7 @@ object TestDomain {
     const val NAME3 = "Sherman Max"
     const val NAME4 = "Abrams"
     const val NAME_NEW = "<New>"
-    const val NAME_SOLD = "<Sold>"
+    const val NAME_SOLD = "<$ITEM_SOLD>"
     const val NOT_SOLD = false
     const val PERCENTAGE = 100.0f
     const val PREMILEAGE = 10000

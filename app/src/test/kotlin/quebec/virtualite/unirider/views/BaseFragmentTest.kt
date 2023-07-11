@@ -22,6 +22,8 @@ import org.mockito.Mockito.verify
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.views.CommonFragmentServices
 import quebec.virtualite.commons.android.views.CommonWidgetServices
+import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain
 import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelDb
@@ -77,7 +79,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     private lateinit var captorOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
 
     @Captor
-    private lateinit var captorOnItemSelected: ArgumentCaptor<(View, Int, String) -> Unit>
+    private lateinit var captorOnItemSelected: ArgumentCaptor<(View?, Int, String) -> Unit>
 
     @Captor
     private lateinit var captorOnUpdateCheckBox: ArgumentCaptor<(Boolean) -> Unit>
@@ -147,6 +149,11 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
 
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
             .`when`(mockedFragments).runUI(any())
+    }
+
+    fun mockStrings() {
+        given(mockedFragments.string(R.string.label_wheel_sold))
+            .willReturn(TestDomain.ITEM_SOLD)
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {

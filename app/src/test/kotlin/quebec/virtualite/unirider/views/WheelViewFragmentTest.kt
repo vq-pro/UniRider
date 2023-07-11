@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.view.View.*
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -30,16 +31,20 @@ import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.ID3
+import quebec.virtualite.unirider.TestDomain.ITEM_SOLD
 import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.KM_NEW
 import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.MILEAGE
+import quebec.virtualite.unirider.TestDomain.MILEAGE3
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.NAME
+import quebec.virtualite.unirider.TestDomain.NAME3
 import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
+import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
 import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE
 import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE_UP
 import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE_ZERO
@@ -130,6 +135,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockExternal()
         mockFields()
         mockFragments()
+        mockStrings()
     }
 
     @Test
@@ -243,6 +249,29 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextName, never()).text = anyString()
         verify(mockedTextBtName, never()).text = anyString()
         verify(mockedTextMileage, never()).text = anyString()
+    }
+
+    @Test
+    fun onViewCreated_whenWheelIsSold() {
+        // Given
+        fragment.wheel = null
+        given(mockedDb.getWheel(anyLong()))
+            .willReturn(SHERMAN_MAX_3)
+
+        // When
+        fragment.onViewCreated(mockedView, mockedBundle)
+
+        // Then
+        verify(mockedFragments).string(R.string.label_wheel_sold)
+
+        verify(mockedTextName).text = "$NAME3 ($ITEM_SOLD)"
+        verify(mockedTextMileage).text = "${PREMILEAGE3 + MILEAGE3}"
+
+        verify(mockedTextBtName, never()).text = anyString()
+        verify(mockedEditVoltageStart, never()).setText(anyString())
+
+        verify(mockedButtonCharge).visibility = GONE
+        verify(mockedButtonConnect).visibility = GONE
     }
 
     @Test

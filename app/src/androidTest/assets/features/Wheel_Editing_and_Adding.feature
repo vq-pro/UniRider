@@ -84,8 +84,8 @@ Feature: Wheel Editing & Adding
     Given I select the S18
     And I edit the wheel
     When I mark the wheel as sold
-    And I save and go back to the main view
-    Then the wheel is shown as sold
+    And I save and view the wheel
+    Then the wheel appears as sold
 
   Scenario: => Unselling a wheel
     Given I select the Nikola+

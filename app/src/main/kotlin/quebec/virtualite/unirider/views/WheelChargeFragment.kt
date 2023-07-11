@@ -83,7 +83,7 @@ open class WheelChargeFragment : BaseFragment() {
         }
     }
 
-    fun onChangeRate(): (View, Int, String) -> Unit = { view, position, text ->
+    fun onChangeRate(): (View?, Int, String) -> Unit = { view, position, text ->
         parmSelectedRate = position
         updateEstimatesWith(widgets.text(editKm))
     }

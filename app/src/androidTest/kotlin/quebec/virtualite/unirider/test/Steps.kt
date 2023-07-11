@@ -32,6 +32,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSelectedTe
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSpinnerText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
@@ -590,8 +591,13 @@ class Steps {
 
     @When("I save and go back to the main view")
     fun goSaveAndGoBackToMainView() {
-        click(R.id.button_save)
+        saveAndView()
         goBackToMainView()
+    }
+
+    @When("I save and view the wheel")
+    fun saveAndView() {
+        click(R.id.button_save)
     }
 
     @Given("^I set the actual voltage to (.*?)V$")
@@ -632,19 +638,11 @@ class Steps {
         }
     }
 
-    @Then("the wheel is shown as sold")
-    fun wheelShownAsSold() {
-        assertThat(
-            "The wheel is not gone", R.id.wheels,
-            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
-        )
-
-        selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
-
-        assertThat(
-            "There should be sold wheel", R.id.wheels,
-            hasRow(WheelRow(selectedWheel.id, "- ${selectedWheel.name}", selectedWheel.mileage))
-        )
+    @Then("the wheel appears as sold")
+    fun wheelAppearsAsSold() {
+        assertThat("Wrong title", R.id.view_name, hasText("${selectedWheel.name} (Sold)"))
+        assertThat("Charge button should not appear", R.id.button_charge, isHidden())
+        assertThat("Connect button should not appear", R.id.button_connect_view, isHidden())
     }
 
     @Then("the wheel is shown as unsold")

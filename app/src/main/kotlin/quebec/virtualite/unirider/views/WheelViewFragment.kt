@@ -1,8 +1,10 @@
 package quebec.virtualite.unirider.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
@@ -54,6 +56,7 @@ open class WheelViewFragment : BaseFragment() {
         return inflater.inflate(R.layout.wheel_view_fragment, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -87,19 +90,28 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.stringListAdapter(listWhPerKm, view, listOfRates)
 
                 fragments.runUI {
-                    editVoltageStart.setText("${wheel!!.voltageStart}")
-                    textName.text = wheel!!.name
-                    textBtName.text = wheel!!.btName
+                    if (wheel!!.isSold) {
+                        textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
+
+                        buttonCharge.visibility = GONE
+                        buttonConnect.visibility = GONE
+
+                    } else {
+                        editVoltageStart.setText("${wheel!!.voltageStart}")
+                        textName.text = wheel!!.name
+                        textBtName.text = wheel!!.btName
+
+                        updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
+                        updateRates()
+                    }
+
                     textMileage.text = textKm(wheel!!.totalMileage())
                 }
-
-                updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
-                updateRates()
             }
         }
     }
 
-    fun onChangeRate(): (View, Int, String) -> Unit = { view, position, text ->
+    fun onChangeRate(): (View?, Int, String) -> Unit = { view, position, text ->
         selectedRate = position
         updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
     }
@@ -168,10 +180,7 @@ open class WheelViewFragment : BaseFragment() {
             return false
 
         val voltage = floatOf(voltageParm)
-        if (voltage < wheel!!.voltageMin || (wheel!!.voltageMax + 3f) < voltage)
-            return false
-
-        return true
+        return !(voltage < wheel!!.voltageMin || (wheel!!.voltageMax + 3f) < voltage)
     }
 
     private fun updateCalculatedValues(kmParm: String?, voltageActualParm: String?, voltageStartParm: String?) {
