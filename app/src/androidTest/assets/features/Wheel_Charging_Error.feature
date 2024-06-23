@@ -22,6 +22,17 @@ Feature: Wheel Charging - ERROR
       | 1V      |
       | aa      |
 
+  Scenario Outline: Charging a wheel - ERROR [<distance>]
+    When I request to charge for <distance>
+    Then it displays an actual voltage of 87.9V
+    And it displays these charging estimates:
+      | required voltage   | time   |
+      | <required voltage> | <time> |
+    Examples:
+      | distance | required voltage | time |
+      |          |                  |      |
+      | aa       |                  |      |
+
   Scenario: Update the voltage - ERROR - Never connected
     When I request to charge for 40 km
     Then I cannot connect to the wheel on the charge screen

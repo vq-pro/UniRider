@@ -89,6 +89,7 @@ object StepsUtils {
         assertThat("Cannot click button $id", id, isEnabled())
 
         poll {
+            System.out.println("click")
             element(id)?.perform(click())
         }
     }

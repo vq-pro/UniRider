@@ -55,7 +55,7 @@ import java.lang.Integer.parseInt
 import java.lang.Thread.sleep
 import java.util.stream.Collectors.toList
 
-//FIXME-2 PageObjects
+//FIXME-1 PageObjects
 class Steps {
 
     private val IS_NOT_SOLD = false
@@ -337,7 +337,7 @@ class Steps {
 
     @When("^I change the rate to (.*) wh/km$")
     fun changeRate(newRate: Int) {
-        selectSpinnerItem(R.id.view_wh_per_km, "$newRate")
+        selectSpinnerItem(R.id.spinner_wh_per_km, "$newRate")
     }
 
     @When("^I change the voltage to (.*)$")
@@ -413,6 +413,12 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
+    @Then("the distance and rate are hidden")
+    fun distanceAndRateAreHidden() {
+        assertThat(R.id.edit_km, isHidden())
+        assertThat(R.id.spinner_wh_per_km, isHidden())
+    }
+
     @Then("^it displays an actual voltage of (.*?)V$")
     fun displaysActualVoltage(expectedVoltage: String) {
         assertThat(R.id.edit_voltage_actual, hasText(strip(expectedVoltage, "V")))
@@ -442,7 +448,7 @@ class Steps {
 
     @Then("^it displays an estimated rate of (.*?) wh/km$")
     fun displaysEstimatedRate(whPerKm: String) {
-        assertThat(R.id.view_wh_per_km, hasSpinnerText(whPerKm))
+        assertThat(R.id.spinner_wh_per_km, hasSpinnerText(whPerKm))
     }
 
     @Then("it displays these charging estimates:")
@@ -469,7 +475,7 @@ class Steps {
                     listOf(
                         getText(R.id.view_remaining_range),
                         getText(R.id.view_total_range),
-                        getSpinnerText(R.id.view_wh_per_km)
+                        getSpinnerText(R.id.spinner_wh_per_km)
                     )
                 )
             )
@@ -723,10 +729,10 @@ class Steps {
 
     @When("^I request to charge for (.*?)$")
     fun whenRequestChargeFor(km: String) {
-        assertThat("Max button is not enabled by default", R.id.check_maximum_charge, isChecked())
+        assertThat("Full button is not enabled by default", R.id.check_full_charge, isChecked())
 
-        if (!"max".equals(km)) {
-            click(R.id.check_maximum_charge)
+        if (!"full".equals(km)) {
+            click(R.id.check_full_charge)
             setText(R.id.edit_km, strip(km, "km"))
         }
     }

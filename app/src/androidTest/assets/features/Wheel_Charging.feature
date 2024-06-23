@@ -51,9 +51,7 @@ Feature: Wheel Charging
       | 50 km    | 97.7V (+9.8)     | 1h14 |
       | 60 km    | 99.3V (+11.4)    | 1h25 |
       | 200 km   | 99.3V (+11.4)    | 1h25 |
-      | max      | 99.3V (+11.4)    | 1h25 |
-      |          |                  |      |
-      | aa       |                  |      |
+      | full     | 99.3V (+11.4)    | 1h25 |
 
   Scenario: Reconnect to update the voltage
     Given this simulated device:
@@ -66,18 +64,21 @@ Feature: Wheel Charging
       | required voltage | time |
       | 94.9V (+6.4)     | 48m  |
 
-#  Scenario: Selecting the max voltage
-#    When I request to charge for max
-#    Then it displays these charging estimates:
-#      | required voltage | time |
-#      | 99.3V (+3.3)     | 25m  |
-#    And the distance and rate are disabled
-#
-#  Scenario: Unselecting the max voltage
+#  FIXME-0 Full charge
+  @WIP
+  Scenario: Charging to full
+    When I request to charge for full
+    Then it displays these charging estimates:
+      | required voltage | time |
+      | 99.3V (+11.4)    | 1h25 |
+    And the distance and rate are hidden
+
+#  @WIP
+#  Scenario: Charging partially
 #    When I request to stop charging for max
 #    Then it displays these charging estimates:
 #      | required voltage | time |
 #      | 93.3V (+3.3)     | 25m  |
 #    And the distance and rate are enabled
 
-#    FIXME-2 Define the voltage stop for each wheel
+#    FIXME-1 Define the voltage stop for each wheel

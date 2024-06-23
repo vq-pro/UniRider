@@ -64,7 +64,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     lateinit var mockedButtonConnect: Button
 
     @Mock
-    lateinit var mockedCheckMaximumCharge: CheckBox
+    lateinit var mockedCheckFullCharge: CheckBox
 
     @Mock
     lateinit var mockedCalculatorService: CalculatorService
@@ -76,7 +76,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     lateinit var mockedEditVoltageActual: EditText
 
     @Mock
-    lateinit var mockedListRates: Spinner
+    lateinit var mockedSpinnerRates: Spinner
 
     @Mock
     lateinit var mockedTextName: TextView
@@ -151,26 +151,26 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         assertThat(fragment.wheel, equalTo(S18_1))
 
         verifyFieldAssignment(R.id.button_connect_charge, fragment.buttonConnect, mockedButtonConnect)
-        verifyFieldAssignment(R.id.check_maximum_charge, fragment.checkMaxCharge, mockedCheckMaximumCharge)
+        verifyFieldAssignment(R.id.check_full_charge, fragment.checkFullCharge, mockedCheckFullCharge)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
-        verifyFieldAssignment(R.id.view_wh_per_km, fragment.listRates, mockedListRates)
+        verifyFieldAssignment(R.id.spinner_wh_per_km, fragment.spinnerRates, mockedSpinnerRates)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_remaining_time, fragment.textRemainingTime, mockedTextRemainingTime)
         verifyFieldAssignment(R.id.view_voltage_required, fragment.textVoltageRequired, mockedTextVoltageRequired)
 
-        assertThat(fragment.listRates, equalTo(mockedListRates))
+        assertThat(fragment.spinnerRates, equalTo(mockedSpinnerRates))
 
         verifyOnClick(mockedButtonConnect, "onConnect")
-        verifyOnToggleCheckbox(mockedCheckMaximumCharge, "onToggleMaxCharge")
+        verifyOnToggleCheckbox(mockedCheckFullCharge, "onToggleFullCharge")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
         verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
-        verifyOnItemSelected(mockedListRates, "onChangeRate")
-        verifyStringListAdapter(mockedListRates, WHS_PER_KM)
+        verifyOnItemSelected(mockedSpinnerRates, "onChangeRate")
+        verifyStringListAdapter(mockedSpinnerRates, WHS_PER_KM)
 
-        verify(mockedCheckMaximumCharge).isChecked = true
+        verify(mockedCheckFullCharge).isChecked = true
         verify(mockedEditVoltageActual).setText("${VOLTAGE + CHARGER_OFFSET}")
-        verify(mockedWidgets).setSelection(mockedListRates, WH_PER_KM_INDEX)
+        verify(mockedWidgets).setSelection(mockedSpinnerRates, WH_PER_KM_INDEX)
         verify(mockedTextName).text = NAME
     }
 
@@ -228,33 +228,33 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     @Test
-    fun onToggleMaxCharge_whenChecked() {
+    fun onToggleFullCharge_whenChecked() {
         // Given
         injectMocks()
         mockUpdateEstimates()
 
         // When
-        fragment.onToggleMaxCharge().invoke(false)
+        fragment.onToggleFullCharge().invoke(false)
 
         // Then
         verify(mockedWidgets).show(mockedEditKm)
-        verify(mockedWidgets).show(mockedListRates)
+        verify(mockedWidgets).show(mockedSpinnerRates)
 
         verify(fragment).updateEstimates()
     }
 
     @Test
-    fun onToggleMaxCharge_whenUnchecked() {
+    fun onToggleFullCharge_whenUnchecked() {
         // Given
         injectMocks()
         mockUpdateEstimates()
 
         // When
-        fragment.onToggleMaxCharge().invoke(true)
+        fragment.onToggleFullCharge().invoke(true)
 
         // Then
         verify(mockedWidgets).hide(mockedEditKm)
-        verify(mockedWidgets).hide(mockedListRates)
+        verify(mockedWidgets).hide(mockedSpinnerRates)
 
         verify(fragment).updateEstimates()
     }
@@ -445,24 +445,24 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     private fun injectMocks() {
         fragment.editKm = mockedEditKm
         fragment.editVoltageActual = mockedEditVoltageActual
-        fragment.listRates = mockedListRates
+        fragment.spinnerRates = mockedSpinnerRates
         fragment.textRemainingTime = mockedTextRemainingTime
         fragment.textVoltageRequired = mockedTextVoltageRequired
     }
 
     private fun mockFields() {
         mockField(R.id.button_connect_charge, mockedButtonConnect)
-        mockField(R.id.check_maximum_charge, mockedCheckMaximumCharge)
+        mockField(R.id.check_full_charge, mockedCheckFullCharge)
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
-        mockField(R.id.view_wh_per_km, mockedListRates)
+        mockField(R.id.spinner_wh_per_km, mockedSpinnerRates)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_remaining_time, mockedTextRemainingTime)
         mockField(R.id.view_voltage_required, mockedTextVoltageRequired)
     }
 
     private fun mockCheckMaximumCharge(value: Boolean) {
-        given(mockedCheckMaximumCharge.isChecked).willReturn(value)
+        given(mockedCheckFullCharge.isChecked).willReturn(value)
     }
 
     private fun mockEditKm() {

@@ -25,10 +25,10 @@ import kotlin.math.roundToInt
 open class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var buttonConnect: Button
-    internal lateinit var checkMaxCharge: CheckBox
+    internal lateinit var checkFullCharge: CheckBox
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
-    internal lateinit var listRates: Spinner
+    internal lateinit var spinnerRates: Spinner
     internal lateinit var textName: TextView
     internal lateinit var textRemainingTime: TextView
     internal lateinit var textVoltageRequired: TextView
@@ -54,34 +54,34 @@ open class WheelChargeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonConnect = view.findViewById(R.id.button_connect_charge)
-        checkMaxCharge = view.findViewById(R.id.check_maximum_charge)
+        checkFullCharge = view.findViewById(R.id.check_full_charge)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
-        listRates = view.findViewById(R.id.view_wh_per_km)
+        spinnerRates = view.findViewById(R.id.spinner_wh_per_km)
         textName = view.findViewById(R.id.view_name)
         textRemainingTime = view.findViewById(R.id.view_remaining_time)
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
-        widgets.setOnCheckedChangeListener(checkMaxCharge, onToggleMaxCharge())
+        widgets.setOnCheckedChangeListener(checkFullCharge, onToggleFullCharge())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
-        widgets.setOnItemSelectedListener(listRates, onChangeRate())
-        widgets.stringListAdapter(listRates, view, parmRates)
+        widgets.setOnItemSelectedListener(spinnerRates, onChangeRate())
+        widgets.stringListAdapter(spinnerRates, view, parmRates)
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
 
             fragments.runUI {
                 textName.text = wheel!!.name
-                widgets.setSelection(listRates, parmSelectedRate)
+                widgets.setSelection(spinnerRates, parmSelectedRate)
                 displayVoltageActual()
 
                 if (wheel!!.btName == null || wheel!!.btAddr == null) {
                     widgets.disable(buttonConnect)
                 }
 
-                checkMaxCharge.isChecked = true
+                checkFullCharge.isChecked = true
             }
         }
     }
@@ -103,14 +103,14 @@ open class WheelChargeFragment : BaseFragment() {
         }
     }
 
-    fun onToggleMaxCharge() = { useMaxCharge: Boolean ->
-        if (useMaxCharge) {
+    fun onToggleFullCharge() = { useFullCharge: Boolean ->
+        if (useFullCharge) {
             widgets.hide(editKm)
-            widgets.hide(listRates)
+            widgets.hide(spinnerRates)
 
         } else {
             widgets.show(editKm)
-            widgets.show(listRates)
+            widgets.show(spinnerRates)
         }
 
         updateEstimates()
@@ -151,18 +151,13 @@ open class WheelChargeFragment : BaseFragment() {
     @SuppressLint("SetTextI18n")
     internal open fun updateEstimates() {
         val requiredVoltageOnCharger = when {
-            checkMaxCharge.isChecked -> calculatorService.requiredMaxVoltage(wheel)
+            checkFullCharge.isChecked -> calculatorService.requiredMaxVoltage(wheel)
             else -> {
                 val km = floatOf(widgets.getText(editKm))
                 val whPerKm = floatOf(parmRates[parmSelectedRate])
                 calculatorService.requiredVoltage(wheel!!, whPerKm, km)
             }
         }
-
-//        parmVoltageDisconnectedFromCharger == null -> {
-//            textVoltageRequired.text = ""
-//            textRemainingTime.text = ""
-//        }
 
         val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
         if (requiredVoltage > parmVoltageDisconnectedFromCharger!!) {

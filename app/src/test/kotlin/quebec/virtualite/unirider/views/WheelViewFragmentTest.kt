@@ -107,7 +107,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     lateinit var mockedEditVoltageStart: EditText
 
     @Mock
-    lateinit var mockedListWhPerKm: Spinner
+    lateinit var mockedSpinnerWhPerKm: Spinner
 
     @Mock
     lateinit var mockedTextBattery: TextView
@@ -173,7 +173,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.edit_voltage_start, fragment.editVoltageStart, mockedEditVoltageStart)
-        verifyFieldAssignment(R.id.view_wh_per_km, fragment.listWhPerKm, mockedListWhPerKm)
+        verifyFieldAssignment(R.id.spinner_wh_per_km, fragment.spinnerWhPerKm, mockedSpinnerWhPerKm)
         verifyFieldAssignment(R.id.view_battery, fragment.textBattery, mockedTextBattery)
         verifyFieldAssignment(R.id.view_bt_name, fragment.textBtName, mockedTextBtName)
         verifyFieldAssignment(R.id.view_mileage, fragment.textMileage, mockedTextMileage)
@@ -181,7 +181,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.view_remaining_range, fragment.textRemainingRange, mockedTextRemainingRange)
         verifyFieldAssignment(R.id.view_total_range, fragment.textTotalRange, mockedTextTotalRange)
 
-        assertThat(fragment.listWhPerKm, equalTo(mockedListWhPerKm))
+        assertThat(fragment.spinnerWhPerKm, equalTo(mockedSpinnerWhPerKm))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
         assertThat(fragment.textName, equalTo(mockedTextName))
@@ -194,11 +194,11 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyOnClick(mockedButtonCharge, "onCharge")
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
-        verifyOnItemSelected(mockedListWhPerKm, "onChangeRate")
-        verifyStringListAdapter(mockedListWhPerKm, emptyList())
+        verifyOnItemSelected(mockedSpinnerWhPerKm, "onChangeRate")
+        verifyStringListAdapter(mockedSpinnerWhPerKm, emptyList())
 
         assertThat(fragment.listOfRates, equalTo(emptyList()))
-        verify(mockedListWhPerKm, never()).setSelection(anyInt())
+        verify(mockedSpinnerWhPerKm, never()).setSelection(anyInt())
 
         verify(mockedTextName).text = NAME
         verify(mockedTextBtName).text = DEVICE_NAME
@@ -771,7 +771,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.editKm = mockedEditKm
         fragment.editVoltageActual = mockedEditVoltageActual
         fragment.editVoltageStart = mockedEditVoltageStart
-        fragment.listWhPerKm = mockedListWhPerKm
+        fragment.spinnerWhPerKm = mockedSpinnerWhPerKm
         fragment.textBattery = mockedTextBattery
         fragment.textBtName = mockedTextBtName
         fragment.textMileage = mockedTextMileage
@@ -786,7 +786,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
         mockField(R.id.edit_voltage_start, mockedEditVoltageStart)
-        mockField(R.id.view_wh_per_km, mockedListWhPerKm)
+        mockField(R.id.spinner_wh_per_km, mockedSpinnerWhPerKm)
         mockField(R.id.view_battery, mockedTextBattery)
         mockField(R.id.view_bt_name, mockedTextBtName)
         mockField(R.id.view_mileage, mockedTextMileage)
@@ -828,8 +828,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun verifyEstimateButClearEstimatedValues() {
         assertThat(fragment.listOfRates, equalTo(emptyList()))
-        verify(mockedListWhPerKm, never()).setSelection(anyInt())
-        verify(mockedWidgets).clearSelection(mockedListWhPerKm)
+        verify(mockedSpinnerWhPerKm, never()).setSelection(anyInt())
+        verify(mockedWidgets).clearSelection(mockedSpinnerWhPerKm)
 
         verify(mockedTextRemainingRange).text = ""
         verify(mockedTextTotalRange).text = ""
@@ -861,6 +861,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun verifyUpdateRate() {
         assertThat(fragment.listOfRates, equalTo(WHS_PER_KM))
-        verify(mockedWidgets).setSelection(mockedListWhPerKm, WH_PER_KM_INDEX)
+        verify(mockedWidgets).setSelection(mockedSpinnerWhPerKm, WH_PER_KM_INDEX)
     }
 }

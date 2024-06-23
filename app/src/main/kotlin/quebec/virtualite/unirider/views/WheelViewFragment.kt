@@ -34,7 +34,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
     internal lateinit var editVoltageStart: EditText
-    internal lateinit var listWhPerKm: Spinner
+    internal lateinit var spinnerWhPerKm: Spinner
     internal lateinit var textBattery: TextView
     internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
@@ -67,7 +67,7 @@ open class WheelViewFragment : BaseFragment() {
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         editVoltageStart = view.findViewById(R.id.edit_voltage_start)
 
-        listWhPerKm = view.findViewById(R.id.view_wh_per_km)
+        spinnerWhPerKm = view.findViewById(R.id.spinner_wh_per_km)
 
         textBattery = view.findViewById(R.id.view_battery)
         textBtName = view.findViewById(R.id.view_bt_name)
@@ -86,8 +86,8 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonCharge, onCharge())
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
-                widgets.setOnItemSelectedListener(listWhPerKm, onChangeRate())
-                widgets.stringListAdapter(listWhPerKm, view, listOfRates)
+                widgets.setOnItemSelectedListener(spinnerWhPerKm, onChangeRate())
+                widgets.stringListAdapter(spinnerWhPerKm, view, listOfRates)
 
                 fragments.runUI {
                     if (wheel!!.isSold) {
@@ -232,7 +232,7 @@ open class WheelViewFragment : BaseFragment() {
         listOfRates.clear()
 
         if (actualRate == null) {
-            widgets.clearSelection(listWhPerKm)
+            widgets.clearSelection(spinnerWhPerKm)
             return
         }
 
@@ -250,7 +250,7 @@ open class WheelViewFragment : BaseFragment() {
         listOfRates.sort()
 
         selectedRate = indexOf(listOfRates, displayActualRate)
-        widgets.setSelection(listWhPerKm, selectedRate)
+        widgets.setSelection(spinnerWhPerKm, selectedRate)
     }
 
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
