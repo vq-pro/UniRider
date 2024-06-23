@@ -207,7 +207,7 @@
                 />
             </TableRow>
 
-            <!-- Sold-->
+            <!-- Sold -->
             <TableRow>
                 <TextView
                         android:labelFor="@+id/check_sold"

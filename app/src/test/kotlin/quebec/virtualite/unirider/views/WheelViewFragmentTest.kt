@@ -1,6 +1,6 @@
 package quebec.virtualite.unirider.views
 
-import android.view.View.*
+import android.view.View.GONE
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -798,21 +798,21 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     private fun mockKm(km: String) {
         fragment.editKm = mockedEditKm
 
-        given(mockedWidgets.text(mockedEditKm))
+        given(mockedWidgets.getText(mockedEditKm))
             .willReturn(km.trim())
     }
 
     private fun mockVoltageActual(voltage: String) {
         fragment.editVoltageActual = mockedEditVoltageActual
 
-        given(mockedWidgets.text(mockedEditVoltageActual))
+        given(mockedWidgets.getText(mockedEditVoltageActual))
             .willReturn(voltage.trim())
     }
 
     private fun mockVoltageStart(voltage: String) {
         fragment.editVoltageStart = mockedEditVoltageStart
 
-        given(mockedWidgets.text(mockedEditVoltageStart))
+        given(mockedWidgets.getText(mockedEditVoltageStart))
             .willReturn(voltage.trim())
     }
 

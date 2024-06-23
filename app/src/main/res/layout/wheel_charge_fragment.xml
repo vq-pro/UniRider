@@ -41,8 +41,28 @@
                 />
             </TableRow>
 
-            <!-- km -->
+            <!-- Maximum Charge -->
             <TableRow android:layout_marginTop="15dp">
+                <TextView
+                        android:labelFor="@+id/check_maximum_charge"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_maximum"
+                />
+
+                <CheckBox
+                        android:id="@+id/check_maximum_charge"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                />
+            </TableRow>
+
+            <!-- km -->
+            <TableRow android:layout_marginTop="10dp">
                 <TextView
                         android:labelFor="@+id/edit_km"
                         android:layout_weight="1"

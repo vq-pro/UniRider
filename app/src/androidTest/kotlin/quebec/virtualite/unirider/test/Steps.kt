@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.test
 
+import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.rule.ActivityTestRule
 import cucumber.api.DataTable
@@ -54,6 +55,7 @@ import java.lang.Integer.parseInt
 import java.lang.Thread.sleep
 import java.util.stream.Collectors.toList
 
+//FIXME-2 PageObjects
 class Steps {
 
     private val IS_NOT_SOLD = false
@@ -617,7 +619,7 @@ class Steps {
 
     @When("I wait")
     fun waitABit() {
-        sleep(5000)
+        sleep(1000)
     }
 
     @Then("the wheel can be saved")
@@ -721,7 +723,12 @@ class Steps {
 
     @When("^I request to charge for (.*?)$")
     fun whenRequestChargeFor(km: String) {
-        setText(R.id.edit_km, strip(km, "km"))
+        assertThat("Max button is not enabled by default", R.id.check_maximum_charge, isChecked())
+
+        if (!"max".equals(km)) {
+            click(R.id.check_maximum_charge)
+            setText(R.id.edit_km, strip(km, "km"))
+        }
     }
 
     @When("^I select the (.*?)$")
@@ -735,6 +742,8 @@ class Steps {
         } else {
             selectListViewItem(R.id.wheels, "name", wheelName)
         }
+
+        sleep(PAUSE)
     }
 
     @When("^I do a scan and see the (.*?) \\((.*?)\\) but go back without connecting$")

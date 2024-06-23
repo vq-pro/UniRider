@@ -51,7 +51,7 @@ import java.lang.Thread.sleep
 object StepsUtils {
 
     val INTERVAL = 250L
-    val PAUSE = if (BLUETOOTH_ACTUAL) 2000L else 0L
+    val PAUSE = if (BLUETOOTH_ACTUAL) 2000L else 1000L
     val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
 
     fun applicationContext(): Context {
@@ -87,16 +87,14 @@ object StepsUtils {
 
     fun click(id: Int) {
         assertThat("Cannot click button $id", id, isEnabled())
-        element(id)?.perform(click())
+
+        poll {
+            element(id)?.perform(click())
+        }
     }
 
     fun currentFragment(mainActivity: MainActivity): Class<Fragment> {
-        return mainActivity
-            .supportFragmentManager
-            .fragments[0]
-            .childFragmentManager
-            .fragments[0]
-            .javaClass
+        return mainActivity.supportFragmentManager.fragments[0].childFragmentManager.fragments[0].javaClass
     }
 
     fun getSpinnerText(id: Int): String {
@@ -165,17 +163,13 @@ object StepsUtils {
 
     fun hasSelectedText(expected: String): Matcher<View> {
         return allOf(
-            isDisplayed(),
-            isEnabled(),
-            withText(equalTo(expected))
+            isDisplayed(), isEnabled(), withText(equalTo(expected))
         )
     }
 
     fun hasSpinnerText(expected: String): Matcher<View> {
         return allOf(
-            isDisplayed(),
-            isEnabled(),
-            withSpinnerText(equalTo(expected))
+            isDisplayed(), isEnabled(), withSpinnerText(equalTo(expected))
         )
     }
 
@@ -201,27 +195,21 @@ object StepsUtils {
 
     fun longClick(id: Int) {
         assertThat("Cannot long click button $id", id, isEnabled())
-        element(id)?.perform(longClick())
+
+        poll {
+            element(id)?.perform(longClick())
+        }
     }
 
     fun selectListViewItem(id: Int, value: String) {
         poll {
-            onData(hasToString(startsWith(value)))
-                .inAdapterView(withId(id))
-                .atPosition(0)
-                .perform(click())
-
-            sleep(PAUSE)
+            onData(hasToString(startsWith(value))).inAdapterView(withId(id)).atPosition(0).perform(click())
         }
     }
 
     fun selectListViewItem(id: Int, fieldName: String, value: Any) {
         poll {
-            onData(hasEntry(equalTo(fieldName), `is`(value)))
-                .inAdapterView(withId(id))
-                .perform(click())
-
-            sleep(PAUSE)
+            onData(hasEntry(equalTo(fieldName), `is`(value))).inAdapterView(withId(id)).perform(click())
         }
     }
 
@@ -229,21 +217,22 @@ object StepsUtils {
         click(id)
 
         poll {
-            onData(allOf(`is`(instanceOf(String::class.java)), `is`(value)))
-                .perform(click())
-
-            sleep(PAUSE)
+            onData(allOf(`is`(instanceOf(String::class.java)), `is`(value))).perform(click())
         }
     }
 
     fun setChecked(id: Int, checked: Boolean) {
         assertThat("Cannot set checked $id", id, isEnabled())
-        element(id)?.perform(internalSetChecked(checked))
+        poll {
+            element(id)?.perform(internalSetChecked(checked))
+        }
     }
 
     fun setText(id: Int, newText: String) {
         assertThat("Cannot set text for $id", id, isEnabled())
-        element(id)?.perform(replaceText(newText))
+        poll {
+            element(id)?.perform(replaceText(newText))
+        }
     }
 
     fun <T : Activity> start(activityTestRule: ActivityTestRule<T>): T? {

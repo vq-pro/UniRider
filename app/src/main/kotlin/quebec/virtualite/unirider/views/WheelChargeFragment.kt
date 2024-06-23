@@ -6,14 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
-import quebec.virtualite.commons.android.utils.NumberUtils.isEmpty
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
-import quebec.virtualite.commons.android.utils.NumberUtils.isPositive
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -26,6 +25,7 @@ import kotlin.math.roundToInt
 open class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var buttonConnect: Button
+    internal lateinit var checkMaxCharge: CheckBox
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
     internal lateinit var listRates: Spinner
@@ -50,11 +50,11 @@ open class WheelChargeFragment : BaseFragment() {
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         buttonConnect = view.findViewById(R.id.button_connect_charge)
+        checkMaxCharge = view.findViewById(R.id.check_maximum_charge)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         listRates = view.findViewById(R.id.view_wh_per_km)
@@ -63,6 +63,7 @@ open class WheelChargeFragment : BaseFragment() {
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
+        widgets.setOnCheckedChangeListener(checkMaxCharge, onToggleMaxCharge())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
         widgets.setOnItemSelectedListener(listRates, onChangeRate())
@@ -79,13 +80,15 @@ open class WheelChargeFragment : BaseFragment() {
                 if (wheel!!.btName == null || wheel!!.btAddr == null) {
                     widgets.disable(buttonConnect)
                 }
+
+                checkMaxCharge.isChecked = true
             }
         }
     }
 
     fun onChangeRate(): (View?, Int, String) -> Unit = { view, position, text ->
         parmSelectedRate = position
-        updateEstimatesWith(widgets.text(editKm))
+        updateEstimates()
     }
 
     fun onConnect(): (View) -> Unit = {
@@ -94,25 +97,47 @@ open class WheelChargeFragment : BaseFragment() {
                 fragments.doneWaiting(it) {
                     parmVoltageDisconnectedFromCharger = round(it!!.voltage, NB_DECIMALS) - CHARGER_OFFSET
                     displayVoltageActual()
-
-                    onUpdateKm().invoke(widgets.text(editKm))
+                    updateEstimates()
                 }
             }
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    fun onToggleMaxCharge() = { useMaxCharge: Boolean ->
+        if (useMaxCharge) {
+            widgets.hide(editKm)
+            widgets.hide(listRates)
+
+        } else {
+            widgets.show(editKm)
+            widgets.show(listRates)
+        }
+
+        updateEstimates()
+    }
+
     fun onUpdateKm() = { km: String ->
-        updateEstimatesWith(km)
+        when {
+            isNumeric(km) -> updateEstimates()
+            else -> blankEstimates()
+        }
     }
 
     fun onUpdateVoltageActual() = { voltage: String ->
-        parmVoltageDisconnectedFromCharger = when {
-            isNumeric(voltage) -> parseFloat(voltage) - CHARGER_OFFSET
-            else -> null
-        }
+        when {
+            isNumeric(voltage) && floatOf(voltage) >= wheel!!.voltageMin -> {
+                parmVoltageDisconnectedFromCharger = parseFloat(voltage) - CHARGER_OFFSET
+                updateEstimates()
+            }
 
-        updateEstimatesWith(widgets.text(editKm))
+            else -> blankEstimates()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    internal open fun blankEstimates() {
+        textRemainingTime.text = ""
+        textVoltageRequired.text = ""
     }
 
     @SuppressLint("DefaultLocale")
@@ -123,41 +148,38 @@ open class WheelChargeFragment : BaseFragment() {
         return if (hours > 0) "${hours}h${format("%02d", minutes)}" else "${minutes}m"
     }
 
-    private fun displayVoltageActual() {
-        editVoltageActual.setText("${parmVoltageDisconnectedFromCharger?.plus(CHARGER_OFFSET)}")
+    @SuppressLint("SetTextI18n")
+    internal open fun updateEstimates() {
+        val requiredVoltageOnCharger = when {
+            checkMaxCharge.isChecked -> calculatorService.requiredMaxVoltage(wheel)
+            else -> {
+                val km = floatOf(widgets.getText(editKm))
+                val whPerKm = floatOf(parmRates[parmSelectedRate])
+                calculatorService.requiredVoltage(wheel!!, whPerKm, km)
+            }
+        }
+
+//        parmVoltageDisconnectedFromCharger == null -> {
+//            textVoltageRequired.text = ""
+//            textRemainingTime.text = ""
+//        }
+
+        val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
+        if (requiredVoltage > parmVoltageDisconnectedFromCharger!!) {
+            val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
+            val rawHours = diff / wheel!!.chargeRate
+
+            textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
+            textRemainingTime.text = timeDisplay(rawHours)
+
+        } else {
+            textVoltageRequired.text = "Go!"
+            textRemainingTime.text = ""
+        }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateEstimatesWith(km: String) {
-        if (isEmpty(km) || !isPositive(km)) {
-            textVoltageRequired.text = ""
-            textRemainingTime.text = ""
-
-        } else {
-            val requiredVoltageOnCharger = calculatorService
-                .requiredVoltage(wheel, floatOf(parmRates[parmSelectedRate]), floatOf(km))
-
-            val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
-
-            when {
-                parmVoltageDisconnectedFromCharger == null -> {
-                    textVoltageRequired.text = ""
-                    textRemainingTime.text = ""
-                }
-
-                requiredVoltage > parmVoltageDisconnectedFromCharger!! -> {
-                    val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
-                    val rawHours = diff / wheel!!.chargeRate
-
-                    textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
-                    textRemainingTime.text = timeDisplay(rawHours)
-                }
-
-                else -> {
-                    textVoltageRequired.text = "Go!"
-                    textRemainingTime.text = ""
-                }
-            }
-        }
+    private fun displayVoltageActual() {
+        editVoltageActual.setText("${parmVoltageDisconnectedFromCharger?.plus(CHARGER_OFFSET)}")
     }
 }

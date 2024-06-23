@@ -135,7 +135,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_voltage_reserve, fragment.editVoltageReserve, mockedEditVoltageReserve)
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
 
-        verifyOnUpdateCheckbox(mockedCheckSold, "onUpdateSold")
+        verifyOnToggleCheckbox(mockedCheckSold, "onToggleSold")
         verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
         verifyOnUpdateText(mockedEditName, "onUpdateName")
         verifyOnUpdateText(mockedEditPreMileage, "onUpdatePreMileage")
@@ -164,19 +164,10 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         // Given
         val wheel =
             WheelEntity(
-                ID,
-                NAME,
-                DEVICE_NAME,
-                DEVICE_ADDR,
-                0,
-                0,
-                WH,
-                VOLTAGE_MAX,
-                VOLTAGE_MIN,
-                VOLTAGE_RESERVE,
-                VOLTAGE_START,
-                CHARGE_RATE,
-                NOT_SOLD
+                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+                0, 0, WH,
+                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
+                CHARGE_RATE, NOT_SOLD
             )
         given(mockedDb.getWheel(ID))
             .willReturn(wheel)
@@ -286,6 +277,23 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         // Then
         verify(mockedDb).saveWheel(fragment.updatedWheel)
         verify(mockedFragments).navigateBack()
+    }
+
+    @Test
+    fun onToggleSold() {
+        // Given
+        initForUpdates(true)
+        injectMocks()
+
+        // When
+        fragment.onToggleSold().invoke(SOLD)
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).enable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(isSold = SOLD)))
     }
 
     @Test
@@ -405,23 +413,6 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateSold() {
-        // Given
-        initForUpdates(true)
-        injectMocks()
-
-        // When
-        fragment.onUpdateSold().invoke(SOLD)
-
-        // Then
-        verify(mockedDb, never()).saveWheels(any())
-        verify(mockedWheelValidator).canSave(any(), any())
-        verify(mockedWidgets).enable(mockedButtonSave)
-
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(isSold = SOLD)))
-    }
-
-    @Test
     fun onUpdateVoltageMax() {
         // Given
         initForUpdates(true)
@@ -516,7 +507,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         injectMocks()
 
         fragment.editVoltageMin = mockedEditVoltageMin
-        given(mockedWidgets.text(mockedEditVoltageMin))
+        given(mockedWidgets.getText(mockedEditVoltageMin))
             .willReturn("$VOLTAGE_MIN")
 
         // When

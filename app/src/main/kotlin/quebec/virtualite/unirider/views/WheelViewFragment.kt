@@ -122,7 +122,7 @@ open class WheelViewFragment : BaseFragment() {
             Pair(PARAMETER_RATES, listOfRates),
             Pair(PARAMETER_SELECTED_RATE, selectedRate),
             Pair(PARAMETER_WHEEL_ID, wheel!!.id),
-            Pair(PARAMETER_VOLTAGE, floatOf(widgets.text(editVoltageActual)))
+            Pair(PARAMETER_VOLTAGE, floatOf(widgets.getText(editVoltageActual)))
         )
     }
 
@@ -184,9 +184,9 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun updateCalculatedValues(kmParm: String?, voltageActualParm: String?, voltageStartParm: String?) {
-        val km = kmParm ?: widgets.text(editKm)
-        val voltageActual = voltageActualParm ?: widgets.text(editVoltageActual)
-        val voltageStart = voltageStartParm ?: widgets.text(editVoltageStart)
+        val km = kmParm ?: widgets.getText(editKm)
+        val voltageActual = voltageActualParm ?: widgets.getText(editVoltageActual)
+        val voltageStart = voltageStartParm ?: widgets.getText(editVoltageStart)
 
         updatePercentage(voltageActual)
         updateEstimatedValues(km, voltageActual, voltageStart)

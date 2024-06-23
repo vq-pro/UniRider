@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,7 @@ open class WheelEditFragment : BaseFragment() {
         return inflater.inflate(R.layout.wheel_edit_fragment, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -56,7 +58,7 @@ open class WheelEditFragment : BaseFragment() {
         buttonDelete = view.findViewById(R.id.button_delete)
         buttonSave = view.findViewById(R.id.button_save)
 
-        widgets.setOnCheckedChangeListener(checkSold, onUpdateSold())
+        widgets.setOnCheckedChangeListener(checkSold, onToggleSold())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
         widgets.addTextChangedListener(editName, onUpdateName())
         widgets.addTextChangedListener(editPreMileage, onUpdatePreMileage())
@@ -116,6 +118,11 @@ open class WheelEditFragment : BaseFragment() {
         fragments.navigateBack()
     }
 
+    fun onToggleSold() = { newSold: Boolean ->
+        updatedWheel = updatedWheel.copy(isSold = newSold)
+        enableSaveIfChanged()
+    }
+
     fun onUpdateChargeRate() = { newChargeRate: String ->
         updatedWheel = updatedWheel.copy(chargeRate = floatOf(newChargeRate))
         enableSaveIfChanged()
@@ -136,11 +143,6 @@ open class WheelEditFragment : BaseFragment() {
         enableSaveIfChanged()
     }
 
-    fun onUpdateSold() = { newSold: Boolean ->
-        updatedWheel = updatedWheel.copy(isSold = newSold)
-        enableSaveIfChanged()
-    }
-
     fun onUpdateVoltageMax() = { newVoltage: String ->
         updatedWheel = updatedWheel.copy(voltageMax = floatOf(newVoltage), voltageStart = floatOf(newVoltage))
         enableSaveIfChanged()
@@ -154,7 +156,7 @@ open class WheelEditFragment : BaseFragment() {
     fun onUpdateVoltageReserve() = { newVoltage: String ->
         var newVoltageReserve = floatOf(newVoltage)
         if (newVoltageReserve == 0f)
-            newVoltageReserve = floatOf(widgets.text(editVoltageMin))
+            newVoltageReserve = floatOf(widgets.getText(editVoltageMin))
 
         updatedWheel = updatedWheel.copy(voltageReserve = newVoltageReserve)
         enableSaveIfChanged()

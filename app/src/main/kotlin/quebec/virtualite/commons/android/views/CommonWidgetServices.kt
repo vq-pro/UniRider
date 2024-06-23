@@ -40,12 +40,6 @@ open class CommonWidgetServices {
         })
     }
 
-    open fun setOnCheckedChangeListener(widget: CheckBox?, callback: ((value: Boolean) -> Unit)?) {
-        widget?.setOnCheckedChangeListener { buttonView, isChecked ->
-            callback?.invoke(isChecked)
-        }
-    }
-
     open fun clearSelection(spinner: Spinner) {
         notifyOnChanged(spinner)
     }
@@ -56,6 +50,10 @@ open class CommonWidgetServices {
 
     open fun enable(widget: View) {
         widget.postDelayed({ widget.isEnabled = true }, POST_DELAY)
+    }
+
+    open fun getText(edit: EditText): String {
+        return edit.text.toString().trim()
     }
 
     open fun hide(widget: View) {
@@ -81,6 +79,12 @@ open class CommonWidgetServices {
     open fun <T> setListViewEntries(listView: ListView, listViewItems: ArrayList<T>, newItems: List<T>) {
         setList(listViewItems, newItems)
         notifyOnChanged(listView)
+    }
+
+    open fun setOnCheckedChangeListener(widget: CheckBox?, callback: ((value: Boolean) -> Unit)?) {
+        widget?.setOnCheckedChangeListener { buttonView, isChecked ->
+            callback?.invoke(isChecked)
+        }
     }
 
     open fun setOnClickListener(widget: View?, callback: ((View) -> Unit)?) {
@@ -120,10 +124,6 @@ open class CommonWidgetServices {
 
     open fun show(widget: View) {
         widget.isVisible = true
-    }
-
-    open fun text(edit: EditText): String {
-        return edit.text.toString().trim()
     }
 
     open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {
