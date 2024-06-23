@@ -19,7 +19,6 @@ import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.PAUSE
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
@@ -413,12 +412,6 @@ class Steps {
         assertThat(R.id.view_battery, hasText(percentage))
     }
 
-    @Then("the distance and rate are hidden")
-    fun distanceAndRateAreHidden() {
-        assertThat(R.id.edit_km, isHidden())
-        assertThat(R.id.spinner_wh_per_km, isHidden())
-    }
-
     @Then("^it displays an actual voltage of (.*?)V$")
     fun displaysActualVoltage(expectedVoltage: String) {
         assertThat(R.id.edit_voltage_actual, hasText(strip(expectedVoltage, "V")))
@@ -687,7 +680,6 @@ class Steps {
     @When("^I connect to the (.*?)$")
     fun whenConnectTo(deviceName: String) {
         click(R.id.button_connect_view)
-        sleep(PAUSE)
 
         selectListViewItem(R.id.devices, deviceName)
 
@@ -748,8 +740,6 @@ class Steps {
         } else {
             selectListViewItem(R.id.wheels, "name", wheelName)
         }
-
-        sleep(PAUSE)
     }
 
     @When("^I do a scan and see the (.*?) \\((.*?)\\) but go back without connecting$")

@@ -75,25 +75,27 @@ open class WheelEditFragment : BaseFragment() {
                 initialWheel = it.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
                 updatedWheel = initialWheel
 
-                checkSold.setChecked(initialWheel.isSold)
-                editChargeRate.setText("${initialWheel.chargeRate}")
-                editName.setText(initialWheel.name)
-                editVoltageMax.setText("${initialWheel.voltageMax}")
-                editVoltageMin.setText("${initialWheel.voltageMin}")
-                editVoltageReserve.setText("${initialWheel.voltageReserve}")
-                editWh.setText("${initialWheel.wh}")
+                fragments.runUI {
+                    checkSold.setChecked(initialWheel.isSold)
+                    editChargeRate.setText("${initialWheel.chargeRate}")
+                    editName.setText(initialWheel.name)
+                    editVoltageMax.setText("${initialWheel.voltageMax}")
+                    editVoltageMin.setText("${initialWheel.voltageMin}")
+                    editVoltageReserve.setText("${initialWheel.voltageReserve}")
+                    editWh.setText("${initialWheel.wh}")
 
-                if (initialWheel.premileage != 0)
-                    editPreMileage.setText("${initialWheel.premileage}")
-                if (initialWheel.mileage != 0)
-                    editMileage.setText("${initialWheel.mileage}")
+                    if (initialWheel.premileage != 0) editPreMileage.setText("${initialWheel.premileage}")
+                    if (initialWheel.mileage != 0) editMileage.setText("${initialWheel.mileage}")
+                }
 
             } else {
                 initialWheel = NEW_WHEEL
                 updatedWheel = initialWheel
             }
 
-            widgets.disable(buttonSave)
+            fragments.runUI {
+                widgets.disable(buttonSave)
+            }
         }
     }
 

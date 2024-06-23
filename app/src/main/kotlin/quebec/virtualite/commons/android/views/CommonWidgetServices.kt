@@ -117,6 +117,10 @@ open class CommonWidgetServices {
         }
     }
 
+    open fun setText(edit: EditText, value: String) {
+        edit.setText(value)
+    }
+
     open fun setSelection(spinner: Spinner, index: Int) {
         notifyOnChanged(spinner)
         spinner.setSelection(index, true)

@@ -346,7 +346,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     @Test
-    fun updateEstimates_whenMaxCharge_displayValue() {
+    fun updateEstimates_whenFullCharge_displayValue() {
         // Given
         injectMocks()
         mockCheckMaximumCharge(true)
@@ -366,7 +366,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Given
         injectMocks()
         mockCheckMaximumCharge(false)
-        mockEditKm()
+        mockEditKmWith(KM)
 
         given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
             .willReturn(MAX_VOLTAGE_BEFORE_BALANCING)
@@ -386,7 +386,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Given
         injectMocks()
         mockCheckMaximumCharge(false)
-        mockEditKm()
+        mockEditKmWith(KM)
 
         given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
             .willReturn(VOLTAGE + CHARGER_OFFSET - 0.1f)
@@ -406,7 +406,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Given
         injectMocks()
         mockCheckMaximumCharge(false)
-        mockEditKm()
+        mockEditKmWith(KM)
 
         given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
             .willReturn(VOLTAGE + CHARGER_OFFSET)
@@ -426,7 +426,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Given
         injectMocks()
         mockCheckMaximumCharge(false)
-        mockEditKm()
+        mockEditKmWith(KM)
 
         val voltageRequired = VOLTAGE + CHARGER_OFFSET + 0.1f
         given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
@@ -440,6 +440,20 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
         verify(mockedCalculatorService).requiredVoltage(SHERMAN_MAX_3, whPerKm, KM)
         verifyVoltageRequired(voltageRequired)
+    }
+
+    @Test
+    fun updateEstimates_withZeroKm_noDisplay() {
+        // Given
+        injectMocks()
+        mockCheckMaximumCharge(false)
+        mockEditKmWith(0f)
+
+        // When
+        fragment.updateEstimates()
+
+        // Then
+        verify(fragment).blankEstimates()
     }
 
     private fun injectMocks() {
@@ -465,8 +479,8 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         given(mockedCheckFullCharge.isChecked).willReturn(value)
     }
 
-    private fun mockEditKm() {
-        given(mockedWidgets.getText(mockedEditKm)).willReturn(KM.toString())
+    private fun mockEditKmWith(km: Float) {
+        given(mockedWidgets.getText(mockedEditKm)).willReturn(km.toString())
     }
 
     private fun mockUpdateEstimates() {

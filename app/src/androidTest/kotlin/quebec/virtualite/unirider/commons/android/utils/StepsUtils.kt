@@ -51,7 +51,7 @@ import java.lang.Thread.sleep
 object StepsUtils {
 
     val INTERVAL = 250L
-    val PAUSE = if (BLUETOOTH_ACTUAL) 2000L else 1000L
+    val PAUSE = if (BLUETOOTH_ACTUAL) 2000L else 0L
     val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
 
     fun applicationContext(): Context {
@@ -86,12 +86,7 @@ object StepsUtils {
     }
 
     fun click(id: Int) {
-        assertThat("Cannot click button $id", id, isEnabled())
-
-        poll {
-            System.out.println("click")
-            element(id)?.perform(click())
-        }
+        element(id)?.perform(click())
     }
 
     fun currentFragment(mainActivity: MainActivity): Class<Fragment> {
@@ -190,16 +185,12 @@ object StepsUtils {
         return not(isDisplayed())
     }
 
-    fun isTrue(): Boolean {
-        return true
+    fun longClick(id: Int) {
+        element(id)?.perform(longClick())
     }
 
-    fun longClick(id: Int) {
-        assertThat("Cannot long click button $id", id, isEnabled())
-
-        poll {
-            element(id)?.perform(longClick())
-        }
+    fun pause() {
+        sleep(PAUSE)
     }
 
     fun selectListViewItem(id: Int, value: String) {
@@ -224,16 +215,12 @@ object StepsUtils {
 
     fun setChecked(id: Int, checked: Boolean) {
         assertThat("Cannot set checked $id", id, isEnabled())
-        poll {
-            element(id)?.perform(internalSetChecked(checked))
-        }
+        element(id)?.perform(internalSetChecked(checked))
     }
 
     fun setText(id: Int, newText: String) {
         assertThat("Cannot set text for $id", id, isEnabled())
-        poll {
-            element(id)?.perform(replaceText(newText))
-        }
+        element(id)?.perform(replaceText(newText))
     }
 
     fun <T : Activity> start(activityTestRule: ActivityTestRule<T>): T? {

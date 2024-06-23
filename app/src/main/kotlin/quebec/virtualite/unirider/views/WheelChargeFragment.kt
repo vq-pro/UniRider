@@ -154,6 +154,11 @@ open class WheelChargeFragment : BaseFragment() {
             checkFullCharge.isChecked -> calculatorService.requiredMaxVoltage(wheel)
             else -> {
                 val km = floatOf(widgets.getText(editKm))
+                if (km < 0.1f) {
+                    blankEstimates()
+                    return
+                }
+
                 val whPerKm = floatOf(parmRates[parmSelectedRate])
                 calculatorService.requiredVoltage(wheel!!, whPerKm, km)
             }

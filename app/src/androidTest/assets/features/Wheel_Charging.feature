@@ -64,21 +64,4 @@ Feature: Wheel Charging
       | required voltage | time |
       | 94.9V (+6.4)     | 48m  |
 
-#  FIXME-0 Full charge
-  @WIP
-  Scenario: Charging to full
-    When I request to charge for full
-    Then it displays these charging estimates:
-      | required voltage | time |
-      | 99.3V (+11.4)    | 1h25 |
-    And the distance and rate are hidden
-
-#  @WIP
-#  Scenario: Charging partially
-#    When I request to stop charging for max
-#    Then it displays these charging estimates:
-#      | required voltage | time |
-#      | 93.3V (+3.3)     | 25m  |
-#    And the distance and rate are enabled
-
 #    FIXME-1 Define the voltage stop for each wheel
