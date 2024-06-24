@@ -16,7 +16,7 @@ import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
@@ -25,6 +25,7 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editMileage: EditText
     internal lateinit var editName: EditText
     internal lateinit var editPreMileage: EditText
+    internal lateinit var editVoltageFull: EditText
     internal lateinit var editVoltageMax: EditText
     internal lateinit var editVoltageMin: EditText
     internal lateinit var editVoltageReserve: EditText
@@ -51,6 +52,7 @@ open class WheelEditFragment : BaseFragment() {
         editName = view.findViewById(R.id.edit_name)
         editPreMileage = view.findViewById(R.id.edit_premileage)
         editMileage = view.findViewById(R.id.edit_mileage)
+        editVoltageFull = view.findViewById(R.id.edit_voltage_full)
         editVoltageMax = view.findViewById(R.id.edit_voltage_max)
         editVoltageMin = view.findViewById(R.id.edit_voltage_min)
         editVoltageReserve = view.findViewById(R.id.edit_voltage_reserve)
@@ -63,6 +65,7 @@ open class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editName, onUpdateName())
         widgets.addTextChangedListener(editPreMileage, onUpdatePreMileage())
         widgets.addTextChangedListener(editMileage, onUpdateMileage())
+        widgets.addTextChangedListener(editVoltageFull, onUpdateVoltageFull())
         widgets.addTextChangedListener(editVoltageMax, onUpdateVoltageMax())
         widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
         widgets.addTextChangedListener(editVoltageReserve, onUpdateVoltageReserve())
@@ -79,6 +82,7 @@ open class WheelEditFragment : BaseFragment() {
                     checkSold.setChecked(initialWheel.isSold)
                     editChargeRate.setText("${initialWheel.chargeRate}")
                     editName.setText(initialWheel.name)
+                    editVoltageFull.setText("${initialWheel.voltageFull}")
                     editVoltageMax.setText("${initialWheel.voltageMax}")
                     editVoltageMin.setText("${initialWheel.voltageMin}")
                     editVoltageReserve.setText("${initialWheel.voltageReserve}")
@@ -142,6 +146,11 @@ open class WheelEditFragment : BaseFragment() {
 
     fun onUpdatePreMileage() = { newPreMileage: String ->
         updatedWheel = updatedWheel.copy(premileage = intOf(newPreMileage))
+        enableSaveIfChanged()
+    }
+
+    fun onUpdateVoltageFull() = { newVoltage: String ->
+        updatedWheel = updatedWheel.copy(voltageFull = floatOf(newVoltage))
         enableSaveIfChanged()
     }
 

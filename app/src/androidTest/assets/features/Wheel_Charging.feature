@@ -64,4 +64,5 @@ Feature: Wheel Charging
       | required voltage | time |
       | 94.9V (+6.4)     | 48m  |
 
-#    FIXME-1 Define the voltage stop for each wheel
+#    FIXME-0 Define the voltage stop for each wheel
+#    FIXME-1 Define the voltage charger differential for each wheel

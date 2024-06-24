@@ -14,12 +14,15 @@ open class WheelValidator {
             || updatedWheel.voltageMax == 0f
             || updatedWheel.voltageReserve == 0f
             || updatedWheel.chargeRate == 0f
+            || updatedWheel.voltageFull == 0f
         )
             return false
 
         if (updatedWheel.voltageMin > updatedWheel.voltageMax ||
             updatedWheel.voltageReserve > updatedWheel.voltageMax ||
-            updatedWheel.voltageReserve < updatedWheel.voltageMin
+            updatedWheel.voltageReserve < updatedWheel.voltageMin ||
+            updatedWheel.voltageFull < updatedWheel.voltageMin ||
+            updatedWheel.voltageFull > updatedWheel.voltageMax
         )
             return false
 
@@ -28,6 +31,7 @@ open class WheelValidator {
                 (updatedWheel.mileage != initialWheel.mileage) ||
                 (updatedWheel.name != initialWheel.name) ||
                 (updatedWheel.premileage != initialWheel.premileage) ||
+                (updatedWheel.voltageFull != initialWheel.voltageFull) ||
                 (updatedWheel.voltageMax != initialWheel.voltageMax) ||
                 (updatedWheel.voltageMin != initialWheel.voltageMin) ||
                 (updatedWheel.voltageReserve != initialWheel.voltageReserve) ||

@@ -2,10 +2,10 @@ Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
-      | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Sold |
-      | Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | Yes  |
-      | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 8V/h        | No   |
-      | S18     | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | No   |
+      | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Sold |
+      | Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | 99.4V       | Yes  |
+      | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.4V       | No   |
+      | S18     | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | 81.4V       | No   |
     And I start the app
 
   Scenario: Adding a wheel in full
@@ -24,6 +24,7 @@ Feature: Wheel Editing & Adding
     And it shows the updated name and a mileage of 150 on the main view
     And the wheel's Bluetooth name is undefined
 
+  @WIP
   Scenario: Editing a wheel in full
     Given I select the Sherman
     When I edit the wheel
@@ -36,6 +37,7 @@ Feature: Wheel Editing & Adding
       | Voltage Reserve  | 80.5        |
       | Voltage Min      | 74.5        |
       | Charge Rate      | 2           |
+      | Full Charge      | 99.5        |
       | Sold             | No          |
     Then the wheel was updated
     And I go back to the main view

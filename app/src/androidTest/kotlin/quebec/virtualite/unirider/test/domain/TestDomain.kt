@@ -67,7 +67,7 @@ class TestDomain(applicationContext: Context) {
     fun loadWheels(wheels: DataTable) {
         assertThat(
             wheels.topCells(),
-            equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate", "Sold"))
+            equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate", "Full Charge", "Sold"))
         )
 
         val wheelEntities = wheels.cells(1)
@@ -81,9 +81,10 @@ class TestDomain(applicationContext: Context) {
                 val voltageReserve = voltageOf(row[col++])
                 val voltageMax = voltageOf(row[col++])
                 val chargeRate = voltsPerHourOf(row[col++])
+                val voltageFull = voltageOf(row[col++])
                 val isSold = parseYesNo(row[col++])
 
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate, isSold)
+                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate, voltageFull, isSold)
             }
             .collect(toList())
 

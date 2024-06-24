@@ -70,6 +70,7 @@ class TestEditFragment(val app: TestApp) {
 
         val mapDetailToId = mapOf(
             Pair("Charge Rate", R.id.edit_charge_rate),
+            Pair("Full Charge", R.id.edit_voltage_full),
             Pair("Name", R.id.edit_name),
             Pair("Previous Mileage", R.id.edit_premileage),
             Pair("Mileage", R.id.edit_mileage),
@@ -109,6 +110,7 @@ class TestEditFragment(val app: TestApp) {
             floatOf(mapEntity["Voltage Reserve"]!!),
             floatOf(mapEntity["Voltage Max"]!!),
             floatOf(mapEntity["Charge Rate"]!!),
+            floatOf(mapEntity["Full Charge"]!!),
             "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
         )
 

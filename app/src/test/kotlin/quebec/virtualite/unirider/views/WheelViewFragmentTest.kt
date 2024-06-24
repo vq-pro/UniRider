@@ -54,6 +54,7 @@ import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.TOTAL_RANGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
@@ -353,7 +354,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, NOT_SOLD
             )
         )
         verify(mockedEditKm).setText("$KM_NEW")
@@ -382,7 +383,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_NEW,
-                CHARGE_RATE, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, NOT_SOLD
             )
         )
         verify(mockedEditKm).setText("0.0")

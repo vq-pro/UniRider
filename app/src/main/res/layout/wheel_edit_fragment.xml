@@ -159,7 +159,30 @@
                 />
             </TableRow>
 
-            <!-- Mileage-->
+            <!-- Full Charge -->
+            <TableRow>
+                <TextView
+                        android:labelFor="@+id/edit_voltage_full"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_full"
+                />
+
+                <EditText
+                        android:id="@+id/edit_voltage_full"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                />
+            </TableRow>
+
+            <!-- Mileage -->
             <TableRow>
                 <TextView
                         android:labelFor="@+id/edit_mileage"
