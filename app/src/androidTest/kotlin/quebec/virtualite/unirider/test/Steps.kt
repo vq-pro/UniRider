@@ -10,13 +10,11 @@ import cucumber.api.java.en.When
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.nullValue
-import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getSpinnerText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
@@ -27,7 +25,6 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setChecked
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.strip
@@ -43,7 +40,6 @@ import quebec.virtualite.unirider.views.WheelChargeFragment
 import quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
-import quebec.virtualite.unirider.views.WheelViewFragment
 import java.lang.Thread.sleep
 
 //FIXME-0 PageObjects
@@ -57,11 +53,10 @@ class Steps {
 
     private val chargeFragment = TestChargeFragment(app)
     private val editFragment = TestEditFragment(app)
-    private val mainFragment = TestMainFragment(domain)
-    private val viewFragment = TestViewFragment(app)
+    private val mainFragment = TestMainFragment(app, domain)
+    private val viewFragment = TestViewFragment(app, domain)
 
     private var expectedDeviceName: String = ""
-    private val expectedLiveWheelMileage = HashMap<String, Int>()
     private lateinit var selectedWheel: WheelEntity
     private lateinit var updatedWheel: WheelEntity
 
@@ -114,23 +109,22 @@ class Steps {
 
     @Then("^the km is updated to (.*?)$")
     fun kmUpdatedTo(expectedKm: Float) {
-        assertThat(R.id.edit_km, hasText("$expectedKm"))
+        viewFragment.validateKm(expectedKm)
     }
 
     @Then("^the mileage is updated to (.*?) km$")
     fun mileageUpdatedTo(expectedMileage: Int) {
-        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
+        viewFragment.validateMileageUpdated(expectedMileage)
     }
 
     @Then("the mileage is updated to its up-to-date value")
     fun mileageUpdatedToUpToDateValue() {
-        assertThat(R.id.view_mileage, hasText("${expectedLiveWheelMileage[selectedWheel.name]}"))
+        viewFragment.validateUpToDateMileage(selectedWheel)
     }
 
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
     fun voltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
-        assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
-        assertThat(R.id.view_battery, hasText("$expectedBattery"))
+        viewFragment.validateVoltageAndBattery(expectedVoltage, expectedBattery)
     }
 
     @Then("the wheel is gone")
@@ -197,8 +191,8 @@ class Steps {
             assertThat("Field '$field' is not defined", rawField, not(nullValue()))
 
             val key = rawField!!
-            if ("Sold".equals(field))
-                setChecked(key, "Yes".equals(value))
+            if ("Sold" == field)
+                setChecked(key, "Yes" == value)
             else
                 setText(key, value)
         }
@@ -280,12 +274,12 @@ class Steps {
 
     @Then("the wheel's Bluetooth name is updated")
     fun bluetoothNameUpdated() {
-        assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
+        viewFragment.validateBluetootName(expectedDeviceName)
     }
 
     @When("I cancel the scan and go back")
     fun cancelScan() {
-        back(2)
+        app.back(2)
     }
 
     @Then("I can enter the details for that wheel")
@@ -367,7 +361,7 @@ class Steps {
 
     @Then("^the starting voltage is (.*)V$")
     fun startingVoltageIs(expectedStartingVoltage: Float) {
-        assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
+        viewFragment.validateStartingVoltage(expectedStartingVoltage)
     }
 
     @Then("^it displays a percentage of (.*?)%$")
@@ -456,12 +450,7 @@ class Steps {
 
     @When("the updated mileage for some of these wheels should be:")
     fun updateMileageForSomeOfTheseWheels(table: DataTable) {
-        for (row in table.cells(1)) {
-            val wheelName = row[0]
-            val expectedMileage = row[1].toInt() + domain.getWheel(wheelName)!!.premileage
-
-            expectedLiveWheelMileage[wheelName] = expectedMileage
-        }
+        viewFragment.useTheseUpdateMileageValues(table)
     }
 
     @Given("this connected wheel:")
@@ -491,14 +480,14 @@ class Steps {
 
     @When("I go back to the main view")
     fun goBackToMainView() {
-        back()
-        assertThat(app.activeFragment(), equalTo(MainFragment::class.java))
+        app.back()
+        mainFragment.validateView()
     }
 
     @When("I go back to view the wheel")
     fun goBackToViewWheel() {
-        back()
-        assertThat(app.activeFragment(), equalTo(WheelViewFragment::class.java))
+        app.back()
+        viewFragment.validateView()
     }
 
     @When("I save and go back to the main view")
@@ -587,11 +576,7 @@ class Steps {
 
     @When("^I connect to the (.*?)$")
     fun whenConnectTo(deviceName: String) {
-        click(R.id.button_connect_view)
-
-        selectListViewItem(R.id.devices, deviceName)
-
-        expectedDeviceName = deviceName
+        expectedDeviceName = viewFragment.connectTo(deviceName)
     }
 
     @When("^I enter an actual voltage of (.*?)$")
@@ -619,7 +604,7 @@ class Steps {
 
     @When("I reconnect to the wheel")
     fun whenReconnectToWheel() {
-        click(R.id.button_connect_view)
+        viewFragment.reconnect()
     }
 
     @When("I reconnect to update the voltage$")
@@ -639,9 +624,7 @@ class Steps {
 
     @When("^I do a scan and see the (.*?) \\((.*?)\\) but go back without connecting$")
     fun whenTryingToConnectTo(deviceName: String, deviceAddr: String) {
-        click(R.id.button_connect_view)
-        assertThat(R.id.devices, hasRow(BluetoothDevice(deviceName, deviceAddr)))
-        goBackToViewWheel()
+        viewFragment.connectAndAbort(deviceName, deviceAddr)
     }
 
     @Given("this simulated device:")

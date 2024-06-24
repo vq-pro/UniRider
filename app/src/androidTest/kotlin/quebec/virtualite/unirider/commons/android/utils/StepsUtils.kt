@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBackUnconditionally
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
@@ -71,13 +70,6 @@ object StepsUtils {
 
     fun <T> assertThat(message: String, actual: T, matcher: Matcher<T>) {
         org.hamcrest.MatcherAssert.assertThat(message, actual, matcher)
-    }
-
-    fun back(nb: Int = 1) {
-        var i = nb
-        while (i-- > 0) {
-            pressBackUnconditionally()
-        }
     }
 
     fun click(id: Int) {

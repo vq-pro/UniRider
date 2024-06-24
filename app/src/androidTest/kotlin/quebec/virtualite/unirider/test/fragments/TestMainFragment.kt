@@ -10,11 +10,13 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.throwAssert
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
+import quebec.virtualite.unirider.views.MainFragment
 import quebec.virtualite.unirider.views.WheelRow
 import java.util.stream.Collectors.toList
 
-class TestMainFragment(val domain: TestDomain) {
+class TestMainFragment(val app: TestApp, val domain: TestDomain) {
 
     val NEW_WHEEL_ENTRY = "<New>"
     val SOLD_WHEEL_ENTRY = "<Sold>"
@@ -49,6 +51,10 @@ class TestMainFragment(val domain: TestDomain) {
         domain.forEachWheel { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
 
         assertThat(R.id.total_mileage, hasText("$totalMileage"))
+    }
+
+    fun validateView() {
+        assertThat(app.activeFragment(), equalTo(MainFragment::class.java))
     }
 
     fun validateWheels(expectedWheels: DataTable) {
