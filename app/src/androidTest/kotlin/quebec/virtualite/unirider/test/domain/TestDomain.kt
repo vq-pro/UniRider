@@ -4,7 +4,9 @@ import android.content.Context
 import cucumber.api.DataTable
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
+import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
+import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
@@ -94,8 +96,15 @@ class TestDomain(applicationContext: Context) {
         return db.findWheel(name)
     }
 
-    fun voltageOf(value: String): Float {
-        return floatOfWithSuffix(value, "V")
+    fun simulateDevice(device: DataTable) {
+        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltage")))
+        val deviceFields = device.cells(1)[0]
+
+        BluetoothServicesSim
+            .setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
+            .setKm(floatOf(deviceFields[2]))
+            .setMileage(floatOf(deviceFields[3]))
+            .setVoltage(voltageOf(deviceFields[4]))
     }
 
     fun updateWheelPreviousMileage(name: String, premileage: Int) {
@@ -108,6 +117,10 @@ class TestDomain(applicationContext: Context) {
     private fun floatOfWithSuffix(value: String, suffix: String): Float {
         assertThat(value, endsWith(suffix))
         return floatOf(value.substring(0, value.length - suffix.length))
+    }
+
+    private fun voltageOf(value: String): Float {
+        return floatOfWithSuffix(value, "V")
     }
 
     private fun voltsPerHourOf(value: String): Float {

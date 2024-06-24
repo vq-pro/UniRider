@@ -214,6 +214,13 @@ object StepsUtils {
         element(id)?.perform(replaceText(newText))
     }
 
+    fun strip(value: String, stripValue: String): String {
+        return when {
+            value.endsWith(stripValue) -> value.substring(0, value.length - stripValue.length).trim()
+            else -> value.trim()
+        }
+    }
+
     fun <T> throwAssert(message: String): T {
         throw AssertionError(message)
     }

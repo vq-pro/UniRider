@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.test
 
-import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import cucumber.api.DataTable
 import cucumber.api.java.After
@@ -15,7 +14,6 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
@@ -30,12 +28,13 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setChecked
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.strip
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
+import quebec.virtualite.unirider.test.fragments.TestChargeFragment
 import quebec.virtualite.unirider.test.fragments.TestEditFragment
 import quebec.virtualite.unirider.test.fragments.TestMainFragment
 import quebec.virtualite.unirider.test.fragments.TestViewFragment
@@ -55,6 +54,8 @@ class Steps {
 
     private val app = TestApp()
     private val domain = TestDomain(applicationContext())
+
+    private val chargeFragment = TestChargeFragment(app)
     private val editFragment = TestEditFragment(app)
     private val mainFragment = TestMainFragment(domain)
     private val viewFragment = TestViewFragment(app)
@@ -97,7 +98,7 @@ class Steps {
 
     @Then("I cannot connect to the wheel on the charge screen")
     fun cannotConnectToWheelOnChargeScreen() {
-        assertThat("Connect button is not disabled", R.id.button_connect_charge, isDisabled())
+        chargeFragment.validateCannotConnect()
     }
 
     @Then("it shows that every field is editable")
@@ -298,12 +299,12 @@ class Steps {
 
     @When("^I change the rate to (.*) wh/km$")
     fun changeRate(newRate: Int) {
-        selectSpinnerItem(R.id.spinner_wh_per_km, "$newRate")
+        chargeFragment.changeRateTo(newRate)
     }
 
     @When("^I change the voltage to (.*)$")
     fun changeVoltage(newVoltage: String) {
-        setText(R.id.edit_voltage_actual, strip(newVoltage, "V"))
+        chargeFragment.changeVoltageTo(newVoltage)
     }
 
     @When("I change the mileage")
@@ -376,7 +377,7 @@ class Steps {
 
     @Then("^it displays an actual voltage of (.*?)V$")
     fun displaysActualVoltage(expectedVoltage: String) {
-        assertThat(R.id.edit_voltage_actual, hasText(strip(expectedVoltage, "V")))
+        chargeFragment.validateActualVoltage(expectedVoltage)
     }
 
     @Then("it displays blank estimated values")
@@ -408,17 +409,7 @@ class Steps {
 
     @Then("it displays these charging estimates:")
     fun displaysTheseChargingEstimates(expectedEstimates: DataTable) {
-        expectedEstimates.diff(
-            DataTable.create(
-                listOf(
-                    listOf("required voltage", "time"),
-                    listOf(
-                        getText(R.id.view_voltage_required),
-                        getText(R.id.view_remaining_time)
-                    )
-                )
-            )
-        )
+        chargeFragment.validateEstimates(expectedEstimates)
     }
 
     @Then("it displays these estimates:")
@@ -439,7 +430,8 @@ class Steps {
 
     @When("I charge the wheel")
     fun chargeWheel() {
-        click(R.id.button_charge)
+        viewFragment.charge()
+        chargeFragment.validateView()
     }
 
     @When("I edit the wheel")
@@ -522,17 +514,17 @@ class Steps {
 
     @Given("^I set the actual voltage to (.*?)V$")
     fun setActualVoltageTo(voltage: String) {
-        setText(R.id.edit_voltage_actual, voltage)
+        viewFragment.setActualVoltageTo(voltage)
     }
 
     @Given("^I set the distance to (.*?)$")
     fun setDistanceTo(km: String) {
-        setText(R.id.edit_km, strip(km, "km"))
+        viewFragment.setDistanceTo(km)
     }
 
     @Given("^I set the starting voltage to (.*)$")
     fun setStartingVoltageTo(startingVoltage: String) {
-        setText(R.id.edit_voltage_start, strip(startingVoltage, "V"))
+        viewFragment.setStartingVoltageTo(startingVoltage)
     }
 
     @When("I wait")
@@ -632,17 +624,12 @@ class Steps {
 
     @When("I reconnect to update the voltage$")
     fun whenReconnectToUpdateVoltage() {
-        click(R.id.button_connect_charge)
+        chargeFragment.reconnect()
     }
 
     @When("^I request to charge for (.*?)$")
     fun whenRequestChargeFor(km: String) {
-        assertThat("Full button is not enabled by default", R.id.check_full_charge, isChecked())
-
-        if (!"full".equals(km)) {
-            click(R.id.check_full_charge)
-            setText(R.id.edit_km, strip(km, "km"))
-        }
+        chargeFragment.chargeFor(km)
     }
 
     @When("^I select the (.*?)$")
@@ -659,14 +646,7 @@ class Steps {
 
     @Given("this simulated device:")
     fun simulatedDevice(device: DataTable) {
-        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltage")))
-        val deviceFields = device.cells(1)[0]
-
-        BluetoothServicesSim
-            .setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
-            .setKm(floatOf(deviceFields[2]))
-            .setMileage(floatOf(deviceFields[3]))
-            .setVoltage(domain.voltageOf(deviceFields[4]))
+        domain.simulateDevice(device)
     }
 
     private fun getVoltageMax() = floatOf(getText(R.id.edit_voltage_max))
@@ -674,11 +654,4 @@ class Steps {
     private fun getVoltageMin() = floatOf(getText(R.id.edit_voltage_min))
 
     private fun getVoltageReserve() = floatOf(getText(R.id.edit_voltage_reserve))
-
-    private fun strip(value: String, stripValue: String): String {
-        return when {
-            value.endsWith(stripValue) -> value.substring(0, value.length - stripValue.length).trim()
-            else -> value.trim()
-        }
-    }
 }
