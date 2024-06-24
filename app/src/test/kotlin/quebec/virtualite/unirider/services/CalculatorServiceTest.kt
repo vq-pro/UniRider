@@ -127,7 +127,7 @@ class CalculatorServiceTest {
     fun requiredVoltage() {
         requiredVoltage(100.8f, 25f, 20f, 85.5f + CHARGER_OFFSET)
         requiredVoltage(100.8f, 35f, 40f, 91.8f + CHARGER_OFFSET)
-        requiredVoltage(100.8f, 25f, 200f, SHERMAN_MAX_3.voltageMax - CHARGER_OFFSET)
+        requiredVoltage(100.8f, 25f, 200f, SHERMAN_MAX_3.voltageFull)
     }
 
     private fun requiredVoltage(voltageStart: Float, whPerKm: Float, km: Float, expectedRequiredVoltage: Float) {
@@ -139,11 +139,11 @@ class CalculatorServiceTest {
     }
 
     @Test
-    fun requiredMaxVoltage() {
+    fun requiredFullVoltage() {
         // When
-        val result = service.requiredMaxVoltage(SHERMAN_MAX_3.copy(voltageStart = 100.8f))
+        val result = service.requiredFullVoltage(SHERMAN_MAX_3)
 
         // Then
-        assertThat(result, equalTo(SHERMAN_MAX_3.voltageMax - CHARGER_OFFSET))
+        assertThat(result, equalTo(SHERMAN_MAX_3.voltageFull))
     }
 }

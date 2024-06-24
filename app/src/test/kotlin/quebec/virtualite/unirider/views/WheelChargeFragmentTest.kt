@@ -35,7 +35,7 @@ import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
@@ -50,8 +50,6 @@ import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_RATES
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_SELECTED_RATE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_VOLTAGE
 import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
-
-private const val MAX_VOLTAGE_BEFORE_BALANCING = VOLTAGE_MAX3 - CHARGER_OFFSET
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java) {
@@ -349,27 +347,27 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     fun updateEstimates_whenFullCharge_displayValue() {
         // Given
         injectMocks()
-        mockCheckMaximumCharge(true)
+        mockCheckFullCharge(true)
 
-        given(mockedCalculatorService.requiredMaxVoltage(any())).willReturn(MAX_VOLTAGE_BEFORE_BALANCING)
+        given(mockedCalculatorService.requiredFullVoltage(any())).willReturn(VOLTAGE_FULL3)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        verify(mockedCalculatorService).requiredMaxVoltage(SHERMAN_MAX_3)
-        verifyVoltageRequired(MAX_VOLTAGE_BEFORE_BALANCING)
+        verify(mockedCalculatorService).requiredFullVoltage(SHERMAN_MAX_3)
+        verifyVoltageRequired(SHERMAN_MAX_3.voltageFull)
     }
 
     @Test
     fun updateEstimates_whenFullChargeIsNeeded_displayValue() {
         // Given
         injectMocks()
-        mockCheckMaximumCharge(false)
+        mockCheckFullCharge(false)
         mockEditKmWith(KM)
 
         given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
-            .willReturn(MAX_VOLTAGE_BEFORE_BALANCING)
+            .willReturn(SHERMAN_MAX_3.voltageFull)
 
         // When
         fragment.updateEstimates()
@@ -378,14 +376,14 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         val whPerKm = floatOf(WHS_PER_KM[WH_PER_KM_INDEX])
 
         verify(mockedCalculatorService).requiredVoltage(SHERMAN_MAX_3, whPerKm, KM)
-        verifyVoltageRequired(MAX_VOLTAGE_BEFORE_BALANCING)
+        verifyVoltageRequired(SHERMAN_MAX_3.voltageFull)
     }
 
     @Test
     fun updateEstimates_whenVoltageIsEnough_displayValue() {
         // Given
         injectMocks()
-        mockCheckMaximumCharge(false)
+        mockCheckFullCharge(false)
         mockEditKmWith(KM)
 
         given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
@@ -405,7 +403,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     fun updateEstimates_whenVoltageIsLimit_displayValue() {
         // Given
         injectMocks()
-        mockCheckMaximumCharge(false)
+        mockCheckFullCharge(false)
         mockEditKmWith(KM)
 
         given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
@@ -425,7 +423,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     fun updateEstimates_whenVoltageIsNotEnough_displayValue() {
         // Given
         injectMocks()
-        mockCheckMaximumCharge(false)
+        mockCheckFullCharge(false)
         mockEditKmWith(KM)
 
         val voltageRequired = VOLTAGE + CHARGER_OFFSET + 0.1f
@@ -446,7 +444,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     fun updateEstimates_withZeroKm_noDisplay() {
         // Given
         injectMocks()
-        mockCheckMaximumCharge(false)
+        mockCheckFullCharge(false)
         mockEditKmWith(0f)
 
         // When
@@ -475,7 +473,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         mockField(R.id.view_voltage_required, mockedTextVoltageRequired)
     }
 
-    private fun mockCheckMaximumCharge(value: Boolean) {
+    private fun mockCheckFullCharge(value: Boolean) {
         given(mockedCheckFullCharge.isChecked).willReturn(value)
     }
 

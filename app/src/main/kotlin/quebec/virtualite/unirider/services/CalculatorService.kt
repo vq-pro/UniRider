@@ -41,8 +41,8 @@ open class CalculatorService {
         return round(rawPercentage(wheel, voltage!!) * 100, NUM_DECIMALS)
     }
 
-    open fun requiredMaxVoltage(wheel: WheelEntity?): Float {
-        return (wheel!!).voltageMax - CHARGER_OFFSET
+    open fun requiredFullVoltage(wheel: WheelEntity?): Float {
+        return (wheel!!).voltageFull
     }
 
     open fun requiredVoltage(wheel: WheelEntity?, whPerKm: Float, km: Float): Float {
@@ -55,7 +55,7 @@ open class CalculatorService {
         val voltageRange = wheel.voltageMax - wheel.voltageMin
         val voltageRequired = min(
             percentage * voltageRange + wheel.voltageMin + CHARGER_OFFSET,
-            wheel.voltageMax - CHARGER_OFFSET
+            wheel.voltageFull
         )
 
         return round(voltageRequired, NUM_DECIMALS)

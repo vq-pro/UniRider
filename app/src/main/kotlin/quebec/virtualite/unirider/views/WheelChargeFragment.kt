@@ -151,7 +151,7 @@ open class WheelChargeFragment : BaseFragment() {
     @SuppressLint("SetTextI18n")
     internal open fun updateEstimates() {
         val requiredVoltageOnCharger = when {
-            checkFullCharge.isChecked -> calculatorService.requiredMaxVoltage(wheel)
+            checkFullCharge.isChecked -> calculatorService.requiredFullVoltage(wheel)
             else -> {
                 val km = floatOf(widgets.getText(editKm))
                 if (km < 0.1f) {

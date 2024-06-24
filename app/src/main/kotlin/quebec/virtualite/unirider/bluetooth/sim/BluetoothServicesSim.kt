@@ -3,6 +3,9 @@ package quebec.virtualite.unirider.bluetooth.sim
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
+import java.lang.Thread.sleep
+
+private const val BLUETOOTH_SIMULATED_DELAY = 250L
 
 open class BluetoothServicesSim : BluetoothServices {
 
@@ -34,12 +37,12 @@ open class BluetoothServicesSim : BluetoothServices {
     }
 
     override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((WheelInfo?) -> Unit)?) {
-        Thread.sleep(1000)
+        sleep(BLUETOOTH_SIMULATED_DELAY)
         onGotInfo!!.invoke(WheelInfo(km, mileage, 0f, voltage))
     }
 
     override fun scan(onFound: ((BluetoothDevice) -> Unit)?) {
-        Thread.sleep(1000)
+        sleep(BLUETOOTH_SIMULATED_DELAY)
         onFound!!.invoke(device)
     }
 

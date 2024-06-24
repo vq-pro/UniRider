@@ -43,7 +43,6 @@ Feature: Wheel Editing & Adding
     And I go back to the main view
     And it shows the updated name and a mileage of 200 on the main view
 
-  @WIP
   Scenario Outline: Wheel <can or cannot> be saved if we <do something>
     Given the Sherman has a previous mileage of 3600 km
     And I select the Sherman

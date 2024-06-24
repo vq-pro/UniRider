@@ -37,8 +37,6 @@ Feature: Wheel Charging
       | required voltage | time |
       | 93.3V (+3.3)     | 25m  |
 
-#    FIXME-0 Define the voltage stop for each wheel
-#  @WIP
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V
@@ -51,9 +49,9 @@ Feature: Wheel Charging
       | 20 km    | 89.2V (+1.3)     | 10m  |
       | 40 km    | 94.9V (+7.0)     | 53m  |
       | 50 km    | 97.7V (+9.8)     | 1h14 |
-      | 60 km    | 99.5V (+11.4)    | 1h25 |
-      | 200 km   | 99.5V (+11.4)    | 1h25 |
-      | full     | 99.5V (+11.4)    | 1h25 |
+      | 60 km    | 99.5V (+11.6)    | 1h27 |
+      | 200 km   | 99.5V (+11.6)    | 1h27 |
+      | full     | 99.5V (+11.6)    | 1h27 |
 
   Scenario: Reconnect to update the voltage
     Given this simulated device:
