@@ -29,6 +29,10 @@ class TestEditFragment(val app: TestApp) {
         setText(R.id.edit_charge_rate, value)
     }
 
+    fun changeFullVoltage(value: String) {
+        setText(R.id.edit_voltage_full, value)
+    }
+
     fun changeMileage(value: String) {
         setText(R.id.edit_mileage, value)
     }
@@ -119,16 +123,20 @@ class TestEditFragment(val app: TestApp) {
         return updatedWheel
     }
 
-    fun getVoltageMax(): String {
-        return getText(R.id.edit_voltage_max)
+    fun getVoltageFull(): Float {
+        return floatOf(getText(R.id.edit_voltage_full))
     }
 
-    fun getVoltageMin(): String {
-        return getText(R.id.edit_voltage_min)
+    fun getVoltageMax(): Float {
+        return floatOf(getText(R.id.edit_voltage_max))
     }
 
-    fun getVoltageReserve(): String {
-        return getText(R.id.edit_voltage_reserve)
+    fun getVoltageMin(): Float {
+        return floatOf(getText(R.id.edit_voltage_min))
+    }
+
+    fun getVoltageReserve(): Float {
+        return floatOf(getText(R.id.edit_voltage_reserve))
     }
 
     fun markAsSold() {

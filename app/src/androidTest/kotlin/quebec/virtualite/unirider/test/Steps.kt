@@ -7,7 +7,6 @@ import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import org.hamcrest.Matchers.equalTo
-import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.database.WheelEntity
@@ -159,6 +158,11 @@ class Steps {
         editFragment.changeName(" ")
     }
 
+    @When("I blank the full voltage")
+    fun blankWheelFullVoltage() {
+        editFragment.changeFullVoltage(" ")
+    }
+
     @When("I blank the maximum voltage")
     fun blankWheelMaximumVoltage() {
         editFragment.changeVoltageMax(" ")
@@ -223,14 +227,19 @@ class Steps {
         editFragment.changeMileage("123")
     }
 
-    @When("I change the minimum voltage")
-    fun changeWheelVoltageMin() {
-        editFragment.changeVoltageMin("${getVoltageMin() + 0.1f}")
+    @When("I change the full voltage")
+    fun changeWheelVoltageFull() {
+        editFragment.changeFullVoltage("${editFragment.getVoltageFull() + 0.1f}")
     }
 
     @When("I change the maximum voltage")
     fun changeWheelVoltageMax() {
-        editFragment.changeVoltageMax("${getVoltageMax() + 0.1f}")
+        editFragment.changeVoltageMax("${editFragment.getVoltageMax() + 0.1f}")
+    }
+
+    @When("I change the minimum voltage")
+    fun changeWheelVoltageMin() {
+        editFragment.changeVoltageMin("${editFragment.getVoltageMin() + 0.1f}")
     }
 
     @When("I change the charge rate")
@@ -250,7 +259,7 @@ class Steps {
 
     @When("I change the reserve voltage")
     fun changeWheelReserveVoltage() {
-        editFragment.changeReserveVoltage("${getVoltageReserve() + 0.1f}")
+        editFragment.changeReserveVoltage("${editFragment.getVoltageReserve() + 0.1f}")
     }
 
     @When("I change the wh")
@@ -316,19 +325,29 @@ class Steps {
         viewFragment.editWheel()
     }
 
+    @When("I set the full voltage lower than the minimum")
+    fun setFullVoltageLowerThanMinimum() {
+        editFragment.changeFullVoltage("${editFragment.getVoltageMin() - 0.1f}")
+    }
+
+    @When("I set the full voltage higher than the maximum")
+    fun setFullVoltageHigherThanMaximum() {
+        editFragment.changeFullVoltage("${editFragment.getVoltageMax() + 0.1f}")
+    }
+
     @When("I set the maximum voltage lower than the minimum")
     fun setMaximumVoltageLowerThanMinimum() {
-        editFragment.changeVoltageMax("${getVoltageMin() - 0.1f}")
+        editFragment.changeVoltageMax("${editFragment.getVoltageMin() - 0.1f}")
     }
 
     @When("I set the reserve voltage higher than the maximum")
     fun setReserveVoltageHigherThanMaximum() {
-        editFragment.changeReserveVoltage("${getVoltageMax() + 0.1f}")
+        editFragment.changeReserveVoltage("${editFragment.getVoltageMax() + 0.1f}")
     }
 
     @When("I set the reserve voltage lower than the minimum")
     fun setReserveVoltageLowerThanMinimum() {
-        editFragment.changeReserveVoltage("${getVoltageMin() - 0.1f}")
+        editFragment.changeReserveVoltage("${editFragment.getVoltageMin() - 0.1f}")
     }
 
     @When("the updated mileage for some of these wheels should be:")
@@ -500,10 +519,4 @@ class Steps {
     fun simulatedDevice(device: DataTable) {
         domain.simulateDevice(device)
     }
-
-    private fun getVoltageMax() = floatOf(editFragment.getVoltageMax())
-
-    private fun getVoltageMin() = floatOf(editFragment.getVoltageMin())
-
-    private fun getVoltageReserve() = floatOf(editFragment.getVoltageReserve())
 }

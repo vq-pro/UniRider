@@ -19,12 +19,12 @@ Feature: Wheel Editing & Adding
       | Voltage Reserve  | 80.0        |
       | Voltage Min      | 75.6        |
       | Charge Rate      | 8           |
+      | Full Charge      | 99.5        |
       | Sold             | No          |
     Then the wheel was added
     And it shows the updated name and a mileage of 150 on the main view
     And the wheel's Bluetooth name is undefined
 
-  @WIP
   Scenario: Editing a wheel in full
     Given I select the Sherman
     When I edit the wheel
@@ -43,6 +43,7 @@ Feature: Wheel Editing & Adding
     And I go back to the main view
     And it shows the updated name and a mileage of 200 on the main view
 
+  @WIP
   Scenario Outline: Wheel <can or cannot> be saved if we <do something>
     Given the Sherman has a previous mileage of 3600 km
     And I select the Sherman
@@ -55,10 +56,12 @@ Feature: Wheel Editing & Adding
       | can           | change the name                                 |
       | can           | change the mileage                              |
       | can           | blank the mileage                               |
+      | can           | change the full voltage                         |
       | can           | change the maximum voltage                      |
       | can           | change the minimum voltage                      |
       | can           | change the previous mileage                     |
       | can           | change the reserve voltage                      |
+#      | can           | blank the full voltage                          |
       | can           | blank the previous mileage                      |
       | can           | blank the reserve voltage                       |
       | can           | change the wh                                   |
@@ -66,10 +69,13 @@ Feature: Wheel Editing & Adding
       | cannot        | blank the charge rate                           |
       | cannot        | blank the name                                  |
       | cannot        | blank the wh                                    |
+      | cannot        | blank the full voltage                          |
       | cannot        | blank the maximum voltage                       |
       | cannot        | blank the minimum voltage                       |
       | cannot        | change nothing                                  |
       | cannot        | reuse the name S18                              |
+      | cannot        | set the full voltage lower than the minimum     |
+      | cannot        | set the full voltage higher than the maximum    |
       | cannot        | set the maximum voltage lower than the minimum  |
       | cannot        | set the reserve voltage higher than the maximum |
       | cannot        | set the reserve voltage lower than the minimum  |

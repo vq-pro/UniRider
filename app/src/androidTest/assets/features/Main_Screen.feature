@@ -2,12 +2,12 @@ Feature: Main Screen
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Sold |
-      | Sherman     | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 6V/h        | No   |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | Yes  |
-      | 14S         | 694     | 840  | 48V         | 55V             | 67.2V       | 4V/h        | No   |
-      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | Yes  |
-      | S18         | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | Yes  |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Sold |
+      | Sherman     | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 6V/h        | 99.5V       | No   |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.5V       | Yes  |
+      | 14S         | 694     | 840  | 48V         | 55V             | 67.2V       | 4V/h        | 65.5V       | No   |
+      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | 99.5V       | Yes  |
+      | S18         | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | 81.5V       | Yes  |
     And the Sherman has a previous mileage of 3600 km
 
   Scenario: On entering, we see a list of registered wheels and their mileage
