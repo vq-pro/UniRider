@@ -6,18 +6,24 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getSpinnerText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.strip
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
+import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
 
 class TestViewFragment(val app: TestApp, val domain: TestDomain) {
 
+    private var expectedDeviceName: String = ""
     private val expectedLiveWheelMileage = HashMap<String, Int>()
 
     fun charge() {
@@ -32,11 +38,15 @@ class TestViewFragment(val app: TestApp, val domain: TestDomain) {
         validateView()
     }
 
-    fun connectTo(deviceName: String): String {
+    fun connectTo(deviceName: String) {
         click(R.id.button_connect_view)
         selectListViewItem(R.id.devices, deviceName)
 
-        return deviceName
+        expectedDeviceName = deviceName
+    }
+
+    fun editWheel() {
+        click(R.id.button_edit)
     }
 
     fun reconnect() {
@@ -44,7 +54,7 @@ class TestViewFragment(val app: TestApp, val domain: TestDomain) {
     }
 
     fun setActualVoltageTo(voltage: String) {
-        setText(R.id.edit_voltage_actual, voltage)
+        setText(R.id.edit_voltage_actual, stripV(voltage))
     }
 
     fun setDistanceTo(km: String) {
@@ -64,20 +74,71 @@ class TestViewFragment(val app: TestApp, val domain: TestDomain) {
         }
     }
 
-    fun validateBluetootName(expectedDeviceName: String) {
+    fun validateBlankEstimates() {
+        validateEstimates(
+            DataTable.create(
+                listOf(
+                    listOf("remaining", "total range", "wh/km"),
+                    listOf("", "", "")
+                )
+            )
+        )
+    }
+
+    fun validateBluetoothName() {
         assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
+    }
+
+    fun validateCannotCharge() {
+        assertThat("Charge button is not disabled", R.id.button_charge, isDisabled())
+    }
+
+    fun validateEstimates(expectedEstimates: DataTable) {
+        expectedEstimates.diff(
+            DataTable.create(
+                listOf(
+                    listOf("remaining", "total range", "wh/km"),
+                    listOf(
+                        getText(R.id.view_remaining_range),
+                        getText(R.id.view_total_range),
+                        getSpinnerText(R.id.spinner_wh_per_km)
+                    )
+                )
+            )
+        )
     }
 
     fun validateKm(expectedKm: Float) {
         assertThat(R.id.edit_km, hasText("$expectedKm"))
     }
 
-    fun validateMileageUpdated(expectedMileage: Int) {
-        assertThat(R.id.view_mileage, hasText("$expectedMileage"))
+    fun validateMileageUpdated(expectedMileage: String) {
+        assertThat(R.id.view_mileage, hasText(expectedMileage))
+    }
+
+    fun validateName(expectedName: String) {
+        assertThat(R.id.view_name, hasText(expectedName))
+    }
+
+    fun validatePercentage(expectedPercentage: String) {
+        assertThat(R.id.view_battery, hasText(expectedPercentage))
+    }
+
+    fun validateSold(name: String) {
+        assertThat("Wrong title", R.id.view_name, hasText("${name} (Sold)"))
+        assertThat("Charge button should not appear", R.id.button_charge, isHidden())
+        assertThat("Connect button should not appear", R.id.button_connect_view, isHidden())
     }
 
     fun validateStartingVoltage(expectedStartingVoltage: Float) {
         assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
+    }
+
+    fun validateUnsold(selectedWheel: WheelEntity) {
+        assertThat(
+            "The wheel is gone", R.id.wheels,
+            hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))
+        )
     }
 
     fun validateUpToDateMileage(selectedWheel: WheelEntity) {
@@ -97,4 +158,9 @@ class TestViewFragment(val app: TestApp, val domain: TestDomain) {
         assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery"))
     }
+
+    private fun stripV(voltage: String): String = if (voltage.endsWith("V"))
+        voltage.substring(0, voltage.length - 1)
+    else
+        voltage
 }

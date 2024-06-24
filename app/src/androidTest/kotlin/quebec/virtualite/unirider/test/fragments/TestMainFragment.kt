@@ -2,9 +2,11 @@ package quebec.virtualite.unirider.test.fragments
 
 import cucumber.api.DataTable
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.not
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
@@ -46,6 +48,11 @@ class TestMainFragment(val app: TestApp, val domain: TestDomain) {
         selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
     }
 
+    fun validateBluetoothDeviceUndefined(selectedWheel: WheelEntity) {
+        assertThat(selectedWheel.btName, equalTo(null))
+        assertThat(selectedWheel.btAddr, equalTo(null))
+    }
+
     fun validateTotalMileage() {
         var totalMileage = 0
         domain.forEachWheel { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
@@ -55,6 +62,18 @@ class TestMainFragment(val app: TestApp, val domain: TestDomain) {
 
     fun validateView() {
         assertThat(app.activeFragment(), equalTo(MainFragment::class.java))
+    }
+
+    fun validateUpdatedNameAndMileage(expectedId: Long, expectedName: String, expectedMileage: Int) {
+        validateView()
+        assertThat(R.id.wheels, hasRow(WheelRow(expectedId, expectedName, expectedMileage)))
+    }
+
+    fun validateWheelIsGone(selectedWheel: WheelEntity) {
+        assertThat(
+            "The wheel is not gone", R.id.wheels,
+            not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
+        )
     }
 
     fun validateWheels(expectedWheels: DataTable) {

@@ -15,7 +15,7 @@ Feature: Wheel Viewing
     Given I select the <wheel>
     And I set the starting voltage to <starting voltage>V
     And I set the distance to <km> km
-    When I enter an actual voltage of <voltage>V
+    When I set the actual voltage to <voltage>V
     Then it displays these estimates:
       | remaining   | total range | wh/km   |
       | <remaining> | <total>     | <wh/km> |
@@ -31,7 +31,7 @@ Feature: Wheel Viewing
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And I set the distance to <km>
-    When I enter an actual voltage of <voltage>
+    When I set the actual voltage to <voltage>
     Then it displays blank estimated values
     Examples:
       | wheel   | km      | voltage |
@@ -46,7 +46,7 @@ Feature: Wheel Viewing
     Given I select the Sherman Max
     And I set the starting voltage to 100.6V
     And I set the distance to 20 km
-    And I enter an actual voltage of 94.1V
+    And I set the actual voltage to 94.1V
     And it displays these estimates:
       | remaining | total range | wh/km |
       | 37.3      | 57.3        | 46.4  |
@@ -58,7 +58,7 @@ Feature: Wheel Viewing
   Scenario Outline: Calculating percentage [<wheel> / <voltage>]
     Given I select the <wheel>
     And I set the starting voltage to <voltage>
-    When I enter an actual voltage of <voltage>
+    When I set the actual voltage to <voltage>
     Then it displays a percentage of <battery>
     Examples:
       | wheel       | voltage | battery |

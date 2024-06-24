@@ -45,7 +45,6 @@ import java.lang.Thread.sleep
 object StepsUtils {
 
     val INTERVAL = 250L
-    val PAUSE = if (BLUETOOTH_ACTUAL) 2000L else 0L
     val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
 
     fun applicationContext(): Context {
@@ -170,10 +169,6 @@ object StepsUtils {
 
     fun longClick(id: Int) {
         element(id)?.perform(longClick())
-    }
-
-    fun pause() {
-        sleep(PAUSE)
     }
 
     fun selectListViewItem(id: Int, value: String) {
