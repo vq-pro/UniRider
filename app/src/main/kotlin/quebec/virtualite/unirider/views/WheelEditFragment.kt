@@ -9,7 +9,8 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
-import quebec.virtualite.commons.android.utils.NumberUtils.intOf
+import quebec.virtualite.commons.android.utils.NumberUtils.safeFloatOf
+import quebec.virtualite.commons.android.utils.NumberUtils.safeIntOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
@@ -130,12 +131,12 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onUpdateChargeRate() = { newChargeRate: String ->
-        updatedWheel = updatedWheel.copy(chargeRate = floatOf(newChargeRate))
+        updatedWheel = updatedWheel.copy(chargeRate = safeFloatOf(newChargeRate))
         enableSaveIfChanged()
     }
 
     fun onUpdateMileage() = { newMileage: String ->
-        updatedWheel = updatedWheel.copy(mileage = intOf(newMileage))
+        updatedWheel = updatedWheel.copy(mileage = safeIntOf(newMileage))
         enableSaveIfChanged()
     }
 
@@ -145,27 +146,31 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onUpdatePreMileage() = { newPreMileage: String ->
-        updatedWheel = updatedWheel.copy(premileage = intOf(newPreMileage))
+        updatedWheel = updatedWheel.copy(premileage = safeIntOf(newPreMileage))
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageFull() = { newVoltage: String ->
-        updatedWheel = updatedWheel.copy(voltageFull = floatOf(newVoltage))
+        var newVoltageFull = safeFloatOf(newVoltage)
+        if (newVoltageFull == 0f)
+            newVoltageFull = floatOf(widgets.getText(editVoltageMax))
+
+        updatedWheel = updatedWheel.copy(voltageFull = newVoltageFull)
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageMax() = { newVoltage: String ->
-        updatedWheel = updatedWheel.copy(voltageMax = floatOf(newVoltage), voltageStart = floatOf(newVoltage))
+        updatedWheel = updatedWheel.copy(voltageMax = safeFloatOf(newVoltage), voltageStart = safeFloatOf(newVoltage))
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageMin() = { newVoltage: String ->
-        updatedWheel = updatedWheel.copy(voltageMin = floatOf(newVoltage))
+        updatedWheel = updatedWheel.copy(voltageMin = safeFloatOf(newVoltage))
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageReserve() = { newVoltage: String ->
-        var newVoltageReserve = floatOf(newVoltage)
+        var newVoltageReserve = safeFloatOf(newVoltage)
         if (newVoltageReserve == 0f)
             newVoltageReserve = floatOf(widgets.getText(editVoltageMin))
 
@@ -174,7 +179,7 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onUpdateWh() = { newWh: String ->
-        updatedWheel = updatedWheel.copy(wh = intOf(newWh))
+        updatedWheel = updatedWheel.copy(wh = safeIntOf(newWh))
         enableSaveIfChanged()
     }
 }

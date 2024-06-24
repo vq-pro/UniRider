@@ -38,7 +38,7 @@ Feature: Wheel Charging
       | 93.3V (+3.3)     | 25m  |
 
 #    FIXME-0 Define the voltage stop for each wheel
-  @WIP
+#  @WIP
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V

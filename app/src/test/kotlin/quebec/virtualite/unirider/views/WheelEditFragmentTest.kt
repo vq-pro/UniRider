@@ -33,6 +33,7 @@ import quebec.virtualite.unirider.TestDomain.PREMILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.SOLD
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
@@ -337,6 +338,22 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     }
 
     @Test
+    fun onUpdateChargeRate_whenInvalid_zero() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        // When
+        fragment.onUpdateChargeRate().invoke("ab ")
+
+        // Then
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = 0f)))
+    }
+
+    @Test
     fun onUpdateMileage() {
         // Given
         initForUpdates(true)
@@ -361,6 +378,22 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // When
         fragment.onUpdateMileage().invoke(" ")
+
+        // Then
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(mileage = 0)))
+    }
+
+    @Test
+    fun onUpdateMileage_whenInvalid_zero() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        // When
+        fragment.onUpdateMileage().invoke("ab ")
 
         // Then
         verify(mockedWheelValidator).canSave(any(), any())
@@ -403,6 +436,22 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     }
 
     @Test
+    fun onUpdatePreMileage_whenInvalid_zero() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        // When
+        fragment.onUpdatePreMileage().invoke("ab ")
+
+        // Then
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(premileage = 0)))
+    }
+
+    @Test
     fun onUpdateName() {
         // Given
         initForUpdates(true)
@@ -417,6 +466,65 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedWidgets).enable(mockedButtonSave)
 
         assertThat(fragment.updatedWheel, equalTo(S18_1.copy(name = NAME_NEW)))
+    }
+
+    @Test
+    fun onUpdateVoltageFull() {
+        // Given
+        initForUpdates(true)
+        injectMocks()
+
+        // When
+        fragment.onUpdateVoltageFull().invoke("$VOLTAGE_FULL_NEW ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).enable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageFull = VOLTAGE_FULL_NEW)))
+    }
+
+    @Test
+    fun onUpdateVoltageFull_whenEmpty_setToMaximum() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        fragment.editVoltageMax = mockedEditVoltageMax
+        given(mockedWidgets.getText(mockedEditVoltageMax))
+            .willReturn("$VOLTAGE_MAX")
+
+        // When
+        fragment.onUpdateVoltageFull().invoke(" ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageFull = VOLTAGE_MAX)))
+    }
+
+    @Test
+    fun onUpdateVoltageFull_whenInvalid_setToMaximum() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        fragment.editVoltageMax = mockedEditVoltageMax
+        given(mockedWidgets.getText(mockedEditVoltageMax))
+            .willReturn("$VOLTAGE_MAX")
+
+        // When
+        fragment.onUpdateVoltageFull().invoke("ab ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageFull = VOLTAGE_MAX)))
     }
 
     @Test
@@ -457,6 +565,23 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     }
 
     @Test
+    fun onUpdateVoltageMax_whenInvalid_zero() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        // When
+        fragment.onUpdateVoltageMax().invoke("ab ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = 0f, voltageStart = 0f)))
+    }
+
+    @Test
     fun onUpdateVoltageMin() {
         // Given
         initForUpdates(true)
@@ -481,6 +606,23 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // When
         fragment.onUpdateVoltageMin().invoke(" ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMin = 0f)))
+    }
+
+    @Test
+    fun onUpdateVoltageMin_whenInvalid_zero() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        // When
+        fragment.onUpdateVoltageMin().invoke("ab ")
 
         // Then
         verify(mockedDb, never()).saveWheels(any())
@@ -529,6 +671,27 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     }
 
     @Test
+    fun onUpdateVoltageReserve_whenInvalid_setToMinimum() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        fragment.editVoltageMin = mockedEditVoltageMin
+        given(mockedWidgets.getText(mockedEditVoltageMin))
+            .willReturn("$VOLTAGE_MIN")
+
+        // When
+        fragment.onUpdateVoltageReserve().invoke("ab ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageReserve = VOLTAGE_MIN)))
+    }
+
+    @Test
     fun onUpdateWh() {
         // Given
         initForUpdates(true)
@@ -553,6 +716,23 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // When
         fragment.onUpdateWh().invoke(" ")
+
+        // Then
+        verify(mockedDb, never()).saveWheels(any())
+        verify(mockedWheelValidator).canSave(any(), any())
+        verify(mockedWidgets).disable(mockedButtonSave)
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(wh = 0)))
+    }
+
+    @Test
+    fun onUpdateWh_whenInvalid_zero() {
+        // Given
+        initForUpdates(false)
+        injectMocks()
+
+        // When
+        fragment.onUpdateWh().invoke("ab ")
 
         // Then
         verify(mockedDb, never()).saveWheels(any())

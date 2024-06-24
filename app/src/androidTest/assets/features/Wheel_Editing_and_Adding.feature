@@ -61,7 +61,7 @@ Feature: Wheel Editing & Adding
       | can           | change the minimum voltage                      |
       | can           | change the previous mileage                     |
       | can           | change the reserve voltage                      |
-#      | can           | blank the full voltage                          |
+      | can           | blank the full voltage                          |
       | can           | blank the previous mileage                      |
       | can           | blank the reserve voltage                       |
       | can           | change the wh                                   |
@@ -69,7 +69,6 @@ Feature: Wheel Editing & Adding
       | cannot        | blank the charge rate                           |
       | cannot        | blank the name                                  |
       | cannot        | blank the wh                                    |
-      | cannot        | blank the full voltage                          |
       | cannot        | blank the maximum voltage                       |
       | cannot        | blank the minimum voltage                       |
       | cannot        | change nothing                                  |
