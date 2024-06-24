@@ -1,14 +1,11 @@
 package quebec.virtualite.unirider.commons.android.utils
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Checkable
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
@@ -27,7 +24,6 @@ import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.rule.ActivityTestRule
 import org.apache.http.util.TextUtils.isBlank
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
@@ -44,7 +40,6 @@ import org.hamcrest.Matchers.isA
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.startsWith
 import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
-import quebec.virtualite.unirider.views.MainActivity
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
@@ -87,10 +82,6 @@ object StepsUtils {
 
     fun click(id: Int) {
         element(id)?.perform(click())
-    }
-
-    fun currentFragment(mainActivity: MainActivity): Class<Fragment> {
-        return mainActivity.supportFragmentManager.fragments[0].childFragmentManager.fragments[0].javaClass
     }
 
     fun getSpinnerText(id: Int): String {
@@ -221,15 +212,6 @@ object StepsUtils {
     fun setText(id: Int, newText: String) {
         assertThat("Cannot set text for $id", id, isEnabled())
         element(id)?.perform(replaceText(newText))
-    }
-
-    fun <T : Activity> start(activityTestRule: ActivityTestRule<T>): T? {
-        activityTestRule.launchActivity(Intent())
-        return activityTestRule.activity
-    }
-
-    fun <T : Activity> stop(activityTestRule: ActivityTestRule<T>) {
-        activityTestRule.finishActivity()
     }
 
     fun <T> throwAssert(message: String): T {

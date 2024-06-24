@@ -2,18 +2,15 @@ package quebec.virtualite.unirider.test
 
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.rule.ActivityTestRule
 import cucumber.api.DataTable
 import cucumber.api.java.After
 import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
-import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.nullValue
-import org.junit.Rule
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
@@ -23,11 +20,9 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationCo
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.back
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.currentFragment
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getSpinnerText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSelectedText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasSpinnerText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
@@ -38,38 +33,31 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListVie
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setChecked
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.start
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.stop
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.throwAssert
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.database.impl.WheelDbImpl
-import quebec.virtualite.unirider.views.MainActivity
+import quebec.virtualite.unirider.test.app.TestApp
+import quebec.virtualite.unirider.test.domain.TestDomain
+import quebec.virtualite.unirider.test.fragments.TestEditFragment
+import quebec.virtualite.unirider.test.fragments.TestMainFragment
+import quebec.virtualite.unirider.test.fragments.TestViewFragment
 import quebec.virtualite.unirider.views.MainFragment
 import quebec.virtualite.unirider.views.WheelChargeFragment
 import quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
-import java.lang.Integer.parseInt
 import java.lang.Thread.sleep
-import java.util.stream.Collectors.toList
 
-//FIXME-1 PageObjects
+//FIXME-0 PageObjects
 class Steps {
 
     private val IS_NOT_SOLD = false
     private val IS_SOLD = true
-    private val NEW_WHEEL_ENTRY = "<New>"
-    private val SOLD_WHEEL_ENTRY = "<Sold>"
 
-    @JvmField
-    @Rule
-    var activityTestRule = ActivityTestRule(MainActivity::class.java)
-
-    private val db = WheelDbImpl(applicationContext())
-    private val wheels = HashMap<String, WheelEntity>()
-
-    private lateinit var mainActivity: MainActivity
+    private val app = TestApp()
+    private val domain = TestDomain(applicationContext())
+    private val editFragment = TestEditFragment(app)
+    private val mainFragment = TestMainFragment(domain)
+    private val viewFragment = TestViewFragment(app)
 
     private var expectedDeviceName: String = ""
     private val expectedLiveWheelMileage = HashMap<String, Int>()
@@ -78,29 +66,28 @@ class Steps {
 
     @Before
     fun beforeScenario() {
-        db.deleteAll()
+        domain.clear()
     }
 
     @After
     fun afterScenario() {
-        stop(activityTestRule)
+        app.stop()
     }
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
-        selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
+        selectedWheel = mainFragment.addWheel()
     }
 
     @Then("I am back at the main screen")
     fun backOnMainScreen() {
-        assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
+        assertThat(app.activeFragment(), equalTo(MainFragment::class.java))
     }
 
     @Then("I can charge the wheel")
     fun canChargeWheel() {
         click(R.id.button_charge)
-        assertThat(currentFragment(mainActivity), equalTo(WheelChargeFragment::class.java))
+        assertThat(app.activeFragment(), equalTo(WheelChargeFragment::class.java))
     }
 
     @Then("I cannot charge the wheel")
@@ -115,12 +102,12 @@ class Steps {
 
     @Then("it shows that every field is editable")
     fun itShowsThatEveryFieldIsEditable() {
-        assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
+        assertThat(app.activeFragment(), equalTo(WheelEditFragment::class.java))
     }
 
     @Then("^it shows the updated name and a mileage of (.*?) on the main view$")
     fun itShowsTheUpdatedNameAndMileageOnTheMainView(expectedMileage: Int) {
-        assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
+        assertThat(app.activeFragment(), equalTo(MainFragment::class.java))
         assertThat(R.id.wheels, hasRow(WheelRow(selectedWheel.id, updatedWheel.name, expectedMileage)))
     }
 
@@ -171,36 +158,12 @@ class Steps {
 
     @Then("I see my wheels and their mileage:")
     fun seeMyWheelsAndTheirMileage(expectedWheels: DataTable) {
-        assertThat(expectedWheels.topCells(), equalTo(listOf("Name", "Mileage")))
-        val expectedRows = expectedWheels.cells(1)
-            .stream()
-            .map { row ->
-                val name = row[0]
-                val mileage = intOf(row[1])
-                val id = when (name) {
-                    SOLD_WHEEL_ENTRY,
-                    NEW_WHEEL_ENTRY -> 0
-
-                    else ->
-                        if (wheels[name] != null)
-                            wheels[name]!!.id
-                        else
-                            wheels[name.substring(2)]!!.id
-                }
-
-                WheelRow(id, name, mileage)
-            }
-            .collect(toList())
-
-        assertThat(R.id.wheels, hasRows(expectedRows))
+        mainFragment.validateWheels(expectedWheels)
     }
 
     @Then("I see the total mileage")
     fun seeTotalMileage() {
-        var totalMileage = 0
-        wheels.forEach { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
-
-        assertThat(R.id.total_mileage, hasText("$totalMileage"))
+        mainFragment.validateTotalMileage()
     }
 
     @Then("^the selected entry is (.*?)$")
@@ -260,13 +223,12 @@ class Steps {
 
     @When("I start the app")
     fun startApp() {
-        mainActivity = start(activityTestRule)!!
+        app.start()
     }
 
     @Then("the details view shows the details for that wheel")
     fun inDetailsView() {
-        assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
-        assertThat(R.id.view_name, hasText(selectedWheel.name))
+        viewFragment.validateViewing(selectedWheel)
     }
 
     @When("I blank the charge rate")
@@ -327,7 +289,7 @@ class Steps {
 
     @Then("I can enter the details for that wheel")
     fun canEnterDetailsForNewWheel() {
-        assertThat(currentFragment(mainActivity), equalTo(WheelEditFragment::class.java))
+        editFragment.validateView()
     }
 
     @When("I change nothing")
@@ -386,7 +348,7 @@ class Steps {
 
     @When("I confirm the deletion")
     fun confirmDelete() {
-        assertThat(currentFragment(mainActivity), equalTo(WheelDeleteConfirmationFragment::class.java))
+        assertThat(app.activeFragment(), equalTo(WheelDeleteConfirmationFragment::class.java))
         click(R.id.button_delete_confirmation)
     }
 
@@ -504,7 +466,7 @@ class Steps {
     fun updateMileageForSomeOfTheseWheels(table: DataTable) {
         for (row in table.cells(1)) {
             val wheelName = row[0]
-            val expectedMileage = row[1].toInt() + wheels[wheelName]!!.premileage
+            val expectedMileage = row[1].toInt() + domain.getWheel(wheelName)!!.premileage
 
             expectedLiveWheelMileage[wheelName] = expectedMileage
         }
@@ -517,55 +479,12 @@ class Steps {
 
     @Given("these wheels:")
     fun givenTheseWheels(wheels: DataTable) {
-        assertThat(
-            wheels.topCells(),
-            equalTo(listOf("Name", "Mileage", "Wh", "Voltage Min", "Voltage Reserve", "Voltage Max", "Charge Rate", "Sold"))
-        )
-
-        val wheelEntities = wheels.cells(1)
-            .stream()
-            .map { row ->
-                var col = 0
-                val name = row[col++]
-                val mileage = parseInt(row[col++])
-                val wh = parseInt(row[col++])
-                val voltageMin = voltageOf(row[col++])
-                val voltageReserve = voltageOf(row[col++])
-                val voltageMax = voltageOf(row[col++])
-                val chargeRate = voltsPerHourOf(row[col++])
-                val isSold = parseYesNo(row[col++])
-
-                WheelEntity(0, name, null, null, 0, mileage, wh, voltageMax, voltageMin, voltageReserve, voltageMax, chargeRate, isSold)
-            }
-            .collect(toList())
-
-        db.saveWheels(wheelEntities)
-
-        updateMapWheels()
+        domain.loadWheels(wheels)
     }
 
     @Given("these wheels are connected:")
     fun givenTheseWheelsAreConnected(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Bt Name", "Bt Address")))
-
-        wheels.cells(1)
-            .forEach { row ->
-                val name = row[0]
-                val btName = row[1]
-                val btAddress = row[2]
-
-                db.findWheel(name)?.let {
-                    db.saveWheel(
-                        it.copy(
-                            name = name,
-                            btName = btName,
-                            btAddr = btAddress
-                        )
-                    )
-                }
-            }
-
-        updateMapWheels()
+        domain.loadConnectedWheels(wheels)
     }
 
     @Given("this wheel:")
@@ -581,13 +500,13 @@ class Steps {
     @When("I go back to the main view")
     fun goBackToMainView() {
         back()
-        assertThat(currentFragment(mainActivity), equalTo(MainFragment::class.java))
+        assertThat(app.activeFragment(), equalTo(MainFragment::class.java))
     }
 
     @When("I go back to view the wheel")
     fun goBackToViewWheel() {
         back()
-        assertThat(currentFragment(mainActivity), equalTo(WheelViewFragment::class.java))
+        assertThat(app.activeFragment(), equalTo(WheelViewFragment::class.java))
     }
 
     @When("I save and go back to the main view")
@@ -633,10 +552,7 @@ class Steps {
 
     @Given("^the (.*?) has a previous mileage of (.*?) km$")
     fun wheelHasPreviousMileage(name: String, premileage: Int) {
-        db.findWheel(name)?.let {
-            db.saveWheel(it.copy(premileage = premileage))
-            updateMapWheels()
-        }
+        domain.updateWheelPreviousMileage(name, premileage)
     }
 
     @Then("the wheel appears as sold")
@@ -656,7 +572,7 @@ class Steps {
 
     @Then("the wheel was added")
     fun wheelWasAdded() {
-        selectedWheel = db.findWheel(updatedWheel.name)!!
+        selectedWheel = domain.locateWheel(updatedWheel.name)!!
 
         assertThat(selectedWheel.chargeRate, equalTo(updatedWheel.chargeRate))
         assertThat(selectedWheel.name, equalTo(updatedWheel.name))
@@ -668,13 +584,13 @@ class Steps {
 
     @Then("the wheel was updated")
     fun wheelWasUpdated() {
-        val wheel = db.getWheel(selectedWheel.id)
+        val wheel = domain.loadWheel(selectedWheel.id)
         assertThat(wheel, equalTo(updatedWheel))
     }
 
     @When("I collapse the sold wheels")
     fun whenCollapseSoldWheels() {
-        whenOpenSoldWheels()
+        mainFragment.toggleSoldWheels()
     }
 
     @When("^I connect to the (.*?)$")
@@ -706,7 +622,7 @@ class Steps {
      */
     @When("I open up the sold wheels")
     fun whenOpenSoldWheels() {
-        selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
+        mainFragment.toggleSoldWheels()
     }
 
     @When("I reconnect to the wheel")
@@ -731,15 +647,7 @@ class Steps {
 
     @When("^I select the (.*?)$")
     fun whenSelect(wheelName: String) {
-        selectedWheel = db.findWheel(wheelName)
-            ?: throwAssert("$wheelName is not defined")
-
-        if (selectedWheel.isSold) {
-            selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
-            selectListViewItem(R.id.wheels, "name", "- $wheelName")
-        } else {
-            selectListViewItem(R.id.wheels, "name", wheelName)
-        }
+        selectedWheel = mainFragment.selectWheel(wheelName)
     }
 
     @When("^I do a scan and see the (.*?) \\((.*?)\\) but go back without connecting$")
@@ -758,12 +666,7 @@ class Steps {
             .setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
             .setKm(floatOf(deviceFields[2]))
             .setMileage(floatOf(deviceFields[3]))
-            .setVoltage(voltageOf(deviceFields[4]))
-    }
-
-    private fun floatOfWithSuffix(value: String, suffix: String): Float {
-        assertThat(value, endsWith(suffix))
-        return floatOf(value.substring(0, value.length - suffix.length))
+            .setVoltage(domain.voltageOf(deviceFields[4]))
     }
 
     private fun getVoltageMax() = floatOf(getText(R.id.edit_voltage_max))
@@ -772,28 +675,10 @@ class Steps {
 
     private fun getVoltageReserve() = floatOf(getText(R.id.edit_voltage_reserve))
 
-    private fun parseYesNo(value: String): Boolean {
-        return "yes".equals(value, ignoreCase = true)
-    }
-
     private fun strip(value: String, stripValue: String): String {
         return when {
             value.endsWith(stripValue) -> value.substring(0, value.length - stripValue.length).trim()
             else -> value.trim()
         }
-    }
-
-    private fun updateMapWheels() {
-        db.getWheels().forEach { wheel ->
-            wheels[wheel.name] = wheel
-        }
-    }
-
-    private fun voltageOf(value: String): Float {
-        return floatOfWithSuffix(value, "V")
-    }
-
-    private fun voltsPerHourOf(value: String): Float {
-        return floatOfWithSuffix(value, "V/h")
     }
 }
