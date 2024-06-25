@@ -37,7 +37,6 @@ Feature: Wheel Charging
       | required voltage | time |
       | 93.3V (+3.3)     | 25m  |
 
-#    FIXME-0 Define the voltage charger differential for each wheel
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V

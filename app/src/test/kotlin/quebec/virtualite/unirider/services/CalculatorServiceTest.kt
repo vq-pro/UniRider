@@ -6,6 +6,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.commons.android.utils.NumberUtils.round
+import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
@@ -17,7 +19,6 @@ import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
 
 @RunWith(MockitoJUnitRunner::class)
 class CalculatorServiceTest {
@@ -25,20 +26,22 @@ class CalculatorServiceTest {
     @InjectMocks
     lateinit var service: CalculatorService
 
+    private val WHEEL = SHERMAN_MAX_3
+
     @Test
     fun adjustedReserve() {
         // When
-        val result = service.adjustedReserve(SHERMAN_MAX_3)
+        val result = service.adjustedReserve(WHEEL)
 
         // Then
-        assertThat(result, equalTo(SHERMAN_MAX_3.voltageReserve + 2))
+        assertThat(result, equalTo(WHEEL.voltageReserve + 2))
     }
 
     @Test
     fun estimatedAndRequired() {
         estimatedValues(100.6f, 91.9f, 38f, null, 43.2f, 81.2f, 32.7f)
-        requiredVoltage(100.6f, 32.7f, 43f, 91.8f + CHARGER_OFFSET)
-        requiredVoltage(100.6f, 32.7f, 40f, 91.2f + CHARGER_OFFSET)
+        requiredVoltage(100.6f, 32.7f, 43f, round(91.8f + WHEEL.chargerOffset, 1))
+        requiredVoltage(100.6f, 32.7f, 40f, round(91.2f + WHEEL.chargerOffset, 1))
     }
 
     @Test
@@ -68,11 +71,8 @@ class CalculatorServiceTest {
         expectedTotalRange: Float,
         expectedWhPerKm: Float
     ) {
-        // Given
-        val wheel = SHERMAN_MAX_3.copy(voltageStart = voltageStart)
-
         // When
-        val values = service.estimatedValues(wheel, voltageActual, km, rateOverride)
+        val values = service.estimatedValues(WHEEL.copy(voltageStart = voltageStart), voltageActual, km, rateOverride)
 
         // Then
         assertThat(values.remainingRange, equalTo(expectedRemainingRange))
@@ -91,7 +91,7 @@ class CalculatorServiceTest {
 
     private fun percentage(voltage: Float, expectedPercentage: Float) {
         // When
-        val percentage = service.percentage(SHERMAN_MAX_3, voltage)
+        val percentage = service.percentage(WHEEL, voltage)
 
         // Then
         assertThat(percentage, equalTo(expectedPercentage))
@@ -126,14 +126,14 @@ class CalculatorServiceTest {
 
     @Test
     fun requiredVoltage() {
-        requiredVoltage(100.8f, 25f, 20f, 85.5f + CHARGER_OFFSET)
-        requiredVoltage(100.8f, 35f, 40f, 91.8f + CHARGER_OFFSET)
-        requiredVoltage(100.8f, 25f, 200f, SHERMAN_MAX_3.voltageFull)
+        requiredVoltage(100.8f, 25f, 20f, 85.5f + WHEEL.chargerOffset)
+        requiredVoltage(100.8f, 35f, 40f, 91.8f + WHEEL.chargerOffset)
+        requiredVoltage(100.8f, 25f, 200f, WHEEL.voltageFull)
     }
 
     private fun requiredVoltage(voltageStart: Float, whPerKm: Float, km: Float, expectedRequiredVoltage: Float) {
         // When
-        val result = service.requiredVoltage(SHERMAN_MAX_3.copy(voltageStart = voltageStart), whPerKm, km)
+        val result = service.requiredVoltage(WHEEL.copy(voltageStart = voltageStart), whPerKm, km)
 
         // Then
         assertThat(result, equalTo(expectedRequiredVoltage))
@@ -142,9 +142,9 @@ class CalculatorServiceTest {
     @Test
     fun requiredFullVoltage() {
         // When
-        val result = service.requiredFullVoltage(SHERMAN_MAX_3)
+        val result = service.requiredFullVoltage(WHEEL)
 
         // Then
-        assertThat(result, equalTo(SHERMAN_MAX_3.voltageFull))
+        assertThat(result, equalTo(WHEEL.voltageFull))
     }
 }

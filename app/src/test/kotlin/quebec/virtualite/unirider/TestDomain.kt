@@ -10,11 +10,11 @@ object TestDomain {
     const val CHARGE_RATE3 = 8f
     const val CHARGE_RATE4 = 10f
     const val CHARGE_RATE_NEW = 10f
-    const val CHARGER_OFFSET = 1.5f
-    const val CHARGER_OFFSET2 = 1.6f
-    const val CHARGER_OFFSET3 = 1.7f
-    const val CHARGER_OFFSET4 = 1.8f
-    const val CHARGER_OFFSET_NEW = 1.9f
+    const val CHARGER_OFFSET = 1.4f
+    const val CHARGER_OFFSET2 = 1.5f
+    const val CHARGER_OFFSET3 = 1.6f
+    const val CHARGER_OFFSET4 = 1.7f
+    const val CHARGER_OFFSET_NEW = 1.8f
     const val DEVICE_ADDR = "AA:BB:CC:DD:EE:FF"
     const val DEVICE_ADDR2 = "BB:CC:DD:EE:FF:GG"
     const val DEVICE_ADDR3 = "CC:DD:EE:FF:GG:HH"

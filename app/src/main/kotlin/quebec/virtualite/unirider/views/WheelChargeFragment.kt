@@ -17,7 +17,6 @@ import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.services.CalculatorService.Companion.CHARGER_OFFSET
 import java.lang.Float.parseFloat
 import java.lang.String.format
 import kotlin.math.roundToInt
@@ -95,7 +94,7 @@ open class WheelChargeFragment : BaseFragment() {
         fragments.runWithWait {
             external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
                 fragments.doneWaiting(it) {
-                    parmVoltageDisconnectedFromCharger = round(it!!.voltage, NB_DECIMALS) - CHARGER_OFFSET
+                    parmVoltageDisconnectedFromCharger = round(it!!.voltage - wheel!!.chargerOffset, NB_DECIMALS)
                     displayVoltageActual()
                     updateEstimates()
                 }
@@ -126,7 +125,7 @@ open class WheelChargeFragment : BaseFragment() {
     fun onUpdateVoltageActual() = { voltage: String ->
         when {
             isNumeric(voltage) && floatOf(voltage) >= wheel!!.voltageMin -> {
-                parmVoltageDisconnectedFromCharger = parseFloat(voltage) - CHARGER_OFFSET
+                parmVoltageDisconnectedFromCharger = parseFloat(voltage) - wheel!!.chargerOffset
                 updateEstimates()
             }
 
@@ -164,7 +163,7 @@ open class WheelChargeFragment : BaseFragment() {
             }
         }
 
-        val requiredVoltage = requiredVoltageOnCharger - CHARGER_OFFSET
+        val requiredVoltage = requiredVoltageOnCharger - (wheel?.chargerOffset ?: 0f)
         if (requiredVoltage > parmVoltageDisconnectedFromCharger!!) {
             val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, 1)
             val rawHours = diff / wheel!!.chargeRate
@@ -180,6 +179,8 @@ open class WheelChargeFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun displayVoltageActual() {
-        editVoltageActual.setText("${parmVoltageDisconnectedFromCharger?.plus(CHARGER_OFFSET)}")
+        if (wheel != null) {
+            editVoltageActual.setText("${parmVoltageDisconnectedFromCharger?.plus(wheel!!.chargerOffset)}")
+        }
     }
 }
