@@ -14,7 +14,6 @@ open class WheelValidator {
             || updatedWheel.voltageMax == 0f
             || updatedWheel.voltageReserve == 0f
             || updatedWheel.chargeRate == 0f
-            || updatedWheel.voltageFull == 0f
         )
             return false
 
@@ -27,6 +26,7 @@ open class WheelValidator {
             return false
 
         return (updatedWheel.chargeRate != initialWheel!!.chargeRate) ||
+                (updatedWheel.chargerOffset != initialWheel.chargerOffset) ||
                 (updatedWheel.isSold != initialWheel.isSold) ||
                 (updatedWheel.mileage != initialWheel.mileage) ||
                 (updatedWheel.name != initialWheel.name) ||

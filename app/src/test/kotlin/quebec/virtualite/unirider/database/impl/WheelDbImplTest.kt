@@ -12,6 +12,8 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
+import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET2
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE2
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
@@ -86,12 +88,12 @@ class WheelDbImplTest {
                 ID2, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, VOLTAGE_FULL, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
             )
         )
 
         // When
-        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false))
+        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false))
 
         // Then
         verify(mockedDao).findWheel(NAME)
@@ -107,12 +109,12 @@ class WheelDbImplTest {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, VOLTAGE_FULL, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
             )
         )
 
         // When
-        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false))
+        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false))
 
         // Then
         verify(mockedDao).findWheel(NAME)
@@ -127,7 +129,7 @@ class WheelDbImplTest {
             .willReturn(null)
 
         // When
-        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false))
+        val result = dbImpl.findDuplicate(WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false))
 
         // Then
         assertThat(result, equalTo(false))
@@ -136,7 +138,7 @@ class WheelDbImplTest {
     @Test
     fun findWheel() {
         // Given
-        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        val wheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
         given(mockedDao.findWheel(NAME))
             .willReturn(wheel)
 
@@ -152,7 +154,7 @@ class WheelDbImplTest {
     @Test
     fun getWheel() {
         // Given
-        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        val wheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
         given(mockedDao.getWheel(ID))
             .willReturn(wheel)
 
@@ -185,7 +187,7 @@ class WheelDbImplTest {
     @Test
     fun saveWheel_whenExisting_update() {
         // Given
-        val existingWheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        val existingWheel = WheelEntity(ID, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
         // When
         dbImpl.saveWheel(existingWheel)
@@ -197,7 +199,7 @@ class WheelDbImplTest {
     @Test
     fun saveWheel_whenNew_insert() {
         // Given
-        val newWheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        val newWheel = WheelEntity(0, NAME, DEVICE_NAME, DEVICE_ADDR, PREMILEAGE, MILEAGE, WH, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
         // When
         dbImpl.saveWheel(newWheel)
@@ -214,14 +216,14 @@ class WheelDbImplTest {
                 0, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, VOLTAGE_FULL, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
             )
         val wheel2 =
             WheelEntity(
                 0, NAME2, DEVICE_NAME2, DEVICE_ADDR2,
                 PREMILEAGE, MILEAGE2, WH2,
                 VOLTAGE_MAX2, VOLTAGE_MIN2, VOLTAGE_RESERVE2, VOLTAGE_START2,
-                CHARGE_RATE2, VOLTAGE_FULL2, NOT_SOLD
+                CHARGE_RATE2, VOLTAGE_FULL2, CHARGER_OFFSET2, NOT_SOLD
             )
 
         // When

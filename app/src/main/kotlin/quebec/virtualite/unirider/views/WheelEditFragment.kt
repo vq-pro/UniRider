@@ -17,12 +17,13 @@ import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
     internal lateinit var checkSold: CheckBox
     internal lateinit var editChargeRate: EditText
+    internal lateinit var editChargerOffset: EditText
     internal lateinit var editMileage: EditText
     internal lateinit var editName: EditText
     internal lateinit var editPreMileage: EditText
@@ -50,6 +51,7 @@ open class WheelEditFragment : BaseFragment() {
 
         checkSold = view.findViewById(R.id.check_sold)
         editChargeRate = view.findViewById(R.id.edit_charge_rate)
+        editChargerOffset = view.findViewById(R.id.edit_charger_offset)
         editName = view.findViewById(R.id.edit_name)
         editPreMileage = view.findViewById(R.id.edit_premileage)
         editMileage = view.findViewById(R.id.edit_mileage)
@@ -63,6 +65,7 @@ open class WheelEditFragment : BaseFragment() {
 
         widgets.setOnCheckedChangeListener(checkSold, onToggleSold())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
+        widgets.addTextChangedListener(editChargerOffset, onUpdateChargerOffset())
         widgets.addTextChangedListener(editName, onUpdateName())
         widgets.addTextChangedListener(editPreMileage, onUpdatePreMileage())
         widgets.addTextChangedListener(editMileage, onUpdateMileage())
@@ -82,6 +85,7 @@ open class WheelEditFragment : BaseFragment() {
                 fragments.runUI {
                     checkSold.setChecked(initialWheel.isSold)
                     editChargeRate.setText("${initialWheel.chargeRate}")
+                    editChargerOffset.setText("${initialWheel.chargerOffset}")
                     editName.setText(initialWheel.name)
                     editVoltageFull.setText("${initialWheel.voltageFull}")
                     editVoltageMax.setText("${initialWheel.voltageMax}")
@@ -104,18 +108,6 @@ open class WheelEditFragment : BaseFragment() {
         }
     }
 
-    fun enableSaveIfChanged() {
-        if (wheelValidator.canSave(updatedWheel, initialWheel)) {
-            external.runDB {
-                if (!it.findDuplicate(updatedWheel))
-                    widgets.enable(buttonSave)
-                else
-                    widgets.disable(buttonSave)
-            }
-        } else
-            widgets.disable(buttonSave)
-    }
-
     fun onDelete(): (View) -> Unit = {
         goto(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment, updatedWheel)
     }
@@ -132,6 +124,11 @@ open class WheelEditFragment : BaseFragment() {
 
     fun onUpdateChargeRate() = { newChargeRate: String ->
         updatedWheel = updatedWheel.copy(chargeRate = safeFloatOf(newChargeRate))
+        enableSaveIfChanged()
+    }
+
+    fun onUpdateChargerOffset() = { newChargerOffset: String ->
+        updatedWheel = updatedWheel.copy(chargerOffset = safeFloatOf(newChargerOffset))
         enableSaveIfChanged()
     }
 
@@ -181,5 +178,17 @@ open class WheelEditFragment : BaseFragment() {
     fun onUpdateWh() = { newWh: String ->
         updatedWheel = updatedWheel.copy(wh = safeIntOf(newWh))
         enableSaveIfChanged()
+    }
+
+    internal open fun enableSaveIfChanged() {
+        if (wheelValidator.canSave(updatedWheel, initialWheel)) {
+            external.runDB {
+                if (!it.findDuplicate(updatedWheel))
+                    widgets.enable(buttonSave)
+                else
+                    widgets.disable(buttonSave)
+            }
+        } else
+            widgets.disable(buttonSave)
     }
 }

@@ -24,7 +24,7 @@ class TestMainFragment(val app: TestApp, val domain: TestDomain) {
     val SOLD_WHEEL_ENTRY = "<Sold>"
 
     fun addWheel(): WheelEntity {
-        val newWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        val newWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
 
         return newWheel

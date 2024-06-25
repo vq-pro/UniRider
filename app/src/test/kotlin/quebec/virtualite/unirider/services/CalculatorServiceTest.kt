@@ -113,7 +113,8 @@ class CalculatorServiceTest {
             WheelEntity(
                 0, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
-                voltageMax, voltageMin, 1f, voltageMax, CHARGE_RATE, VOLTAGE_FULL, NOT_SOLD
+                voltageMax, voltageMin, 1f, voltageMax,
+                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
             )
 
         // When

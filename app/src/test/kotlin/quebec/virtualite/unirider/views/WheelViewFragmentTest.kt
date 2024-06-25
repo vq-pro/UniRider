@@ -26,6 +26,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
@@ -354,7 +355,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, VOLTAGE_FULL, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
             )
         )
         verify(mockedEditKm).setText("$KM_NEW")
@@ -383,7 +384,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_NEW,
-                CHARGE_RATE, VOLTAGE_FULL, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
             )
         )
         verify(mockedEditKm).setText("0.0")

@@ -148,6 +148,11 @@ class Steps {
         editFragment.changeChargeRate(" ")
     }
 
+    @When("I blank the charger offset")
+    fun blankWheelChargerOffset() {
+        editFragment.changeChargerOffset(" ")
+    }
+
     @When("I blank the mileage")
     fun blankWheelMileage() {
         editFragment.changeMileage(" ")
@@ -245,6 +250,11 @@ class Steps {
     @When("I change the charge rate")
     fun changeWheelChargeRate() {
         editFragment.changeChargeRate("3")
+    }
+
+    @When("I change the charger offset")
+    fun changeWheelChargerOffset() {
+        editFragment.changeChargerOffset("3")
     }
 
     @When("I change the name")

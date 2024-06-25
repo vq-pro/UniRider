@@ -2,17 +2,17 @@ Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
-      | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Sold |
-      | Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | 99.4V       | Yes  |
-      | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.4V       | No   |
-      | S18     | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | 81.4V       | No   |
+      | Name    | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Charger Offset | Sold |
+      | Nikola+ | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | 99.4V       | 1.6V           | Yes  |
+      | Sherman | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.4V       | 1.6V           | No   |
+      | S18     | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | 81.4V       | 1.2V           | No   |
     And I start the app
 
   Scenario: Adding a wheel in full
     When I add a new wheel
     And I set these new values:
-      | Name             | Sherman Max |
       | Previous Mileage | 0           |
+      | Name             | Sherman Max |
       | Mileage          | 150         |
       | Wh               | 3600        |
       | Voltage Max      | 100.8       |
@@ -20,6 +20,7 @@ Feature: Wheel Editing & Adding
       | Voltage Min      | 75.6        |
       | Charge Rate      | 8           |
       | Full Charge      | 99.5        |
+      | Charger Offset   | 1.7         |
       | Sold             | No          |
     Then the wheel was added
     And it shows the updated name and a mileage of 150 on the main view
@@ -38,6 +39,7 @@ Feature: Wheel Editing & Adding
       | Voltage Min      | 74.5        |
       | Charge Rate      | 2           |
       | Full Charge      | 99.5        |
+      | Charger Offset   | 1.7         |
       | Sold             | No          |
     Then the wheel was updated
     And I go back to the main view
@@ -52,6 +54,7 @@ Feature: Wheel Editing & Adding
     Examples:
       | can or cannot | do something                                    |
       | can           | change the charge rate                          |
+      | can           | change the charger offset                       |
       | can           | change the name                                 |
       | can           | change the mileage                              |
       | can           | blank the mileage                               |
@@ -60,7 +63,9 @@ Feature: Wheel Editing & Adding
       | can           | change the minimum voltage                      |
       | can           | change the previous mileage                     |
       | can           | change the reserve voltage                      |
+      | can           | blank the charger offset                        |
       | can           | blank the full voltage                          |
+      | can           | blank the mileage                               |
       | can           | blank the previous mileage                      |
       | can           | blank the reserve voltage                       |
       | can           | change the wh                                   |

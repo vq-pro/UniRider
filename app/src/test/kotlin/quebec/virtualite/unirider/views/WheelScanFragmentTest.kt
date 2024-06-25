@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET3
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE3
 import quebec.virtualite.unirider.TestDomain.DEVICE3
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
@@ -152,7 +153,7 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
                 ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
                 PREMILEAGE3, MILEAGE_NEW, WH3,
                 VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3, VOLTAGE_START3,
-                CHARGE_RATE3, VOLTAGE_FULL3, SOLD
+                CHARGE_RATE3, VOLTAGE_FULL3, CHARGER_OFFSET3, SOLD
             )
         )
         verify(mockedFragments).navigateBack()

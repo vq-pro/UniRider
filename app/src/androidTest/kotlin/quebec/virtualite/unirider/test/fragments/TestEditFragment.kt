@@ -29,6 +29,10 @@ class TestEditFragment(val app: TestApp) {
         setText(R.id.edit_charge_rate, value)
     }
 
+    fun changeChargerOffset(value: String) {
+        setText(R.id.edit_charger_offset, value)
+    }
+
     fun changeFullVoltage(value: String) {
         setText(R.id.edit_voltage_full, value)
     }
@@ -74,6 +78,7 @@ class TestEditFragment(val app: TestApp) {
 
         val mapDetailToId = mapOf(
             Pair("Charge Rate", R.id.edit_charge_rate),
+            Pair("Charger Offset", R.id.edit_charger_offset),
             Pair("Full Charge", R.id.edit_voltage_full),
             Pair("Name", R.id.edit_name),
             Pair("Previous Mileage", R.id.edit_premileage),
@@ -115,6 +120,7 @@ class TestEditFragment(val app: TestApp) {
             floatOf(mapEntity["Voltage Max"]!!),
             floatOf(mapEntity["Charge Rate"]!!),
             floatOf(mapEntity["Full Charge"]!!),
+            floatOf(mapEntity["Charger Offset"]!!),
             "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
         )
 

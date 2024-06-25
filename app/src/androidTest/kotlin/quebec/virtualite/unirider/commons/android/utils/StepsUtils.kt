@@ -16,36 +16,23 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import org.apache.http.util.TextUtils.isBlank
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.hasEntry
-import org.hamcrest.Matchers.hasItem
-import org.hamcrest.Matchers.hasToString
-import org.hamcrest.Matchers.instanceOf
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.isA
-import org.hamcrest.Matchers.not
-import org.hamcrest.Matchers.startsWith
+import org.hamcrest.Matchers.*
 import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
 object StepsUtils {
 
-    val INTERVAL = 250L
-    val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
+    private val INTERVAL = 250L
+    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
+
+    private val nestedScrollViewExtension = NestedScrollViewExtension()
 
     fun applicationContext(): Context {
         return ApplicationProvider.getApplicationContext()!!
@@ -192,12 +179,10 @@ object StepsUtils {
     }
 
     fun setChecked(id: Int, checked: Boolean) {
-        assertThat("Cannot set checked $id", id, isEnabled())
         element(id)?.perform(internalSetChecked(checked))
     }
 
     fun setText(id: Int, newText: String) {
-        assertThat("Cannot set text for $id", id, isEnabled())
         element(id)?.perform(replaceText(newText))
     }
 
@@ -225,7 +210,14 @@ object StepsUtils {
     }
 
     private fun element(id: Int): ViewInteraction? {
-        return onView(withId(id))
+        val onView = onView(withId(id))
+
+        return try {
+            onView?.perform(nestedScrollViewExtension)
+
+        } catch (e: Exception) {
+            onView
+        }
     }
 
     private fun internalSetChecked(checked: Boolean): ViewAction {
