@@ -29,4 +29,12 @@ object NumberUtils {
         val factor = 10.0.pow(numDecimals.toDouble()).toFloat()
         return (value * factor).roundToInt() / factor
     }
+
+    fun safeFloatOf(string: String): Float {
+        return if (isNumeric(string)) floatOf(string) else 0f
+    }
+
+    fun safeIntOf(string: String): Int {
+        return if (isNumeric(string) && !string.contains('.')) intOf(string) else 0
+    }
 }

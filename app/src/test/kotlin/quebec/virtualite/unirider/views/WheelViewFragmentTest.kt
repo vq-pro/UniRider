@@ -1,6 +1,6 @@
 package quebec.virtualite.unirider.views
 
-import android.view.View.*
+import android.view.View.GONE
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -26,6 +26,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
@@ -54,6 +55,7 @@ import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.TOTAL_RANGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
+import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
@@ -107,7 +109,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     lateinit var mockedEditVoltageStart: EditText
 
     @Mock
-    lateinit var mockedListWhPerKm: Spinner
+    lateinit var mockedSpinnerWhPerKm: Spinner
 
     @Mock
     lateinit var mockedTextBattery: TextView
@@ -173,7 +175,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.edit_voltage_start, fragment.editVoltageStart, mockedEditVoltageStart)
-        verifyFieldAssignment(R.id.view_wh_per_km, fragment.listWhPerKm, mockedListWhPerKm)
+        verifyFieldAssignment(R.id.spinner_wh_per_km, fragment.spinnerWhPerKm, mockedSpinnerWhPerKm)
         verifyFieldAssignment(R.id.view_battery, fragment.textBattery, mockedTextBattery)
         verifyFieldAssignment(R.id.view_bt_name, fragment.textBtName, mockedTextBtName)
         verifyFieldAssignment(R.id.view_mileage, fragment.textMileage, mockedTextMileage)
@@ -181,7 +183,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.view_remaining_range, fragment.textRemainingRange, mockedTextRemainingRange)
         verifyFieldAssignment(R.id.view_total_range, fragment.textTotalRange, mockedTextTotalRange)
 
-        assertThat(fragment.listWhPerKm, equalTo(mockedListWhPerKm))
+        assertThat(fragment.spinnerWhPerKm, equalTo(mockedSpinnerWhPerKm))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
         assertThat(fragment.textName, equalTo(mockedTextName))
@@ -194,11 +196,11 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyOnClick(mockedButtonCharge, "onCharge")
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
-        verifyOnItemSelected(mockedListWhPerKm, "onChangeRate")
-        verifyStringListAdapter(mockedListWhPerKm, emptyList())
+        verifyOnItemSelected(mockedSpinnerWhPerKm, "onChangeRate")
+        verifyStringListAdapter(mockedSpinnerWhPerKm, emptyList())
 
         assertThat(fragment.listOfRates, equalTo(emptyList()))
-        verify(mockedListWhPerKm, never()).setSelection(anyInt())
+        verify(mockedSpinnerWhPerKm, never()).setSelection(anyInt())
 
         verify(mockedTextName).text = NAME
         verify(mockedTextBtName).text = DEVICE_NAME
@@ -353,7 +355,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
             )
         )
         verify(mockedEditKm).setText("$KM_NEW")
@@ -382,7 +384,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_NEW,
-                CHARGE_RATE, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
             )
         )
         verify(mockedEditKm).setText("0.0")
@@ -771,7 +773,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.editKm = mockedEditKm
         fragment.editVoltageActual = mockedEditVoltageActual
         fragment.editVoltageStart = mockedEditVoltageStart
-        fragment.listWhPerKm = mockedListWhPerKm
+        fragment.spinnerWhPerKm = mockedSpinnerWhPerKm
         fragment.textBattery = mockedTextBattery
         fragment.textBtName = mockedTextBtName
         fragment.textMileage = mockedTextMileage
@@ -786,7 +788,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
         mockField(R.id.edit_voltage_start, mockedEditVoltageStart)
-        mockField(R.id.view_wh_per_km, mockedListWhPerKm)
+        mockField(R.id.spinner_wh_per_km, mockedSpinnerWhPerKm)
         mockField(R.id.view_battery, mockedTextBattery)
         mockField(R.id.view_bt_name, mockedTextBtName)
         mockField(R.id.view_mileage, mockedTextMileage)
@@ -798,21 +800,21 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     private fun mockKm(km: String) {
         fragment.editKm = mockedEditKm
 
-        given(mockedWidgets.text(mockedEditKm))
+        given(mockedWidgets.getText(mockedEditKm))
             .willReturn(km.trim())
     }
 
     private fun mockVoltageActual(voltage: String) {
         fragment.editVoltageActual = mockedEditVoltageActual
 
-        given(mockedWidgets.text(mockedEditVoltageActual))
+        given(mockedWidgets.getText(mockedEditVoltageActual))
             .willReturn(voltage.trim())
     }
 
     private fun mockVoltageStart(voltage: String) {
         fragment.editVoltageStart = mockedEditVoltageStart
 
-        given(mockedWidgets.text(mockedEditVoltageStart))
+        given(mockedWidgets.getText(mockedEditVoltageStart))
             .willReturn(voltage.trim())
     }
 
@@ -828,8 +830,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun verifyEstimateButClearEstimatedValues() {
         assertThat(fragment.listOfRates, equalTo(emptyList()))
-        verify(mockedListWhPerKm, never()).setSelection(anyInt())
-        verify(mockedWidgets).clearSelection(mockedListWhPerKm)
+        verify(mockedSpinnerWhPerKm, never()).setSelection(anyInt())
+        verify(mockedWidgets).clearSelection(mockedSpinnerWhPerKm)
 
         verify(mockedTextRemainingRange).text = ""
         verify(mockedTextTotalRange).text = ""
@@ -861,6 +863,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
     private fun verifyUpdateRate() {
         assertThat(fragment.listOfRates, equalTo(WHS_PER_KM))
-        verify(mockedWidgets).setSelection(mockedListWhPerKm, WH_PER_KM_INDEX)
+        verify(mockedWidgets).setSelection(mockedSpinnerWhPerKm, WH_PER_KM_INDEX)
     }
 }

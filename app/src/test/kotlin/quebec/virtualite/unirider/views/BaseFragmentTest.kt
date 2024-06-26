@@ -217,7 +217,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         assertThat(captorOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
-    fun verifyOnUpdateCheckbox(mockedField: CheckBox, methodName: String) {
+    fun verifyOnToggleCheckbox(mockedField: CheckBox, methodName: String) {
         verify(mockedWidgets).setOnCheckedChangeListener(eq(mockedField), captorOnUpdateCheckBox.capture())
         assertThat(captorOnUpdateCheckBox.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }

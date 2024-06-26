@@ -41,8 +41,28 @@
                 />
             </TableRow>
 
-            <!-- km -->
+            <!-- Full Charge -->
             <TableRow android:layout_marginTop="15dp">
+                <TextView
+                        android:labelFor="@+id/check_full_charge"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_full"
+                />
+
+                <CheckBox
+                        android:id="@+id/check_full_charge"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                />
+            </TableRow>
+
+            <!-- km -->
+            <TableRow android:layout_marginTop="10dp">
                 <TextView
                         android:labelFor="@+id/edit_km"
                         android:layout_weight="1"
@@ -78,7 +98,7 @@
             <!-- Rate -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:labelFor="@+id/view_wh_per_km"
+                        android:labelFor="@+id/spinner_wh_per_km"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -88,14 +108,14 @@
                 />
 
                 <Spinner
-                        android:id="@+id/view_wh_per_km"
+                        android:id="@+id/spinner_wh_per_km"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:visibility="visible">
                 </Spinner>
 
                 <TextView
-                        android:labelFor="@+id/view_wh_per_km"
+                        android:labelFor="@+id/spinner_wh_per_km"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

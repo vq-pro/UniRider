@@ -7,7 +7,6 @@ import kotlin.math.max
 open class CalculatorService {
 
     companion object {
-        const val CHARGER_OFFSET = 1.5f
         const val NUM_DECIMALS = 1
     }
 
@@ -41,6 +40,10 @@ open class CalculatorService {
         return round(rawPercentage(wheel, voltage!!) * 100, NUM_DECIMALS)
     }
 
+    open fun requiredFullVoltage(wheel: WheelEntity?): Float {
+        return (wheel!!).voltageFull
+    }
+
     open fun requiredVoltage(wheel: WheelEntity?, whPerKm: Float, km: Float): Float {
 
         val whReserve = wh(wheel!!, adjustedReserve(wheel), wheel.voltageMin)
@@ -50,8 +53,8 @@ open class CalculatorService {
         val percentage = whTotalRequired / wheel.wh
         val voltageRange = wheel.voltageMax - wheel.voltageMin
         val voltageRequired = min(
-            percentage * voltageRange + wheel.voltageMin + CHARGER_OFFSET,
-            wheel.voltageMax - CHARGER_OFFSET
+            percentage * voltageRange + wheel.voltageMin + wheel.chargerOffset,
+            wheel.voltageFull
         )
 
         return round(voltageRequired, NUM_DECIMALS)

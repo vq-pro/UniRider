@@ -35,6 +35,22 @@ class NumberUtilsTest {
         round(24094.455f, 24094.5f)
     }
 
+    @Test
+    fun safeFloatOf() {
+        safeFloatOf("1", 1f)
+        safeFloatOf("1.1", 1.1f)
+        safeFloatOf(" ", 0f)
+        safeFloatOf("ab ", 0f)
+    }
+
+    @Test
+    fun safeIntOf() {
+        safeIntOf("1", 1)
+        safeIntOf("1.1", 0)
+        safeIntOf(" ", 0)
+        safeIntOf("ab ", 0)
+    }
+
     private fun floatOf(value: String, expectedResult: Float) {
         // When
         val result = NumberUtils.floatOf(value)
@@ -57,5 +73,21 @@ class NumberUtilsTest {
 
         // Then
         assertThat(result, equalTo(expectedResult))
+    }
+
+    private fun safeFloatOf(string: String, expectedValue: Float) {
+        // When
+        val result = NumberUtils.safeFloatOf(string)
+
+        // Then
+        assertThat(result, equalTo(expectedValue))
+    }
+
+    private fun safeIntOf(string: String, expectedValue: Int) {
+        // When
+        val result = NumberUtils.safeIntOf(string)
+
+        // Then
+        assertThat(result, equalTo(expectedValue))
     }
 }

@@ -1,18 +1,14 @@
 package quebec.virtualite.unirider.commons.android.utils
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Checkable
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBackUnconditionally
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
@@ -20,39 +16,23 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.rule.ActivityTestRule
+import androidx.test.espresso.matcher.ViewMatchers.*
 import org.apache.http.util.TextUtils.isBlank
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.hasEntry
-import org.hamcrest.Matchers.hasItem
-import org.hamcrest.Matchers.hasToString
-import org.hamcrest.Matchers.instanceOf
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.isA
-import org.hamcrest.Matchers.not
-import org.hamcrest.Matchers.startsWith
+import org.hamcrest.Matchers.*
 import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
-import quebec.virtualite.unirider.views.MainActivity
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
 object StepsUtils {
 
-    val INTERVAL = 250L
-    val PAUSE = if (BLUETOOTH_ACTUAL) 2000L else 0L
-    val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
+    private val INTERVAL = 250L
+    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
+
+    private val nestedScrollViewExtension = NestedScrollViewExtension()
 
     fun applicationContext(): Context {
         return ApplicationProvider.getApplicationContext()!!
@@ -78,25 +58,8 @@ object StepsUtils {
         org.hamcrest.MatcherAssert.assertThat(message, actual, matcher)
     }
 
-    fun back(nb: Int = 1) {
-        var i = nb
-        while (i-- > 0) {
-            pressBackUnconditionally()
-        }
-    }
-
     fun click(id: Int) {
-        assertThat("Cannot click button $id", id, isEnabled())
         element(id)?.perform(click())
-    }
-
-    fun currentFragment(mainActivity: MainActivity): Class<Fragment> {
-        return mainActivity
-            .supportFragmentManager
-            .fragments[0]
-            .childFragmentManager
-            .fragments[0]
-            .javaClass
     }
 
     fun getSpinnerText(id: Int): String {
@@ -165,17 +128,13 @@ object StepsUtils {
 
     fun hasSelectedText(expected: String): Matcher<View> {
         return allOf(
-            isDisplayed(),
-            isEnabled(),
-            withText(equalTo(expected))
+            isDisplayed(), isEnabled(), withText(equalTo(expected))
         )
     }
 
     fun hasSpinnerText(expected: String): Matcher<View> {
         return allOf(
-            isDisplayed(),
-            isEnabled(),
-            withSpinnerText(equalTo(expected))
+            isDisplayed(), isEnabled(), withSpinnerText(equalTo(expected))
         )
     }
 
@@ -195,33 +154,19 @@ object StepsUtils {
         return not(isDisplayed())
     }
 
-    fun isTrue(): Boolean {
-        return true
-    }
-
     fun longClick(id: Int) {
-        assertThat("Cannot long click button $id", id, isEnabled())
         element(id)?.perform(longClick())
     }
 
     fun selectListViewItem(id: Int, value: String) {
         poll {
-            onData(hasToString(startsWith(value)))
-                .inAdapterView(withId(id))
-                .atPosition(0)
-                .perform(click())
-
-            sleep(PAUSE)
+            onData(hasToString(startsWith(value))).inAdapterView(withId(id)).atPosition(0).perform(click())
         }
     }
 
     fun selectListViewItem(id: Int, fieldName: String, value: Any) {
         poll {
-            onData(hasEntry(equalTo(fieldName), `is`(value)))
-                .inAdapterView(withId(id))
-                .perform(click())
-
-            sleep(PAUSE)
+            onData(hasEntry(equalTo(fieldName), `is`(value))).inAdapterView(withId(id)).perform(click())
         }
     }
 
@@ -229,30 +174,23 @@ object StepsUtils {
         click(id)
 
         poll {
-            onData(allOf(`is`(instanceOf(String::class.java)), `is`(value)))
-                .perform(click())
-
-            sleep(PAUSE)
+            onData(allOf(`is`(instanceOf(String::class.java)), `is`(value))).perform(click())
         }
     }
 
     fun setChecked(id: Int, checked: Boolean) {
-        assertThat("Cannot set checked $id", id, isEnabled())
         element(id)?.perform(internalSetChecked(checked))
     }
 
     fun setText(id: Int, newText: String) {
-        assertThat("Cannot set text for $id", id, isEnabled())
         element(id)?.perform(replaceText(newText))
     }
 
-    fun <T : Activity> start(activityTestRule: ActivityTestRule<T>): T? {
-        activityTestRule.launchActivity(Intent())
-        return activityTestRule.activity
-    }
-
-    fun <T : Activity> stop(activityTestRule: ActivityTestRule<T>) {
-        activityTestRule.finishActivity()
+    fun strip(value: String, stripValue: String): String {
+        return when {
+            value.endsWith(stripValue) -> value.substring(0, value.length - stripValue.length).trim()
+            else -> value.trim()
+        }
     }
 
     fun <T> throwAssert(message: String): T {
@@ -272,7 +210,14 @@ object StepsUtils {
     }
 
     private fun element(id: Int): ViewInteraction? {
-        return onView(withId(id))
+        val onView = onView(withId(id))
+
+        return try {
+            onView?.perform(nestedScrollViewExtension)
+
+        } catch (e: Exception) {
+            onView
+        }
     }
 
     private fun internalSetChecked(checked: Boolean): ViewAction {

@@ -1,10 +1,10 @@
 Feature: Wheel Charging
 
   Background:
-    Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Sold |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | No   |
-    And these wheels are connected:
+    Given this wheel:
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Charger Offset | Sold |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.5V       | 1.5V           | No   |
+    And this wheel is connected:
       | Name        | Bt Name | Bt Address        |
       | Sherman Max | LK1234  | C0:C1:C2:C3:C4:C5 |
     And I start the app
@@ -13,7 +13,6 @@ Feature: Wheel Charging
     And I set the actual voltage to 86.4V
     And I set the distance to 50 km
     And I charge the wheel
-    And it displays an estimated rate of 40.6 wh/km
 
   Scenario: Changing the rate
     Given I request to charge for 40 km
@@ -50,12 +49,11 @@ Feature: Wheel Charging
       | 20 km    | 89.2V (+1.3)     | 10m  |
       | 40 km    | 94.9V (+7.0)     | 53m  |
       | 50 km    | 97.7V (+9.8)     | 1h14 |
-      | 60 km    | 99.3V (+11.4)    | 1h25 |
-      | 200 km   | 99.3V (+11.4)    | 1h25 |
-      |          |                  |      |
-      | aa       |                  |      |
+      | 60 km    | 99.5V (+11.6)    | 1h27 |
+      | 200 km   | 99.5V (+11.6)    | 1h27 |
+      | full     | 99.5V (+11.6)    | 1h27 |
 
-  Scenario: Update the voltage
+  Scenario: Reconnect to update the voltage
     Given this simulated device:
       | Bt Name | Bt Address        | Km     | Mileage | Voltage |
       | LK1234  | C0:C1:C2:C3:C4:C5 | 12.218 | 705.615 | 88.5V   |
@@ -65,3 +63,4 @@ Feature: Wheel Charging
     And it displays these charging estimates:
       | required voltage | time |
       | 94.9V (+6.4)     | 48m  |
+

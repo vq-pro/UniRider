@@ -2,20 +2,20 @@ Feature: Wheel Viewing
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Sold |
-      | Sherman     | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 7.5V/h      | No   |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | No   |
-      | 14S         | 694     | 840  | 48V         | 55V             | 67.2V       | 4V/h        | No   |
-      | S18         | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | No   |
-      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | Yes  |
-      | Abrams      | 95      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | Yes  |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Charger Offset | Sold |
+      | Sherman     | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 7.5V/h      | 99.5V       | 1.5V           | No   |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.5V       | 1.5V           | No   |
+      | 14S         | 694     | 840  | 48V         | 55V             | 67.2V       | 4V/h        | 65.5V       | 1.5V           | No   |
+      | S18         | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | 81.5V       | 1.5V           | No   |
+      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | 99.5V       | 1.5V           | Yes  |
+      | Abrams      | 95      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | 99.5V       | 1.5V           | Yes  |
     And I start the app
 
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
     Given I select the <wheel>
     And I set the starting voltage to <starting voltage>V
     And I set the distance to <km> km
-    When I enter an actual voltage of <voltage>V
+    When I set the actual voltage to <voltage>V
     Then it displays these estimates:
       | remaining   | total range | wh/km   |
       | <remaining> | <total>     | <wh/km> |
@@ -31,7 +31,7 @@ Feature: Wheel Viewing
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And I set the distance to <km>
-    When I enter an actual voltage of <voltage>
+    When I set the actual voltage to <voltage>
     Then it displays blank estimated values
     Examples:
       | wheel   | km      | voltage |
@@ -46,7 +46,7 @@ Feature: Wheel Viewing
     Given I select the Sherman Max
     And I set the starting voltage to 100.6V
     And I set the distance to 20 km
-    And I enter an actual voltage of 94.1V
+    And I set the actual voltage to 94.1V
     And it displays these estimates:
       | remaining | total range | wh/km |
       | 37.3      | 57.3        | 46.4  |
@@ -58,7 +58,7 @@ Feature: Wheel Viewing
   Scenario Outline: Calculating percentage [<wheel> / <voltage>]
     Given I select the <wheel>
     And I set the starting voltage to <voltage>
-    When I enter an actual voltage of <voltage>
+    When I set the actual voltage to <voltage>
     Then it displays a percentage of <battery>
     Examples:
       | wheel       | voltage | battery |
