@@ -1,8 +1,8 @@
 package quebec.virtualite.unirider.views
 
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
+import com.google.android.material.switchmaterial.SwitchMaterial
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -64,9 +64,6 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     lateinit var mockedButtonSave: Button
 
     @Mock
-    lateinit var mockedCheckSold: CheckBox
-
-    @Mock
     lateinit var mockedEditChargeRate: EditText
 
     @Mock
@@ -95,6 +92,9 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
     @Mock
     lateinit var mockedEditWh: EditText
+
+    @Mock
+    lateinit var mockedSwitchSold: SwitchMaterial
 
     @Mock
     lateinit var mockedWheelValidator: WheelValidator
@@ -138,7 +138,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         verifyFieldAssignment(R.id.button_delete, fragment.buttonDelete, mockedButtonDelete)
         verifyFieldAssignment(R.id.button_save, fragment.buttonSave, mockedButtonSave)
-        verifyFieldAssignment(R.id.check_sold, fragment.checkSold, mockedCheckSold)
+        verifyFieldAssignment(R.id.check_sold, fragment.swtichSold, mockedSwitchSold)
         verifyFieldAssignment(R.id.edit_name, fragment.editChargeRate, mockedEditChargeRate)
         verifyFieldAssignment(R.id.edit_charger_offset, fragment.editChargerOffset, mockedEditChargerOffset)
         verifyFieldAssignment(R.id.edit_mileage, fragment.editMileage, mockedEditMileage)
@@ -150,7 +150,6 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_voltage_reserve, fragment.editVoltageReserve, mockedEditVoltageReserve)
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
 
-        verifyOnToggleCheckbox(mockedCheckSold, "onToggleSold")
         verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
         verifyOnUpdateText(mockedEditChargerOffset, "onUpdateChargerOffset")
         verifyOnUpdateText(mockedEditName, "onUpdateName")
@@ -161,10 +160,10 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verifyOnUpdateText(mockedEditVoltageMin, "onUpdateVoltageMin")
         verifyOnUpdateText(mockedEditVoltageReserve, "onUpdateVoltageReserve")
         verifyOnUpdateText(mockedEditWh, "onUpdateWh")
+        verifyOnToggleSwitch(mockedSwitchSold, "onToggleSold")
         verifyOnLongClick(mockedButtonDelete, "onDelete")
         verifyOnClick(mockedButtonSave, "onSave")
 
-        verify(mockedCheckSold).isChecked = wheel.isSold
         verify(mockedEditChargeRate).setText("$CHARGE_RATE")
         verify(mockedEditChargerOffset).setText("$CHARGER_OFFSET")
         verify(mockedEditName).setText(NAME)
@@ -175,6 +174,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedEditVoltageReserve).setText("$VOLTAGE_RESERVE")
         verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
         verify(mockedEditWh).setText("$WH")
+        verify(mockedSwitchSold).isChecked = wheel.isSold
         verify(mockedWidgets).disable(mockedButtonSave)
     }
 
@@ -700,7 +700,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     private fun mockFields() {
         mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_save, mockedButtonSave)
-        mockField(R.id.check_sold, mockedCheckSold)
+        mockField(R.id.check_sold, mockedSwitchSold)
         mockField(R.id.edit_charge_rate, mockedEditChargeRate)
         mockField(R.id.edit_charger_offset, mockedEditChargerOffset)
         mockField(R.id.edit_name, mockedEditName)

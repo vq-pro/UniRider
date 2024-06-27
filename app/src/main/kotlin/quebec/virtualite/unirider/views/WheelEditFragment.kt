@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
+import com.google.android.material.switchmaterial.SwitchMaterial
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.safeFloatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.safeIntOf
@@ -21,7 +21,6 @@ open class WheelEditFragment : BaseFragment() {
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
-    internal lateinit var checkSold: CheckBox
     internal lateinit var editChargeRate: EditText
     internal lateinit var editChargerOffset: EditText
     internal lateinit var editMileage: EditText
@@ -32,6 +31,7 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editVoltageMin: EditText
     internal lateinit var editVoltageReserve: EditText
     internal lateinit var editWh: EditText
+    internal lateinit var swtichSold: SwitchMaterial
 
     internal lateinit var initialWheel: WheelEntity
     internal lateinit var updatedWheel: WheelEntity
@@ -49,7 +49,7 @@ open class WheelEditFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkSold = view.findViewById(R.id.check_sold)
+        swtichSold = view.findViewById(R.id.check_sold)
         editChargeRate = view.findViewById(R.id.edit_charge_rate)
         editChargerOffset = view.findViewById(R.id.edit_charger_offset)
         editName = view.findViewById(R.id.edit_name)
@@ -63,7 +63,7 @@ open class WheelEditFragment : BaseFragment() {
         buttonDelete = view.findViewById(R.id.button_delete)
         buttonSave = view.findViewById(R.id.button_save)
 
-        widgets.setOnCheckedChangeListener(checkSold, onToggleSold())
+        widgets.setOnCheckedChangeListener(swtichSold, onToggleSold())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
         widgets.addTextChangedListener(editChargerOffset, onUpdateChargerOffset())
         widgets.addTextChangedListener(editName, onUpdateName())
@@ -83,7 +83,7 @@ open class WheelEditFragment : BaseFragment() {
                 updatedWheel = initialWheel
 
                 fragments.runUI {
-                    checkSold.setChecked(initialWheel.isSold)
+                    swtichSold.setChecked(initialWheel.isSold)
                     editChargeRate.setText("${initialWheel.chargeRate}")
                     editChargerOffset.setText("${initialWheel.chargerOffset}")
                     editName.setText(initialWheel.name)

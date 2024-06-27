@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.view.isVisible
+import com.google.android.material.switchmaterial.SwitchMaterial
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.commons.android.views.impl.CustomListAdapter
 
@@ -45,11 +45,17 @@ open class CommonWidgetServices {
     }
 
     open fun disable(widget: View) {
-        widget.postDelayed({ widget.isEnabled = false }, POST_DELAY)
+        widget.postDelayed({
+            widget.isEnabled = false
+            widget.alpha = 0.25f
+        }, POST_DELAY)
     }
 
     open fun enable(widget: View) {
-        widget.postDelayed({ widget.isEnabled = true }, POST_DELAY)
+        widget.postDelayed({
+            widget.isEnabled = true
+            widget.alpha = 1f
+        }, POST_DELAY)
     }
 
     open fun getText(edit: EditText): String {
@@ -81,7 +87,7 @@ open class CommonWidgetServices {
         notifyOnChanged(listView)
     }
 
-    open fun setOnCheckedChangeListener(widget: CheckBox?, callback: ((value: Boolean) -> Unit)?) {
+    open fun setOnCheckedChangeListener(widget: SwitchMaterial?, callback: ((value: Boolean) -> Unit)?) {
         widget?.setOnCheckedChangeListener { buttonView, isChecked ->
             callback?.invoke(isChecked)
         }
@@ -148,14 +154,12 @@ open class CommonWidgetServices {
     }
 
     private fun notifyOnChanged(listView: ListView) {
-        @Suppress("UNCHECKED_CAST")
-        val listViewAdapter: ArrayAdapter<String> = listView.adapter as ArrayAdapter<String>
+        @Suppress("UNCHECKED_CAST") val listViewAdapter: ArrayAdapter<String> = listView.adapter as ArrayAdapter<String>
         listViewAdapter.notifyDataSetChanged()
     }
 
     private fun notifyOnChanged(spinner: Spinner) {
-        @Suppress("UNCHECKED_CAST")
-        val spinnerAdapter: ArrayAdapter<String> = spinner.adapter as ArrayAdapter<String>
+        @Suppress("UNCHECKED_CAST") val spinnerAdapter: ArrayAdapter<String> = spinner.adapter as ArrayAdapter<String>
         spinnerAdapter.notifyDataSetChanged()
     }
 }

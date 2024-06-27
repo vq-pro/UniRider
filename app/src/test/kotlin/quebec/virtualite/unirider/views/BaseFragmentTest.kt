@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Spinner
+import com.google.android.material.switchmaterial.SwitchMaterial
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
@@ -82,7 +82,7 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     private lateinit var captorOnItemSelected: ArgumentCaptor<(View?, Int, String) -> Unit>
 
     @Captor
-    private lateinit var captorOnUpdateCheckBox: ArgumentCaptor<(Boolean) -> Unit>
+    private lateinit var captorOnUpdateSwitch: ArgumentCaptor<(Boolean) -> Unit>
 
     @Captor
     private lateinit var captorOnUpdateText: ArgumentCaptor<(String) -> Unit>
@@ -217,9 +217,9 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
         assertThat(captorOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
-    fun verifyOnToggleCheckbox(mockedField: CheckBox, methodName: String) {
-        verify(mockedWidgets).setOnCheckedChangeListener(eq(mockedField), captorOnUpdateCheckBox.capture())
-        assertThat(captorOnUpdateCheckBox.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+    fun verifyOnToggleSwitch(mockedField: SwitchMaterial, methodName: String) {
+        verify(mockedWidgets).setOnCheckedChangeListener(eq(mockedField), captorOnUpdateSwitch.capture())
+        assertThat(captorOnUpdateSwitch.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
     }
 
     fun verifyOnUpdateText(mockedField: EditText, methodName: String) {
@@ -242,6 +242,6 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun verifyStringListAdapter(mockedField: Spinner, expectedData: List<String>) {
-        verify(mockedWidgets).stringListAdapter(eq(mockedField), eq(mockedView), eq(expectedData))
+        verify(mockedWidgets).stringListAdapter(mockedField, mockedView, expectedData)
     }
 }
