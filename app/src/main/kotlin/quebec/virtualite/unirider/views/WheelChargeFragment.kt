@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
@@ -24,13 +24,13 @@ import kotlin.math.roundToInt
 open class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var buttonConnect: Button
-    internal lateinit var checkFullCharge: CheckBox
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
     internal lateinit var spinnerRates: Spinner
     internal lateinit var textName: TextView
     internal lateinit var textRemainingTime: TextView
     internal lateinit var textVoltageRequired: TextView
+    internal lateinit var switchFullCharge: SwitchMaterial
 
     internal var parmWheelId: Long? = 0
 
@@ -53,20 +53,20 @@ open class WheelChargeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonConnect = view.findViewById(R.id.button_connect_charge)
-        checkFullCharge = view.findViewById(R.id.check_full_charge)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         spinnerRates = view.findViewById(R.id.spinner_wh_per_km)
         textName = view.findViewById(R.id.view_name)
         textRemainingTime = view.findViewById(R.id.view_remaining_time)
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
+        switchFullCharge = view.findViewById(R.id.check_full_charge)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
-        widgets.setOnCheckedChangeListener(checkFullCharge, onToggleFullCharge())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
         widgets.setOnItemSelectedListener(spinnerRates, onChangeRate())
         widgets.stringListAdapter(spinnerRates, view, parmRates)
+        widgets.setOnCheckedChangeListener(switchFullCharge, onToggleFullCharge())
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
@@ -80,7 +80,7 @@ open class WheelChargeFragment : BaseFragment() {
                     widgets.disable(buttonConnect)
                 }
 
-                checkFullCharge.isChecked = true
+                switchFullCharge.isChecked = true
             }
         }
     }
@@ -104,12 +104,12 @@ open class WheelChargeFragment : BaseFragment() {
 
     fun onToggleFullCharge() = { useFullCharge: Boolean ->
         if (useFullCharge) {
-            widgets.hide(editKm)
-            widgets.hide(spinnerRates)
+            widgets.disable(editKm)
+            widgets.disable(spinnerRates)
 
         } else {
-            widgets.show(editKm)
-            widgets.show(spinnerRates)
+            widgets.enable(editKm)
+            widgets.enable(spinnerRates)
         }
 
         updateEstimates()
@@ -150,7 +150,7 @@ open class WheelChargeFragment : BaseFragment() {
     @SuppressLint("SetTextI18n")
     internal open fun updateEstimates() {
         val requiredVoltageOnCharger = when {
-            checkFullCharge.isChecked -> calculatorService.requiredFullVoltage(wheel)
+            switchFullCharge.isChecked -> calculatorService.requiredFullVoltage(wheel)
             else -> {
                 val km = floatOf(widgets.getText(editKm))
                 if (km < 0.1f) {

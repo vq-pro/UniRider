@@ -1,10 +1,10 @@
 package quebec.virtualite.unirider.views
 
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -56,7 +56,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     lateinit var mockedButtonConnect: Button
 
     @Mock
-    lateinit var mockedCheckFullCharge: CheckBox
+    lateinit var mockedSwitchFullCharge: SwitchMaterial
 
     @Mock
     lateinit var mockedCalculatorService: CalculatorService
@@ -145,7 +145,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         assertThat(fragment.wheel, equalTo(WHEEL))
 
         verifyFieldAssignment(R.id.button_connect_charge, fragment.buttonConnect, mockedButtonConnect)
-        verifyFieldAssignment(R.id.check_full_charge, fragment.checkFullCharge, mockedCheckFullCharge)
+        verifyFieldAssignment(R.id.check_full_charge, fragment.switchFullCharge, mockedSwitchFullCharge)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.spinner_wh_per_km, fragment.spinnerRates, mockedSpinnerRates)
@@ -156,14 +156,14 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         assertThat(fragment.spinnerRates, equalTo(mockedSpinnerRates))
 
         verifyOnClick(mockedButtonConnect, "onConnect")
-        verifyOnToggleCheckbox(mockedCheckFullCharge, "onToggleFullCharge")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
         verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
         verifyOnItemSelected(mockedSpinnerRates, "onChangeRate")
         verifyStringListAdapter(mockedSpinnerRates, WHS_PER_KM)
+        verifyOnToggleSwitch(mockedSwitchFullCharge, "onToggleFullCharge")
 
-        verify(mockedCheckFullCharge).isChecked = true
         verify(mockedEditVoltageActual).setText("${VOLTAGE + WHEEL.chargerOffset}")
+        verify(mockedSwitchFullCharge).isChecked = true
         verify(mockedWidgets).setSelection(mockedSpinnerRates, WH_PER_KM_INDEX)
         verify(mockedTextName).text = WHEEL.name
     }
@@ -231,8 +231,8 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onToggleFullCharge().invoke(false)
 
         // Then
-        verify(mockedWidgets).show(mockedEditKm)
-        verify(mockedWidgets).show(mockedSpinnerRates)
+        verify(mockedWidgets).enable(mockedEditKm)
+        verify(mockedWidgets).enable(mockedSpinnerRates)
 
         verify(fragment).updateEstimates()
     }
@@ -247,8 +247,8 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onToggleFullCharge().invoke(true)
 
         // Then
-        verify(mockedWidgets).hide(mockedEditKm)
-        verify(mockedWidgets).hide(mockedSpinnerRates)
+        verify(mockedWidgets).disable(mockedEditKm)
+        verify(mockedWidgets).disable(mockedSpinnerRates)
 
         verify(fragment).updateEstimates()
     }
@@ -460,7 +460,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
 
     private fun mockFields() {
         mockField(R.id.button_connect_charge, mockedButtonConnect)
-        mockField(R.id.check_full_charge, mockedCheckFullCharge)
+        mockField(R.id.check_full_charge, mockedSwitchFullCharge)
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
         mockField(R.id.spinner_wh_per_km, mockedSpinnerRates)
@@ -470,7 +470,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     }
 
     private fun mockCheckFullCharge(value: Boolean) {
-        given(mockedCheckFullCharge.isChecked).willReturn(value)
+        given(mockedSwitchFullCharge.isChecked).willReturn(value)
     }
 
     private fun mockEditKmWith(km: Float) {
