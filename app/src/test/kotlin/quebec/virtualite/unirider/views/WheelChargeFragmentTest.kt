@@ -68,7 +68,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     lateinit var mockedEditVoltageActual: EditText
 
     @Mock
-    lateinit var mockedSpinnerRates: Spinner
+    lateinit var mockedSpinnerRate: Spinner
 
     @Mock
     lateinit var mockedTextName: TextView
@@ -148,23 +148,23 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         verifyFieldAssignment(R.id.check_full_charge, fragment.switchFullCharge, mockedSwitchFullCharge)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
-        verifyFieldAssignment(R.id.spinner_wh_per_km, fragment.spinnerRates, mockedSpinnerRates)
+        verifyFieldAssignment(R.id.spinner_rate, fragment.spinnerRate, mockedSpinnerRate)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_remaining_time, fragment.textRemainingTime, mockedTextRemainingTime)
         verifyFieldAssignment(R.id.view_voltage_required, fragment.textVoltageRequired, mockedTextVoltageRequired)
 
-        assertThat(fragment.spinnerRates, equalTo(mockedSpinnerRates))
+        assertThat(fragment.spinnerRate, equalTo(mockedSpinnerRate))
 
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
         verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
-        verifyOnItemSelected(mockedSpinnerRates, "onChangeRate")
-        verifyStringListAdapter(mockedSpinnerRates, WHS_PER_KM)
+        verifyOnItemSelected(mockedSpinnerRate, "onChangeRate")
+        verifyStringListAdapter(mockedSpinnerRate, WHS_PER_KM)
         verifyOnToggleSwitch(mockedSwitchFullCharge, "onToggleFullCharge")
 
         verify(mockedEditVoltageActual).setText("${VOLTAGE + WHEEL.chargerOffset}")
         verify(mockedSwitchFullCharge).isChecked = true
-        verify(mockedWidgets).setSelection(mockedSpinnerRates, WH_PER_KM_INDEX)
+        verify(mockedWidgets).setSelection(mockedSpinnerRate, WH_PER_KM_INDEX)
         verify(mockedTextName).text = WHEEL.name
     }
 
@@ -179,7 +179,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedWidgets).disable(mockedButtonConnect)
+        verify(mockedWidgets).enable(mockedButtonConnect, false)
     }
 
     @Test
@@ -231,8 +231,8 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onToggleFullCharge().invoke(false)
 
         // Then
-        verify(mockedWidgets).enable(mockedEditKm)
-        verify(mockedWidgets).enable(mockedSpinnerRates)
+        verify(mockedWidgets).enable(mockedEditKm, true)
+        verify(mockedWidgets).enable(mockedSpinnerRate, true)
 
         verify(fragment).updateEstimates()
     }
@@ -247,8 +247,8 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onToggleFullCharge().invoke(true)
 
         // Then
-        verify(mockedWidgets).disable(mockedEditKm)
-        verify(mockedWidgets).disable(mockedSpinnerRates)
+        verify(mockedWidgets).enable(mockedEditKm, false)
+        verify(mockedWidgets).enable(mockedSpinnerRate, false)
 
         verify(fragment).updateEstimates()
     }
@@ -453,7 +453,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     private fun injectMocks() {
         fragment.editKm = mockedEditKm
         fragment.editVoltageActual = mockedEditVoltageActual
-        fragment.spinnerRates = mockedSpinnerRates
+        fragment.spinnerRate = mockedSpinnerRate
         fragment.textRemainingTime = mockedTextRemainingTime
         fragment.textVoltageRequired = mockedTextVoltageRequired
     }
@@ -463,7 +463,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         mockField(R.id.check_full_charge, mockedSwitchFullCharge)
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
-        mockField(R.id.spinner_wh_per_km, mockedSpinnerRates)
+        mockField(R.id.spinner_rate, mockedSpinnerRate)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_remaining_time, mockedTextRemainingTime)
         mockField(R.id.view_voltage_required, mockedTextVoltageRequired)

@@ -34,7 +34,11 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
     internal lateinit var editVoltageStart: EditText
-    internal lateinit var spinnerWhPerKm: Spinner
+    internal lateinit var labelBattery: TextView
+    internal lateinit var labelRate: TextView
+    internal lateinit var labelRemainingRange: TextView
+    internal lateinit var labelTotalRange: TextView
+    internal lateinit var spinnerRate: Spinner
     internal lateinit var textBattery: TextView
     internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
@@ -66,15 +70,17 @@ open class WheelViewFragment : BaseFragment() {
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         editVoltageStart = view.findViewById(R.id.edit_voltage_start)
-
-        spinnerWhPerKm = view.findViewById(R.id.spinner_wh_per_km)
-
+        labelBattery = view.findViewById(R.id.label_battery)
+        labelRate = view.findViewById(R.id.label_rate)
+        labelRemainingRange = view.findViewById(R.id.label_remaining_range)
+        labelTotalRange = view.findViewById(R.id.label_total_range)
         textBattery = view.findViewById(R.id.view_battery)
         textBtName = view.findViewById(R.id.view_bt_name)
         textMileage = view.findViewById(R.id.view_mileage)
         textName = view.findViewById(R.id.view_name)
         textRemainingRange = view.findViewById(R.id.view_remaining_range)
         textTotalRange = view.findViewById(R.id.view_total_range)
+        spinnerRate = view.findViewById(R.id.spinner_rate)
 
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
@@ -86,8 +92,8 @@ open class WheelViewFragment : BaseFragment() {
                 widgets.setOnClickListener(buttonCharge, onCharge())
                 widgets.setOnClickListener(buttonConnect, onConnect())
                 widgets.setOnClickListener(buttonEdit, onEdit())
-                widgets.setOnItemSelectedListener(spinnerWhPerKm, onChangeRate())
-                widgets.stringListAdapter(spinnerWhPerKm, view, listOfRates)
+                widgets.setOnItemSelectedListener(spinnerRate, onChangeRate())
+                widgets.stringListAdapter(spinnerRate, view, listOfRates)
 
                 fragments.runUI {
                     if (wheel!!.isSold) {
@@ -212,7 +218,12 @@ open class WheelViewFragment : BaseFragment() {
             textRemainingRange.text = textKmWithDecimal(estimates?.remainingRange)
             textTotalRange.text = textKmWithDecimal(estimates?.totalRange)
 
-            buttonCharge.isEnabled = estimates != null
+            val hasDisplay = estimates != null
+            widgets.enable(buttonCharge, hasDisplay)
+            widgets.show(labelRate, hasDisplay)
+            widgets.show(labelRemainingRange, hasDisplay)
+            widgets.show(labelTotalRange, hasDisplay)
+            widgets.show(spinnerRate, hasDisplay)
         }
     }
 
@@ -223,6 +234,7 @@ open class WheelViewFragment : BaseFragment() {
         }
 
         textBattery.text = textPercentageWithDecimal(percentage)
+        widgets.show(labelBattery, percentage != null)
     }
 
     private fun updateRates() {
@@ -232,7 +244,7 @@ open class WheelViewFragment : BaseFragment() {
         listOfRates.clear()
 
         if (actualRate == null) {
-            widgets.clearSelection(spinnerWhPerKm)
+            widgets.clearSelection(spinnerRate)
             return
         }
 
@@ -250,9 +262,10 @@ open class WheelViewFragment : BaseFragment() {
         listOfRates.sort()
 
         selectedRate = indexOf(listOfRates, displayActualRate)
-        widgets.setSelection(spinnerWhPerKm, selectedRate)
+        widgets.setSelection(spinnerRate, selectedRate)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
         wheel = wheel!!.copy(mileage = newMileage)
 

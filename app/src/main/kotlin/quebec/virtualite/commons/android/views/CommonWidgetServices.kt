@@ -44,26 +44,15 @@ open class CommonWidgetServices {
         notifyOnChanged(spinner)
     }
 
-    open fun disable(widget: View) {
+    open fun enable(widget: View, isEnabled: Boolean) {
         widget.postDelayed({
-            widget.isEnabled = false
-            widget.alpha = 0.25f
-        }, POST_DELAY)
-    }
-
-    open fun enable(widget: View) {
-        widget.postDelayed({
-            widget.isEnabled = true
-            widget.alpha = 1f
+            widget.isEnabled = isEnabled
+            widget.alpha = if (isEnabled) 1f else 0.25f
         }, POST_DELAY)
     }
 
     open fun getText(edit: EditText): String {
         return edit.text.toString().trim()
-    }
-
-    open fun hide(widget: View) {
-        widget.isVisible = false
     }
 
     open fun <T> multifieldListAdapter(
@@ -132,8 +121,9 @@ open class CommonWidgetServices {
         spinner.setSelection(index, true)
     }
 
-    open fun show(widget: View) {
-        widget.isVisible = true
+    // FIXME-0 Make variable parameter
+    open fun show(widget: View, isShown: Boolean) {
+        widget.isVisible = isShown
     }
 
     open fun stringListAdapter(listView: ListView, view: View?, contents: List<String>?) {

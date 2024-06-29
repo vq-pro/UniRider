@@ -98,7 +98,7 @@
             <!-- Rate -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:labelFor="@+id/spinner_wh_per_km"
+                        android:labelFor="@+id/spinner_rate"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -108,14 +108,14 @@
                 />
 
                 <Spinner
-                        android:id="@+id/spinner_wh_per_km"
+                        android:id="@+id/spinner_rate"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:visibility="visible">
                 </Spinner>
 
                 <TextView
-                        android:labelFor="@+id/spinner_wh_per_km"
+                        android:labelFor="@+id/spinner_rate"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
