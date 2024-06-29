@@ -51,7 +51,7 @@ class WheelDbImplTest {
     lateinit var mockedDb: WheelDatabase
 
     @Mock
-    lateinit var mockedDao: WheelMileageDao
+    lateinit var mockedDao: WheelDao
 
     @InjectMocks
     var dbImpl = WheelDbImpl(mock(Context::class.java))
