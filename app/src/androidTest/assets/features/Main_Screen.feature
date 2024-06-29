@@ -13,11 +13,11 @@ Feature: Main Screen
   Scenario: On entering, we see a list of registered wheels and their mileage
     When I start the app
     Then I see my wheels and their mileage:
-      | Name    | Mileage |
-      | Sherman | 21222   |
-      | 14S     | 694     |
-      | <Sold>  | 7777    |
-      | <New>   |         |
+      | Name    | Mileage  |
+      | Sherman | 21222 km |
+      | 14S     | 694 km   |
+      | <Sold>  | 7777 km  |
+      | <New>   |          |
     And I see the total mileage
 
   Scenario: => Viewing a wheel's details
@@ -29,25 +29,25 @@ Feature: Main Screen
     Given I start the app
     When I open up the sold wheels
     Then I see my wheels and their mileage:
-      | Name          | Mileage |
-      | Sherman       | 21222   |
-      | 14S           | 694     |
-      | <Sold>        |         |
-      | - Nikola+     | 2927    |
-      | - S18         | 2850    |
-      | - Sherman Max | 2000    |
-      | <New>         |         |
+      | Name          | Mileage  |
+      | Sherman       | 21222 km |
+      | 14S           | 694 km   |
+      | <Sold>        |          |
+      | - Nikola+     | 2927 km  |
+      | - S18         | 2850 km  |
+      | - Sherman Max | 2000 km  |
+      | <New>         |          |
 
   Scenario: Hiding sold wheels
     Given I start the app
     And I open up the sold wheels
     When I collapse the sold wheels
     Then I see my wheels and their mileage:
-      | Name    | Mileage |
-      | Sherman | 21222   |
-      | 14S     | 694     |
-      | <Sold>  | 7777    |
-      | <New>   |         |
+      | Name    | Mileage  |
+      | Sherman | 21222 km |
+      | 14S     | 694 km   |
+      | <Sold>  | 7777 km  |
+      | <New>   |          |
 
   Scenario: => Adding a wheel
     Given I start the app

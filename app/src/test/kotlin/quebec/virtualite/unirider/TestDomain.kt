@@ -31,6 +31,7 @@ object TestDomain {
     const val KM = 4444f
     const val KM_NEW = 4445f
     const val KM_NEW_RAW = 4445.012f
+    const val LABEL_KM = "km"
     const val MILEAGE = 2222
     const val MILEAGE2 = 2222
     const val MILEAGE3 = 2223

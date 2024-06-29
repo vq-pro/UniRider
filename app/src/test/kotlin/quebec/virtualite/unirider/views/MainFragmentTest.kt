@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.ABRAMS_4
 import quebec.virtualite.unirider.TestDomain.ID2
+import quebec.virtualite.unirider.TestDomain.LABEL_KM
 import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE2
 import quebec.virtualite.unirider.TestDomain.MILEAGE3
@@ -61,6 +62,9 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     fun before() {
         mockExternal()
         mockFragments()
+        mockStrings()
+
+        fragment.labelKm = LABEL_KM
     }
 
     @Test
@@ -75,6 +79,8 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     @Test
     fun onViewCreated() {
         // Given
+        fragment.labelKm = ""
+
         mockField(R.id.wheels, mockedLVWheels)
         mockField(R.id.total_mileage, mockedTextTotalMileage)
 
@@ -92,10 +98,12 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         verifyOnItemClick(mockedLVWheels, "onSelectWheel")
 
         verify(fragment).showWheels()
+
+        assertThat(fragment.labelKm, equalTo(LABEL_KM))
     }
 
     @Test
-    fun onDisplayItem() {
+    fun onDisplayWheel() {
         // Given
         mockField(R.id.row_name, mockedTextName)
         mockField(R.id.row_mileage, mockedTextMileage)
@@ -105,11 +113,11 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
         // Then
         verify(mockedTextName).text = NAME
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE} $LABEL_KM"
     }
 
     @Test
-    fun onDisplayItem_newItem_hideMileageZero() {
+    fun onDisplayWheel_newItem_hideMileageZero() {
         // Given
         mockField(R.id.row_name, mockedTextName)
         mockField(R.id.row_mileage, mockedTextMileage)
@@ -123,7 +131,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
     }
 
     @Test
-    fun onDisplayItem_soldItemWhenCollapsed_showMileage() {
+    fun onDisplayWheel_soldItemWhenCollapsed_showMileage() {
         // Given
         mockField(R.id.row_name, mockedTextName)
         mockField(R.id.row_mileage, mockedTextMileage)
@@ -133,11 +141,11 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
 
         // Then
         verify(mockedTextName).text = NAME_SOLD
-        verify(mockedTextMileage).text = "1"
+        verify(mockedTextMileage).text = "1 $LABEL_KM"
     }
 
     @Test
-    fun onDisplayItem_soldItemWhenOpened_hideMileageZero() {
+    fun onDisplayWheel_soldItemWhenOpened_hideMileageZero() {
         // Given
         mockField(R.id.row_name, mockedTextName)
         mockField(R.id.row_mileage, mockedTextMileage)
@@ -293,7 +301,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
             )
         )
         verify(mockedTextTotalMileage).text =
-            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4}"
+            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4} km"
     }
 
     @Test
@@ -330,6 +338,6 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
             )
         )
         verify(mockedTextTotalMileage).text =
-            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4}"
+            "${PREMILEAGE + PREMILEAGE2 + PREMILEAGE3 + PREMILEAGE4 + MILEAGE + MILEAGE2 + MILEAGE3 + MILEAGE4} km"
     }
 }
