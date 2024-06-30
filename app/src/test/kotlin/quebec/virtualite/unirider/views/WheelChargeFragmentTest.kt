@@ -179,7 +179,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedWidgets).enable(mockedButtonConnect, false)
+        verify(mockedWidgets).disable(mockedButtonConnect)
     }
 
     @Test
@@ -231,8 +231,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onToggleFullCharge().invoke(false)
 
         // Then
-        verify(mockedWidgets).enable(mockedEditKm, true)
-        verify(mockedWidgets).enable(mockedSpinnerRate, true)
+        verify(mockedWidgets).enable(mockedEditKm, mockedSpinnerRate)
 
         verify(fragment).updateEstimates()
     }
@@ -247,8 +246,7 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         fragment.onToggleFullCharge().invoke(true)
 
         // Then
-        verify(mockedWidgets).enable(mockedEditKm, false)
-        verify(mockedWidgets).enable(mockedSpinnerRate, false)
+        verify(mockedWidgets).disable(mockedEditKm, mockedSpinnerRate)
 
         verify(fragment).updateEstimates()
     }

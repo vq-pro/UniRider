@@ -36,7 +36,7 @@ open class MainFragment : BaseFragment() {
         lvWheels = view.findViewById(R.id.wheels) as ListView
         textTotalMileage = view.findViewById(R.id.total_mileage)
 
-        widgets.enable(lvWheels, true)
+        widgets.enable(lvWheels)
         widgets.multifieldListAdapter(lvWheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(lvWheels, onSelectWheel())
 

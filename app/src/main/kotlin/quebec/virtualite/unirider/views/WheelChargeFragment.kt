@@ -77,7 +77,7 @@ open class WheelChargeFragment : BaseFragment() {
                 displayVoltageActual()
 
                 if (wheel!!.btName == null || wheel!!.btAddr == null) {
-                    widgets.enable(buttonConnect, false)
+                    widgets.disable(buttonConnect)
                 }
 
                 switchFullCharge.isChecked = true
@@ -103,17 +103,10 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     fun onToggleFullCharge() = { useFullCharge: Boolean ->
-//        if (useFullCharge) {
-//            widgets.disable(editKm)
-//            widgets.disable(spinnerRates)
-//
-//        } else {
-//            widgets.enable(editKm)
-//            widgets.enable(spinnerRates)
-//        }
-
-        widgets.enable(editKm, !useFullCharge)
-        widgets.enable(spinnerRate, !useFullCharge)
+        if (useFullCharge)
+            widgets.disable(editKm, spinnerRate)
+        else
+            widgets.enable(editKm, spinnerRate)
 
         updateEstimates()
     }

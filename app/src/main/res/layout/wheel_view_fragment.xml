@@ -242,7 +242,7 @@
                     android:background="@android:color/darker_gray"
             />
 
-            <!-- Mileage-->
+            <!-- Mileage -->
             <TableRow android:layout_marginTop="15dp">
                 <TextView
                         android:labelFor="@+id/view_mileage"
@@ -269,7 +269,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:layout_gravity="end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="@string/label_km"
                 />

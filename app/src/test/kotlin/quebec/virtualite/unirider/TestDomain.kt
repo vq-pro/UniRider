@@ -31,6 +31,7 @@ object TestDomain {
     const val KM = 4444f
     const val KM_NEW = 4445f
     const val KM_NEW_RAW = 4445.012f
+    const val KM_STRING = "$KM"
     const val LABEL_KM = "km"
     const val MILEAGE = 2222
     const val MILEAGE2 = 2222
@@ -86,6 +87,7 @@ object TestDomain {
     const val VOLTAGE_START3 = 100.4f
     const val VOLTAGE_START4 = 99.8f
     const val VOLTAGE_START_NEW = 83.1f
+    const val VOLTAGE_STRING = "$VOLTAGE"
     const val WH = 1110
     const val WH2 = 2220
     const val WH3 = 3600

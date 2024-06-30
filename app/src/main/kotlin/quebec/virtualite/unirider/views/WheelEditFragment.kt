@@ -103,7 +103,7 @@ open class WheelEditFragment : BaseFragment() {
             }
 
             fragments.runUI {
-                widgets.enable(buttonSave, false)
+                widgets.disable(buttonSave)
             }
         }
     }
@@ -183,9 +183,12 @@ open class WheelEditFragment : BaseFragment() {
     internal open fun enableSaveIfChanged() {
         if (wheelValidator.canSave(updatedWheel, initialWheel)) {
             external.runDB {
-                widgets.enable(buttonSave, !it.findDuplicate(updatedWheel))
+                if (it.findDuplicate(updatedWheel))
+                    widgets.disable(buttonSave)
+                else
+                    widgets.enable(buttonSave)
             }
         } else
-            widgets.enable(buttonSave, false)
+            widgets.disable(buttonSave)
     }
 }

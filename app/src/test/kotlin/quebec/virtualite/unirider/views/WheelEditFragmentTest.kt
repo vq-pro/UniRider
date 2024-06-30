@@ -175,7 +175,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
         verify(mockedEditWh).setText("$WH")
         verify(mockedSwitchSold).isChecked = wheel.isSold
-        verify(mockedWidgets).enable(mockedButtonSave, false)
+        verify(mockedWidgets).disable(mockedButtonSave)
     }
 
     @Test
@@ -211,7 +211,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb, never()).getWheel(anyLong())
-        verify(mockedWidgets).enable(mockedButtonSave, false)
+        verify(mockedWidgets).disable(mockedButtonSave)
 
         verify(mockedEditName, never()).setText(anyString())
         verify(mockedEditVoltageMax, never()).setText(anyString())
@@ -232,7 +232,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(definedWheel())
-        verify(mockedWidgets).enable(mockedButtonSave, true)
+        verify(mockedWidgets).enable(mockedButtonSave)
     }
 
     @Test
@@ -249,7 +249,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(definedWheel())
-        verify(mockedWidgets).enable(mockedButtonSave, false)
+        verify(mockedWidgets).disable(mockedButtonSave)
     }
 
     @Test
@@ -263,7 +263,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb, never()).findDuplicate(any())
-        verify(mockedWidgets).enable(mockedButtonSave, false)
+        verify(mockedWidgets).disable(mockedButtonSave)
     }
 
     @Test

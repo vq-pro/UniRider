@@ -10,11 +10,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
-import org.apache.http.util.TextUtils.isEmpty
 import quebec.virtualite.commons.android.utils.ArrayListUtils.indexOf
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
-import quebec.virtualite.commons.android.utils.NumberUtils.isPositive
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
@@ -23,10 +21,6 @@ import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
 import kotlin.math.roundToInt
 
 open class WheelViewFragment : BaseFragment() {
-
-    private val READ_KM = null
-    private val READ_VOLTAGE_ACTUAL = null
-    private val READ_VOLTAGE_START = null
 
     internal lateinit var buttonCharge: Button
     internal lateinit var buttonConnect: Button
@@ -107,8 +101,7 @@ open class WheelViewFragment : BaseFragment() {
                         textName.text = wheel!!.name
                         textBtName.text = wheel!!.btName
 
-                        updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
-                        updateRates()
+                        clearDisplay()
                     }
 
                     textMileage.text = textKm(wheel!!.totalMileage())
@@ -119,7 +112,7 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onChangeRate(): (View?, Int, String) -> Unit = { view, position, text ->
         selectedRate = position
-        updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
+        refreshDisplay(readVoltageStart(), readVoltageActual(), readKm())
     }
 
     fun onCharge(): (View) -> Unit = {
@@ -128,7 +121,7 @@ open class WheelViewFragment : BaseFragment() {
             Pair(PARAMETER_RATES, listOfRates),
             Pair(PARAMETER_SELECTED_RATE, selectedRate),
             Pair(PARAMETER_WHEEL_ID, wheel!!.id),
-            Pair(PARAMETER_VOLTAGE, floatOf(widgets.getText(editVoltageActual)))
+            Pair(PARAMETER_VOLTAGE, readVoltageActual())
         )
     }
 
@@ -156,113 +149,33 @@ open class WheelViewFragment : BaseFragment() {
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment, wheel!!)
     }
 
-    fun onUpdateKm() = { km: String ->
-        selectedRate = -1
-        updateCalculatedValues(km, READ_VOLTAGE_ACTUAL, READ_VOLTAGE_START)
-        updateRates()
+    fun onUpdateKm() = { rawKm: String ->
+        refreshDisplay(readVoltageStart(), readVoltageActual(), parseKm(rawKm))
+        refreshRates()
     }
 
     fun onUpdateVoltageActual() = { voltageActual: String ->
-        selectedRate = -1
-        updateCalculatedValues(READ_KM, voltageActual, READ_VOLTAGE_START)
-        updateRates()
+        refreshDisplay(readVoltageStart(), parseVoltage(voltageActual), readKm())
+        refreshRates()
     }
 
     fun onUpdateVoltageStart() = { voltageStart: String ->
-        if (isVoltageWithinRange(voltageStart)) {
-            wheel = wheel!!.copy(voltageStart = floatOf(voltageStart))
-            external.runDB { it.saveWheel(wheel) }
-        }
-
-        updateCalculatedValues(READ_KM, READ_VOLTAGE_ACTUAL, voltageStart)
-        updateRates()
-    }
-
-    private fun isVoltageWithinRange(voltageParm: String): Boolean {
-        if (isEmpty(voltageParm))
-            return false
-
-        if (!isNumeric(voltageParm))
-            return false
-
-        val voltage = floatOf(voltageParm)
-        return !(voltage < wheel!!.voltageMin || (wheel!!.voltageMax + 3f) < voltage)
-    }
-
-    private fun updateCalculatedValues(kmParm: String?, voltageActualParm: String?, voltageStartParm: String?) {
-        val km = kmParm ?: widgets.getText(editKm)
-        val voltageActual = voltageActualParm ?: widgets.getText(editVoltageActual)
-        val voltageStart = voltageStartParm ?: widgets.getText(editVoltageStart)
-
-        updatePercentage(voltageActual)
-        updateEstimatedValues(km, voltageActual, voltageStart)
-    }
-
-    private fun updateEstimatedValues(km: String, voltageActual: String, voltageStart: String) {
-        estimates = when {
-            !isEmpty(km) && isPositive(km)
-                    && isVoltageWithinRange(voltageActual)
-                    && isVoltageWithinRange(voltageStart)
-                    && floatOf(voltageActual) <= floatOf(voltageStart) -> {
-
-                val rateOverride = if (selectedRate == -1) null else floatOf(listOfRates[selectedRate])
-                calculatorService.estimatedValues(wheel, floatOf(voltageActual), floatOf(km), rateOverride)
+        var voltage = parseVoltage(voltageStart)
+        when {
+            voltage != null && isVoltageWithinRange(voltage) -> {
+                wheel = wheel!!.copy(voltageStart = voltage)
+                external.runDB { it.saveWheel(wheel) }
             }
 
-            else -> null
+            else -> voltage = null
         }
-        if (estimates != null && estimates!!.whPerKm < 5.0f)
-            estimates = null
 
-        fragments.runUI {
-            textRemainingRange.text = textKmWithDecimal(estimates?.remainingRange)
-            textTotalRange.text = textKmWithDecimal(estimates?.totalRange)
-
-            val hasDisplay = estimates != null
-            widgets.enable(buttonCharge, hasDisplay)
-            widgets.show(labelRate, hasDisplay)
-            widgets.show(labelRemainingRange, hasDisplay)
-            widgets.show(labelTotalRange, hasDisplay)
-            widgets.show(spinnerRate, hasDisplay)
-        }
+        refreshDisplay(voltage, readVoltageActual(), readKm())
+        refreshRates()
     }
 
-    private fun updatePercentage(voltageActual: String) {
-        val percentage: Float? = when {
-            isVoltageWithinRange(voltageActual) -> calculatorService.percentage(wheel, floatOf(voltageActual))
-            else -> null
-        }
-
-        textBattery.text = textPercentageWithDecimal(percentage)
-        widgets.show(labelBattery, percentage != null)
-    }
-
-    private fun updateRates() {
-        val actualRate = estimates?.whPerKm
-
-        selectedRate = -1
-        listOfRates.clear()
-
-        if (actualRate == null) {
-            widgets.clearSelection(spinnerRate)
-            return
-        }
-
-        val displayActualRate = textWhPerKm(actualRate)
-        listOfRates.add(displayActualRate)
-
-        val stepDown = (actualRate / 5).toInt() * 5
-        for (i in stepDown - 10..stepDown + 15 step 5) {
-            if (i < 10)
-                continue
-
-            listOfRates.add(i.toString())
-        }
-
-        listOfRates.sort()
-
-        selectedRate = indexOf(listOfRates, displayActualRate)
-        widgets.setSelection(spinnerRate, selectedRate)
+    private fun isVoltageWithinRange(voltage: Float): Boolean {
+        return !(voltage < wheel!!.voltageMin || (wheel!!.voltageMax + 3f) < voltage)
     }
 
     @SuppressLint("SetTextI18n")
@@ -281,5 +194,114 @@ open class WheelViewFragment : BaseFragment() {
             editKm.setText("$newKm")
             editVoltageActual.setText("$newVoltage")
         }
+    }
+
+    internal open fun clearDisplay() {
+        clearPercentage()
+        clearEstimates()
+    }
+
+    internal open fun clearEstimates() {
+        widgets.hide(
+            spinnerRate, labelRate,
+            textRemainingRange, labelRemainingRange,
+            textTotalRange, labelTotalRange
+        )
+        widgets.disable(buttonCharge)
+    }
+
+    internal open fun clearPercentage() {
+        widgets.hide(
+            textBattery, labelBattery
+        )
+    }
+
+    internal open fun parseKm(value: String): Float? =
+        when {
+            isNumeric(value) -> floatOf(value)
+            else -> null
+        }
+
+    internal open fun parseVoltage(value: String): Float? =
+        when {
+            !isNumeric(value) -> null
+            floatOf(value) < wheel!!.voltageMin -> null
+            else -> floatOf(value)
+        }
+
+    internal open fun readKm(): Float? {
+        return parseKm(widgets.getText(editKm))
+    }
+
+    internal open fun readVoltageActual(): Float? {
+        return parseVoltage(widgets.getText(editVoltageActual))
+    }
+
+    internal open fun readVoltageStart(): Float? {
+        return parseVoltage(widgets.getText(editVoltageStart))
+    }
+
+    internal open fun refreshDisplay(voltageStart: Float?, voltageActual: Float?, km: Float?) {
+        when (voltageActual) {
+            null -> clearDisplay()
+            else -> {
+                updatePercentageFor(voltageActual)
+
+                when {
+                    voltageStart == null -> clearEstimates()
+                    km == null -> clearEstimates()
+                    else -> refreshEstimates(voltageActual, km)
+                }
+            }
+        }
+    }
+
+    internal open fun refreshEstimates(voltage: Float, km: Float) {
+        val rateOverride = if (selectedRate == -1) null else floatOf(listOfRates[selectedRate])
+        estimates = calculatorService.estimatedValues(wheel!!, voltage, km, rateOverride)
+
+        textRemainingRange.text = textKmWithDecimal(estimates!!.remainingRange)
+        textTotalRange.text = textKmWithDecimal(estimates!!.totalRange)
+
+        widgets.show(
+            spinnerRate, labelRate,
+            textRemainingRange, labelRemainingRange,
+            textTotalRange, labelTotalRange
+        )
+        widgets.enable(buttonCharge)
+    }
+
+    internal open fun refreshRates() {
+        val actualRate = estimates?.whPerKm
+
+        selectedRate = -1
+        listOfRates.clear()
+
+        if (actualRate == null) {
+            widgets.clearSelection(spinnerRate)
+            return
+        }
+
+        val displayActualRate = textWhPerKm(actualRate)
+        listOfRates.add(displayActualRate)
+
+        val stepDown = (actualRate / 5).toInt() * 5
+        for (i in stepDown - 10..stepDown + 15 step 5) {
+            if (i < 10) continue
+
+            listOfRates.add(i.toString())
+        }
+
+        listOfRates.sort()
+
+        selectedRate = indexOf(listOfRates, displayActualRate)
+        widgets.setSelection(spinnerRate, selectedRate)
+    }
+
+    internal open fun updatePercentageFor(voltageActual: Float) {
+        val percentage = calculatorService.percentage(wheel!!, voltageActual)
+
+        textBattery.text = textPercentageWithDecimal(percentage)
+        widgets.show(textBattery, labelBattery)
     }
 }
