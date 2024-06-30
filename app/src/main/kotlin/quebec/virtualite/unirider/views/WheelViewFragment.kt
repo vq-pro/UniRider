@@ -76,37 +76,38 @@ open class WheelViewFragment : BaseFragment() {
         textTotalRange = view.findViewById(R.id.view_total_range)
         spinnerRate = view.findViewById(R.id.spinner_rate)
 
+        widgets.addTextChangedListener(editVoltageStart, onUpdateVoltageStart())
+        widgets.addTextChangedListener(editKm, onUpdateKm())
+        widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
+        widgets.setOnClickListener(buttonCharge, onCharge())
+        widgets.setOnClickListener(buttonConnect, onConnect())
+        widgets.setOnClickListener(buttonEdit, onEdit())
+        widgets.setOnItemSelectedListener(spinnerRate, onChangeRate())
+        widgets.stringListAdapter(spinnerRate, view, listOfRates)
+
         external.runDB {
             wheel = it.getWheel(parmWheelId!!)
 
-            if (wheel != null) {
-                widgets.addTextChangedListener(editVoltageStart, onUpdateVoltageStart())
-                widgets.addTextChangedListener(editKm, onUpdateKm())
-                widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
-                widgets.setOnClickListener(buttonCharge, onCharge())
-                widgets.setOnClickListener(buttonConnect, onConnect())
-                widgets.setOnClickListener(buttonEdit, onEdit())
-                widgets.setOnItemSelectedListener(spinnerRate, onChangeRate())
-                widgets.stringListAdapter(spinnerRate, view, listOfRates)
-
+            if (wheel != null)
                 fragments.runUI {
-                    if (wheel!!.isSold) {
+                    if (!wheel!!.isSold) {
+                        editVoltageStart.setText("${wheel!!.voltageStart}")
+                        textName.text = wheel!!.name
+                        textBtName.text = wheel!!.btName
+
+                    } else {
                         textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
 
                         buttonCharge.visibility = GONE
                         buttonConnect.visibility = GONE
 
-                    } else {
-                        editVoltageStart.setText("${wheel!!.voltageStart}")
-                        textName.text = wheel!!.name
-                        textBtName.text = wheel!!.btName
-
-                        clearDisplay()
                     }
 
                     textMileage.text = textKm(wheel!!.totalMileage())
+
+                    refreshDisplay(readVoltageStart(), readVoltageActual(), readKm())
+                    refreshRates()
                 }
-            }
         }
     }
 

@@ -16,7 +16,6 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.doNothing
 import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.doReturn
@@ -217,7 +216,12 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.wheel = null
         given(mockedDb.getWheel(anyLong())).willReturn(INITIAL_WHEEL)
 
-        doNothing().`when`(fragment).clearDisplay()
+        doReturn(INVALID_KM).`when`(fragment).readKm()
+        doReturn(INVALID_VOLTAGE_ACTUAL).`when`(fragment).readVoltageActual()
+        doReturn(INITIAL_WHEEL.voltageStart).`when`(fragment).readVoltageStart()
+
+        doNothing().`when`(fragment).refreshDisplay(VOLTAGE_START, INVALID_VOLTAGE_ACTUAL, INVALID_KM)
+        doNothing().`when`(fragment).refreshRates()
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -245,6 +249,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.view_remaining_range, fragment.textRemainingRange, mockedTextRemainingRange)
         verifyFieldAssignment(R.id.view_total_range, fragment.textTotalRange, mockedTextTotalRange)
 
+        assertThat(fragment.buttonCharge, equalTo(mockedButtonCharge))
         assertThat(fragment.spinnerRate, equalTo(mockedSpinnerRate))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
@@ -269,7 +274,11 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedEditVoltageStart).setText("${INITIAL_WHEEL.voltageStart}")
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
 
-        verify(fragment).clearDisplay()
+        verify(fragment).readKm()
+        verify(fragment).readVoltageActual()
+        verify(fragment).readVoltageStart()
+        verify(fragment).refreshDisplay(VOLTAGE_START, INVALID_VOLTAGE_ACTUAL, INVALID_KM)
+        verify(fragment).refreshRates()
     }
 
     @Test
@@ -281,7 +290,6 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verifyNoInteractions(mockedWidgets)
         verify(mockedTextName, never()).text = anyString()
         verify(mockedTextBtName, never()).text = anyString()
         verify(mockedTextMileage, never()).text = anyString()
@@ -292,6 +300,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         // Given
         fragment.wheel = null
         given(mockedDb.getWheel(anyLong())).willReturn(SHERMAN_MAX_3)
+
+        doReturn(INVALID_KM).`when`(fragment).readKm()
+        doReturn(INVALID_VOLTAGE_ACTUAL).`when`(fragment).readVoltageActual()
+        doReturn(INVALID_VOLTAGE_START).`when`(fragment).readVoltageStart()
+
+        doNothing().`when`(fragment).refreshDisplay(INVALID_VOLTAGE_START, INVALID_VOLTAGE_ACTUAL, INVALID_KM)
+        doNothing().`when`(fragment).refreshRates()
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
