@@ -20,6 +20,7 @@ import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
 import kotlin.math.roundToInt
 
+const val MAXIMUM_RATE_TRESHOLD = 200f
 const val MINIMUM_RATE_TRESHOLD = 10f
 
 open class WheelViewFragment : BaseFragment() {
@@ -43,7 +44,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textTotalRange: TextView
 
     internal val listOfRates = ArrayList<String>()
-    internal var selectedRate: Int = -1
+    internal var selectedRate: Int? = null
 
     internal var estimates: EstimatedValues? = null
     internal var parmWheelId: Long? = 0
@@ -148,16 +149,18 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onEdit(): (View) -> Unit = {
-        selectedRate = -1
+        selectedRate = null
         goto(R.id.action_WheelViewFragment_to_WheelEditFragment, wheel!!)
     }
 
     fun onUpdateKm() = { rawKm: String ->
+        selectedRate = null
         refreshDisplay(readVoltageStart(), readVoltageActual(), parseKm(rawKm))
         refreshRates()
     }
 
     fun onUpdateVoltageActual() = { voltageActual: String ->
+        selectedRate = null
         refreshDisplay(readVoltageStart(), parseVoltage(voltageActual), readKm())
         refreshRates()
     }
@@ -173,6 +176,7 @@ open class WheelViewFragment : BaseFragment() {
             else -> voltage = null
         }
 
+        selectedRate = null
         refreshDisplay(voltage, readVoltageActual(), readKm())
         refreshRates()
     }
@@ -262,27 +266,28 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     internal open fun refreshEstimates(voltage: Float, km: Float) {
-        val rateOverride = if (selectedRate == -1) null else floatOf(listOfRates[selectedRate])
+        val rateOverride = if (selectedRate == null) null else floatOf(listOfRates[selectedRate!!])
         estimates = calculatorService.estimatedValues(wheel!!, voltage, km, rateOverride)
 
-        if (estimates!!.whPerKm < MINIMUM_RATE_TRESHOLD) {
-            clearEstimates()
-            return
+        when {
+            estimates!!.whPerKm < MINIMUM_RATE_TRESHOLD -> clearEstimates()
+            estimates!!.whPerKm > MAXIMUM_RATE_TRESHOLD -> clearEstimates()
+            else -> {
+                textRemainingRange.text = textKmWithDecimal(estimates!!.remainingRange)
+                textTotalRange.text = textKmWithDecimal(estimates!!.totalRange)
+
+                widgets.show(
+                    spinnerRate, labelRate, textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
+                )
+                widgets.enable(buttonCharge)
+            }
         }
-
-        textRemainingRange.text = textKmWithDecimal(estimates!!.remainingRange)
-        textTotalRange.text = textKmWithDecimal(estimates!!.totalRange)
-
-        widgets.show(
-            spinnerRate, labelRate, textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
-        )
-        widgets.enable(buttonCharge)
     }
 
     internal open fun refreshRates() {
         val actualRate = estimates?.whPerKm
 
-        selectedRate = -1
+        selectedRate = null
         listOfRates.clear()
 
         if (actualRate == null) {
@@ -303,7 +308,7 @@ open class WheelViewFragment : BaseFragment() {
         listOfRates.sort()
 
         selectedRate = indexOf(listOfRates, displayActualRate)
-        widgets.setSelection(spinnerRate, selectedRate)
+        widgets.setSelection(spinnerRate, selectedRate!!)
     }
 
     internal open fun updatePercentageFor(voltageActual: Float) {

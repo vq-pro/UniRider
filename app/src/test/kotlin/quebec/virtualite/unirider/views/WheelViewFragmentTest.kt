@@ -455,7 +455,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onEdit().invoke(mockedView)
 
         // Then
-        assertThat(fragment.selectedRate, equalTo(-1))
+        assertThat(fragment.selectedRate, equalTo(null))
         verify(mockedFragments).navigateTo(
             R.id.action_WheelViewFragment_to_WheelEditFragment, Pair(PARAMETER_WHEEL_ID, ID)
         )
@@ -464,24 +464,27 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     @Test
     fun onUpdateKm() {
         // Given
-        val value = "$KM "
-        doReturn(KM).`when`(fragment).parseKm(value)
+        doReturn(KM).`when`(fragment).parseKm(KM_STRING)
         doReturn(VOLTAGE_START).`when`(fragment).readVoltageStart()
         doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
 
         doNothing().`when`(fragment).refreshDisplay(VOLTAGE_START, VOLTAGE, KM)
         doNothing().`when`(fragment).refreshRates()
 
+        fragment.selectedRate = 99
+
         // When
-        fragment.onUpdateKm().invoke(value)
+        fragment.onUpdateKm().invoke(KM_STRING)
 
         // Then
-        verify(fragment).parseKm(value)
+        verify(fragment).parseKm(KM_STRING)
         verify(fragment).readVoltageStart()
         verify(fragment).readVoltageActual()
 
         verify(fragment).refreshDisplay(VOLTAGE_START, VOLTAGE, KM)
         verify(fragment).refreshRates()
+
+        assertThat(fragment.selectedRate, equalTo(null))
     }
 
     @Test
@@ -491,9 +494,10 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         doReturn(VOLTAGE).`when`(fragment).parseVoltage(value)
         doReturn(KM).`when`(fragment).readKm()
         doReturn(VOLTAGE_START).`when`(fragment).readVoltageStart()
+        doNothing().`when`(fragment).refreshDisplay(VOLTAGE_START, VOLTAGE, KM)
         doNothing().`when`(fragment).refreshRates()
 
-        doNothing().`when`(fragment).refreshDisplay(VOLTAGE_START, VOLTAGE, KM)
+        fragment.selectedRate = 99
 
         // When
         fragment.onUpdateVoltageActual().invoke(value)
@@ -505,6 +509,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         verify(fragment).refreshDisplay(VOLTAGE_START, VOLTAGE, KM)
         verify(fragment).refreshRates()
+
+        assertThat(fragment.selectedRate, equalTo(null))
     }
 
     @Test
@@ -520,6 +526,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         doNothing().`when`(fragment).refreshDisplay(VOLTAGE_START, VOLTAGE, KM)
         doNothing().`when`(fragment).refreshRates()
 
+        fragment.selectedRate = 99
+
         // When
         fragment.onUpdateVoltageStart().invoke(value)
 
@@ -533,6 +541,8 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         verify(mockedDb).saveWheel(fragment.wheel!!.copy(voltageStart = VOLTAGE_START))
         assertThat(fragment.wheel!!.voltageStart, equalTo(VOLTAGE_START))
+
+        assertThat(fragment.selectedRate, equalTo(null))
     }
 
     @Test
@@ -801,6 +811,27 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun refreshEstimates_whenRateIsAboveMaximumRateTreshold() {
+        // Given
+        injectMocks()
+
+        fragment.selectedRate = WH_PER_KM_INDEX
+        fragment.listOfRates.addAll(WHS_PER_KM)
+
+        val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, MAXIMUM_RATE_TRESHOLD + 0.1f)
+        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM, WH_PER_KM)
+
+        // When
+        fragment.refreshEstimates(VOLTAGE, KM)
+
+        // Then
+        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM, WH_PER_KM)
+        verify(fragment).clearEstimates()
+
+        assertThat(fragment.estimates, equalTo(estimates))
+    }
+
+    @Test
     fun refreshEstimates_whenRateIsBelowMinimumRateTreshold() {
         // Given
         injectMocks()
@@ -850,7 +881,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         assertThat(fragment.listOfRates, equalTo(WHS_PER_KM))
         assertThat(fragment.selectedRate, equalTo(WH_PER_KM_INDEX))
 
-        verify(mockedWidgets).setSelection(mockedSpinnerRate, fragment.selectedRate)
+        verify(mockedWidgets).setSelection(mockedSpinnerRate, fragment.selectedRate!!)
     }
 
     private fun injectMocks() {
