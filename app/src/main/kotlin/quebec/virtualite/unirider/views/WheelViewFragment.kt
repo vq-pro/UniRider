@@ -20,6 +20,8 @@ import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
 import kotlin.math.roundToInt
 
+const val MINIMUM_RATE_TRESHOLD = 10f
+
 open class WheelViewFragment : BaseFragment() {
 
     internal lateinit var buttonCharge: Button
@@ -262,6 +264,11 @@ open class WheelViewFragment : BaseFragment() {
     internal open fun refreshEstimates(voltage: Float, km: Float) {
         val rateOverride = if (selectedRate == -1) null else floatOf(listOfRates[selectedRate])
         estimates = calculatorService.estimatedValues(wheel!!, voltage, km, rateOverride)
+
+        if (estimates!!.whPerKm < MINIMUM_RATE_TRESHOLD) {
+            clearEstimates()
+            return
+        }
 
         textRemainingRange.text = textKmWithDecimal(estimates!!.remainingRange)
         textTotalRange.text = textKmWithDecimal(estimates!!.totalRange)

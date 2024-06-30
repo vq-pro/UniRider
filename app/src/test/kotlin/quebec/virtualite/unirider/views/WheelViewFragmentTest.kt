@@ -801,6 +801,27 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun refreshEstimates_whenRateIsBelowMinimumRateTreshold() {
+        // Given
+        injectMocks()
+
+        fragment.selectedRate = WH_PER_KM_INDEX
+        fragment.listOfRates.addAll(WHS_PER_KM)
+
+        val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, MINIMUM_RATE_TRESHOLD - 0.1f)
+        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM, WH_PER_KM)
+
+        // When
+        fragment.refreshEstimates(VOLTAGE, KM)
+
+        // Then
+        verify(mockedCalculatorService).estimatedValues(fragment.wheel, VOLTAGE, KM, WH_PER_KM)
+        verify(fragment).clearEstimates()
+
+        assertThat(fragment.estimates, equalTo(estimates))
+    }
+
+    @Test
     fun refreshPercentageFor() {
         // Given
         injectMocks()
