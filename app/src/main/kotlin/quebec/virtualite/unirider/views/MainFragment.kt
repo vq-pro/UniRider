@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ open class MainFragment : BaseFragment() {
     lateinit var lvWheels: ListView
     lateinit var textTotalMileage: TextView
 
+    var labelKm = ""
     var showSoldWheels = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,6 +40,8 @@ open class MainFragment : BaseFragment() {
         widgets.multifieldListAdapter(lvWheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
         widgets.setOnItemClickListener(lvWheels, onSelectWheel())
 
+        labelKm = fragments.string(R.string.label_km)
+
         showWheels()
     }
 
@@ -49,7 +53,7 @@ open class MainFragment : BaseFragment() {
         textMileage.text = when {
             item.name() == NEW_ENTRY -> ""
             item.name() == SOLD_ENTRY && item.mileage() == 0 -> ""
-            else -> "${item.mileage()}"
+            else -> "${item.mileage()} $labelKm"
         }
     }
 
@@ -65,36 +69,37 @@ open class MainFragment : BaseFragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     open fun showWheels() {
         external.runDB { db ->
             val wheels = db.getWheels()
-            var newWheelList = getSortedWheelItems(wheels.filter { !it.isSold })
+            var activeWheelList = getSortedWheelItems(wheels.filter { !it.isSold })
             val soldWheels = getSortedWheelItems(wheels.filter { it.isSold })
 
             if (soldWheels.isNotEmpty()) {
                 if (showSoldWheels) {
-                    newWheelList = addTo(
-                        newWheelList,
+                    activeWheelList = addTo(
+                        activeWheelList,
                         WheelRow(0, SOLD_ENTRY, 0),
                     )
                     for (soldWheel in soldWheels) {
-                        newWheelList = addTo(
-                            newWheelList,
+                        activeWheelList = addTo(
+                            activeWheelList,
                             WheelRow(soldWheel.id(), "- " + soldWheel.name(), soldWheel.mileage())
                         )
                     }
                 } else {
-                    newWheelList = addTo(
-                        newWheelList,
+                    activeWheelList = addTo(
+                        activeWheelList,
                         WheelRow(0, SOLD_ENTRY, soldWheels.map { it.mileage() }.sum()),
                     )
                 }
             }
-            newWheelList = addTo(newWheelList, WheelRow(0, NEW_ENTRY, 0))
+            activeWheelList = addTo(activeWheelList, WheelRow(0, NEW_ENTRY, 0))
 
             fragments.runUI {
-                widgets.setListViewEntries(lvWheels, wheelList, newWheelList)
-                textTotalMileage.text = "${newWheelList.map { it.mileage() }.sum()}"
+                widgets.setListViewEntries(lvWheels, wheelList, activeWheelList)
+                textTotalMileage.text = "${activeWheelList.map { it.mileage() }.sum()} $labelKm"
             }
         }
     }

@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.database
 
 interface WheelDb {
-
     fun deleteAll()
     fun deleteWheel(id: Long)
     fun findDuplicate(wheel: WheelEntity?): Boolean

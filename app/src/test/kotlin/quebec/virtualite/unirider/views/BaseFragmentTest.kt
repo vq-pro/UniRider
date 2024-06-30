@@ -23,7 +23,8 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.views.CommonFragmentServices
 import quebec.virtualite.commons.android.views.CommonWidgetServices
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain
+import quebec.virtualite.unirider.TestDomain.ITEM_SOLD
+import quebec.virtualite.unirider.TestDomain.LABEL_KM
 import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelDb
@@ -152,8 +153,10 @@ open class BaseFragmentTest(fragmentType: Class<*>) {
     }
 
     fun mockStrings() {
-        given(mockedFragments.string(R.string.label_wheel_sold))
-            .willReturn(TestDomain.ITEM_SOLD)
+        lenient().`when`(mockedFragments.string(R.string.label_km))
+            .thenReturn(LABEL_KM)
+        lenient().`when`(mockedFragments.string(R.string.label_wheel_sold))
+            .thenReturn(ITEM_SOLD)
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {

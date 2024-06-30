@@ -125,6 +125,7 @@
                 />
 
                 <TextView
+                        android:id="@+id/label_battery"
                         android:labelFor="@+id/view_battery"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -138,7 +139,7 @@
             <!-- Rate -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:labelFor="@+id/spinner_wh_per_km"
+                        android:labelFor="@+id/spinner_rate"
                         android:layout_weight="1"
                         android:layout_width="20dp"
                         android:layout_height="wrap_content"
@@ -148,14 +149,15 @@
                 />
 
                 <Spinner
-                        android:id="@+id/spinner_wh_per_km"
+                        android:id="@+id/spinner_rate"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:visibility="visible">
                 </Spinner>
 
                 <TextView
-                        android:labelFor="@+id/spinner_wh_per_km"
+                        android:id="@+id/label_rate"
+                        android:labelFor="@+id/spinner_rate"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -188,6 +190,7 @@
                 />
 
                 <TextView
+                        android:id="@+id/label_remaining_range"
                         android:labelFor="@+id/view_remaining_range"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -220,6 +223,7 @@
                 />
 
                 <TextView
+                        android:id="@+id/label_total_range"
                         android:labelFor="@+id/view_total_range"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -238,7 +242,7 @@
                     android:background="@android:color/darker_gray"
             />
 
-            <!-- Mileage-->
+            <!-- Mileage -->
             <TableRow android:layout_marginTop="15dp">
                 <TextView
                         android:labelFor="@+id/view_mileage"

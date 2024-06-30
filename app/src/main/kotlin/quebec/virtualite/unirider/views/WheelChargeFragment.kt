@@ -26,7 +26,7 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var buttonConnect: Button
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
-    internal lateinit var spinnerRates: Spinner
+    internal lateinit var spinnerRate: Spinner
     internal lateinit var textName: TextView
     internal lateinit var textRemainingTime: TextView
     internal lateinit var textVoltageRequired: TextView
@@ -55,7 +55,7 @@ open class WheelChargeFragment : BaseFragment() {
         buttonConnect = view.findViewById(R.id.button_connect_charge)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
-        spinnerRates = view.findViewById(R.id.spinner_wh_per_km)
+        spinnerRate = view.findViewById(R.id.spinner_rate)
         textName = view.findViewById(R.id.view_name)
         textRemainingTime = view.findViewById(R.id.view_remaining_time)
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
@@ -64,8 +64,8 @@ open class WheelChargeFragment : BaseFragment() {
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
-        widgets.setOnItemSelectedListener(spinnerRates, onChangeRate())
-        widgets.stringListAdapter(spinnerRates, view, parmRates)
+        widgets.setOnItemSelectedListener(spinnerRate, onChangeRate())
+        widgets.stringListAdapter(spinnerRate, view, parmRates)
         widgets.setOnCheckedChangeListener(switchFullCharge, onToggleFullCharge())
 
         external.runDB {
@@ -73,7 +73,7 @@ open class WheelChargeFragment : BaseFragment() {
 
             fragments.runUI {
                 textName.text = wheel!!.name
-                widgets.setSelection(spinnerRates, parmSelectedRate)
+                widgets.setSelection(spinnerRate, parmSelectedRate)
                 displayVoltageActual()
 
                 if (wheel!!.btName == null || wheel!!.btAddr == null) {
@@ -103,14 +103,10 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     fun onToggleFullCharge() = { useFullCharge: Boolean ->
-        if (useFullCharge) {
-            widgets.disable(editKm)
-            widgets.disable(spinnerRates)
-
-        } else {
-            widgets.enable(editKm)
-            widgets.enable(spinnerRates)
-        }
+        if (useFullCharge)
+            widgets.disable(editKm, spinnerRate)
+        else
+            widgets.enable(editKm, spinnerRate)
 
         updateEstimates()
     }

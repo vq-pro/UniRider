@@ -57,7 +57,7 @@ class TestMainFragment(val app: TestApp, val domain: TestDomain) {
         var totalMileage = 0
         domain.forEachWheel { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
 
-        assertThat(R.id.total_mileage, hasText("$totalMileage"))
+        assertThat(R.id.total_mileage, hasText("$totalMileage km"))
     }
 
     fun validateView() {
@@ -83,18 +83,33 @@ class TestMainFragment(val app: TestApp, val domain: TestDomain) {
             .stream()
             .map { row ->
                 val name = row[0]
-                val mileage = intOf(row[1])
-                val id = when (name) {
-                    SOLD_WHEEL_ENTRY,
-                    NEW_WHEEL_ENTRY -> 0
+                val mileageWithUnits = row[1]
 
-                    else -> domain.getWheelId(name)
+                when (name) {
+                    NEW_WHEEL_ENTRY -> {
+                        assertThat(mileageWithUnits, equalTo(""))
+                        WheelRow(0, name, 0)
+                    }
+
+                    SOLD_WHEEL_ENTRY -> WheelRow(0, name, parseMileage(mileageWithUnits))
+
+                    else -> {
+                        val id = domain.getWheelId(name)
+                        WheelRow(id, name, parseMileage(mileageWithUnits))
+                    }
                 }
-
-                WheelRow(id, name, mileage)
             }
             .collect(toList())
 
         assertThat(R.id.wheels, hasRows(expectedRows))
+    }
+
+    private fun parseMileage(mileageWithUnits: String): Int {
+        if (mileageWithUnits.endsWith(" km"))
+            return intOf(mileageWithUnits.substring(0, mileageWithUnits.length - 3))
+        else {
+            assertThat(mileageWithUnits, equalTo(""))
+            return 0
+        }
     }
 }

@@ -60,8 +60,8 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         fragment.activity?.runOnUiThread(function)
     }
 
-    open fun string(id: Int): String? {
-        return fragment.activity?.applicationContext?.getString(id)
+    open fun string(id: Int): String {
+        return fragment.activity?.applicationContext?.getString(id)!!
     }
 
     private fun hideWaitDialog() {

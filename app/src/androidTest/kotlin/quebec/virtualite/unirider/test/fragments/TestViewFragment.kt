@@ -101,7 +101,7 @@ class TestViewFragment(val app: TestApp, val domain: TestDomain) {
                     listOf(
                         getText(R.id.view_remaining_range),
                         getText(R.id.view_total_range),
-                        getSpinnerText(R.id.spinner_wh_per_km)
+                        getSpinnerText(R.id.spinner_rate)
                     )
                 )
             )

@@ -7,7 +7,7 @@ import androidx.room.Update
 import quebec.virtualite.unirider.database.WheelEntity
 
 @Dao
-interface WheelMileageDao {
+interface WheelDao {
     @Query("DELETE FROM wheel WHERE id=:id")
     fun deleteWheel(id: Long)
 

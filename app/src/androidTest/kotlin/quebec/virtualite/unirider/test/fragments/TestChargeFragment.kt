@@ -18,7 +18,7 @@ import quebec.virtualite.unirider.views.WheelChargeFragment
 class TestChargeFragment(val app: TestApp) {
 
     fun changeRateTo(newRate: Int) {
-        selectSpinnerItem(R.id.spinner_wh_per_km, "$newRate")
+        selectSpinnerItem(R.id.spinner_rate, "$newRate")
     }
 
     fun changeVoltageTo(voltage: String) {

@@ -43,7 +43,7 @@
                     android:id="@+id/total_mileage"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_margin="20dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
             />
