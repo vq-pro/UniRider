@@ -602,6 +602,15 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun parseKm_whenZero() {
+        // When
+        val result = fragment.parseKm("0.0 ")
+
+        // Then
+        assertThat(result, equalTo(null))
+    }
+
+    @Test
     fun parseVoltage() {
         // When
         val result = fragment.parseVoltage("$VOLTAGE ")

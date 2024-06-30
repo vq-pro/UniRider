@@ -203,9 +203,7 @@ open class WheelViewFragment : BaseFragment() {
 
     internal open fun clearEstimates() {
         widgets.hide(
-            spinnerRate, labelRate,
-            textRemainingRange, labelRemainingRange,
-            textTotalRange, labelTotalRange
+            spinnerRate, labelRate, textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
         )
         widgets.disable(buttonCharge)
     }
@@ -218,16 +216,20 @@ open class WheelViewFragment : BaseFragment() {
 
     internal open fun parseKm(value: String): Float? =
         when {
-            isNumeric(value) -> floatOf(value)
+            isNumeric(value) ->
+                when {
+                    floatOf(value) == 0f -> null
+                    else -> floatOf(value)
+                }
+
             else -> null
         }
 
-    internal open fun parseVoltage(value: String): Float? =
-        when {
-            !isNumeric(value) -> null
-            floatOf(value) < wheel!!.voltageMin -> null
-            else -> floatOf(value)
-        }
+    internal open fun parseVoltage(value: String): Float? = when {
+        !isNumeric(value) -> null
+        floatOf(value) < wheel!!.voltageMin -> null
+        else -> floatOf(value)
+    }
 
     internal open fun readKm(): Float? {
         return parseKm(widgets.getText(editKm))
@@ -264,9 +266,7 @@ open class WheelViewFragment : BaseFragment() {
         textTotalRange.text = textKmWithDecimal(estimates!!.totalRange)
 
         widgets.show(
-            spinnerRate, labelRate,
-            textRemainingRange, labelRemainingRange,
-            textTotalRange, labelTotalRange
+            spinnerRate, labelRate, textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
         )
         widgets.enable(buttonCharge)
     }
