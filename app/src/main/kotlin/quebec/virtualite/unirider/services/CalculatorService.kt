@@ -2,7 +2,7 @@ package quebec.virtualite.unirider.services
 
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.views.BaseFragment.Companion.NB_DECIMALS
+import quebec.virtualite.unirider.views.NB_DECIMALS
 import java.lang.Float.min
 import kotlin.math.max
 

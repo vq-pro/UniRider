@@ -23,7 +23,7 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
+import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
@@ -62,6 +62,7 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_START
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_STRING
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WHS_PER_KM
+import quebec.virtualite.unirider.TestDomain.WHS_PER_KM_SERIALIZED
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_INDEX
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP
@@ -70,13 +71,9 @@ import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_RATES
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_SELECTED_RATE
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_VOLTAGE
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
+class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     private val INVALID_KM = null
     private val INVALID_VOLTAGE_ACTUAL = null
@@ -177,9 +174,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verify(mockedWidgets).hide(
-            mockedSpinnerRate, mockedLabelRate,
-            mockedTextRemainingRange, mockedLabelRemainingRange,
-            mockedTextTotalRange, mockedLabelTotalRange
+            mockedSpinnerRate, mockedLabelRate, mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
         )
         verify(mockedWidgets).disable(mockedButtonCharge)
     }
@@ -199,7 +194,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     @Test
     fun onCreateView() {
         // Given
-        mockArgument(fragment, PARAMETER_WHEEL_ID, ID)
+        doReturn(ID).`when`(mockedSharedPreferences).getLong(PARAMETER_WHEEL_ID, 0)
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
@@ -361,14 +356,13 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         fragment.onCharge().invoke(mockedView)
 
         // Then
-        verify(fragment).readVoltageActual()
-        verify(mockedFragments).navigateTo(
-            R.id.action_WheelViewFragment_to_WheelChargeFragment,
-            Pair(PARAMETER_RATES, WHS_PER_KM),
-            Pair(PARAMETER_SELECTED_RATE, WH_PER_KM_INDEX),
-            Pair(PARAMETER_WHEEL_ID, ID),
-            Pair(PARAMETER_VOLTAGE, VOLTAGE)
-        )
+        verify(mockedSharedPreferencesWriter).putString(PARAMETER_RATES, WHS_PER_KM_SERIALIZED)
+        verify(mockedSharedPreferencesWriter).putInt(PARAMETER_SELECTED_RATE, WH_PER_KM_INDEX)
+        verify(mockedSharedPreferencesWriter).putFloat(PARAMETER_VOLTAGE, VOLTAGE)
+        verify(mockedSharedPreferencesWriter).putLong(PARAMETER_WHEEL_ID, ID)
+        verify(mockedSharedPreferencesWriter).apply()
+
+        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
     }
 
     @Test
@@ -383,7 +377,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         verify(mockedFragments).navigateTo(
-            R.id.action_WheelViewFragment_to_WheelScanFragment, Pair(PARAMETER_WHEEL_ID, ID)
+            R.id.action_WheelViewFragment_to_WheelScanFragment, ID
         )
     }
 
@@ -404,10 +398,20 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         verify(mockedDb).saveWheel(
             WheelEntity(
-                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
-                PREMILEAGE, MILEAGE_NEW, WH,
-                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET,
+                ID,
+                NAME,
+                DEVICE_NAME,
+                DEVICE_ADDR,
+                PREMILEAGE,
+                MILEAGE_NEW,
+                WH,
+                VOLTAGE_MAX,
+                VOLTAGE_MIN,
+                VOLTAGE_RESERVE,
+                VOLTAGE_START,
+                CHARGE_RATE,
+                VOLTAGE_FULL,
+                CHARGER_OFFSET,
                 NOT_SOLD
             )
         )
@@ -433,10 +437,20 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         verify(mockedDb).saveWheel(
             WheelEntity(
-                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
-                PREMILEAGE, MILEAGE_NEW, WH,
-                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_NEW,
-                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET,
+                ID,
+                NAME,
+                DEVICE_NAME,
+                DEVICE_ADDR,
+                PREMILEAGE,
+                MILEAGE_NEW,
+                WH,
+                VOLTAGE_MAX,
+                VOLTAGE_MIN,
+                VOLTAGE_RESERVE,
+                VOLTAGE_NEW,
+                CHARGE_RATE,
+                VOLTAGE_FULL,
+                CHARGER_OFFSET,
                 NOT_SOLD
             )
         )
@@ -456,9 +470,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
 
         // Then
         assertThat(fragment.selectedRate, equalTo(null))
-        verify(mockedFragments).navigateTo(
-            R.id.action_WheelViewFragment_to_WheelEditFragment, Pair(PARAMETER_WHEEL_ID, ID)
-        )
+        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelEditFragment, ID)
     }
 
     @Test
@@ -813,9 +825,7 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
 
         verify(mockedWidgets).show(
-            mockedSpinnerRate, mockedLabelRate,
-            mockedTextRemainingRange, mockedLabelRemainingRange,
-            mockedTextTotalRange, mockedLabelTotalRange
+            mockedSpinnerRate, mockedLabelRate, mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
         )
         verify(mockedWidgets).enable(mockedButtonCharge)
 

@@ -15,6 +15,7 @@ import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.doNothing
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Spy
@@ -48,10 +49,9 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_START
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
+class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @InjectMocks
     @Spy
@@ -111,21 +111,22 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     @Test
     fun onCreateView() {
         // Given
-        mockArgument(fragment, PARAMETER_WHEEL_ID, ID)
+        doReturn(ID).`when`(mockedSharedPreferences).getLong(PARAMETER_WHEEL_ID, 0)
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
         // Then
         verifyInflate(R.layout.wheel_edit_fragment)
+
+        assertThat(fragment.parmWheelId, equalTo(ID))
     }
 
     @Test
     fun onViewCreated() {
         // Given
         val wheel = definedWheel()
-        given(mockedDb.getWheel(ID))
-            .willReturn(wheel)
+        given(mockedDb.getWheel(ID)).willReturn(wheel)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -181,15 +182,24 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     @Test
     fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
         // Given
-        val wheel =
-            WheelEntity(
-                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
-                0, 0, WH,
-                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
-            )
-        given(mockedDb.getWheel(ID))
-            .willReturn(wheel)
+        val wheel = WheelEntity(
+            ID,
+            NAME,
+            DEVICE_NAME,
+            DEVICE_ADDR,
+            0,
+            0,
+            WH,
+            VOLTAGE_MAX,
+            VOLTAGE_MIN,
+            VOLTAGE_RESERVE,
+            VOLTAGE_START,
+            CHARGE_RATE,
+            VOLTAGE_FULL,
+            CHARGER_OFFSET,
+            NOT_SOLD
+        )
+        given(mockedDb.getWheel(ID)).willReturn(wheel)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -241,8 +251,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         changeCanBeSaved(true)
         injectMocks()
 
-        given(mockedDb.findDuplicate(any()))
-            .willReturn(true)
+        given(mockedDb.findDuplicate(any())).willReturn(true)
 
         // When
         fragment.enableSaveIfChanged()
@@ -275,10 +284,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         fragment.onDelete().invoke(mockedView)
 
         // Then
-        verify(mockedFragments).navigateTo(
-            R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment,
-            Pair(PARAMETER_WHEEL_ID, ID)
-        )
+        verify(mockedFragments).navigateTo(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment, ID)
     }
 
     @Test
@@ -563,8 +569,7 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         verify(fragment).enableSaveIfChanged()
 
         assertThat(
-            fragment.updatedWheel,
-            equalTo(S18_1.copy(voltageMax = VOLTAGE_MAX_NEW, voltageStart = VOLTAGE_MAX_NEW))
+            fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = VOLTAGE_MAX_NEW, voltageStart = VOLTAGE_MAX_NEW))
         )
     }
 
@@ -749,15 +754,25 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
         fragment.initialWheel = definedWheel()
         fragment.updatedWheel = fragment.initialWheel
 
-        given(mockedWheelValidator.canSave(any(), any()))
-            .willReturn(canSave)
+        given(mockedWheelValidator.canSave(any(), any())).willReturn(canSave)
     }
 
     private fun definedWheel() = WheelEntity(
-        ID, NAME, DEVICE_NAME, DEVICE_ADDR,
-        PREMILEAGE, MILEAGE, WH,
-        VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
-        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
+        ID,
+        NAME,
+        DEVICE_NAME,
+        DEVICE_ADDR,
+        PREMILEAGE,
+        MILEAGE,
+        WH,
+        VOLTAGE_MAX,
+        VOLTAGE_MIN,
+        VOLTAGE_RESERVE,
+        VOLTAGE_START,
+        CHARGE_RATE,
+        VOLTAGE_FULL,
+        CHARGER_OFFSET,
+        NOT_SOLD
     )
 
     private fun initUpdate() {
@@ -789,13 +804,11 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
     private fun mockVoltageMax() {
         fragment.editVoltageMax = mockedEditVoltageMax
-        given(mockedWidgets.getText(mockedEditVoltageMax))
-            .willReturn("$VOLTAGE_MAX")
+        given(mockedWidgets.getText(mockedEditVoltageMax)).willReturn("$VOLTAGE_MAX")
     }
 
     private fun mockVoltageMin() {
         fragment.editVoltageMin = mockedEditVoltageMin
-        given(mockedWidgets.getText(mockedEditVoltageMin))
-            .willReturn("$VOLTAGE_MIN")
+        given(mockedWidgets.getText(mockedEditVoltageMin)).willReturn("$VOLTAGE_MIN")
     }
 }

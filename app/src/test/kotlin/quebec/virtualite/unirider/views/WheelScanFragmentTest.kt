@@ -9,10 +9,11 @@ import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
-import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
+import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET3
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE3
@@ -45,7 +46,7 @@ import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
+class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
 
     private val DEVICE = BluetoothDevice(DEVICE_NAME, DEVICE_ADDR)
     private val DEVICE2 = BluetoothDevice(DEVICE_NAME2, DEVICE_ADDR2)
@@ -68,11 +69,16 @@ class WheelScanFragmentTest : BaseFragmentTest(WheelScanFragment::class.java) {
 
     @Test
     fun onCreateView() {
+        // Given
+        doReturn(ID).`when`(mockedSharedPreferences).getLong(PARAMETER_WHEEL_ID, 0)
+
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
         // Then
         verifyInflate(R.layout.wheel_scan_fragment)
+
+        assertThat(fragment.parmWheelId, equalTo(ID))
     }
 
     @Test

@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
@@ -18,10 +19,9 @@ import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.exceptions.WheelNotFoundException
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirmationFragment::class.java) {
+class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirmationFragment::class.java) {
 
     @InjectMocks
     lateinit var fragment: WheelDeleteConfirmationFragment
@@ -50,13 +50,15 @@ class WheelDeleteConfirmationFragmentTest : BaseFragmentTest(WheelDeleteConfirma
     @Test
     fun onCreateView() {
         // Given
-        mockArgument(fragment, PARAMETER_WHEEL_ID, ID)
+        doReturn(ID).`when`(mockedSharedPreferences).getLong(PARAMETER_WHEEL_ID, 0)
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
         // Then
         verifyInflate(R.layout.wheel_delete_confirmation_fragment)
+
+        assertThat(fragment.parmWheelId, equalTo(ID))
     }
 
     @Test

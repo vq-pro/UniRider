@@ -42,7 +42,7 @@ open class WheelEditFragment : BaseFragment() {
     private var wheelValidator = WheelValidator()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)!!
+        parmWheelId = fragments.sharedPreferences().getLong(PARAMETER_WHEEL_ID, 0)
         return inflater.inflate(R.layout.wheel_edit_fragment, container, false)
     }
 
@@ -110,7 +110,10 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onDelete(): (View) -> Unit = {
-        goto(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment, updatedWheel)
+        fragments.navigateTo(
+            R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment,
+            updatedWheel.id
+        )
     }
 
     fun onSave(): (View) -> Unit = {

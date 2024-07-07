@@ -1,6 +1,5 @@
 Feature: Wheel Charging
 
-#  FIXME-1 Change way of sharing data using SharedPreferences
   Background:
     Given this wheel:
       | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Charger Offset | Sold |
@@ -64,4 +63,3 @@ Feature: Wheel Charging
     And it displays these charging estimates:
       | required voltage | time |
       | 94.9V (+6.4)     | 48m  |
-

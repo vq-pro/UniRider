@@ -37,10 +37,9 @@ import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_NEW
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_S18_1_123
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_S20_2_123
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_SHERMAN_MAX_3
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
-class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
+class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
 
     @InjectMocks
     @Spy
@@ -167,10 +166,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         fragment.onSelectWheel().invoke(mockedView, 1)
 
         // Then
-        verify(mockedFragments).navigateTo(
-            R.id.action_MainFragment_to_WheelViewFragment,
-            Pair(PARAMETER_WHEEL_ID, ID2)
-        )
+        verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelViewFragment, ID2)
     }
 
     @Test
@@ -184,10 +180,7 @@ class MainFragmentTest : BaseFragmentTest(MainFragment::class.java) {
         fragment.onSelectWheel().invoke(mockedView, 3)
 
         // Then
-        verify(mockedFragments).navigateTo(
-            R.id.action_MainFragment_to_WheelEditFragment,
-            Pair(PARAMETER_WHEEL_ID, 0L)
-        )
+        verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelEditFragment, 0L)
     }
 
     @Test

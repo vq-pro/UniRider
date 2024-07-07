@@ -1,11 +1,13 @@
 package quebec.virtualite.commons.android.views
 
 import android.app.ProgressDialog
-import androidx.core.os.bundleOf
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import quebec.virtualite.unirider.views.PARAMETER_WHEEL_ID
 
 open class CommonFragmentServices(val fragment: CommonFragment<*>, private val idStringPleaseWait: Int) {
 
@@ -33,13 +35,17 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         }
     }
 
-    open fun navigateTo(id: Int, vararg params: Pair<String, Any?>) {
-        runUI {
-            fragment.findNavController().navigate(
-                id,
-                bundleOf(*params)
-            )
+    open fun navigateTo(id: Int) {
+        runUI { fragment.findNavController().navigate(id) }
+    }
+
+    open fun navigateTo(id: Int, wheelId: Long) {
+        with(sharedPreferences().edit()) {
+            putLong(PARAMETER_WHEEL_ID, wheelId)
+            apply()
         }
+
+        navigateTo(id)
     }
 
     open fun runBackground(function: (() -> Unit)?) {
@@ -58,6 +64,10 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
 
     open fun runUI(function: (() -> Unit)?) {
         fragment.activity?.runOnUiThread(function)
+    }
+
+    open fun sharedPreferences(): SharedPreferences {
+        return fragment.activity?.getPreferences(MODE_PRIVATE)!!
     }
 
     open fun string(id: Int): String {

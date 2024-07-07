@@ -13,7 +13,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.google.android.material.switchmaterial.SwitchMaterial
-import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
+import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.commons.android.views.impl.CustomListAdapter
 
 open class CommonWidgetServices {
@@ -78,8 +78,8 @@ open class CommonWidgetServices {
         listView!!.adapter = CustomListAdapter(view!!.context, id!!, items!!, display!!)
     }
 
-    open fun onItemSelectedListener(callback: (index: Int) -> Unit): AdapterView.OnItemSelectedListener {
-        return object : AdapterView.OnItemSelectedListener {
+    open fun onItemSelectedListener(callback: (index: Int) -> Unit): OnItemSelectedListener {
+        return object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 callback(position)
             }

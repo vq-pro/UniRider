@@ -17,11 +17,12 @@ import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.any
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
+import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
@@ -35,18 +36,15 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.WHS_PER_KM
+import quebec.virtualite.unirider.TestDomain.WHS_PER_KM_SERIALIZED
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_INDEX
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP_INDEX
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.services.CalculatorService
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_RATES
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_SELECTED_RATE
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_VOLTAGE
-import quebec.virtualite.unirider.views.BaseFragment.Companion.PARAMETER_WHEEL_ID
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java) {
+class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java) {
 
     @InjectMocks
     @Spy
@@ -110,10 +108,10 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
     @Test
     fun onCreateView() {
         // Given
-        mockArgument(fragment, PARAMETER_WHEEL_ID, ID)
-        mockArgument(fragment, PARAMETER_RATES, WHS_PER_KM)
-        mockArgument(fragment, PARAMETER_SELECTED_RATE, WH_PER_KM_INDEX)
-        mockArgument(fragment, PARAMETER_VOLTAGE, VOLTAGE)
+        doReturn(WHS_PER_KM_SERIALIZED).`when`(mockedSharedPreferences).getString(PARAMETER_RATES, null)
+        doReturn(WH_PER_KM_INDEX).`when`(mockedSharedPreferences).getInt(PARAMETER_SELECTED_RATE, 0)
+        doReturn(VOLTAGE).`when`(mockedSharedPreferences).getFloat(PARAMETER_VOLTAGE, 0f)
+        doReturn(ID).`when`(mockedSharedPreferences).getLong(PARAMETER_WHEEL_ID, 0L)
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
@@ -121,9 +119,10 @@ class WheelChargeFragmentTest : BaseFragmentTest(WheelChargeFragment::class.java
         // Then
         verifyInflate(R.layout.wheel_charge_fragment)
 
-        assertThat(fragment.parmWheelId, equalTo(ID))
+        assertThat(fragment.parmRates, equalTo(WHS_PER_KM))
         assertThat(fragment.parmSelectedRate, equalTo(WH_PER_KM_INDEX))
         assertThat(fragment.parmVoltageDisconnectedFromCharger, equalTo(VOLTAGE))
+        assertThat(fragment.parmWheelId, equalTo(ID))
     }
 
     @Test

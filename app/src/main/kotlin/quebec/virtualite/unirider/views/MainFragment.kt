@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
-import quebec.virtualite.commons.android.utils.ArrayListUtils.addTo
+import quebec.virtualite.commons.android.utils.CollectionUtils.addTo
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import java.util.stream.Collectors.toList
@@ -84,8 +84,7 @@ open class MainFragment : BaseFragment() {
                     )
                     for (soldWheel in soldWheels) {
                         activeWheelList = addTo(
-                            activeWheelList,
-                            WheelRow(soldWheel.id(), "- " + soldWheel.name(), soldWheel.mileage())
+                            activeWheelList, WheelRow(soldWheel.id(), "- " + soldWheel.name(), soldWheel.mileage())
                         )
                     }
                 } else {
@@ -105,32 +104,21 @@ open class MainFragment : BaseFragment() {
     }
 
     private fun addWheel() {
-        fragments.navigateTo(
-            R.id.action_MainFragment_to_WheelEditFragment,
-            Pair(PARAMETER_WHEEL_ID, 0L)
-        )
+        fragments.navigateTo(R.id.action_MainFragment_to_WheelEditFragment, 0L)
     }
 
     private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
-        return wheelList
-            .stream()
-            .map { wheel -> WheelRow(wheel.id, wheel.name, wheel.totalMileage()) }
-            .sorted(sortWheelsByMileageDescAndNameAsc())
+        return wheelList.stream().map { wheel -> WheelRow(wheel.id, wheel.name, wheel.totalMileage()) }.sorted(sortWheelsByMileageDescAndNameAsc())
             .collect(toList())
     }
 
     private fun sortWheelsByMileageDescAndNameAsc() = { rowA: WheelRow, rowB: WheelRow ->
         val byMileage = rowB.mileage().compareTo(rowA.mileage())
-        if (byMileage != 0)
-            byMileage
-        else
-            rowA.name().compareTo(rowB.name())
+        if (byMileage != 0) byMileage
+        else rowA.name().compareTo(rowB.name())
     }
 
     private fun viewWheel(wheel: WheelRow) {
-        fragments.navigateTo(
-            R.id.action_MainFragment_to_WheelViewFragment,
-            Pair(PARAMETER_WHEEL_ID, wheel.id())
-        )
+        fragments.navigateTo(R.id.action_MainFragment_to_WheelViewFragment, wheel.id())
     }
 }

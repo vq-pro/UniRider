@@ -21,7 +21,7 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
     internal var parmWheelId: Long? = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
+        parmWheelId = fragments.sharedPreferences().getLong(PARAMETER_WHEEL_ID, 0)
         return inflater.inflate(R.layout.wheel_delete_confirmation_fragment, container, false)
     }
 

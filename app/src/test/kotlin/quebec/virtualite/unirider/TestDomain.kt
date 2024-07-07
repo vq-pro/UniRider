@@ -53,8 +53,6 @@ object TestDomain {
     const val PREMILEAGE4 = 0
     const val PREMILEAGE_NEW = 20000
     const val REMAINING_RANGE = 5555f
-    const val REMAINING_RANGE_UP = 5554f
-    const val REMAINING_RANGE_ZERO = 0
     const val SOLD = true
     const val TEMPERATURE_NEW_RAW = 3333f
     const val TOTAL_RANGE = 6666f
@@ -76,7 +74,6 @@ object TestDomain {
     const val VOLTAGE_MIN3 = 75.6f
     const val VOLTAGE_MIN4 = 75.6f
     const val VOLTAGE_MIN_NEW = 62.0f
-    const val VOLTAGE_REQUIRED = 90.5f
     const val VOLTAGE_RESERVE = 70.0f
     const val VOLTAGE_RESERVE2 = 95.0f
     const val VOLTAGE_RESERVE3 = 80.0f
@@ -86,7 +83,6 @@ object TestDomain {
     const val VOLTAGE_START2 = 124.5f
     const val VOLTAGE_START3 = 100.4f
     const val VOLTAGE_START4 = 99.8f
-    const val VOLTAGE_START_NEW = 83.1f
     const val VOLTAGE_STRING = "$VOLTAGE"
     const val WH = 1110
     const val WH2 = 2220
@@ -95,20 +91,16 @@ object TestDomain {
     const val WH_NEW = 9999
     const val WH_PER_KM = 30.3f
     const val WH_PER_KM_INDEX = 3
-    const val WH_PER_KM_SMALL_INDEX = 2
-    const val WH_PER_KM_SMALL = 18.7f
     const val WH_PER_KM_UP = 35f
     const val WH_PER_KM_UP_INDEX = 4
     val WHS_PER_KM = listOf("20", "25", "30", "30.3", "35", "40", "45")
-    val WHS_PER_KM_SMALL = listOf("10", "15", "18.7", "20", "25", "30")
+    val WHS_PER_KM_SERIALIZED = "20|25|30|30.3|35|40|45"
     val WHEEL_ROW_S18_1_123 = WheelRow(ID, NAME, PREMILEAGE + MILEAGE)
     val WHEEL_ROW_S20_2_123 = WheelRow(ID2, NAME2, PREMILEAGE2 + MILEAGE2)
     val WHEEL_ROW_SHERMAN_MAX_3 = WheelRow(ID3, "- $NAME3", PREMILEAGE3 + MILEAGE3)
     val WHEEL_ROW_ABRAMS_4 = WheelRow(ID4, "- $NAME4", PREMILEAGE4 + MILEAGE4)
     val WHEEL_ROW_NEW = WheelRow(0, NAME_NEW, 0)
 
-    val DEVICE = BluetoothDevice(DEVICE_NAME, DEVICE_ADDR)
-    val DEVICE2 = BluetoothDevice(DEVICE_NAME2, DEVICE_ADDR2)
     val DEVICE3 = BluetoothDevice(DEVICE_NAME3, DEVICE_ADDR3)
 
     val S18_1 = WheelEntity(

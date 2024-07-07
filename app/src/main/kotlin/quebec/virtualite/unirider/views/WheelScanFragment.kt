@@ -20,7 +20,7 @@ open class WheelScanFragment : BaseFragment() {
     internal var wheel: WheelEntity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
+        parmWheelId = fragments.sharedPreferences().getLong(PARAMETER_WHEEL_ID, 0)
         return inflater.inflate(R.layout.wheel_scan_fragment, container, false)
     }
 

@@ -2,23 +2,16 @@ package quebec.virtualite.unirider.views
 
 import quebec.virtualite.commons.android.views.CommonFragment
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.ExternalServices
 import java.util.Locale.ENGLISH
 
+const val NB_DECIMALS = 1
+const val PARAMETER_RATES = "rates"
+const val PARAMETER_SELECTED_RATE = "selectedRate"
+const val PARAMETER_VOLTAGE = "voltage"
+const val PARAMETER_WHEEL_ID = "wheelID"
+
 open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait) {
-
-    companion object {
-        const val NB_DECIMALS = 1
-        const val PARAMETER_RATES = "rates"
-        const val PARAMETER_SELECTED_RATE = "selectedRate"
-        const val PARAMETER_VOLTAGE = "voltage"
-        const val PARAMETER_WHEEL_ID = "wheelID"
-    }
-
-    fun goto(id: Int, wheel: WheelEntity) {
-        fragments.navigateTo(id, Pair(PARAMETER_WHEEL_ID, wheel.id))
-    }
 
     override fun getExternalServices(): ExternalServices {
         return ExternalServices(this)

@@ -10,7 +10,8 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import com.google.android.material.switchmaterial.SwitchMaterial
-import quebec.virtualite.commons.android.utils.ArrayListUtils.setList
+import quebec.virtualite.commons.android.utils.CollectionUtils.deserialize
+import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
 import quebec.virtualite.commons.android.utils.NumberUtils.round
@@ -42,10 +43,13 @@ open class WheelChargeFragment : BaseFragment() {
     private var calculatorService = CalculatorService()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelId = arguments?.getLong(PARAMETER_WHEEL_ID)
-        setList(parmRates, arguments?.getStringArrayList(PARAMETER_RATES)!!)
-        parmSelectedRate = arguments?.getInt(PARAMETER_SELECTED_RATE)!!
-        parmVoltageDisconnectedFromCharger = arguments?.getFloat(PARAMETER_VOLTAGE)
+
+        val sharedPreferences = fragments.sharedPreferences()
+        setList(parmRates, deserialize(sharedPreferences.getString(PARAMETER_RATES, null)!!))
+        parmSelectedRate = sharedPreferences.getInt(PARAMETER_SELECTED_RATE, 0)
+        parmVoltageDisconnectedFromCharger = sharedPreferences.getFloat(PARAMETER_VOLTAGE, 0f)
+        parmWheelId = sharedPreferences.getLong(PARAMETER_WHEEL_ID, 0)
+
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
 
