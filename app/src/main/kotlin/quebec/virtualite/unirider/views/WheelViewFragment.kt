@@ -235,7 +235,7 @@ open class WheelViewFragment : BaseFragment() {
     internal open fun parseVoltage(value: String): Float? = when {
         !isNumeric(value) -> null
         floatOf(value) < wheel!!.voltageMin -> null
-        else -> floatOf(value)
+        else -> round(floatOf(value), NB_DECIMALS)
     }
 
     internal open fun readKm(): Float? {

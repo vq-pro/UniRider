@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.google.android.material.switchmaterial.SwitchMaterial
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
+import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.commons.android.utils.NumberUtils.safeFloatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.safeIntOf
 import quebec.virtualite.unirider.R
@@ -123,12 +124,16 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onUpdateChargeRate() = { newChargeRate: String ->
-        updatedWheel = updatedWheel.copy(chargeRate = safeFloatOf(newChargeRate))
+        updatedWheel = updatedWheel.copy(
+            chargeRate = round(safeFloatOf(newChargeRate), NB_DECIMALS)
+        )
         enableSaveIfChanged()
     }
 
     fun onUpdateChargerOffset() = { newChargerOffset: String ->
-        updatedWheel = updatedWheel.copy(chargerOffset = safeFloatOf(newChargerOffset))
+        updatedWheel = updatedWheel.copy(
+            chargerOffset = round(safeFloatOf(newChargerOffset), NB_DECIMALS)
+        )
         enableSaveIfChanged()
     }
 
@@ -148,28 +153,30 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onUpdateVoltageFull() = { newVoltage: String ->
-        var newVoltageFull = safeFloatOf(newVoltage)
-        if (newVoltageFull == 0f)
-            newVoltageFull = floatOf(widgets.getText(editVoltageMax))
+        var newVoltageFull = round(safeFloatOf(newVoltage), NB_DECIMALS)
+        if (newVoltageFull == 0f) newVoltageFull = floatOf(widgets.getText(editVoltageMax))
 
         updatedWheel = updatedWheel.copy(voltageFull = newVoltageFull)
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageMax() = { newVoltage: String ->
-        updatedWheel = updatedWheel.copy(voltageMax = safeFloatOf(newVoltage), voltageStart = safeFloatOf(newVoltage))
+        updatedWheel = updatedWheel.copy(
+            voltageMax = round(safeFloatOf(newVoltage), NB_DECIMALS), voltageStart = round(safeFloatOf(newVoltage), NB_DECIMALS)
+        )
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageMin() = { newVoltage: String ->
-        updatedWheel = updatedWheel.copy(voltageMin = safeFloatOf(newVoltage))
+        updatedWheel = updatedWheel.copy(
+            voltageMin = round(safeFloatOf(newVoltage), NB_DECIMALS)
+        )
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageReserve() = { newVoltage: String ->
-        var newVoltageReserve = safeFloatOf(newVoltage)
-        if (newVoltageReserve == 0f)
-            newVoltageReserve = floatOf(widgets.getText(editVoltageMin))
+        var newVoltageReserve = round(safeFloatOf(newVoltage), NB_DECIMALS)
+        if (newVoltageReserve == 0f) newVoltageReserve = floatOf(widgets.getText(editVoltageMin))
 
         updatedWheel = updatedWheel.copy(voltageReserve = newVoltageReserve)
         enableSaveIfChanged()
@@ -183,12 +190,9 @@ open class WheelEditFragment : BaseFragment() {
     internal open fun enableSaveIfChanged() {
         if (wheelValidator.canSave(updatedWheel, initialWheel)) {
             external.runDB {
-                if (it.findDuplicate(updatedWheel))
-                    widgets.disable(buttonSave)
-                else
-                    widgets.enable(buttonSave)
+                if (it.findDuplicate(updatedWheel)) widgets.disable(buttonSave)
+                else widgets.enable(buttonSave)
             }
-        } else
-            widgets.disable(buttonSave)
+        } else widgets.disable(buttonSave)
     }
 }

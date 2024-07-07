@@ -21,10 +21,6 @@ object NumberUtils {
                 && value.trim().matches("^[0-9.]*$".toRegex())
     }
 
-    fun isPositive(value: String): Boolean {
-        return isNumeric(value) && floatOf(value) > 0f
-    }
-
     fun round(value: Float, numDecimals: Int): Float {
         val factor = 10.0.pow(numDecimals.toDouble()).toFloat()
         return (value * factor).roundToInt() / factor

@@ -347,6 +347,18 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     }
 
     @Test
+    fun onUpdateChargeRate_withTooManyDecimals() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateChargeRate().invoke("${CHARGE_RATE_NEW + 0.001f} ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = CHARGE_RATE_NEW)))
+    }
+
+    @Test
     fun onUpdateChargerOffset() {
         // Given
         initUpdate()
@@ -382,6 +394,18 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = 0f)))
+    }
+
+    @Test
+    fun onUpdateChargerOffset_withTooManyDecimals() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateChargerOffset().invoke("${CHARGER_OFFSET_NEW + 0.001f} ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = CHARGER_OFFSET_NEW)))
     }
 
     @Test
@@ -515,6 +539,19 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     }
 
     @Test
+    fun onUpdateVoltageFull_withTooManyDecimals() {
+        // Given
+        initUpdate()
+        mockVoltageMax()
+
+        // When
+        fragment.onUpdateVoltageFull().invoke("${VOLTAGE_FULL_NEW + 0.001f} ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageFull = VOLTAGE_FULL_NEW)))
+    }
+
+    @Test
     fun onUpdateVoltageMax() {
         // Given
         initUpdate()
@@ -556,6 +593,18 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
     }
 
     @Test
+    fun onUpdateVoltageMax_withTooManyDecimals() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateVoltageMax().invoke("${VOLTAGE_MAX_NEW + 0.001f} ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = VOLTAGE_MAX_NEW, voltageStart = VOLTAGE_MAX_NEW)))
+    }
+
+    @Test
     fun onUpdateVoltageMin() {
         // Given
         initUpdate()
@@ -591,6 +640,18 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMin = 0f)))
+    }
+
+    @Test
+    fun onUpdateVoltageMin_withTooManyDecimals() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateVoltageMin().invoke("${VOLTAGE_MIN_NEW + 0.001f} ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMin = VOLTAGE_MIN_NEW)))
     }
 
     @Test
@@ -631,6 +692,19 @@ class WheelEditFragmentTest : BaseFragmentTest(WheelEditFragment::class.java) {
 
         // Then
         assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageReserve = VOLTAGE_MIN)))
+    }
+
+    @Test
+    fun onUpdateVoltageReserve_withTooManyDecimals() {
+        // Given
+        initUpdate()
+        mockVoltageMin()
+
+        // When
+        fragment.onUpdateVoltageReserve().invoke("${VOLTAGE_RESERVE_NEW + 0.001f} ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageReserve = VOLTAGE_RESERVE_NEW)))
     }
 
     @Test

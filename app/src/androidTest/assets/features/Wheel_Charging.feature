@@ -1,5 +1,6 @@
 Feature: Wheel Charging
 
+#  FIXME-1 Change way of sharing data using SharedPreferences
   Background:
     Given this wheel:
       | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Charger Offset | Sold |
@@ -55,8 +56,8 @@ Feature: Wheel Charging
 
   Scenario: Reconnect to update the voltage
     Given this simulated device:
-      | Bt Name | Bt Address        | Km     | Mileage | Voltage |
-      | LK1234  | C0:C1:C2:C3:C4:C5 | 12.218 | 705.615 | 88.5V   |
+      | Bt Name | Bt Address        | Km     | Mileage | Voltage  |
+      | LK1234  | C0:C1:C2:C3:C4:C5 | 12.218 | 705.615 | 88.5001V |
     And I request to charge for 40 km
     When I reconnect to update the voltage
     Then it displays an actual voltage of 88.5V

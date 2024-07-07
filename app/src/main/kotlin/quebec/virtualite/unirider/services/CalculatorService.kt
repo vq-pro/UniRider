@@ -1,14 +1,12 @@
 package quebec.virtualite.unirider.services
 
+import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.views.BaseFragment.Companion.NB_DECIMALS
 import java.lang.Float.min
 import kotlin.math.max
 
 open class CalculatorService {
-
-    companion object {
-        const val NUM_DECIMALS = 1
-    }
 
     data class EstimatedValues(
         val remainingRange: Float,
@@ -26,9 +24,9 @@ open class CalculatorService {
         val totalRange = remainingRange + km
 
         return EstimatedValues(
-            round(remainingRange, NUM_DECIMALS),
-            round(totalRange, NUM_DECIMALS),
-            round(whPerKmActual, NUM_DECIMALS)
+            round(remainingRange, NB_DECIMALS),
+            round(totalRange, NB_DECIMALS),
+            round(whPerKmActual, NB_DECIMALS)
         )
     }
 
@@ -37,7 +35,7 @@ open class CalculatorService {
             return 0f
         }
 
-        return round(rawPercentage(wheel, voltage!!) * 100, NUM_DECIMALS)
+        return round(rawPercentage(wheel, voltage!!) * 100, NB_DECIMALS)
     }
 
     open fun requiredFullVoltage(wheel: WheelEntity?): Float {
@@ -57,7 +55,7 @@ open class CalculatorService {
             wheel.voltageFull
         )
 
-        return round(voltageRequired, NUM_DECIMALS)
+        return round(voltageRequired, NB_DECIMALS)
     }
 
     internal fun adjustedReserve(wheel: WheelEntity): Float {
@@ -71,11 +69,6 @@ open class CalculatorService {
     private fun rawPercentage(wheel: WheelEntity, voltage: Float): Float {
         val voltageRange = wheel.voltageMax - wheel.voltageMin
         return rawPercentage(voltage - wheel.voltageMin, voltageRange)
-    }
-
-    private fun round(value: Float, numDecimals: Int): Float {
-        val factor = Math.pow(10.0, numDecimals.toDouble())
-        return (Math.round(value * factor) / factor).toFloat()
     }
 
     private fun wh(wheel: WheelEntity, highVoltage: Float, lowVoltage: Float): Float {

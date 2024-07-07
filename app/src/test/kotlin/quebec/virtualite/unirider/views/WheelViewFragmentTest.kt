@@ -666,6 +666,18 @@ class WheelViewFragmentTest : BaseFragmentTest(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun parseVoltage_withTooManyDecimals() {
+        // Given
+        injectMocks()
+
+        // When
+        val result = fragment.parseVoltage("${VOLTAGE + 0.0001f} ")
+
+        // Then
+        assertThat(result, equalTo(VOLTAGE))
+    }
+
+    @Test
     fun readKm() {
         // Given
         injectMocks()
