@@ -67,8 +67,8 @@ object TestDomain {
     const val VOLTAGE_MAX3 = 100.8f
     const val VOLTAGE_MAX4 = 100.8f
     const val VOLTAGE_MAX_NEW = 100.9f
-    const val VOLTAGE_NEW = 84.6f
-    const val VOLTAGE_NEW_RAW = 84.56f
+    const val VOLTAGE_NEW = 84.9f
+    const val VOLTAGE_NEW_RAW = 84.9001f
     const val VOLTAGE_MIN = 60.0f
     const val VOLTAGE_MIN2 = 90.0f
     const val VOLTAGE_MIN3 = 75.6f

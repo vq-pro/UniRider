@@ -106,6 +106,20 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     }
 
     @Test
+    fun displayVoltageActual() {
+        // Given
+        injectMocks()
+
+        fragment.parmVoltageDisconnectedFromCharger = VOLTAGE_NEW_RAW
+
+        // When
+        fragment.displayVoltageActual()
+
+        // Then
+        verify(mockedEditVoltageActual).setText("${VOLTAGE_NEW + WHEEL.chargerOffset}")
+    }
+
+    @Test
     fun onCreateView() {
         // Given
         doReturn(WHS_PER_KM_SERIALIZED).`when`(mockedSharedPreferences).getString(PARAMETER_RATES, null)
@@ -289,7 +303,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         mockUpdateEstimates()
 
         // When
-        fragment.onUpdateVoltageActual().invoke("$VOLTAGE_NEW ")
+        fragment.onUpdateVoltageActual().invoke("$VOLTAGE_NEW_RAW ")
 
         // Then
         assertThat(
