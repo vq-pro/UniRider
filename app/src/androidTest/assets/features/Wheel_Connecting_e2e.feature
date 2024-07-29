@@ -15,11 +15,11 @@ Feature: Wheel Connecting - End-2-End
       | S18-SE      | 1023    | 900  | 60V         | 66V             | 84V         | 4V/h        | 81.5V       | 1.5V           | No   |
       | Sherman-S   | 3269    | 3600 | 69.6V       | 75V             | 100.8V      | 9.5V/h      | 99.5V       | 1.5V           | No   |
       | Abrams      | 3675    | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | 99.5V       | 1.5V           | Yes  |
-      | Lynx        | 7000    | 2700 | 104.4V      | 120V            | 151.2V      | 19V/h       | 149.2V      | 1.8V           | No   |
+      | Lynx        | 7000    | 2700 | 104.4V      | 120V            | 151.2V      | 18.5V/h     | 150.0V      | 1.8V           | No   |
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name      | Updated mileage |
-      | Sherman-S | 21474           |
+      | Sherman-S | 22235           |
       | Sherman   | 19937           |
     And I start the app
 
