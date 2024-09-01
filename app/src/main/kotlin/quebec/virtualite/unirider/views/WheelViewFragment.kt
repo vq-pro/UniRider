@@ -48,7 +48,7 @@ open class WheelViewFragment : BaseFragment() {
     internal var selectedRate: Int? = null
 
     internal var estimates: EstimatedValues? = null
-    internal var parmWheelId: Long? = 0
+    internal var parmWheelId: Long = 0
     internal var wheel: WheelEntity? = null
 
     private var calculatorService = CalculatorService()
@@ -90,27 +90,30 @@ open class WheelViewFragment : BaseFragment() {
         widgets.stringListAdapter(spinnerRate, view, listOfRates)
 
         external.runDB {
-            wheel = it.getWheel(parmWheelId!!)
+            wheel = it.getWheel(parmWheelId)
 
-            if (wheel != null) fragments.runUI {
-                if (!wheel!!.isSold) {
-                    editVoltageStart.setText("${wheel!!.voltageStart}")
-                    textName.text = wheel!!.name
-                    textBtName.text = wheel!!.btName
+            if (wheel == null)
+                fragments.navigateBack()
+            else
+                fragments.runUI {
+                    if (!wheel!!.isSold) {
+                        editVoltageStart.setText("${wheel!!.voltageStart}")
+                        textName.text = wheel!!.name
+                        textBtName.text = wheel!!.btName
 
-                } else {
-                    textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
+                    } else {
+                        textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
 
-                    buttonCharge.visibility = GONE
-                    buttonConnect.visibility = GONE
+                        buttonCharge.visibility = GONE
+                        buttonConnect.visibility = GONE
 
+                    }
+
+                    textMileage.text = textKm(wheel!!.totalMileage())
+
+                    refreshDisplay(readVoltageStart(), readVoltageActual(), readKm())
+                    refreshRates()
                 }
-
-                textMileage.text = textKm(wheel!!.totalMileage())
-
-                refreshDisplay(readVoltageStart(), readVoltageActual(), readKm())
-                refreshRates()
-            }
         }
     }
 

@@ -4,10 +4,10 @@ import android.widget.Button
 import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -18,7 +18,6 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.S18_1
-import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirmationFragment::class.java) {
@@ -89,14 +88,13 @@ class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirma
     @Test
     fun onViewCreated_whenWheelIsntFound() {
         // Given
-        given(mockedDb.getWheel(ID))
-            .willReturn(null)
+        given(mockedDb.getWheel(anyLong())).willReturn(null)
 
         // When
-        val result = { fragment.onViewCreated(mockedView, mockedBundle) }
+        fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        Assert.assertThrows(WheelNotFoundException::class.java, result)
+        verify(mockedFragments).navigateBack()
     }
 
     @Test

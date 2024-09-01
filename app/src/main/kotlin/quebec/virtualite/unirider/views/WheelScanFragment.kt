@@ -16,7 +16,7 @@ open class WheelScanFragment : BaseFragment() {
     internal lateinit var lvDevices: ListView
 
     internal val devices = ArrayList<BluetoothDevice>()
-    internal var parmWheelId: Long? = 0
+    internal var parmWheelId: Long = 0
     internal var wheel: WheelEntity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,7 +32,13 @@ open class WheelScanFragment : BaseFragment() {
         widgets.multifieldListAdapter(lvDevices, view, android.R.layout.simple_list_item_1, devices, onDisplayDevice())
         widgets.setOnItemClickListener(lvDevices, onSelectDevice())
 
-        external.runDB { wheel = it.getWheel(parmWheelId!!) }
+        external.runDB {
+            wheel = it.getWheel(parmWheelId)
+
+            if (wheel == null)
+                fragments.navigateBack()
+        }
+
         fragments.runWithWaitAndBack { scanForDevices() }
     }
 

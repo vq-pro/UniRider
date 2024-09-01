@@ -285,9 +285,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedTextName, never()).text = anyString()
-        verify(mockedTextBtName, never()).text = anyString()
-        verify(mockedTextMileage, never()).text = anyString()
+        verify(mockedFragments).navigateBack()
     }
 
     @Test

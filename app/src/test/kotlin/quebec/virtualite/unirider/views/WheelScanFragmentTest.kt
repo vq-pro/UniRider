@@ -6,6 +6,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -125,6 +126,18 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
         verifyDoneWaiting(connectionPayload)
 
         verify(mockedWidgets).addListViewEntry(mockedLvDevices, fragment.devices, DEVICE2)
+    }
+
+    @Test
+    fun onViewCreated_whenWheelIsntFound() {
+        // Given
+        given(mockedDb.getWheel(anyLong())).willReturn(null)
+
+        // When
+        fragment.onViewCreated(mockedView, mockedBundle)
+
+        // Then
+        verify(mockedFragments).navigateBack()
     }
 
     @Test

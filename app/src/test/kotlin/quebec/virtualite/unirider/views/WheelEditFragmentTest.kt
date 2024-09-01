@@ -180,36 +180,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
-        // Given
-        val wheel = WheelEntity(
-            ID,
-            NAME,
-            DEVICE_NAME,
-            DEVICE_ADDR,
-            0,
-            0,
-            WH,
-            VOLTAGE_MAX,
-            VOLTAGE_MIN,
-            VOLTAGE_RESERVE,
-            VOLTAGE_START,
-            CHARGE_RATE,
-            VOLTAGE_FULL,
-            CHARGER_OFFSET,
-            NOT_SOLD
-        )
-        given(mockedDb.getWheel(ID)).willReturn(wheel)
-
-        // When
-        fragment.onViewCreated(mockedView, mockedBundle)
-
-        // Then
-        verify(mockedEditPreMileage, never()).setText(anyString())
-        verify(mockedEditMileage, never()).setText(anyString())
-    }
-
-    @Test
     fun onViewCreated_whenAdding() {
         // Given
         fragment.parmWheelId = 0L
@@ -229,6 +199,38 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         assertThat(fragment.initialWheel, equalTo(newWheel))
         assertThat(fragment.updatedWheel, equalTo(newWheel))
+    }
+
+    @Test
+    fun onViewCreated_whenWheelIsntFound() {
+        // Given
+        given(mockedDb.getWheel(anyLong())).willReturn(null)
+
+        // When
+        fragment.onViewCreated(mockedView, mockedBundle)
+
+        // Then
+        verify(mockedFragments).navigateBack()
+    }
+
+    @Test
+    fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
+        // Given
+        val wheel = WheelEntity(
+            ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+            0, 0, WH,
+            VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
+            CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET,
+            NOT_SOLD
+        )
+        given(mockedDb.getWheel(ID)).willReturn(wheel)
+
+        // When
+        fragment.onViewCreated(mockedView, mockedBundle)
+
+        // Then
+        verify(mockedEditPreMileage, never()).setText(anyString())
+        verify(mockedEditMileage, never()).setText(anyString())
     }
 
     @Test

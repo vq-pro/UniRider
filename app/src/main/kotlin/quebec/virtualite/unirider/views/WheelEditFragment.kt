@@ -14,7 +14,6 @@ import quebec.virtualite.commons.android.utils.NumberUtils.safeFloatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.safeIntOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 
 open class WheelEditFragment : BaseFragment() {
 
@@ -37,9 +36,8 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var initialWheel: WheelEntity
     internal lateinit var updatedWheel: WheelEntity
 
-    internal var parmWheelId: Long? = 0
-
-    private var wheelValidator = WheelValidator()
+    internal var parmWheelId: Long = 0
+    internal var wheelValidator = WheelValidator()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = fragments.sharedPreferences().getLong(PARAMETER_WHEEL_ID, 0)
@@ -80,24 +78,29 @@ open class WheelEditFragment : BaseFragment() {
 
         external.runDB {
             if (parmWheelId != 0L) {
-                initialWheel = it.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
-                updatedWheel = initialWheel
+                val wheel = it.getWheel(parmWheelId)
 
-                fragments.runUI {
-                    swtichSold.setChecked(initialWheel.isSold)
-                    editChargeRate.setText("${initialWheel.chargeRate}")
-                    editChargerOffset.setText("${initialWheel.chargerOffset}")
-                    editName.setText(initialWheel.name)
-                    editVoltageFull.setText("${initialWheel.voltageFull}")
-                    editVoltageMax.setText("${initialWheel.voltageMax}")
-                    editVoltageMin.setText("${initialWheel.voltageMin}")
-                    editVoltageReserve.setText("${initialWheel.voltageReserve}")
-                    editWh.setText("${initialWheel.wh}")
+                if (wheel == null)
+                    fragments.navigateBack()
+                else {
+                    initialWheel = wheel
+                    updatedWheel = initialWheel
 
-                    if (initialWheel.premileage != 0) editPreMileage.setText("${initialWheel.premileage}")
-                    if (initialWheel.mileage != 0) editMileage.setText("${initialWheel.mileage}")
+                    fragments.runUI {
+                        swtichSold.setChecked(initialWheel.isSold)
+                        editChargeRate.setText("${initialWheel.chargeRate}")
+                        editChargerOffset.setText("${initialWheel.chargerOffset}")
+                        editName.setText(initialWheel.name)
+                        editVoltageFull.setText("${initialWheel.voltageFull}")
+                        editVoltageMax.setText("${initialWheel.voltageMax}")
+                        editVoltageMin.setText("${initialWheel.voltageMin}")
+                        editVoltageReserve.setText("${initialWheel.voltageReserve}")
+                        editWh.setText("${initialWheel.wh}")
+
+                        if (initialWheel.premileage != 0) editPreMileage.setText("${initialWheel.premileage}")
+                        if (initialWheel.mileage != 0) editMileage.setText("${initialWheel.mileage}")
+                    }
                 }
-
             } else {
                 initialWheel = NEW_WHEEL
                 updatedWheel = initialWheel

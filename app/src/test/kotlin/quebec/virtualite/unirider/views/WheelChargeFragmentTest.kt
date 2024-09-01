@@ -196,6 +196,18 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     }
 
     @Test
+    fun onViewCreated_whenWheelIsntFound() {
+        // Given
+        given(mockedDb.getWheel(anyLong())).willReturn(null)
+
+        // When
+        fragment.onViewCreated(mockedView, mockedBundle)
+
+        // Then
+        verify(mockedFragments).navigateBack()
+    }
+
+    @Test
     fun onChangeRate() {
         // Given
         injectMocks()

@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.TextView
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.exceptions.WheelNotFoundException
 
 open class WheelDeleteConfirmationFragment : BaseFragment() {
 
@@ -16,9 +15,8 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
     internal lateinit var buttonDeleteConfirmation: Button
     internal lateinit var textName: TextView
 
-    internal lateinit var wheel: WheelEntity
-
-    internal var parmWheelId: Long? = 0
+    internal var parmWheelId: Long = 0
+    internal var wheel: WheelEntity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         parmWheelId = fragments.sharedPreferences().getLong(PARAMETER_WHEEL_ID, 0)
@@ -36,8 +34,12 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
         widgets.setOnClickListener(buttonDeleteCancel, onCancel())
 
         external.runDB {
-            wheel = it.getWheel(parmWheelId!!) ?: throw WheelNotFoundException()
-            textName.text = wheel.name
+            wheel = it.getWheel(parmWheelId)
+
+            if (wheel == null)
+                fragments.navigateBack()
+            else
+                textName.text = wheel!!.name
         }
     }
 
@@ -46,7 +48,7 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
     }
 
     fun onDelete(): (View) -> Unit = {
-        external.runDB { it.deleteWheel(wheel.id) }
+        external.runDB { it.deleteWheel(wheel!!.id) }
         fragments.navigateBack(3)
     }
 }

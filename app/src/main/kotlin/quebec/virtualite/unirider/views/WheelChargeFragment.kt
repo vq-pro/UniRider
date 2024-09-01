@@ -33,11 +33,10 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var switchFullCharge: SwitchMaterial
 
-    internal var parmWheelId: Long? = 0
-
     internal val parmRates: ArrayList<String> = ArrayList()
     internal var parmSelectedRate: Int = -1
     internal var parmVoltageDisconnectedFromCharger: Float? = 0f
+    internal var parmWheelId: Long = 0
     internal var wheel: WheelEntity? = null
 
     private var calculatorService = CalculatorService()
@@ -73,19 +72,22 @@ open class WheelChargeFragment : BaseFragment() {
         widgets.setOnCheckedChangeListener(switchFullCharge, onToggleFullCharge())
 
         external.runDB {
-            wheel = it.getWheel(parmWheelId!!)
+            wheel = it.getWheel(parmWheelId)
 
-            fragments.runUI {
-                textName.text = wheel!!.name
-                widgets.setSelection(spinnerRate, parmSelectedRate)
-                displayVoltageActual()
+            if (wheel == null)
+                fragments.navigateBack()
+            else
+                fragments.runUI {
+                    textName.text = wheel!!.name
+                    widgets.setSelection(spinnerRate, parmSelectedRate)
+                    displayVoltageActual()
 
-                if (wheel!!.btName == null || wheel!!.btAddr == null) {
-                    widgets.disable(buttonConnect)
+                    if (wheel!!.btName == null || wheel!!.btAddr == null) {
+                        widgets.disable(buttonConnect)
+                    }
+
+                    switchFullCharge.isChecked = true
                 }
-
-                switchFullCharge.isChecked = true
-            }
         }
     }
 
