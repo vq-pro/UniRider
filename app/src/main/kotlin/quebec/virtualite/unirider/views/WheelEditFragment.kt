@@ -188,8 +188,8 @@ open class WheelEditFragment : BaseFragment() {
 
     internal open fun enableSaveIfChanged() {
         if (wheelValidator.canSave(updatedWheel, initialWheel)) {
-            external.runDB {
-                if (it.findDuplicate(updatedWheel)) widgets.disable(buttonSave)
+            external.runDB { db ->
+                if (db.findDuplicate(updatedWheel)) widgets.disable(buttonSave)
                 else widgets.enable(buttonSave)
             }
         } else widgets.disable(buttonSave)

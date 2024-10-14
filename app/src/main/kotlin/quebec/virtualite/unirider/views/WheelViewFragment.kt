@@ -164,7 +164,7 @@ open class WheelViewFragment : BaseFragment() {
         when {
             voltage != null && isVoltageWithinRange(voltage) -> {
                 wheel2 = wheel2!!.copy(voltageStart = voltage)
-                external.runDB { it.saveWheel(wheel2) }
+                external.runDB { db -> db.saveWheel(wheel2) }
             }
 
             else -> voltage = null
