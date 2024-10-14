@@ -31,7 +31,7 @@ class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirma
 
     @Before
     fun before() {
-        BaseFragment.wheel2 = SHERMAN_MAX_3
+        BaseFragment.wheel = SHERMAN_MAX_3
 
         mockField(R.id.button_delete_confirmation, mockedButtonDeleteConfirmation)
         mockField(R.id.button_delete_cancel, mockedButtonDeleteCancel)
@@ -60,7 +60,7 @@ class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirma
         verifyFieldAssignment(R.id.button_delete_confirmation, fragment.buttonDeleteConfirmation, mockedButtonDeleteConfirmation)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
 
-        verify(fragment.textName).text = BaseFragment.wheel2!!.name
+        verify(fragment.textName).text = BaseFragment.wheel!!.name
 
         verifyOnClick(mockedButtonDeleteConfirmation, "onDelete")
         verifyOnClick(mockedButtonDeleteCancel, "onCancel")
@@ -78,7 +78,7 @@ class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirma
     @Test
     fun onDelete() {
         // Given
-        val expectedIdToDelete = BaseFragment.wheel2!!.id
+        val expectedIdToDelete = BaseFragment.wheel!!.id
 
         // When
         fragment.onDelete().invoke(mockedView)
@@ -87,6 +87,6 @@ class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirma
         verify(mockedDb).deleteWheel(expectedIdToDelete)
         verify(mockedFragments).navigateBack(3)
 
-        assertThat(BaseFragment.wheel2, equalTo(null))
+        assertThat(BaseFragment.wheel, equalTo(null))
     }
 }

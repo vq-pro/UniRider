@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.views
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -60,12 +59,6 @@ open class FragmentTestBase(fragmentType: Class<*>) {
     lateinit var mockedInflater: LayoutInflater
 
     @Mock
-    lateinit var mockedSharedPreferences: SharedPreferences
-
-    @Mock
-    lateinit var mockedSharedPreferencesWriter: SharedPreferences.Editor
-
-    @Mock
     lateinit var mockedView: View
 
     @Mock
@@ -122,9 +115,6 @@ open class FragmentTestBase(fragmentType: Class<*>) {
 
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
             .`when`(mockedFragments).runUI(any())
-
-        lenient().doReturn(mockedSharedPreferences).`when`(mockedFragments).sharedPreferences()
-        lenient().doReturn(mockedSharedPreferencesWriter).`when`(mockedSharedPreferences).edit()
     }
 
     fun mockStrings() {

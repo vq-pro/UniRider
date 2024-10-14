@@ -50,12 +50,12 @@ open class WheelScanFragment : BaseFragment() {
         external.bluetooth().getDeviceInfo(device.address) { info ->
             fragments.doneWaiting(info) {
                 external.runDB { db ->
-                    wheel2 = wheel2!!.copy(
+                    wheel = wheel!!.copy(
                         btName = device.name,
                         btAddr = device.address,
                         mileage = info!!.mileage.roundToInt()
                     )
-                    db.saveWheel(wheel2)
+                    db.saveWheel(wheel)
                 }
 
                 fragments.navigateBack()

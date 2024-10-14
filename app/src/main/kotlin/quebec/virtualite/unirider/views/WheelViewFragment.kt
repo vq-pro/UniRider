@@ -11,7 +11,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import quebec.virtualite.commons.android.utils.CollectionUtils.indexOf
-import quebec.virtualite.commons.android.utils.CollectionUtils.serialize
+import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
 import quebec.virtualite.commons.android.utils.NumberUtils.round
@@ -87,19 +87,19 @@ open class WheelViewFragment : BaseFragment() {
 
         external.runDB {
             fragments.runUI {
-                if (!wheel2!!.isSold) {
-                    editVoltageStart.setText("${wheel2!!.voltageStart}")
-                    textName.text = wheel2!!.name
-                    textBtName.text = wheel2!!.btName
+                if (!wheel!!.isSold) {
+                    editVoltageStart.setText("${wheel!!.voltageStart}")
+                    textName.text = wheel!!.name
+                    textBtName.text = wheel!!.btName
 
                 } else {
-                    textName.text = "${wheel2!!.name} (${fragments.string(R.string.label_wheel_sold)})"
+                    textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
 
                     buttonCharge.visibility = GONE
                     buttonConnect.visibility = GONE
                 }
 
-                textMileage.text = textKm(wheel2!!.totalMileage())
+                textMileage.text = textKm(wheel!!.totalMileage())
 
                 clearDisplay()
                 refreshRates()
@@ -113,23 +113,20 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onCharge(): (View) -> Unit = {
-        with(fragments.sharedPreferences().edit()) {
-            putString(PARAMETER_RATES, serialize(listOfRates))
-            putInt(PARAMETER_SELECTED_RATE, selectedRate!!)
-            putFloat(PARAMETER_VOLTAGE, readVoltageActual()!!)
-            apply()
-        }
+        setList(chargeContext.rates, listOfRates)
+        chargeContext.selectedRate = selectedRate!!
+        chargeContext.voltage = readVoltageActual()!!
 
         fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
     }
 
     fun onConnect(): (View) -> Unit = {
-        if (wheel2!!.btName == null) {
+        if (wheel!!.btName == null) {
             fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
 
         } else {
             fragments.runWithWait {
-                external.bluetooth().getDeviceInfo(wheel2!!.btAddr) {
+                external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
                     fragments.doneWaiting(it) {
                         val newKm = round(it!!.km, NB_DECIMALS)
                         val newMileage = it.mileage.roundToInt()
@@ -163,8 +160,8 @@ open class WheelViewFragment : BaseFragment() {
         var voltage = parseVoltage(voltageStart)
         when {
             voltage != null && isVoltageWithinRange(voltage) -> {
-                wheel2 = wheel2!!.copy(voltageStart = voltage)
-                external.runDB { db -> db.saveWheel(wheel2) }
+                wheel = wheel!!.copy(voltageStart = voltage)
+                external.runDB { db -> db.saveWheel(wheel) }
             }
 
             else -> voltage = null
@@ -176,22 +173,22 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     private fun isVoltageWithinRange(voltage: Float): Boolean {
-        return !(voltage < wheel2!!.voltageMin || (wheel2!!.voltageMax + 3f) < voltage)
+        return !(voltage < wheel!!.voltageMin || (wheel!!.voltageMax + 3f) < voltage)
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
-        wheel2 = wheel2!!.copy(mileage = newMileage)
+        wheel = wheel!!.copy(mileage = newMileage)
 
         if (newKm < 0.1f) {
-            wheel2 = wheel2!!.copy(voltageStart = newVoltage)
-            fragments.runUI { editVoltageStart.setText("${wheel2!!.voltageStart}") }
+            wheel = wheel!!.copy(voltageStart = newVoltage)
+            fragments.runUI { editVoltageStart.setText("${wheel!!.voltageStart}") }
         }
 
-        external.runDB { it.saveWheel(wheel2) }
+        external.runDB { db -> db.saveWheel(wheel) }
 
         fragments.runUI {
-            textMileage.text = textKm(wheel2!!.totalMileage())
+            textMileage.text = textKm(wheel!!.totalMileage())
             editKm.setText("$newKm")
             editVoltageActual.setText("$newVoltage")
         }
@@ -226,7 +223,7 @@ open class WheelViewFragment : BaseFragment() {
 
     internal open fun parseVoltage(value: String): Float? = when {
         !isNumeric(value) -> null
-        floatOf(value) < wheel2!!.voltageMin -> null
+        floatOf(value) < wheel!!.voltageMin -> null
         else -> round(floatOf(value), NB_DECIMALS)
     }
 
@@ -259,7 +256,7 @@ open class WheelViewFragment : BaseFragment() {
 
     internal open fun refreshEstimates(voltage: Float, km: Float) {
         val rateOverride = if (selectedRate == null) null else floatOf(listOfRates[selectedRate!!])
-        estimates = calculatorService.estimatedValues(wheel2!!, voltage, km, rateOverride)
+        estimates = calculatorService.estimatedValues(wheel!!, voltage, km, rateOverride)
 
         when {
             estimates!!.whPerKm < MINIMUM_RATE_TRESHOLD -> clearEstimates()
@@ -304,7 +301,7 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     internal open fun updatePercentageFor(voltageActual: Float) {
-        val percentage = calculatorService.percentage(wheel2!!, voltageActual)
+        val percentage = calculatorService.percentage(wheel!!, voltageActual)
 
         textBattery.text = textPercentageWithDecimal(percentage)
         widgets.show(textBattery, labelBattery)

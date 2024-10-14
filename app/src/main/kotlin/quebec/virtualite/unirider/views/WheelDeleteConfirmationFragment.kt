@@ -28,7 +28,7 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
         widgets.setOnClickListener(buttonDeleteConfirmation, onDelete())
         widgets.setOnClickListener(buttonDeleteCancel, onCancel())
 
-        textName.text = wheel2!!.name
+        textName.text = wheel!!.name
     }
 
     fun onCancel(): (View) -> Unit = {
@@ -37,8 +37,8 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
 
     fun onDelete(): (View) -> Unit = {
         external.runDB { db ->
-            db.deleteWheel(wheel2!!.id)
-            wheel2 = null
+            db.deleteWheel(wheel!!.id)
+            wheel = null
         }
 
         fragments.navigateBack(3)

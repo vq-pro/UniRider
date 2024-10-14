@@ -74,8 +74,8 @@ open class WheelEditFragment : BaseFragment() {
         widgets.setOnLongClickListener(buttonDelete, onDelete())
         widgets.setOnClickListener(buttonSave, onSave())
 
-        if (wheel2 != null) {
-            initialWheel = wheel2!!
+        if (wheel != null) {
+            initialWheel = wheel!!
             updatedWheel = initialWheel
 
             fragments.runUI {
@@ -111,8 +111,8 @@ open class WheelEditFragment : BaseFragment() {
 
     fun onSave(): (View) -> Unit = {
         external.runDB { db ->
-            wheel2 = updatedWheel
-            db.saveWheel(wheel2)
+            wheel = updatedWheel
+            db.saveWheel(wheel)
         }
         fragments.navigateBack()
     }

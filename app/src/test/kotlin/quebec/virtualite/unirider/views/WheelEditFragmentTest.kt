@@ -100,7 +100,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @Before
     fun before() {
-        BaseFragment.wheel2 = S18_1
+        BaseFragment.wheel = S18_1
 
         mockExternal()
         mockFields()
@@ -122,8 +122,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        assertThat(fragment.initialWheel, equalTo(BaseFragment.wheel2))
-        assertThat(fragment.updatedWheel, equalTo(BaseFragment.wheel2))
+        assertThat(fragment.initialWheel, equalTo(BaseFragment.wheel))
+        assertThat(fragment.updatedWheel, equalTo(BaseFragment.wheel))
 
         verifyFieldAssignment(R.id.button_delete, fragment.buttonDelete, mockedButtonDelete)
         verifyFieldAssignment(R.id.button_save, fragment.buttonSave, mockedButtonSave)
@@ -163,14 +163,14 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verify(mockedEditVoltageReserve).setText("$VOLTAGE_RESERVE")
         verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
         verify(mockedEditWh).setText("$WH")
-        verify(mockedSwitchSold).isChecked = BaseFragment.wheel2!!.isSold
+        verify(mockedSwitchSold).isChecked = BaseFragment.wheel!!.isSold
         verify(mockedWidgets).disable(mockedButtonSave)
     }
 
     @Test
     fun onViewCreated_whenAdding() {
         // Given
-        BaseFragment.wheel2 = null
+        BaseFragment.wheel = null
 
         val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
@@ -192,7 +192,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     @Test
     fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
         // Given
-        BaseFragment.wheel2 = WheelEntity(
+        BaseFragment.wheel = WheelEntity(
             ID, NAME, DEVICE_NAME, DEVICE_ADDR,
             0, 0, WH,
             VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
@@ -264,8 +264,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     @Test
     fun onSave() {
         // Given
-        BaseFragment.wheel2 = definedWheel()
-        fragment.updatedWheel = BaseFragment.wheel2!!.copy(premileage = 2)
+        BaseFragment.wheel = definedWheel()
+        fragment.updatedWheel = BaseFragment.wheel!!.copy(premileage = 2)
 
         // When
         fragment.onSave().invoke(mockedView)
@@ -274,7 +274,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verify(mockedDb).saveWheel(fragment.updatedWheel)
         verify(mockedFragments).navigateBack()
 
-        assertThat(BaseFragment.wheel2, equalTo(fragment.updatedWheel))
+        assertThat(BaseFragment.wheel, equalTo(fragment.updatedWheel))
     }
 
     @Test

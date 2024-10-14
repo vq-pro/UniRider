@@ -99,7 +99,7 @@ open class MainFragment : BaseFragment() {
     }
 
     private fun addWheel() {
-        wheel2 = null
+        wheel = null
         fragments.navigateTo(R.id.action_MainFragment_to_WheelEditFragment)
     }
 
@@ -115,14 +115,14 @@ open class MainFragment : BaseFragment() {
     }
 
     private fun toggleSoldWheels() {
-        wheel2 = null
+        wheel = null
         showSoldWheels = !showSoldWheels
         showWheels()
     }
 
     private fun viewWheel(wheelRow: WheelRow) {
         external.runDB { db ->
-            wheel2 = db.getWheel(wheelRow.id())
+            wheel = db.getWheel(wheelRow.id())
             fragments.navigateTo(R.id.action_MainFragment_to_WheelViewFragment)
         }
     }

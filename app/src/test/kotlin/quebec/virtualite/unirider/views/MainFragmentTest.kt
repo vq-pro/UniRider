@@ -175,7 +175,7 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         verify(mockedDb).getWheel(ID2)
         verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelViewFragment)
 
-        assertThat(BaseFragment.wheel2, equalTo(S20_2))
+        assertThat(BaseFragment.wheel, equalTo(S20_2))
     }
 
     @Test
@@ -191,7 +191,7 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         // Then
         verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelEditFragment)
 
-        assertThat(BaseFragment.wheel2, equalTo(null))
+        assertThat(BaseFragment.wheel, equalTo(null))
     }
 
     @Test
@@ -209,7 +209,7 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
 
         // Then
         assertThat(fragment.showSoldWheels, equalTo(true))
-        assertThat(BaseFragment.wheel2, equalTo(null))
+        assertThat(BaseFragment.wheel, equalTo(null))
     }
 
     @Test
@@ -227,7 +227,7 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
 
         // Then
         assertThat(fragment.showSoldWheels, equalTo(false))
-        assertThat(BaseFragment.wheel2, equalTo(null))
+        assertThat(BaseFragment.wheel, equalTo(null))
     }
 
     @Test

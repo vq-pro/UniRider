@@ -56,7 +56,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
 
     @Before
     fun before() {
-        BaseFragment.wheel2 = S18_1
+        BaseFragment.wheel = S18_1
 
         mockField(R.id.devices, mockedLvDevices)
 
@@ -124,7 +124,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
         setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
         val selectedDevice = 2
 
-        BaseFragment.wheel2 = SHERMAN_MAX_3
+        BaseFragment.wheel = SHERMAN_MAX_3
 
         // When
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
@@ -137,7 +137,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
         verifyDoneWaiting(connectionPayload)
 
         assertThat(
-            BaseFragment.wheel2, equalTo(
+            BaseFragment.wheel, equalTo(
                 WheelEntity(
                     ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
                     PREMILEAGE3, MILEAGE_NEW, WH3,
@@ -147,7 +147,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
             )
         )
 
-        verify(mockedDb).saveWheel(BaseFragment.wheel2)
+        verify(mockedDb).saveWheel(BaseFragment.wheel)
         verify(mockedFragments).navigateBack()
     }
 }

@@ -1,8 +1,6 @@
 package quebec.virtualite.commons.android.views
 
 import android.app.ProgressDialog
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
@@ -54,11 +52,6 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
 
     open fun runUI(function: (() -> Unit)?) {
         fragment.activity?.runOnUiThread(function)
-    }
-
-    // FIXME-1 Remove
-    open fun sharedPreferences(): SharedPreferences {
-        return fragment.activity?.getPreferences(MODE_PRIVATE)!!
     }
 
     open fun string(id: Int): String {

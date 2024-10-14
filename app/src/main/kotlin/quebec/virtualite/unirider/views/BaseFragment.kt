@@ -7,15 +7,12 @@ import quebec.virtualite.unirider.services.ExternalServices
 import java.util.Locale.ENGLISH
 
 const val NB_DECIMALS = 1
-const val PARAMETER_RATES = "rates"
-const val PARAMETER_SELECTED_RATE = "selectedRate"
-const val PARAMETER_VOLTAGE = "voltage"
 
 open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait) {
 
     companion object {
-        // FIXME-1 Remove the 2
-        var wheel2: WheelEntity? = null
+        val chargeContext = WheelChargeContext()
+        var wheel: WheelEntity? = null
     }
 
     override fun getExternalServices(): ExternalServices {

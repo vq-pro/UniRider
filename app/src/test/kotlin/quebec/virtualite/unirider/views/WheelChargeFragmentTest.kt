@@ -16,7 +16,6 @@ import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.any
-import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
 import org.mockito.Spy
@@ -34,7 +33,6 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.WHS_PER_KM
-import quebec.virtualite.unirider.TestDomain.WHS_PER_KM_SERIALIZED
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_INDEX
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP_INDEX
@@ -79,7 +77,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
     @Before
     fun before() {
-        BaseFragment.wheel2 = WHEEL
+        BaseFragment.wheel = WHEEL
         fragment.parmVoltageDisconnectedFromCharger = VOLTAGE
         setList(fragment.parmRates, WHS_PER_KM)
         fragment.parmSelectedRate = WH_PER_KM_INDEX
@@ -119,9 +117,9 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     @Test
     fun onCreateView() {
         // Given
-        doReturn(WHS_PER_KM_SERIALIZED).`when`(mockedSharedPreferences).getString(PARAMETER_RATES, null)
-        doReturn(WH_PER_KM_INDEX).`when`(mockedSharedPreferences).getInt(PARAMETER_SELECTED_RATE, 0)
-        doReturn(VOLTAGE).`when`(mockedSharedPreferences).getFloat(PARAMETER_VOLTAGE, 0f)
+        setList(BaseFragment.chargeContext.rates, WHS_PER_KM)
+        BaseFragment.chargeContext.selectedRate = WH_PER_KM_INDEX
+        BaseFragment.chargeContext.voltage = VOLTAGE
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
@@ -171,7 +169,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     @Test
     fun onViewCreated_whenWheelHasNeverBeenConnected_disableConnectButton() {
         // Given
-        BaseFragment.wheel2 = WHEEL.copy(btName = null, btAddr = null)
+        BaseFragment.wheel = WHEEL.copy(btName = null, btAddr = null)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -486,7 +484,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         val diff = round(voltageRequired - (VOLTAGE + WHEEL.chargerOffset), 1)
         verify(mockedTextVoltageRequired).text = "${voltageRequired}V (+$diff)"
 
-        val rawHours = diff / BaseFragment.wheel2!!.chargeRate
+        val rawHours = diff / BaseFragment.wheel!!.chargeRate
         verify(mockedTextRemainingTime).text = fragment.timeDisplay(rawHours)
     }
 }
