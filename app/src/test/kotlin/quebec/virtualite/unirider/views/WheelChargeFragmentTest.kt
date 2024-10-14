@@ -11,7 +11,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat
-import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.doNothing
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
@@ -26,7 +25,6 @@ import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
@@ -81,11 +79,10 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
     @Before
     fun before() {
-        fragment.parmWheelId = ID
+        BaseFragment.wheel2 = WHEEL
         fragment.parmVoltageDisconnectedFromCharger = VOLTAGE
         setList(fragment.parmRates, WHS_PER_KM)
         fragment.parmSelectedRate = WH_PER_KM_INDEX
-        fragment.wheel = WHEEL
 
         mockExternal()
         mockFields()
@@ -125,7 +122,6 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         doReturn(WHS_PER_KM_SERIALIZED).`when`(mockedSharedPreferences).getString(PARAMETER_RATES, null)
         doReturn(WH_PER_KM_INDEX).`when`(mockedSharedPreferences).getInt(PARAMETER_SELECTED_RATE, 0)
         doReturn(VOLTAGE).`when`(mockedSharedPreferences).getFloat(PARAMETER_VOLTAGE, 0f)
-        doReturn(ID).`when`(mockedSharedPreferences).getLong(PARAMETER_WHEEL_ID, 0L)
 
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
@@ -136,16 +132,11 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         assertThat(fragment.parmRates, equalTo(WHS_PER_KM))
         assertThat(fragment.parmSelectedRate, equalTo(WH_PER_KM_INDEX))
         assertThat(fragment.parmVoltageDisconnectedFromCharger, equalTo(VOLTAGE))
-        assertThat(fragment.parmWheelId, equalTo(ID))
     }
 
     @Test
     fun onViewCreated() {
         // Given
-        fragment.wheel = null
-        given(mockedDb.getWheel(anyLong()))
-            .willReturn(WHEEL)
-
         setList(fragment.parmRates, WHS_PER_KM)
         fragment.parmSelectedRate = WH_PER_KM_INDEX
 
@@ -153,10 +144,6 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedDb).getWheel(ID)
-
-        assertThat(fragment.wheel, equalTo(WHEEL))
-
         verifyFieldAssignment(R.id.button_connect_charge, fragment.buttonConnect, mockedButtonConnect)
         verifyFieldAssignment(R.id.check_full_charge, fragment.switchFullCharge, mockedSwitchFullCharge)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
@@ -184,27 +171,13 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     @Test
     fun onViewCreated_whenWheelHasNeverBeenConnected_disableConnectButton() {
         // Given
-        fragment.wheel = null
-        given(mockedDb.getWheel(anyLong()))
-            .willReturn(WHEEL.copy(btName = null, btAddr = null))
+        BaseFragment.wheel2 = WHEEL.copy(btName = null, btAddr = null)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
         verify(mockedWidgets).disable(mockedButtonConnect)
-    }
-
-    @Test
-    fun onViewCreated_whenWheelIsntFound() {
-        // Given
-        given(mockedDb.getWheel(anyLong())).willReturn(null)
-
-        // When
-        fragment.onViewCreated(mockedView, mockedBundle)
-
-        // Then
-        verify(mockedFragments).navigateBack()
     }
 
     @Test
@@ -513,7 +486,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         val diff = round(voltageRequired - (VOLTAGE + WHEEL.chargerOffset), 1)
         verify(mockedTextVoltageRequired).text = "${voltageRequired}V (+$diff)"
 
-        val rawHours = diff / fragment.wheel!!.chargeRate
+        val rawHours = diff / BaseFragment.wheel2!!.chargeRate
         verify(mockedTextRemainingTime).text = fragment.timeDisplay(rawHours)
     }
 }

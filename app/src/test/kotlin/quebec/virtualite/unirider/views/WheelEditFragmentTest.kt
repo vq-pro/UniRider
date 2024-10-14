@@ -15,7 +15,6 @@ import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.doNothing
-import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Spy
@@ -101,7 +100,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @Before
     fun before() {
-        fragment.parmWheelId = ID
+        BaseFragment.wheel2 = S18_1
 
         mockExternal()
         mockFields()
@@ -110,36 +109,25 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @Test
     fun onCreateView() {
-        // Given
-        doReturn(ID).`when`(mockedSharedPreferences).getLong(PARAMETER_WHEEL_ID, 0)
-
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
         // Then
         verifyInflate(R.layout.wheel_edit_fragment)
-
-        assertThat(fragment.parmWheelId, equalTo(ID))
     }
 
     @Test
     fun onViewCreated() {
-        // Given
-        val wheel = definedWheel()
-        given(mockedDb.getWheel(ID)).willReturn(wheel)
-
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedDb).getWheel(ID)
-
-        assertThat(fragment.initialWheel, equalTo(wheel))
-        assertThat(fragment.updatedWheel, equalTo(wheel))
+        assertThat(fragment.initialWheel, equalTo(BaseFragment.wheel2))
+        assertThat(fragment.updatedWheel, equalTo(BaseFragment.wheel2))
 
         verifyFieldAssignment(R.id.button_delete, fragment.buttonDelete, mockedButtonDelete)
         verifyFieldAssignment(R.id.button_save, fragment.buttonSave, mockedButtonSave)
-        verifyFieldAssignment(R.id.check_sold, fragment.swtichSold, mockedSwitchSold)
+        verifyFieldAssignment(R.id.check_sold, fragment.switchSold, mockedSwitchSold)
         verifyFieldAssignment(R.id.edit_name, fragment.editChargeRate, mockedEditChargeRate)
         verifyFieldAssignment(R.id.edit_charger_offset, fragment.editChargerOffset, mockedEditChargerOffset)
         verifyFieldAssignment(R.id.edit_mileage, fragment.editMileage, mockedEditMileage)
@@ -175,14 +163,14 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verify(mockedEditVoltageReserve).setText("$VOLTAGE_RESERVE")
         verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
         verify(mockedEditWh).setText("$WH")
-        verify(mockedSwitchSold).isChecked = wheel.isSold
+        verify(mockedSwitchSold).isChecked = BaseFragment.wheel2!!.isSold
         verify(mockedWidgets).disable(mockedButtonSave)
     }
 
     @Test
     fun onViewCreated_whenAdding() {
         // Given
-        fragment.parmWheelId = 0L
+        BaseFragment.wheel2 = null
 
         val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
@@ -202,28 +190,15 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated_whenWheelIsntFound() {
-        // Given
-        given(mockedDb.getWheel(anyLong())).willReturn(null)
-
-        // When
-        fragment.onViewCreated(mockedView, mockedBundle)
-
-        // Then
-        verify(mockedFragments).navigateBack()
-    }
-
-    @Test
     fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
         // Given
-        val wheel = WheelEntity(
+        BaseFragment.wheel2 = WheelEntity(
             ID, NAME, DEVICE_NAME, DEVICE_ADDR,
             0, 0, WH,
             VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
             CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET,
             NOT_SOLD
         )
-        given(mockedDb.getWheel(ID)).willReturn(wheel)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -279,20 +254,18 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @Test
     fun onDelete() {
-        // Given
-        fragment.updatedWheel = definedWheel()
-
         // When
         fragment.onDelete().invoke(mockedView)
 
         // Then
-        verify(mockedFragments).navigateTo(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment, ID)
+        verify(mockedFragments).navigateTo(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment)
     }
 
     @Test
     fun onSave() {
         // Given
-        fragment.updatedWheel = definedWheel()
+        BaseFragment.wheel2 = definedWheel()
+        fragment.updatedWheel = BaseFragment.wheel2!!.copy(premileage = 2)
 
         // When
         fragment.onSave().invoke(mockedView)
@@ -300,6 +273,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(mockedDb).saveWheel(fragment.updatedWheel)
         verify(mockedFragments).navigateBack()
+
+        assertThat(BaseFragment.wheel2, equalTo(fragment.updatedWheel))
     }
 
     @Test

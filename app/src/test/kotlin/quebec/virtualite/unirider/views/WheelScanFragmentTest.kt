@@ -6,11 +6,8 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
@@ -25,7 +22,6 @@ import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR3
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME2
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME3
-import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.ID3
 import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
@@ -60,7 +56,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
 
     @Before
     fun before() {
-        fragment.wheel = S18_1
+        BaseFragment.wheel2 = S18_1
 
         mockField(R.id.devices, mockedLvDevices)
 
@@ -70,40 +66,25 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
 
     @Test
     fun onCreateView() {
-        // Given
-        doReturn(ID).`when`(mockedSharedPreferences).getLong(PARAMETER_WHEEL_ID, 0)
-
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
         // Then
         verifyInflate(R.layout.wheel_scan_fragment)
-
-        assertThat(fragment.parmWheelId, equalTo(ID))
     }
 
     @Test
     fun onViewCreated() {
-        // Given
-        fragment.parmWheelId = ID
-        fragment.wheel = null
-
-        given(mockedDb.getWheel(ID))
-            .willReturn(SHERMAN_MAX_3)
-
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
         assertThat(fragment.devices, equalTo(emptyList()))
-        assertThat(fragment.wheel, equalTo(SHERMAN_MAX_3))
 
         verifyFieldAssignment(R.id.devices, fragment.lvDevices, mockedLvDevices)
 
         verifyMultiFieldListAdapter<BluetoothDevice>(mockedLvDevices, android.R.layout.simple_list_item_1, "onDisplayDevice")
         verifyOnItemClick(mockedLvDevices, "onSelectDevice")
-
-        verify(mockedDb).getWheel(ID)
 
         val connectionPayload = DEVICE
         verifyRunWithWaitDialogAndBack()
@@ -129,18 +110,6 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated_whenWheelIsntFound() {
-        // Given
-        given(mockedDb.getWheel(anyLong())).willReturn(null)
-
-        // When
-        fragment.onViewCreated(mockedView, mockedBundle)
-
-        // Then
-        verify(mockedFragments).navigateBack()
-    }
-
-    @Test
     fun onDestroyView() {
         // When
         fragment.onDestroyView()
@@ -155,7 +124,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
         setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
         val selectedDevice = 2
 
-        fragment.wheel = SHERMAN_MAX_3
+        BaseFragment.wheel2 = SHERMAN_MAX_3
 
         // When
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
@@ -167,14 +136,18 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        verify(mockedDb).saveWheel(
-            WheelEntity(
-                ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
-                PREMILEAGE3, MILEAGE_NEW, WH3,
-                VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3, VOLTAGE_START3,
-                CHARGE_RATE3, VOLTAGE_FULL3, CHARGER_OFFSET3, SOLD
+        assertThat(
+            BaseFragment.wheel2, equalTo(
+                WheelEntity(
+                    ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
+                    PREMILEAGE3, MILEAGE_NEW, WH3,
+                    VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3, VOLTAGE_START3,
+                    CHARGE_RATE3, VOLTAGE_FULL3, CHARGER_OFFSET3, SOLD
+                )
             )
         )
+
+        verify(mockedDb).saveWheel(BaseFragment.wheel2)
         verify(mockedFragments).navigateBack()
     }
 }

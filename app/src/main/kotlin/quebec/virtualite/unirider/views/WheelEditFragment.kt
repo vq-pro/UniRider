@@ -31,16 +31,14 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editVoltageMin: EditText
     internal lateinit var editVoltageReserve: EditText
     internal lateinit var editWh: EditText
-    internal lateinit var swtichSold: SwitchMaterial
+    internal lateinit var switchSold: SwitchMaterial
 
     internal lateinit var initialWheel: WheelEntity
     internal lateinit var updatedWheel: WheelEntity
 
-    internal var parmWheelId: Long = 0
     internal var wheelValidator = WheelValidator()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelId = fragments.sharedPreferences().getLong(PARAMETER_WHEEL_ID, 0)
         return inflater.inflate(R.layout.wheel_edit_fragment, container, false)
     }
 
@@ -48,7 +46,7 @@ open class WheelEditFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        swtichSold = view.findViewById(R.id.check_sold)
+        switchSold = view.findViewById(R.id.check_sold)
         editChargeRate = view.findViewById(R.id.edit_charge_rate)
         editChargerOffset = view.findViewById(R.id.edit_charger_offset)
         editName = view.findViewById(R.id.edit_name)
@@ -62,7 +60,7 @@ open class WheelEditFragment : BaseFragment() {
         buttonDelete = view.findViewById(R.id.button_delete)
         buttonSave = view.findViewById(R.id.button_save)
 
-        widgets.setOnCheckedChangeListener(swtichSold, onToggleSold())
+        widgets.setOnCheckedChangeListener(switchSold, onToggleSold())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
         widgets.addTextChangedListener(editChargerOffset, onUpdateChargerOffset())
         widgets.addTextChangedListener(editName, onUpdateName())
@@ -76,51 +74,46 @@ open class WheelEditFragment : BaseFragment() {
         widgets.setOnLongClickListener(buttonDelete, onDelete())
         widgets.setOnClickListener(buttonSave, onSave())
 
-        external.runDB {
-            if (parmWheelId != 0L) {
-                val wheel = it.getWheel(parmWheelId)
-
-                if (wheel == null)
-                    fragments.navigateBack()
-                else {
-                    initialWheel = wheel
-                    updatedWheel = initialWheel
-
-                    fragments.runUI {
-                        swtichSold.setChecked(initialWheel.isSold)
-                        editChargeRate.setText("${initialWheel.chargeRate}")
-                        editChargerOffset.setText("${initialWheel.chargerOffset}")
-                        editName.setText(initialWheel.name)
-                        editVoltageFull.setText("${initialWheel.voltageFull}")
-                        editVoltageMax.setText("${initialWheel.voltageMax}")
-                        editVoltageMin.setText("${initialWheel.voltageMin}")
-                        editVoltageReserve.setText("${initialWheel.voltageReserve}")
-                        editWh.setText("${initialWheel.wh}")
-
-                        if (initialWheel.premileage != 0) editPreMileage.setText("${initialWheel.premileage}")
-                        if (initialWheel.mileage != 0) editMileage.setText("${initialWheel.mileage}")
-                    }
-                }
-            } else {
-                initialWheel = NEW_WHEEL
-                updatedWheel = initialWheel
-            }
+        if (wheel2 != null) {
+            initialWheel = wheel2!!
+            updatedWheel = initialWheel
 
             fragments.runUI {
-                widgets.disable(buttonSave)
+                switchSold.setChecked(initialWheel.isSold)
+                editChargeRate.setText("${initialWheel.chargeRate}")
+                editChargerOffset.setText("${initialWheel.chargerOffset}")
+                editName.setText(initialWheel.name)
+                editVoltageFull.setText("${initialWheel.voltageFull}")
+                editVoltageMax.setText("${initialWheel.voltageMax}")
+                editVoltageMin.setText("${initialWheel.voltageMin}")
+                editVoltageReserve.setText("${initialWheel.voltageReserve}")
+                editWh.setText("${initialWheel.wh}")
+
+                if (initialWheel.premileage != 0)
+                    editPreMileage.setText("${initialWheel.premileage}")
+
+                if (initialWheel.mileage != 0)
+                    editMileage.setText("${initialWheel.mileage}")
             }
+        } else {
+            initialWheel = NEW_WHEEL
+            updatedWheel = initialWheel
+        }
+
+        fragments.runUI {
+            widgets.disable(buttonSave)
         }
     }
 
     fun onDelete(): (View) -> Unit = {
-        fragments.navigateTo(
-            R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment,
-            updatedWheel.id
-        )
+        fragments.navigateTo(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment)
     }
 
     fun onSave(): (View) -> Unit = {
-        external.runDB { it.saveWheel(updatedWheel) }
+        external.runDB { db ->
+            wheel2 = updatedWheel
+            db.saveWheel(wheel2)
+        }
         fragments.navigateBack()
     }
 

@@ -13,6 +13,8 @@ import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
+private const val SOLD_PREFIX = "- "
+
 class TestDomain(applicationContext: Context) {
 
     private val db = WheelDbImpl(applicationContext)
@@ -27,14 +29,10 @@ class TestDomain(applicationContext: Context) {
     }
 
     fun getWheel(name: String): WheelEntity? {
-        return wheels[name]
-    }
-
-    fun getWheelId(name: String): Long {
-        return if (wheels[name] != null)
-            wheels[name]!!.id
+        return if (name.startsWith(SOLD_PREFIX))
+            wheels[name.substring(SOLD_PREFIX.length)]
         else
-            wheels[name.substring(2)]!!.id
+            wheels[name]
     }
 
     fun loadConnectedWheels(wheels: DataTable) {

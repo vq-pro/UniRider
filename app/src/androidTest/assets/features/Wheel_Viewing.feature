@@ -93,7 +93,7 @@ Feature: Wheel Viewing
     Then it displays a percentage of 64.7%
     And it displays these estimates:
       | remaining | total range | wh/km |
-      | 42.2      | 80.2        | 33.5  |
+      | 42.3      | 80.3        | 33.5  |
 
   Scenario: Saving the starting voltage
     Given I select the Sherman

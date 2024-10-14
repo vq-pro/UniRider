@@ -80,14 +80,14 @@ class TestEditFragment(val app: TestApp) {
             Pair("Charge Rate", R.id.edit_charge_rate),
             Pair("Charger Offset", R.id.edit_charger_offset),
             Pair("Full Charge", R.id.edit_voltage_full),
+            Pair("Mileage", R.id.edit_mileage),
             Pair("Name", R.id.edit_name),
             Pair("Previous Mileage", R.id.edit_premileage),
-            Pair("Mileage", R.id.edit_mileage),
-            Pair("Wh", R.id.edit_wh),
-            Pair("Voltage Min", R.id.edit_voltage_min),
-            Pair("Voltage Reserve", R.id.edit_voltage_reserve),
-            Pair("Voltage Max", R.id.edit_voltage_max),
             Pair("Sold", R.id.check_sold),
+            Pair("Voltage Min", R.id.edit_voltage_min),
+            Pair("Voltage Max", R.id.edit_voltage_max),
+            Pair("Voltage Reserve", R.id.edit_voltage_reserve),
+            Pair("Wh", R.id.edit_wh),
         )
 
         val mapEntity = mutableMapOf<String, String>()
@@ -106,22 +106,18 @@ class TestEditFragment(val app: TestApp) {
                 setText(key, value)
         }
 
-        val updatedWheel = WheelEntity(
-            selectedWheel.id,
-            mapEntity["Name"]!!,
-            null,
-            null,
-            intOf(mapEntity["Previous Mileage"]!!),
-            intOf(mapEntity["Mileage"]!!),
-            intOf(mapEntity["Wh"]!!),
-            floatOf(mapEntity["Voltage Max"]!!),
-            floatOf(mapEntity["Voltage Min"]!!),
-            floatOf(mapEntity["Voltage Reserve"]!!),
-            floatOf(mapEntity["Voltage Max"]!!),
-            floatOf(mapEntity["Charge Rate"]!!),
-            floatOf(mapEntity["Full Charge"]!!),
-            floatOf(mapEntity["Charger Offset"]!!),
-            "yes".equals(mapEntity["Sold"]!!, ignoreCase = true)
+        val updatedWheel = selectedWheel.copy(
+            chargeRate = floatOf(mapEntity["Charge Rate"]!!),
+            chargerOffset = floatOf(mapEntity["Charger Offset"]!!),
+            isSold = "yes".equals(mapEntity["Sold"]!!),
+            mileage = intOf(mapEntity["Mileage"]!!),
+            name = mapEntity["Name"]!!,
+            premileage = intOf(mapEntity["Previous Mileage"]!!),
+            voltageFull = floatOf(mapEntity["Full Charge"]!!),
+            voltageMax = floatOf(mapEntity["Voltage Max"]!!),
+            voltageMin = floatOf(mapEntity["Voltage Min"]!!),
+            voltageReserve = floatOf(mapEntity["Voltage Reserve"]!!),
+            wh = intOf(mapEntity["Wh"]!!)
         )
 
         click(R.id.button_save)

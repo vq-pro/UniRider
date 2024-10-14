@@ -93,10 +93,7 @@ class TestMainFragment(val app: TestApp, val domain: TestDomain) {
 
                     SOLD_WHEEL_ENTRY -> WheelRow(0, name, parseMileage(mileageWithUnits))
 
-                    else -> {
-                        val id = domain.getWheelId(name)
-                        WheelRow(id, name, parseMileage(mileageWithUnits))
-                    }
+                    else -> WheelRow(domain.getWheel(name)!!.id, name, parseMileage(mileageWithUnits))
                 }
             }
             .collect(toList())

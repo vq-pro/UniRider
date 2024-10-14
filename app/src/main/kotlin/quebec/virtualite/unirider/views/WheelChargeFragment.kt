@@ -16,7 +16,6 @@ import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
 import java.lang.String.format
@@ -36,8 +35,6 @@ open class WheelChargeFragment : BaseFragment() {
     internal val parmRates: ArrayList<String> = ArrayList()
     internal var parmSelectedRate: Int = -1
     internal var parmVoltageDisconnectedFromCharger: Float? = 0f
-    internal var parmWheelId: Long = 0
-    internal var wheel: WheelEntity? = null
 
     private var calculatorService = CalculatorService()
 
@@ -47,7 +44,6 @@ open class WheelChargeFragment : BaseFragment() {
         setList(parmRates, deserialize(sharedPreferences.getString(PARAMETER_RATES, null)!!))
         parmSelectedRate = sharedPreferences.getInt(PARAMETER_SELECTED_RATE, 0)
         parmVoltageDisconnectedFromCharger = sharedPreferences.getFloat(PARAMETER_VOLTAGE, 0f)
-        parmWheelId = sharedPreferences.getLong(PARAMETER_WHEEL_ID, 0)
 
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
@@ -71,23 +67,16 @@ open class WheelChargeFragment : BaseFragment() {
         widgets.stringListAdapter(spinnerRate, view, parmRates)
         widgets.setOnCheckedChangeListener(switchFullCharge, onToggleFullCharge())
 
-        external.runDB {
-            wheel = it.getWheel(parmWheelId)
+        fragments.runUI {
+            textName.text = wheel2!!.name
+            widgets.setSelection(spinnerRate, parmSelectedRate)
+            displayVoltageActual()
 
-            if (wheel == null)
-                fragments.navigateBack()
-            else
-                fragments.runUI {
-                    textName.text = wheel!!.name
-                    widgets.setSelection(spinnerRate, parmSelectedRate)
-                    displayVoltageActual()
+            if (wheel2!!.btName == null || wheel2!!.btAddr == null) {
+                widgets.disable(buttonConnect)
+            }
 
-                    if (wheel!!.btName == null || wheel!!.btAddr == null) {
-                        widgets.disable(buttonConnect)
-                    }
-
-                    switchFullCharge.isChecked = true
-                }
+            switchFullCharge.isChecked = true
         }
     }
 
@@ -98,9 +87,9 @@ open class WheelChargeFragment : BaseFragment() {
 
     fun onConnect(): (View) -> Unit = {
         fragments.runWithWait {
-            external.bluetooth().getDeviceInfo(wheel!!.btAddr) { live ->
+            external.bluetooth().getDeviceInfo(wheel2!!.btAddr) { live ->
                 fragments.doneWaiting(live) {
-                    parmVoltageDisconnectedFromCharger = round(live!!.voltage - wheel!!.chargerOffset, NB_DECIMALS)
+                    parmVoltageDisconnectedFromCharger = round(live!!.voltage - wheel2!!.chargerOffset, NB_DECIMALS)
                     displayVoltageActual()
                     updateEstimates()
                 }
@@ -126,8 +115,8 @@ open class WheelChargeFragment : BaseFragment() {
 
     fun onUpdateVoltageActual() = { voltage: String ->
         when {
-            isNumeric(voltage) && floatOf(voltage) >= wheel!!.voltageMin -> {
-                parmVoltageDisconnectedFromCharger = round(parseFloat(voltage) - wheel!!.chargerOffset, NB_DECIMALS)
+            isNumeric(voltage) && floatOf(voltage) >= wheel2!!.voltageMin -> {
+                parmVoltageDisconnectedFromCharger = round(parseFloat(voltage) - wheel2!!.chargerOffset, NB_DECIMALS)
                 updateEstimates()
             }
 
@@ -152,7 +141,7 @@ open class WheelChargeFragment : BaseFragment() {
     @SuppressLint("SetTextI18n")
     internal open fun updateEstimates() {
         val requiredVoltageOnCharger = when {
-            switchFullCharge.isChecked -> calculatorService.requiredFullVoltage(wheel)
+            switchFullCharge.isChecked -> calculatorService.requiredFullVoltage(wheel2)
             else -> {
                 val km = floatOf(widgets.getText(editKm))
                 if (km < 0.1f) {
@@ -161,14 +150,14 @@ open class WheelChargeFragment : BaseFragment() {
                 }
 
                 val whPerKm = floatOf(parmRates[parmSelectedRate])
-                calculatorService.requiredVoltage(wheel!!, whPerKm, km)
+                calculatorService.requiredVoltage(wheel2!!, whPerKm, km)
             }
         }
 
-        val requiredVoltage = requiredVoltageOnCharger - (wheel?.chargerOffset ?: 0f)
+        val requiredVoltage = requiredVoltageOnCharger - (wheel2?.chargerOffset ?: 0f)
         if (requiredVoltage > parmVoltageDisconnectedFromCharger!!) {
             val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, NB_DECIMALS)
-            val rawHours = diff / wheel!!.chargeRate
+            val rawHours = diff / wheel2!!.chargeRate
 
             textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
             textRemainingTime.text = timeDisplay(rawHours)
@@ -181,10 +170,8 @@ open class WheelChargeFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     internal fun displayVoltageActual() {
-        if (wheel != null) {
-            editVoltageActual.setText(
-                "${round(parmVoltageDisconnectedFromCharger?.plus(wheel!!.chargerOffset)!!, NB_DECIMALS)}"
-            )
-        }
+        editVoltageActual.setText(
+            "${round(parmVoltageDisconnectedFromCharger?.plus(wheel2!!.chargerOffset)!!, NB_DECIMALS)}"
+        )
     }
 }

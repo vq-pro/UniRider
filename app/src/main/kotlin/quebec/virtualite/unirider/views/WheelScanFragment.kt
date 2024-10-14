@@ -8,7 +8,6 @@ import android.widget.ListView
 import android.widget.TextView
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.database.WheelEntity
 import kotlin.math.roundToInt
 
 open class WheelScanFragment : BaseFragment() {
@@ -16,11 +15,8 @@ open class WheelScanFragment : BaseFragment() {
     internal lateinit var lvDevices: ListView
 
     internal val devices = ArrayList<BluetoothDevice>()
-    internal var parmWheelId: Long = 0
-    internal var wheel: WheelEntity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelId = fragments.sharedPreferences().getLong(PARAMETER_WHEEL_ID, 0)
         return inflater.inflate(R.layout.wheel_scan_fragment, container, false)
     }
 
@@ -31,13 +27,6 @@ open class WheelScanFragment : BaseFragment() {
 
         widgets.multifieldListAdapter(lvDevices, view, android.R.layout.simple_list_item_1, devices, onDisplayDevice())
         widgets.setOnItemClickListener(lvDevices, onSelectDevice())
-
-        external.runDB {
-            wheel = it.getWheel(parmWheelId)
-
-            if (wheel == null)
-                fragments.navigateBack()
-        }
 
         fragments.runWithWaitAndBack { scanForDevices() }
     }
@@ -61,13 +50,12 @@ open class WheelScanFragment : BaseFragment() {
         external.bluetooth().getDeviceInfo(device.address) { info ->
             fragments.doneWaiting(info) {
                 external.runDB { db ->
-                    db.saveWheel(
-                        wheel!!.copy(
-                            btName = device.name,
-                            btAddr = device.address,
-                            mileage = info!!.mileage.roundToInt()
-                        )
+                    wheel2 = wheel2!!.copy(
+                        btName = device.name,
+                        btAddr = device.address,
+                        mileage = info!!.mileage.roundToInt()
                     )
+                    db.saveWheel(wheel2)
                 }
 
                 fragments.navigateBack()

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.database.WheelEntity
 
 open class WheelDeleteConfirmationFragment : BaseFragment() {
 
@@ -15,11 +14,7 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
     internal lateinit var buttonDeleteConfirmation: Button
     internal lateinit var textName: TextView
 
-    internal var parmWheelId: Long = 0
-    internal var wheel: WheelEntity? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmWheelId = fragments.sharedPreferences().getLong(PARAMETER_WHEEL_ID, 0)
         return inflater.inflate(R.layout.wheel_delete_confirmation_fragment, container, false)
     }
 
@@ -33,14 +28,7 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
         widgets.setOnClickListener(buttonDeleteConfirmation, onDelete())
         widgets.setOnClickListener(buttonDeleteCancel, onCancel())
 
-        external.runDB {
-            wheel = it.getWheel(parmWheelId)
-
-            if (wheel == null)
-                fragments.navigateBack()
-            else
-                textName.text = wheel!!.name
-        }
+        textName.text = wheel2!!.name
     }
 
     fun onCancel(): (View) -> Unit = {
@@ -48,7 +36,11 @@ open class WheelDeleteConfirmationFragment : BaseFragment() {
     }
 
     fun onDelete(): (View) -> Unit = {
-        external.runDB { it.deleteWheel(wheel!!.id) }
+        external.runDB { db ->
+            db.deleteWheel(wheel2!!.id)
+            wheel2 = null
+        }
+
         fragments.navigateBack(3)
     }
 }

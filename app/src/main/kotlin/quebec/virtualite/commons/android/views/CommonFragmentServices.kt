@@ -7,7 +7,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import quebec.virtualite.unirider.views.PARAMETER_WHEEL_ID
 
 open class CommonFragmentServices(val fragment: CommonFragment<*>, private val idStringPleaseWait: Int) {
 
@@ -39,15 +38,6 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         runUI { fragment.findNavController().navigate(id) }
     }
 
-    open fun navigateTo(id: Int, wheelId: Long) {
-        with(sharedPreferences().edit()) {
-            putLong(PARAMETER_WHEEL_ID, wheelId)
-            apply()
-        }
-
-        navigateTo(id)
-    }
-
     open fun runBackground(function: (() -> Unit)?) {
         fragment.lifecycleScope.launch(Dispatchers.IO) {
             function!!()
@@ -66,6 +56,7 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         fragment.activity?.runOnUiThread(function)
     }
 
+    // FIXME-1 Remove
     open fun sharedPreferences(): SharedPreferences {
         return fragment.activity?.getPreferences(MODE_PRIVATE)!!
     }

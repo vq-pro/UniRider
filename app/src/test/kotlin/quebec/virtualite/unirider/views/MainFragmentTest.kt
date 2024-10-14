@@ -38,6 +38,10 @@ import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_S18_1_123
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_S20_2_123
 import quebec.virtualite.unirider.TestDomain.WHEEL_ROW_SHERMAN_MAX_3
 
+private const val LIST_ENTRY2 = 1
+private const val LIST_ENTRY3 = 2
+private const val LIST_ENTRY4 = 3
+
 @RunWith(MockitoJUnitRunner::class)
 class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
 
@@ -162,11 +166,16 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         // Given
         fragment.wheelList += listOf(WHEEL_ROW_S18_1_123, WHEEL_ROW_S20_2_123, WHEEL_ROW_NEW)
 
+        given(mockedDb.getWheel(ID2)).willReturn(S20_2)
+
         // When
-        fragment.onSelectWheel().invoke(mockedView, 1)
+        fragment.onSelectWheel().invoke(mockedView, LIST_ENTRY2)
 
         // Then
-        verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelViewFragment, ID2)
+        verify(mockedDb).getWheel(ID2)
+        verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelViewFragment)
+
+        assertThat(BaseFragment.wheel2, equalTo(S20_2))
     }
 
     @Test
@@ -177,10 +186,12 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         )
 
         // When
-        fragment.onSelectWheel().invoke(mockedView, 3)
+        fragment.onSelectWheel().invoke(mockedView, LIST_ENTRY4)
 
         // Then
-        verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelEditFragment, 0L)
+        verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelEditFragment)
+
+        assertThat(BaseFragment.wheel2, equalTo(null))
     }
 
     @Test
@@ -194,10 +205,11 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         )
 
         // When
-        fragment.onSelectWheel().invoke(mockedView, 2)
+        fragment.onSelectWheel().invoke(mockedView, LIST_ENTRY3)
 
         // Then
         assertThat(fragment.showSoldWheels, equalTo(true))
+        assertThat(BaseFragment.wheel2, equalTo(null))
     }
 
     @Test
@@ -211,10 +223,11 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         )
 
         // When
-        fragment.onSelectWheel().invoke(mockedView, 2)
+        fragment.onSelectWheel().invoke(mockedView, LIST_ENTRY3)
 
         // Then
         assertThat(fragment.showSoldWheels, equalTo(false))
+        assertThat(BaseFragment.wheel2, equalTo(null))
     }
 
     @Test

@@ -21,7 +21,7 @@ import quebec.virtualite.unirider.test.domain.TestDomain
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
 
-class TestViewFragment(val app: TestApp, val domain: TestDomain) {
+class TestViewFragment(val app: TestApp, private val domain: TestDomain) {
 
     private var expectedDeviceName: String = ""
     private val expectedLiveWheelMileage = HashMap<String, Int>()
@@ -125,7 +125,7 @@ class TestViewFragment(val app: TestApp, val domain: TestDomain) {
     }
 
     fun validateSold(name: String) {
-        assertThat("Wrong title", R.id.view_name, hasText("${name} (Sold)"))
+        assertThat("Wrong title", R.id.view_name, hasText("$name (Sold)"))
         assertThat("Charge button should not appear", R.id.button_charge, isHidden())
         assertThat("Connect button should not appear", R.id.button_connect_view, isHidden())
     }

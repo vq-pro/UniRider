@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import quebec.virtualite.commons.android.external.CommonExternalServices
 
+// FIXME-2 - Collapse this into BaseFragment?
 abstract class CommonFragment<E : CommonExternalServices>(idStringWaitMessage: Int) : Fragment() {
 
     internal var external: E = getExternalServices()

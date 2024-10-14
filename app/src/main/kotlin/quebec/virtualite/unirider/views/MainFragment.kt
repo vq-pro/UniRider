@@ -12,7 +12,6 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import java.util.stream.Collectors.toList
 
-
 open class MainFragment : BaseFragment() {
 
     private val SOLD_ENTRY = "<Sold>"
@@ -60,11 +59,7 @@ open class MainFragment : BaseFragment() {
     fun onSelectWheel() = { _: View, index: Int ->
         when (wheelList[index].name()) {
             NEW_ENTRY -> addWheel()
-            SOLD_ENTRY -> {
-                showSoldWheels = !showSoldWheels
-                showWheels()
-            }
-
+            SOLD_ENTRY -> toggleSoldWheels()
             else -> viewWheel(wheelList[index])
         }
     }
@@ -104,12 +99,13 @@ open class MainFragment : BaseFragment() {
     }
 
     private fun addWheel() {
-        fragments.navigateTo(R.id.action_MainFragment_to_WheelEditFragment, 0L)
+        wheel2 = null
+        fragments.navigateTo(R.id.action_MainFragment_to_WheelEditFragment)
     }
 
     private fun getSortedWheelItems(wheelList: List<WheelEntity>): List<WheelRow> {
-        return wheelList.stream().map { wheel -> WheelRow(wheel.id, wheel.name, wheel.totalMileage()) }.sorted(sortWheelsByMileageDescAndNameAsc())
-            .collect(toList())
+        return wheelList.stream().map { wheel -> WheelRow(wheel.id, wheel.name, wheel.totalMileage()) }
+            .sorted(sortWheelsByMileageDescAndNameAsc()).collect(toList())
     }
 
     private fun sortWheelsByMileageDescAndNameAsc() = { rowA: WheelRow, rowB: WheelRow ->
@@ -118,7 +114,16 @@ open class MainFragment : BaseFragment() {
         else rowA.name().compareTo(rowB.name())
     }
 
-    private fun viewWheel(wheel: WheelRow) {
-        fragments.navigateTo(R.id.action_MainFragment_to_WheelViewFragment, wheel.id())
+    private fun toggleSoldWheels() {
+        wheel2 = null
+        showSoldWheels = !showSoldWheels
+        showWheels()
+    }
+
+    private fun viewWheel(wheelRow: WheelRow) {
+        external.runDB { db ->
+            wheel2 = db.getWheel(wheelRow.id())
+            fragments.navigateTo(R.id.action_MainFragment_to_WheelViewFragment)
+        }
     }
 }
