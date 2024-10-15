@@ -31,8 +31,8 @@ Feature: Wheel Connecting - End-2-End
     And the wheel's Bluetooth name is updated
     Examples:
       | wheel     | bt name |
-      | Sherman-S | LK6474  |
-      | Sherman   | LK1149  |
+      | Lynx      | LK9622  |
+      | Sherman-L | LK13447 |
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
     Given I select the Lynx
@@ -47,13 +47,15 @@ Feature: Wheel Connecting - End-2-End
       | S18-SE    | KSS18-9135   | 48:70:1E:4D:E7:3F |
       | Sherman   | LK1149       | 88:25:83:F1:C9:8B |
       | Sherman-S | LK6474       | 88:25:83:F4:E4:89 |
+      | Lynx      | LK9622       | 88:25:83:F5:36:17 |
+      | Sherman-L | LK13447      | 88:25:83:F5:75:80 |
     And I select the <wheel>
     When I reconnect to the wheel
     Then the mileage is updated to its up-to-date value
     Examples:
       | wheel     |
-      | Sherman-S |
-      | Sherman   |
+      | Lynx      |
+      | Sherman-L |
 
   Scenario: Connecting to a previously connected wheel - ERROR - Connection following failure to connect
     Given these wheels are connected:
