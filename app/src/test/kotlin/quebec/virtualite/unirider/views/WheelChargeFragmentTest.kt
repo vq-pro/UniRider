@@ -21,6 +21,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.CollectionUtils.setList
+import quebec.virtualite.commons.android.utils.DateUtils
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
@@ -82,6 +83,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         setList(fragment.parmRates, WHS_PER_KM)
         fragment.parmSelectedRate = WH_PER_KM_INDEX
 
+        DateUtils.simulateNow("11:45")
         mockExternal()
         mockFields()
         mockFragments()
@@ -319,10 +321,12 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
     @Test
     fun timeDisplay() {
-        timeDisplay(2.75f, "2h45")
-        timeDisplay(0.1625f, "10m")
-        timeDisplay(9f / 8f, "1h08")
-        timeDisplay(0.08f, "5m")
+        timeDisplay(0f, "11:45")
+        timeDisplay(1f, "12:45")
+        timeDisplay(2.75f, "14:30")
+        timeDisplay(0.1625f, "11:55")
+        timeDisplay(9f / 8f, "12:53")
+        timeDisplay(0.08f, "11:50")
     }
 
     private fun timeDisplay(rawHours: Float, expectedDisplay: String) {

@@ -7,6 +7,7 @@ import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import org.hamcrest.Matchers.equalTo
+import quebec.virtualite.commons.android.utils.DateUtils
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.database.WheelEntity
@@ -363,6 +364,11 @@ class Steps {
     @When("the updated mileage for some of these wheels should be:")
     fun updateMileageForSomeOfTheseWheels(table: DataTable) {
         viewFragment.useTheseUpdateMileageValues(table)
+    }
+
+    @Given("^the current time is (.*)$")
+    fun givenCurrentTimeIs(currentTime: String) {
+        DateUtils.simulateNow(currentTime)
     }
 
     @Given("this connected wheel:")

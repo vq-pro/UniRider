@@ -11,14 +11,17 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import quebec.virtualite.commons.android.utils.CollectionUtils.setList
+import quebec.virtualite.commons.android.utils.DateUtils
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.CalculatorService
 import java.lang.Float.parseFloat
-import java.lang.String.format
+import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
+
+private val DTF = DateTimeFormatter.ofPattern("HH:mm")
 
 open class WheelChargeFragment : BaseFragment() {
 
@@ -30,6 +33,8 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var textRemainingTime: TextView
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var switchFullCharge: SwitchMaterial
+
+    internal val dateUtils = DateUtils()
 
     internal val parmRates: ArrayList<String> = ArrayList()
     internal var parmSelectedRate: Int = -1
@@ -132,7 +137,11 @@ open class WheelChargeFragment : BaseFragment() {
         val hours = rawHours.toInt()
         val minutes = ((rawHours - hours) * 60).roundToInt()
 
-        return if (hours > 0) "${hours}h${format("%02d", minutes)}" else "${minutes}m"
+        val time = dateUtils.now()
+            .plusHours(hours.toLong())
+            .plusMinutes(minutes.toLong())
+
+        return DTF.format(time)
     }
 
     @SuppressLint("SetTextI18n")
