@@ -12,8 +12,8 @@ Feature: Wheel Viewing
       | Abrams      | 95      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | 99.5V       | 1.5V           | Yes  |
     And I start the app
 
-#    FIXME-1 Implement this
-  @Ignore
+#    FIXME-0 Implement this
+  @WIP
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
     Given I select the <wheel>
     And I set the starting voltage to <starting voltage>V

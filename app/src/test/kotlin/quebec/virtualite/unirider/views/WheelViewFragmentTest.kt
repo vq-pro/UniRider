@@ -768,13 +768,13 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.listOfRates.addAll(WHS_PER_KM)
 
         val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM)
-        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel, VOLTAGE, KM, WH_PER_KM)
+        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
 
         // When
         fragment.refreshEstimates(VOLTAGE, KM)
 
         // Then
-        verify(mockedCalculatorService).estimatedValues(BaseFragment.wheel, VOLTAGE, KM, WH_PER_KM)
+        verify(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
 
         verify(mockedTextRemainingRange).text = "$REMAINING_RANGE"
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
@@ -796,13 +796,13 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.listOfRates.addAll(WHS_PER_KM)
 
         val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, MAXIMUM_RATE_TRESHOLD + 0.1f)
-        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel, VOLTAGE, KM, WH_PER_KM)
+        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
 
         // When
         fragment.refreshEstimates(VOLTAGE, KM)
 
         // Then
-        verify(mockedCalculatorService).estimatedValues(BaseFragment.wheel, VOLTAGE, KM, WH_PER_KM)
+        verify(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
         verify(fragment).clearEstimates()
 
         assertThat(fragment.estimates, equalTo(estimates))
@@ -817,13 +817,13 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.listOfRates.addAll(WHS_PER_KM)
 
         val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, MINIMUM_RATE_TRESHOLD - 0.1f)
-        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel, VOLTAGE, KM, WH_PER_KM)
+        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
 
         // When
         fragment.refreshEstimates(VOLTAGE, KM)
 
         // Then
-        verify(mockedCalculatorService).estimatedValues(BaseFragment.wheel, VOLTAGE, KM, WH_PER_KM)
+        verify(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
         verify(fragment).clearEstimates()
 
         assertThat(fragment.estimates, equalTo(estimates))

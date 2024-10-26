@@ -9,24 +9,29 @@ object TestDomain {
     const val CHARGE_RATE2 = 6f
     const val CHARGE_RATE3 = 8f
     const val CHARGE_RATE4 = 10f
+    const val CHARGE_RATE5 = 21f
     const val CHARGE_RATE_NEW = 10f
     const val CHARGER_OFFSET = 1.4f
     const val CHARGER_OFFSET2 = 1.5f
     const val CHARGER_OFFSET3 = 1.6f
     const val CHARGER_OFFSET4 = 1.7f
+    const val CHARGER_OFFSET5 = 1.8f
     const val CHARGER_OFFSET_NEW = 1.8f
     const val DEVICE_ADDR = "AA:BB:CC:DD:EE:FF"
     const val DEVICE_ADDR2 = "BB:CC:DD:EE:FF:GG"
     const val DEVICE_ADDR3 = "CC:DD:EE:FF:GG:HH"
     const val DEVICE_ADDR4 = "DD:EE:FF:GG:HH:II"
+    const val DEVICE_ADDR5 = "EE:FF:GG:HH:II:JJ"
     const val DEVICE_NAME = "KS-S18"
     const val DEVICE_NAME2 = "KS-S20"
     const val DEVICE_NAME3 = "LK2000"
     const val DEVICE_NAME4 = "LK2001"
+    const val DEVICE_NAME5 = "LK2002"
     const val ID = 1111L
     const val ID2 = 1112L
     const val ID3 = 1113L
     const val ID4 = 1114L
+    const val ID5 = 1115L
     const val ITEM_SOLD = "Sold"
     const val KM = 4444f
     const val KM_NEW = 4445f
@@ -37,12 +42,14 @@ object TestDomain {
     const val MILEAGE2 = 2222
     const val MILEAGE3 = 2223
     const val MILEAGE4 = 2224
+    const val MILEAGE5 = 2225
     const val MILEAGE_NEW = 2224
     const val MILEAGE_NEW_RAW = 2223.617f
     const val NAME = "S18"
     const val NAME2 = "S20"
     const val NAME3 = "Sherman Max"
     const val NAME4 = "Abrams"
+    const val NAME5 = "Sherman L"
     const val NAME_NEW = "<New>"
     const val NAME_SOLD = "<$ITEM_SOLD>"
     const val NOT_SOLD = false
@@ -51,6 +58,7 @@ object TestDomain {
     const val PREMILEAGE2 = 10000
     const val PREMILEAGE3 = 200
     const val PREMILEAGE4 = 0
+    const val PREMILEAGE5 = 0
     const val PREMILEAGE_NEW = 20000
     const val REMAINING_RANGE = 5555f
     const val SOLD = true
@@ -61,11 +69,13 @@ object TestDomain {
     const val VOLTAGE_FULL2 = 123f
     const val VOLTAGE_FULL3 = 99.5f
     const val VOLTAGE_FULL4 = 99.5f
+    const val VOLTAGE_FULL5 = 149.3f
     const val VOLTAGE_FULL_NEW = 80.7f
     const val VOLTAGE_MAX = 84.0f
     const val VOLTAGE_MAX2 = 126.0f
     const val VOLTAGE_MAX3 = 100.8f
     const val VOLTAGE_MAX4 = 100.8f
+    const val VOLTAGE_MAX5 = 151.2f
     const val VOLTAGE_MAX_NEW = 100.9f
     const val VOLTAGE_NEW = 84.9f
     const val VOLTAGE_NEW_RAW = 84.9001f
@@ -73,21 +83,25 @@ object TestDomain {
     const val VOLTAGE_MIN2 = 90.0f
     const val VOLTAGE_MIN3 = 75.6f
     const val VOLTAGE_MIN4 = 75.6f
+    const val VOLTAGE_MIN5 = 104.4f
     const val VOLTAGE_MIN_NEW = 62.0f
     const val VOLTAGE_RESERVE = 70.0f
     const val VOLTAGE_RESERVE2 = 95.0f
     const val VOLTAGE_RESERVE3 = 80.0f
     const val VOLTAGE_RESERVE4 = 82.0f
+    const val VOLTAGE_RESERVE5 = 120.0f
     const val VOLTAGE_RESERVE_NEW = 72.6f
     const val VOLTAGE_START = 83.8f
     const val VOLTAGE_START2 = 124.5f
     const val VOLTAGE_START3 = 100.4f
     const val VOLTAGE_START4 = 99.8f
+    const val VOLTAGE_START5 = 147.5f
     const val VOLTAGE_STRING = "$VOLTAGE"
     const val WH = 1110
     const val WH2 = 2220
     const val WH3 = 3600
     const val WH4 = 2700
+    const val WH5 = 4000
     const val WH_NEW = 9999
     const val WH_PER_KM = 30.3f
     const val WH_PER_KM_INDEX = 3
@@ -127,6 +141,13 @@ object TestDomain {
         PREMILEAGE4, MILEAGE4, WH4,
         VOLTAGE_MAX4, VOLTAGE_MIN4, VOLTAGE_RESERVE4, VOLTAGE_START4,
         CHARGE_RATE4, VOLTAGE_FULL4, CHARGER_OFFSET4, SOLD
+    )
+
+    val SHERMAN_L_5 = WheelEntity(
+        ID5, NAME5, DEVICE_NAME5, DEVICE_ADDR5,
+        PREMILEAGE5, MILEAGE5, WH5,
+        VOLTAGE_MAX5, VOLTAGE_MIN5, VOLTAGE_RESERVE5, VOLTAGE_START5,
+        CHARGE_RATE5, VOLTAGE_FULL5, CHARGER_OFFSET5, NOT_SOLD
     )
 
     val S18_DISCONNECTED = WheelEntity(

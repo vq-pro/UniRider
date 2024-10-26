@@ -256,7 +256,7 @@ open class WheelViewFragment : BaseFragment() {
 
     internal open fun refreshEstimates(voltage: Float, km: Float) {
         val rateOverride = if (selectedRate == null) null else floatOf(listOfRates[selectedRate!!])
-        estimates = calculatorService.estimatedValues(wheel!!, voltage, km, rateOverride)
+        estimates = calculatorService.estimatedValues(wheel!!, voltage, km)
 
         when {
             estimates!!.whPerKm < MINIMUM_RATE_TRESHOLD -> clearEstimates()
