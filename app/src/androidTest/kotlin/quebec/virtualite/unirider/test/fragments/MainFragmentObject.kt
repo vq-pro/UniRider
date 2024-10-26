@@ -18,7 +18,7 @@ import quebec.virtualite.unirider.views.MainFragment
 import quebec.virtualite.unirider.views.WheelRow
 import java.util.stream.Collectors.toList
 
-class TestMainFragment(val app: TestApp, val domain: TestDomain) {
+class MainFragmentObject(val app: TestApp, val domain: TestDomain) {
 
     val NEW_WHEEL_ENTRY = "<New>"
     val SOLD_WHEEL_ENTRY = "<Sold>"

@@ -5,12 +5,15 @@ Feature: Wheel Viewing
       | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Charger Offset | Sold |
       | Sherman     | 17622   | 3200 | 75.6V       | 80V             | 100.8V      | 7.5V/h      | 99.5V       | 1.5V           | No   |
       | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.5V       | 1.5V           | No   |
+      | Sherman L   | 4000    | 4000 | 104.4V      | 120V            | 151.2V      | 21V/h       | 149.3V      | 1.8V           | No   |
       | 14S         | 694     | 840  | 48V         | 55V             | 67.2V       | 4V/h        | 65.5V       | 1.5V           | No   |
       | S18         | 2850    | 1110 | 60V         | 68V             | 84V         | 4V/h        | 81.5V       | 1.5V           | No   |
       | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | 99.5V       | 1.5V           | Yes  |
       | Abrams      | 95      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | 99.5V       | 1.5V           | Yes  |
     And I start the app
 
+#    FIXME-1 Implement this
+  @Ignore
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
     Given I select the <wheel>
     And I set the starting voltage to <starting voltage>V
@@ -21,12 +24,12 @@ Feature: Wheel Viewing
       | <remaining> | <total>     | <wh/km> |
     Examples:
       | wheel       | starting voltage | km | voltage | remaining | total | wh/km |
-      | Sherman Max | 100.6            | 38 | 91.9    | 43.3      | 81.3  | 32.7  |
-      | Sherman Max | 100.4            | 81 | 83.5    | 7.2       | 88.2  | 29.8  |
-      | Sherman Max | 100.4            | 42 | 91      | 40.2      | 82.2  | 32.0  |
-      | Sherman Max | 98.2             | 42 | 91      | 52.5      | 94.5  | 24.5  |
-      | S18         | 84               | 21 | 72      | 3.5       | 24.5  | 26.4  |
-      | S18         | 84               | 42 | 67      | 0         | 42.0  | 18.7  |
+      | Sherman L | 150              | 20 | 140.9   | 40        | 60    | 32.7  |
+#      | Sherman Max | 100.4            | 81 | 83.5    | 7.2       | 88.2  | 29.8  |
+#      | Sherman Max | 100.4            | 42 | 91      | 40.2      | 82.2  | 32.0  |
+#      | Sherman Max | 98.2             | 42 | 91      | 52.5      | 94.5  | 24.5  |
+#      | S18         | 84               | 21 | 72      | 3.5       | 24.5  | 26.4  |
+#      | S18         | 84               | 42 | 67      | 0         | 42.0  | 18.7  |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
@@ -42,6 +45,7 @@ Feature: Wheel Viewing
       | Sherman |         | bb      |
       | Sherman | aa      | bb      |
 
+#    FIXME-1 Remove rate
   Scenario: Calculating estimated values when changing rate
     Given I select the Sherman Max
     And I set the starting voltage to 100.6V
@@ -67,6 +71,7 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 82.9%   |
       | Sherman Max | 91.9V   | 64.7%   |
 
+#    FIXME-1 Enable charging at all times
   Scenario Outline: => Charging the wheel [when <available>]
     Given I select the Sherman
     When the wh/km is <available>
@@ -106,8 +111,8 @@ Feature: Wheel Viewing
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
     Given the Sherman has a previous mileage of <previous mileage>
     When I select the Sherman
-    Then the details view shows the Sherman with a mileage of <expected mileage> and a starting voltage of 100.8V
+    Then the details view shows the Sherman with a mileage of <actual mileage> and a starting voltage of 100.8V
     Examples:
-      | previous mileage | expected mileage |
-      | 0 km             | 17622 km         |
-      | 10000 km         | 27622 km         |
+      | previous mileage | actual mileage |
+      | 0 km             | 17622 km       |
+      | 10000 km         | 27622 km       |

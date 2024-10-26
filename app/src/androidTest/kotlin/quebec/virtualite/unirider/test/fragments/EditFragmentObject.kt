@@ -20,7 +20,7 @@ import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 
-class TestEditFragment(val app: TestApp) {
+class EditFragmentObject(val app: TestApp) {
 
     private val IS_NOT_SOLD = false
     private val IS_SOLD = true

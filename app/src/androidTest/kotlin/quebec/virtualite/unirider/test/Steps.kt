@@ -13,10 +13,10 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
-import quebec.virtualite.unirider.test.fragments.TestChargeFragment
-import quebec.virtualite.unirider.test.fragments.TestEditFragment
-import quebec.virtualite.unirider.test.fragments.TestMainFragment
-import quebec.virtualite.unirider.test.fragments.TestViewFragment
+import quebec.virtualite.unirider.test.fragments.ChargeFragmentObject
+import quebec.virtualite.unirider.test.fragments.EditFragmentObject
+import quebec.virtualite.unirider.test.fragments.MainFragmentObject
+import quebec.virtualite.unirider.test.fragments.ViewFragmentObject
 import quebec.virtualite.unirider.views.MainFragment
 
 class Steps {
@@ -24,10 +24,10 @@ class Steps {
     private val app = TestApp()
     private val domain = TestDomain(applicationContext())
 
-    private val chargeFragment = TestChargeFragment(app)
-    private val editFragment = TestEditFragment(app)
-    private val mainFragment = TestMainFragment(app, domain)
-    private val viewFragment = TestViewFragment(app, domain)
+    private val chargeFragment = ChargeFragmentObject(app)
+    private val editFragment = EditFragmentObject(app)
+    private val mainFragment = MainFragmentObject(app, domain)
+    private val viewFragment = ViewFragmentObject(app, domain)
 
     private lateinit var selectedWheel: WheelEntity
     private lateinit var updatedWheel: WheelEntity

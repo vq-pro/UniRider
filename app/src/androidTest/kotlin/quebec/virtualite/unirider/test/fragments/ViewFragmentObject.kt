@@ -21,7 +21,7 @@ import quebec.virtualite.unirider.test.domain.TestDomain
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
 
-class TestViewFragment(val app: TestApp, private val domain: TestDomain) {
+class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
     private var expectedDeviceName: String = ""
     private val expectedLiveWheelMileage = HashMap<String, Int>()

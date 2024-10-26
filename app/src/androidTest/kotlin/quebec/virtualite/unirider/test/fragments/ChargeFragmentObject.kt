@@ -15,7 +15,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.strip
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.views.WheelChargeFragment
 
-class TestChargeFragment(val app: TestApp) {
+class ChargeFragmentObject(val app: TestApp) {
 
     fun changeRateTo(newRate: Int) {
         selectSpinnerItem(R.id.spinner_rate, "$newRate")
