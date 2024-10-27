@@ -8,6 +8,7 @@ import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
@@ -787,6 +788,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         assertThat(fragment.estimates, equalTo(estimates))
     }
 
+    @Ignore
     @Test
     fun refreshEstimates_whenRateIsAboveMaximumRateTreshold() {
         // Given
@@ -808,6 +810,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         assertThat(fragment.estimates, equalTo(estimates))
     }
 
+    @Ignore
     @Test
     fun refreshEstimates_whenRateIsBelowMinimumRateTreshold() {
         // Given

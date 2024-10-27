@@ -255,22 +255,15 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     internal open fun refreshEstimates(voltage: Float, km: Float) {
-        val rateOverride = if (selectedRate == null) null else floatOf(listOfRates[selectedRate!!])
         estimates = calculatorService.estimatedValues(wheel!!, voltage, km)
 
-        when {
-            estimates!!.whPerKm < MINIMUM_RATE_TRESHOLD -> clearEstimates()
-            estimates!!.whPerKm > MAXIMUM_RATE_TRESHOLD -> clearEstimates()
-            else -> {
-                textRemainingRange.text = textKmWithDecimal(estimates!!.remainingRange)
-                textTotalRange.text = textKmWithDecimal(estimates!!.totalRange)
+        textRemainingRange.text = textKmWithDecimal(estimates!!.remainingRange)
+        textTotalRange.text = textKmWithDecimal(estimates!!.totalRange)
 
-                widgets.show(
-                    spinnerRate, labelRate, textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
-                )
-                widgets.enable(buttonCharge)
-            }
-        }
+        widgets.show(
+            spinnerRate, labelRate, textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
+        )
+        widgets.enable(buttonCharge)
     }
 
     internal open fun refreshRates() {

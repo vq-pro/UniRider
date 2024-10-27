@@ -7,7 +7,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.SHERMAN_L_5
 import quebec.virtualite.unirider.database.WheelEntity
@@ -29,17 +28,9 @@ class CalculatorServiceTest {
         assertThat(result, equalTo(WHEEL.voltageReserve + 2))
     }
 
-    @Ignore
-    @Test
-    fun estimatedAndRequired() {
-//        estimatedValues(91.9f, 38f, 43.2f, 81.2f)
-        requiredVoltage(100.6f, 32.7f, 43f, round(91.8f + WHEEL.chargerOffset, 1))
-        requiredVoltage(100.6f, 32.7f, 40f, round(91.2f + WHEEL.chargerOffset, 1))
-    }
-
     @Test
     fun estimatedValues() {
-        estimatedValues(SHERMAN_L_5, 141.1f, 19.4f, 39.3f, 58.7f);
+        estimatedValues(SHERMAN_L_5, 141.1f, 20.0f, 40.5f, 60.5f);
         estimatedValues(SHERMAN_L_5, 133.0f, 39.9f, 19.7f, 59.6f);
         estimatedValues(SHERMAN_L_5, 132.0f, 39.9f, 16.9f, 56.8f);
         estimatedValues(SHERMAN_L_5, 125.6f, 65.0f, 9.0f, 74.0f);

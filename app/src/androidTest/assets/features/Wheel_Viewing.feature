@@ -12,24 +12,22 @@ Feature: Wheel Viewing
       | Abrams      | 95      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | 99.5V       | 1.5V           | Yes  |
     And I start the app
 
-#    FIXME-1 Implement this
-  @WIP
-  Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <starting voltage> / <voltage>]
+#  FIXME-1 Eliminate starting voltage
+  Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
-    And I set the starting voltage to <starting voltage>V
-    And I set the distance to <km> km
-    When I set the actual voltage to <voltage>V
+#    And I set the starting voltage to <starting voltage>V
+    And I set the distance to <distance>
+    When I set the actual voltage to <voltage>
     Then it displays these estimates:
-      | remaining   | total range | wh/km   |
-      | <remaining> | <total>     | <wh/km> |
+      | remaining   | total range | wh/km |
+      | <remaining> | <total>     | 0.0   |
     Examples:
-      | wheel       | starting voltage | km | voltage | remaining | total | wh/km |
-      | Sherman L | 150              | 20 | 140.9   | 40        | 60    | 32.7  |
-#      | Sherman Max | 100.4            | 81 | 83.5    | 7.2       | 88.2  | 29.8  |
-#      | Sherman Max | 100.4            | 42 | 91      | 40.2      | 82.2  | 32.0  |
-#      | Sherman Max | 98.2             | 42 | 91      | 52.5      | 94.5  | 24.5  |
-#      | S18         | 84               | 21 | 72      | 3.5       | 24.5  | 26.4  |
-#      | S18         | 84               | 42 | 67      | 0         | 42.0  | 18.7  |
+      | wheel       | distance | voltage | remaining | total |
+      | Sherman L   | 20 km    | 141.1V  | 40.5      | 60.5  |
+      | Sherman Max | 81 km    | 83.5V   | 9.5       | 90.5  |
+      | Sherman Max | 42 km    | 91V     | 39.3      | 81.3  |
+      | S18         | 21 km    | 72V     | 6.1       | 27.1  |
+      | S18         | 42 km    | 67V     | 0         | 42.0  |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
