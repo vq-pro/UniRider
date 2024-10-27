@@ -93,7 +93,7 @@ class CalculatorServiceTest {
 
     private fun requiredVoltage(whPerKm: Float, km: Float, expectedRequiredVoltage: Float) {
         // When
-        val result = service.requiredVoltage(WHEEL, whPerKm, km)
+        val result = service.requiredVoltage(WHEEL, km)
 
         // Then
         assertThat(result, equalTo(expectedRequiredVoltage))

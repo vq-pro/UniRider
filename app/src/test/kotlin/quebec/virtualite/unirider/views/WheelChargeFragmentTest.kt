@@ -21,7 +21,6 @@ import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.DateUtils
-import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.KM
@@ -32,8 +31,6 @@ import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.WHS_PER_KM
-import quebec.virtualite.unirider.TestDomain.WH_PER_KM_INDEX
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.services.CalculatorService
 
@@ -318,16 +315,14 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         mockCheckFullCharge(false)
         mockEditKmWith(KM)
 
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat()))
             .willReturn(WHEEL.voltageFull)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        val whPerKm = floatOf(WHS_PER_KM[WH_PER_KM_INDEX])
-
-        verify(mockedCalculatorService).requiredVoltage(WHEEL, whPerKm, KM)
+        verify(mockedCalculatorService).requiredVoltage(WHEEL, KM)
         verifyVoltageRequired(WHEEL.voltageFull)
     }
 
@@ -339,16 +334,14 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         mockCheckFullCharge(false)
         mockEditKmWith(KM)
 
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat()))
             .willReturn(VOLTAGE + WHEEL.chargerOffset - 0.1f)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        val whPerKm = floatOf(WHS_PER_KM[WH_PER_KM_INDEX])
-
-        verify(mockedCalculatorService).requiredVoltage(WHEEL, whPerKm, KM)
+        verify(mockedCalculatorService).requiredVoltage(WHEEL, KM)
         verifyDisplayGo()
     }
 
@@ -360,16 +353,14 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         mockCheckFullCharge(false)
         mockEditKmWith(KM)
 
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat()))
             .willReturn(VOLTAGE + WHEEL.chargerOffset)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        val whPerKm = floatOf(WHS_PER_KM[WH_PER_KM_INDEX])
-
-        verify(mockedCalculatorService).requiredVoltage(WHEEL, whPerKm, KM)
+        verify(mockedCalculatorService).requiredVoltage(WHEEL, KM)
         verifyDisplayGo()
     }
 
@@ -382,16 +373,14 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         mockEditKmWith(KM)
 
         val voltageRequired = VOLTAGE + WHEEL.chargerOffset + 0.1f
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat()))
             .willReturn(voltageRequired)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        val whPerKm = floatOf(WHS_PER_KM[WH_PER_KM_INDEX])
-
-        verify(mockedCalculatorService).requiredVoltage(WHEEL, whPerKm, KM)
+        verify(mockedCalculatorService).requiredVoltage(WHEEL, KM)
         verifyVoltageRequired(voltageRequired)
     }
 

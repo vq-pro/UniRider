@@ -98,12 +98,6 @@ object TestDomain {
     const val WH4 = 2700
     const val WH5 = 4000
     const val WH_NEW = 9999
-    const val WH_PER_KM = 30.3f
-    const val WH_PER_KM_INDEX = 3
-    const val WH_PER_KM_UP = 35f
-    const val WH_PER_KM_UP_INDEX = 4
-    val WHS_PER_KM = listOf("20", "25", "30", "30.3", "35", "40", "45")
-    val WHS_PER_KM_SERIALIZED = "20|25|30|30.3|35|40|45"
 
     val DEVICE3 = BluetoothDevice(DEVICE_NAME3, DEVICE_ADDR3)
 

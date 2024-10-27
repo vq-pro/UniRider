@@ -7,7 +7,6 @@ import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyString
@@ -55,7 +54,6 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_STRING
 import quebec.virtualite.unirider.TestDomain.WH
-import quebec.virtualite.unirider.TestDomain.WH_PER_KM
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
@@ -507,7 +505,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
-        val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM)
+        val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE)
         doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
 
         // When
@@ -523,44 +521,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
             mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
         )
         verify(mockedWidgets).enable(mockedButtonCharge)
-
-        assertThat(fragment.estimates, equalTo(estimates))
-    }
-
-    @Ignore
-    @Test
-    fun refreshEstimates_whenRateIsAboveMaximumRateTreshold() {
-        // Given
-        injectMocks()
-
-        val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, MAXIMUM_RATE_TRESHOLD + 0.1f)
-        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
-
-        // When
-        fragment.refreshEstimates(VOLTAGE, KM)
-
-        // Then
-        verify(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
-        verify(fragment).clearEstimates()
-
-        assertThat(fragment.estimates, equalTo(estimates))
-    }
-
-    @Ignore
-    @Test
-    fun refreshEstimates_whenRateIsBelowMinimumRateTreshold() {
-        // Given
-        injectMocks()
-
-        val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, MINIMUM_RATE_TRESHOLD - 0.1f)
-        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
-
-        // When
-        fragment.refreshEstimates(VOLTAGE, KM)
-
-        // Then
-        verify(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
-        verify(fragment).clearEstimates()
 
         assertThat(fragment.estimates, equalTo(estimates))
     }

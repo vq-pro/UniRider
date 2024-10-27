@@ -3,12 +3,12 @@ package quebec.virtualite.unirider.services
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.NB_DECIMALS
-import java.lang.Float.min
 
 open class CalculatorService {
 
     data class EstimatedValues(
-        val remainingRange: Float, val totalRange: Float, val whPerKm: Float
+        val remainingRange: Float,
+        val totalRange: Float
     )
 
     data class SoRPerCell(
@@ -61,15 +61,14 @@ open class CalculatorService {
     open fun estimatedValues(wheel: WheelEntity, voltage: Float, km: Float): EstimatedValues {
         val sor = getSoR(wheel, voltage)
         if (sor == -1f)
-            return EstimatedValues(-1f, -1f, 0f)
+            return EstimatedValues(-1f, -1f)
 
         val totalRange = 100 * km / (100 - sor)
         val remainingRange = totalRange - km
 
         return EstimatedValues(
             round(remainingRange, NB_DECIMALS),
-            round(totalRange, NB_DECIMALS),
-            0f
+            round(totalRange, NB_DECIMALS)
         )
     }
 
@@ -86,19 +85,8 @@ open class CalculatorService {
     }
 
     //    FIXME-1 Implement using km, voltage, and km desired
-    open fun requiredVoltage(wheel: WheelEntity?, whPerKm: Float, km: Float): Float {
-
-        val whReserve = wh(wheel!!, adjustedReserve(wheel), wheel.voltageMin)
-
-        val whRequiredToReserve = whPerKm * km
-        val whTotalRequired = whRequiredToReserve + whReserve
-        val percentage = whTotalRequired / wheel.wh
-        val voltageRange = wheel.voltageMax - wheel.voltageMin
-        val voltageRequired = min(
-            percentage * voltageRange + wheel.voltageMin + wheel.chargerOffset, wheel.voltageFull
-        )
-
-        return round(voltageRequired, NB_DECIMALS)
+    open fun requiredVoltage(wheel: WheelEntity?, km: Float): Float {
+        return round(0f, NB_DECIMALS)
     }
 
     internal fun adjustedReserve(wheel: WheelEntity): Float {

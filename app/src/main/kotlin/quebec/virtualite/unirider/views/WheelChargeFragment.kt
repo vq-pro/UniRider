@@ -134,7 +134,7 @@ open class WheelChargeFragment : BaseFragment() {
                     return
                 }
 
-                calculatorService.requiredVoltage(wheel!!, 0f, km)
+                calculatorService.requiredVoltage(wheel!!, km)
             }
         }
 
