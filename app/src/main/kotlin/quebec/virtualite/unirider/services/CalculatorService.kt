@@ -8,34 +8,39 @@ import java.lang.Float.min
 open class CalculatorService {
 
     data class EstimatedValues(
-        val remainingRange: Float,
-        val totalRange: Float,
-        val whPerKm: Float
+        val remainingRange: Float, val totalRange: Float, val whPerKm: Float
+    )
+
+    data class SoRPerCell(
+        val averageCell: Int, val soR: Float
     )
 
     //    FIXME-1 Complete table
-    private val ENERGY_PER_CELL_VOLTAGE = arrayOf(
-        arrayOf(4200, 181440),
-        arrayOf(3920, 145475),
-        arrayOf(3695, 99730),
-        arrayOf(3680, 96035),
-        arrayOf(3650, 92355),
-        arrayOf(3505, 67205),
-        arrayOf(3490, 63700),
-        arrayOf(3480, 60210),
-        arrayOf(3430, 53280)
+    private val SOR_PER_CELL = arrayOf(
+        SoRPerCell(4200, 100f),
+        SoRPerCell(3920, 67.2780f),
+        SoRPerCell(3810, 49.0909f),
+        SoRPerCell(3795, 46.1040f),
+        SoRPerCell(3695, 33.1931f),
+        SoRPerCell(3680, 30.8081f),
+        SoRPerCell(3650, 28.4876f),
+        SoRPerCell(3505, 14.0904f),
+        SoRPerCell(3490, 12.2864f),
+        SoRPerCell(3480, 10.5393f),
+        SoRPerCell(3430, 7.2158f)
     )
 
     open fun estimatedValues(wheel: WheelEntity, voltage: Float, km: Float): EstimatedValues {
         val sor = getSoR(wheel, voltage)
+        if (sor == -1f) {
+            return EstimatedValues(-1f, -1f, 0f)
+        }
 
         val totalRange = 100 * km / (100 - sor)
         val remainingRange = totalRange - km
 
         return EstimatedValues(
-            round(remainingRange, NB_DECIMALS),
-            round(totalRange, NB_DECIMALS),
-            0f
+            round(remainingRange, NB_DECIMALS), round(totalRange, NB_DECIMALS), 0f
         )
     }
 
@@ -70,25 +75,14 @@ open class CalculatorService {
         return wheel.voltageReserve + 2
     }
 
-
-    private fun calculateSoR(row: Array<Int>): Float {
-        val max = ENERGY_PER_CELL_VOLTAGE[0][1]
-        val soE = row[1].toFloat() / max.toFloat()
-        val safeSoE = (soE - 0.2) * 10 / 8
-        val range60 = -0.068599 + 0.34751 * safeSoE * 100 + 0.0025607 * safeSoE * safeSoE * 100 * 100
-        val soR = range60 / 60.29f * 100f
-
-        return soR.toFloat()
-    }
-
     private fun getSoR(wheel: WheelEntity, voltage: Float): Float {
         val numberOfCellsPerPack = wheel.voltageMax / 4.2f
-        val averageCell = voltage / numberOfCellsPerPack
-        val averageCellInt = round(averageCell * 1000, 0).toInt()
+        val averageCellFloat = voltage / numberOfCellsPerPack
+        val averageCellInt = round(averageCellFloat * 1000, 0).toInt()
 
-        var upperRow = ENERGY_PER_CELL_VOLTAGE[0]
-        for (row in ENERGY_PER_CELL_VOLTAGE) {
-            if (averageCellInt > row[0]) {
+        var upperRow = SOR_PER_CELL[0]
+        for (row in SOR_PER_CELL) {
+            if (averageCellInt > row.averageCell) {
                 return prorateSoR(averageCellInt, upperRow, row)
             }
 
@@ -98,18 +92,17 @@ open class CalculatorService {
         return 0f
     }
 
-    private fun prorateSoR(averageCellInt: Int, upperRow: Array<Int>, lowerRow: Array<Int>): Float {
-        val upperSoR = calculateSoR(upperRow)
-        val lowerSoR = calculateSoR(lowerRow)
+    private fun prorateSoR(averageCell: Int, upperRow: SoRPerCell, lowerRow: SoRPerCell): Float {
+        if (upperRow == lowerRow) return -1f
 
-        val diffCellBetweenRows = upperRow[0] - lowerRow[0]
-        val diffActual = averageCellInt - lowerRow[0]
+        val diffCellBetweenRows = upperRow.averageCell - lowerRow.averageCell
+        val diffActual = averageCell - lowerRow.averageCell
         val percentActual = diffActual.toFloat() / diffCellBetweenRows.toFloat()
 
-        val diffUpperToLowerSoR = upperSoR - lowerSoR
+        val diffUpperToLowerSoR = upperRow.soR - lowerRow.soR
         val diffSoR = diffUpperToLowerSoR * percentActual
 
-        return lowerSoR + diffSoR
+        return lowerRow.soR + diffSoR
     }
 
     private fun rawPercentage(value: Float, range: Float): Float {

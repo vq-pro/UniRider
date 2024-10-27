@@ -16,6 +16,7 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
+import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.SHERMAN_L_5
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
 import quebec.virtualite.unirider.TestDomain.WH
@@ -41,40 +42,35 @@ class CalculatorServiceTest {
     @Ignore
     @Test
     fun estimatedAndRequired() {
-        estimatedValues(91.9f, 38f, 43.2f, 81.2f)
+//        estimatedValues(91.9f, 38f, 43.2f, 81.2f)
         requiredVoltage(100.6f, 32.7f, 43f, round(91.8f + WHEEL.chargerOffset, 1))
         requiredVoltage(100.6f, 32.7f, 40f, round(91.2f + WHEEL.chargerOffset, 1))
     }
 
     @Test
     fun estimatedValues() {
-        estimatedValues(141.12f, 19.4f, 39.9f, 59.3f);
-        estimatedValues(133.02f, 39.9f, 19.8f, 59.7f);
-        estimatedValues(132f, 39.9f, 16.9f, 56.8f);
-        estimatedValues(125.64f, 65f, 9.1f, 74.1f);
-//        estimatedValues(100.4f, 83.5f, 81f, null, 7.2f, 88.2f, 29.8f)
-//        estimatedValues(98.2f, 91.0f, 42f, null, 52.5f, 94.5f, 24.5f)
-//        estimatedValues(100.8f, 83.5f, 81f, null, 7.0f, 88.0f, 30.5f)
-//        estimatedValues(100.6f, 91.9f, 40f, 35f, 40.4f, 80.4f, 31.1f)
-//        estimatedValues(100.4f, 83.5f, 81f, 35f, 6.1f, 87.1f, 29.8f)
-//        estimatedValues(98.2f, 91.0f, 42f, 35f, 36.7f, 78.7f, 24.5f)
-//        estimatedValues(100.8f, 83.5f, 81f, 35f, 6.1f, 87.1f, 30.5f)
+        estimatedValues(SHERMAN_L_5, 141.1f, 19.4f, 39.6f, 59.0f);
+        estimatedValues(SHERMAN_L_5, 133.0f, 39.9f, 19.7f, 59.6f);
+        estimatedValues(SHERMAN_L_5, 132.0f, 39.9f, 16.9f, 56.8f);
+        estimatedValues(SHERMAN_L_5, 125.6f, 65.0f, 9.0f, 74.0f);
+        estimatedValues(S18_1, 76.2f, 15.0f, 14.5f, 29.5f);
 
         // Voltage lower than reserve
-//        estimatedValues(100.8f, 79.5f, 81.2f, null, 0f, 81.2f, 37.5f)
+        estimatedValues(SHERMAN_L_5, 119.5f, 60f, 0f, 60f)
 
         // Voltage higher than max
-//        estimatedValues(101.6f, 100.9f, 3f, null, 81.0f, 84.0f, 33.3f)
+        estimatedValues(SHERMAN_L_5, 151.3f, 3f, -1f, -1f)
     }
 
     private fun estimatedValues(
+        wheel: WheelEntity,
         voltageActual: Float,
         km: Float,
         expectedRemainingRange: Float,
         expectedTotalRange: Float
     ) {
         // When
-        val values = service.estimatedValues(WHEEL.copy(), voltageActual, km)
+        val values = service.estimatedValues(wheel, voltageActual, km)
 
         // Then
         assertThat(values.remainingRange, equalTo(expectedRemainingRange))
