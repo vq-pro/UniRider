@@ -85,6 +85,7 @@ open class CalculatorService {
         return (wheel!!).voltageFull
     }
 
+    //    FIXME-1 Implement using km, voltage, and km desired
     open fun requiredVoltage(wheel: WheelEntity?, whPerKm: Float, km: Float): Float {
 
         val whReserve = wh(wheel!!, adjustedReserve(wheel), wheel.voltageMin)

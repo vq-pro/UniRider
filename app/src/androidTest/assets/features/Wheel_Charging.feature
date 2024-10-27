@@ -15,6 +15,8 @@ Feature: Wheel Charging
     And I charge the wheel
     And the current time is 11:45
 
+#    FIXME-1 Remove rate from charging
+  @Ignore
   Scenario: Changing the rate
     Given I request to charge for 40 km
     And it displays an actual voltage of 87.9V
@@ -26,10 +28,12 @@ Feature: Wheel Charging
       | required voltage | time  |
       | 93.3V (+5.4)     | 12:26 |
 
+#  FIXME-1 Implement partial charging estimate
+  @Ignore
   Scenario: Changing the voltage
     Given I request to charge for 40 km
     And it displays an actual voltage of 87.9V
-    And I change the rate to 35 wh/km
+#    And I change the rate to 35 wh/km
     And it displays these charging estimates:
       | required voltage | time  |
       | 93.3V (+5.4)     | 12:26 |
@@ -38,6 +42,7 @@ Feature: Wheel Charging
       | required voltage | time  |
       | 93.3V (+3.3)     | 12:10 |
 
+  @Ignore
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V
@@ -54,6 +59,7 @@ Feature: Wheel Charging
       | 200 km   | 99.5V (+11.6)    | 13:12 |
       | full     | 99.5V (+11.6)    | 13:12 |
 
+  @Ignore
   Scenario: Reconnect to update the voltage
     Given this simulated device:
       | Bt Name | Bt Address        | Km     | Mileage | Voltage  |

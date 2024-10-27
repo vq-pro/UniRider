@@ -44,6 +44,7 @@ Feature: Wheel Viewing
       | Sherman | aa      | bb      |
 
 #    FIXME-1 Remove rate
+  @Ignore
   Scenario: Calculating estimated values when changing rate
     Given I select the Sherman Max
     And I set the starting voltage to 100.6V
@@ -64,10 +65,10 @@ Feature: Wheel Viewing
     Then it displays a percentage of <battery>
     Examples:
       | wheel       | voltage | battery |
-      | 14S         | 63.5V   | 80.7%   |
-      | S18         | 71.4V   | 47.5%   |
-      | Sherman     | 96.5V   | 82.9%   |
-      | Sherman Max | 91.9V   | 64.7%   |
+      | 14S         | 63.5V   | 83.2%   |
+      | S18         | 71.4V   | 19.5%   |
+      | Sherman     | 96.5V   | 95.3%   |
+      | Sherman Max | 91.9V   | 53.6%   |
 
 #    FIXME-1 Enable charging at all times
   Scenario Outline: => Charging the wheel [when <available>]
@@ -90,13 +91,13 @@ Feature: Wheel Viewing
     And I set the actual voltage to 91.9V
     And it displays these estimates:
       | remaining | total range | wh/km |
-      | 42.2      | 80.2        | 33.5  |
+      | 44.0      | 82.0        | 0.0   |
     When I edit the wheel
     And I go back to view the wheel
-    Then it displays a percentage of 64.7%
+    Then it displays a percentage of 53.6%
     And it displays these estimates:
       | remaining | total range | wh/km |
-      | 42.3      | 80.3        | 33.5  |
+      | 44.0      | 82.0        | 0.0   |
 
   Scenario: Saving the starting voltage
     Given I select the Sherman

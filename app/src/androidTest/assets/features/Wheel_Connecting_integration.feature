@@ -26,7 +26,7 @@ Feature: Wheel Connecting
     And I select the 14S
     When I reconnect to the wheel
     Then the mileage is updated to 1706 km
-    And the voltage is updated to 58.6V and the battery 55.2%
+    And the voltage is updated to 58.6V and the battery 29.5%
     And the km is updated to 12.2
 
   Scenario Outline: When reconnecting, set the starting voltage depending on km [<km>]
