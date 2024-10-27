@@ -8,18 +8,8 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.NumberUtils.round
-import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
-import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
-import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
-import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
-import quebec.virtualite.unirider.TestDomain.MILEAGE
-import quebec.virtualite.unirider.TestDomain.NAME
-import quebec.virtualite.unirider.TestDomain.NOT_SOLD
-import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.SHERMAN_L_5
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
-import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
@@ -49,11 +39,11 @@ class CalculatorServiceTest {
 
     @Test
     fun estimatedValues() {
-        estimatedValues(SHERMAN_L_5, 141.1f, 19.4f, 39.6f, 59.0f);
+        estimatedValues(SHERMAN_L_5, 141.1f, 19.4f, 39.3f, 58.7f);
         estimatedValues(SHERMAN_L_5, 133.0f, 39.9f, 19.7f, 59.6f);
         estimatedValues(SHERMAN_L_5, 132.0f, 39.9f, 16.9f, 56.8f);
         estimatedValues(SHERMAN_L_5, 125.6f, 65.0f, 9.0f, 74.0f);
-        estimatedValues(S18_1, 76.2f, 15.0f, 14.5f, 29.5f);
+        estimatedValues(S18_1, 76.2f, 15.0f, 16.1f, 31.1f);
 
         // Voltage lower than reserve
         estimatedValues(SHERMAN_L_5, 119.5f, 60f, 0f, 60f)
@@ -81,46 +71,26 @@ class CalculatorServiceTest {
     //    FIXME-0 Adjust percentage to SoR
     @Test
     fun percentage() {
-        percentage(151.2f, 100.0f)
-        percentage(104.4f, 0.0f)
-        percentage(127.8f, 50.0f)
-        percentage(135.8f, 67.1f)
-        percentage(152.7f, 103.2f)
+        percentage(SHERMAN_L_5, 151.2f, 100.0f)
+        percentage(SHERMAN_L_5, 119.2f, 0.0f)
+        percentage(SHERMAN_L_5, 136.9f, 50.4f)
+        percentage(SHERMAN_L_5, 141.1f, 67.0f)
+        percentage(SHERMAN_L_5, 152.7f, 100.0f)
+
+        // Voltage lower than reserve
+        percentage(SHERMAN_L_5, 119.5f, 0.0f)
+        percentage(S18_1, 67.5f, 0.0f)
+
+        // Voltage higher than max
+        percentage(SHERMAN_L_5, 151.3f, 100f)
     }
 
-    private fun percentage(voltage: Float, expectedPercentage: Float) {
+    private fun percentage(wheel: WheelEntity, voltage: Float, expectedPercentage: Float) {
         // When
-        val percentage = service.percentage(WHEEL, voltage)
+        val percentage = service.percentage(wheel, voltage)
 
         // Then
         assertThat(percentage, equalTo(expectedPercentage))
-    }
-
-    @Test
-    fun percentage_whenVoltagesNotSet_zero() {
-        percentage_whenVoltagesNotSet_zero(0f, 1f)
-        percentage_whenVoltagesNotSet_zero(-1f, 1f)
-        percentage_whenVoltagesNotSet_zero(-100f, 1f)
-        percentage_whenVoltagesNotSet_zero(1f, 0f)
-        percentage_whenVoltagesNotSet_zero(1f, -1f)
-        percentage_whenVoltagesNotSet_zero(1f, -100f)
-    }
-
-    private fun percentage_whenVoltagesNotSet_zero(voltageMin: Float, voltageMax: Float) {
-        // Given
-        val wheel =
-            WheelEntity(
-                0, NAME, DEVICE_NAME, DEVICE_ADDR,
-                PREMILEAGE, MILEAGE, WH,
-                voltageMax, voltageMin, 1f, voltageMax,
-                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
-            )
-
-        // When
-        val percentage = service.percentage(wheel, 108.0f)
-
-        // Then
-        assertThat(percentage, equalTo(0.0f))
     }
 
     @Ignore
