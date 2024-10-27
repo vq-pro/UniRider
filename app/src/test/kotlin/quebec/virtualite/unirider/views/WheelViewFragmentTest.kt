@@ -181,6 +181,12 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     @Test
     fun onViewCreated() {
+        // Given
+        doReturn(KM).`when`(fragment).readKm()
+        doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
+
+        doNothing().`when`(fragment).refreshDisplay(VOLTAGE, KM)
+
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
@@ -217,13 +223,20 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedTextBtName).text = DEVICE_NAME
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
 
-        verify(fragment).clearDisplay()
+        verify(fragment).readKm()
+        verify(fragment).readVoltageActual()
+        verify(fragment).refreshDisplay(VOLTAGE, KM)
     }
 
     @Test
     fun onViewCreated_whenWheelIsSold() {
         // Given
         BaseFragment.wheel = SHERMAN_MAX_3
+
+        doReturn(null).`when`(fragment).readKm()
+        doReturn(null).`when`(fragment).readVoltageActual()
+
+        doNothing().`when`(fragment).refreshDisplay(null, null)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)

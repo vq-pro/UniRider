@@ -82,7 +82,7 @@ open class WheelViewFragment : BaseFragment() {
 
                 textMileage.text = textKm(wheel!!.totalMileage())
 
-                clearDisplay()
+                refreshDisplay(readVoltageActual(), readKm())
             }
         }
     }
