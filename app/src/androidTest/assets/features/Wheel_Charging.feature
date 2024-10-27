@@ -15,25 +15,11 @@ Feature: Wheel Charging
     And I charge the wheel
     And the current time is 11:45
 
-#    FIXME-1 Remove rate from charging
-  @Ignore
-  Scenario: Changing the rate
-    Given I request to charge for 40 km
-    And it displays an actual voltage of 87.9V
-    And it displays these charging estimates:
-      | required voltage | time  |
-      | 94.9V (+7.0)     | 12:38 |
-    When I change the rate to 35 wh/km
-    Then it displays these charging estimates:
-      | required voltage | time  |
-      | 93.3V (+5.4)     | 12:26 |
-
 #  FIXME-1 Implement partial charging estimate
   @Ignore
   Scenario: Changing the voltage
     Given I request to charge for 40 km
     And it displays an actual voltage of 87.9V
-#    And I change the rate to 35 wh/km
     And it displays these charging estimates:
       | required voltage | time  |
       | 93.3V (+5.4)     | 12:26 |

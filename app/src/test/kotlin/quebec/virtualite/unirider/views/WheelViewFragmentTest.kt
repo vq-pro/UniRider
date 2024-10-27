@@ -3,7 +3,6 @@ package quebec.virtualite.unirider.views
 import android.view.View.GONE
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.TextView
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -11,7 +10,6 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.doNothing
 import org.mockito.InjectMocks
@@ -21,7 +19,6 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
@@ -58,11 +55,7 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_STRING
 import quebec.virtualite.unirider.TestDomain.WH
-import quebec.virtualite.unirider.TestDomain.WHS_PER_KM
 import quebec.virtualite.unirider.TestDomain.WH_PER_KM
-import quebec.virtualite.unirider.TestDomain.WH_PER_KM_INDEX
-import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP
-import quebec.virtualite.unirider.TestDomain.WH_PER_KM_UP_INDEX
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
@@ -102,16 +95,10 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     lateinit var mockedLabelBattery: TextView
 
     @Mock
-    lateinit var mockedLabelRate: TextView
-
-    @Mock
     lateinit var mockedLabelRemainingRange: TextView
 
     @Mock
     lateinit var mockedLabelTotalRange: TextView
-
-    @Mock
-    lateinit var mockedSpinnerRate: Spinner
 
     @Mock
     lateinit var mockedTextBattery: TextView
@@ -165,7 +152,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
         // Then
         verify(mockedWidgets).hide(
-            mockedSpinnerRate, mockedLabelRate, mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
+            mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
         )
         verify(mockedWidgets).disable(mockedButtonCharge)
     }
@@ -193,9 +180,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     @Test
     fun onViewCreated() {
-        // Given
-        doNothing().`when`(fragment).refreshRates()
-
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
@@ -206,10 +190,8 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.label_battery, fragment.labelBattery, mockedLabelBattery)
-        verifyFieldAssignment(R.id.label_rate, fragment.labelRate, mockedLabelRate)
         verifyFieldAssignment(R.id.label_remaining_range, fragment.labelRemainingRange, mockedLabelRemainingRange)
         verifyFieldAssignment(R.id.label_total_range, fragment.labelTotalRange, mockedLabelTotalRange)
-        verifyFieldAssignment(R.id.spinner_rate, fragment.spinnerRate, mockedSpinnerRate)
         verifyFieldAssignment(R.id.view_battery, fragment.textBattery, mockedTextBattery)
         verifyFieldAssignment(R.id.view_bt_name, fragment.textBtName, mockedTextBtName)
         verifyFieldAssignment(R.id.view_mileage, fragment.textMileage, mockedTextMileage)
@@ -218,7 +200,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.view_total_range, fragment.textTotalRange, mockedTextTotalRange)
 
         assertThat(fragment.buttonCharge, equalTo(mockedButtonCharge))
-        assertThat(fragment.spinnerRate, equalTo(mockedSpinnerRate))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
         assertThat(fragment.textName, equalTo(mockedTextName))
@@ -230,25 +211,18 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verifyOnClick(mockedButtonCharge, "onCharge")
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnClick(mockedButtonEdit, "onEdit")
-        verifyOnItemSelected(mockedSpinnerRate, "onChangeRate")
-        verifyStringListAdapter(mockedSpinnerRate, fragment.listOfRates)
-
-        verify(mockedSpinnerRate, never()).setSelection(anyInt())
 
         verify(mockedTextName).text = NAME
         verify(mockedTextBtName).text = DEVICE_NAME
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
 
         verify(fragment).clearDisplay()
-        verify(fragment).refreshRates()
     }
 
     @Test
     fun onViewCreated_whenWheelIsSold() {
         // Given
         BaseFragment.wheel = SHERMAN_MAX_3
-
-        doNothing().`when`(fragment).refreshRates()
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -265,41 +239,11 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedButtonConnect).visibility = GONE
     }
 
-    // FIXME-1 Remove rate
-    @Ignore
-    @Test
-    fun onChangeRate() {
-        // Given
-        injectMocks()
-
-        fragment.selectedRate = -999
-        setList(fragment.listOfRates, WHS_PER_KM)
-
-        doReturn(KM).`when`(fragment).readKm()
-        doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
-        doNothing().`when`(fragment).refreshDisplay(VOLTAGE, KM)
-
-        // When
-        fragment.onChangeRate().invoke(mockedView, WH_PER_KM_UP_INDEX, WH_PER_KM_UP.toString())
-
-        // Then
-        verify(fragment).readVoltageActual()
-        verify(fragment).readKm()
-        verify(fragment).refreshDisplay(VOLTAGE, KM)
-
-        assertThat(fragment.selectedRate, equalTo(WH_PER_KM_UP_INDEX))
-    }
-
     //    FIXME-1 Memorize KM and VOLTAGE in the context, for partial charging
     @Test
     fun onCharge() {
         // Given
-        BaseFragment.chargeContext.rates.clear()
-        BaseFragment.chargeContext.selectedRate = -1
         BaseFragment.chargeContext.voltage = -1f
-
-        setList(fragment.listOfRates, WHS_PER_KM)
-        fragment.selectedRate = WH_PER_KM_INDEX
 
         doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
 
@@ -309,8 +253,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Then
         verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
 
-        assertThat(BaseFragment.chargeContext.rates, equalTo(fragment.listOfRates))
-        assertThat(BaseFragment.chargeContext.selectedRate, equalTo(fragment.selectedRate))
         assertThat(BaseFragment.chargeContext.voltage, equalTo(VOLTAGE))
     }
 
@@ -358,14 +300,10 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     @Test
     fun onEdit() {
-        // Given
-        fragment.selectedRate = WH_PER_KM_UP_INDEX
-
         // When
         fragment.onEdit().invoke(mockedView)
 
         // Then
-        assertThat(fragment.selectedRate, equalTo(null))
         verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelEditFragment)
     }
 
@@ -376,9 +314,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
 
         doNothing().`when`(fragment).refreshDisplay(VOLTAGE, KM)
-        doNothing().`when`(fragment).refreshRates()
-
-        fragment.selectedRate = 99
 
         // When
         fragment.onUpdateKm().invoke(KM_STRING)
@@ -388,9 +323,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(fragment).readVoltageActual()
 
         verify(fragment).refreshDisplay(VOLTAGE, KM)
-        verify(fragment).refreshRates()
-
-        assertThat(fragment.selectedRate, equalTo(null))
     }
 
     @Test
@@ -400,9 +332,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         doReturn(VOLTAGE).`when`(fragment).parseVoltage(value)
         doReturn(KM).`when`(fragment).readKm()
         doNothing().`when`(fragment).refreshDisplay(VOLTAGE, KM)
-        doNothing().`when`(fragment).refreshRates()
-
-        fragment.selectedRate = 99
 
         // When
         fragment.onUpdateVoltageActual().invoke(value)
@@ -412,9 +341,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(fragment).readKm()
 
         verify(fragment).refreshDisplay(VOLTAGE, KM)
-        verify(fragment).refreshRates()
-
-        assertThat(fragment.selectedRate, equalTo(null))
     }
 
     @Test
@@ -581,9 +507,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
-        fragment.selectedRate = WH_PER_KM_INDEX
-        fragment.listOfRates.addAll(WHS_PER_KM)
-
         val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM)
         doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
 
@@ -597,7 +520,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
 
         verify(mockedWidgets).show(
-            mockedSpinnerRate, mockedLabelRate, mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
+            mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
         )
         verify(mockedWidgets).enable(mockedButtonCharge)
 
@@ -609,9 +532,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     fun refreshEstimates_whenRateIsAboveMaximumRateTreshold() {
         // Given
         injectMocks()
-
-        fragment.selectedRate = WH_PER_KM_INDEX
-        fragment.listOfRates.addAll(WHS_PER_KM)
 
         val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, MAXIMUM_RATE_TRESHOLD + 0.1f)
         doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
@@ -631,9 +551,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     fun refreshEstimates_whenRateIsBelowMinimumRateTreshold() {
         // Given
         injectMocks()
-
-        fragment.selectedRate = WH_PER_KM_INDEX
-        fragment.listOfRates.addAll(WHS_PER_KM)
 
         val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, MINIMUM_RATE_TRESHOLD - 0.1f)
         doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
@@ -665,31 +582,14 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedWidgets).show(mockedTextBattery, mockedLabelBattery)
     }
 
-    @Test
-    fun refreshRates() {
-        // Given
-        fragment.estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE, WH_PER_KM)
-
-        // When
-        fragment.refreshRates()
-
-        // Then
-        assertThat(fragment.listOfRates, equalTo(WHS_PER_KM))
-        assertThat(fragment.selectedRate, equalTo(WH_PER_KM_INDEX))
-
-        verify(mockedWidgets).setSelection(mockedSpinnerRate, fragment.selectedRate!!)
-    }
-
     private fun injectMocks() {
         fragment.buttonCharge = mockedButtonCharge
         fragment.buttonConnect = mockedButtonConnect
         fragment.editKm = mockedEditKm
         fragment.editVoltageActual = mockedEditVoltageActual
         fragment.labelBattery = mockedLabelBattery
-        fragment.labelRate = mockedLabelRate
         fragment.labelRemainingRange = mockedLabelRemainingRange
         fragment.labelTotalRange = mockedLabelTotalRange
-        fragment.spinnerRate = mockedSpinnerRate
         fragment.textBattery = mockedTextBattery
         fragment.textBtName = mockedTextBtName
         fragment.textMileage = mockedTextMileage
@@ -706,10 +606,8 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
         mockField(R.id.label_battery, mockedLabelBattery)
-        mockField(R.id.label_rate, mockedLabelRate)
         mockField(R.id.label_remaining_range, mockedLabelRemainingRange)
         mockField(R.id.label_total_range, mockedLabelTotalRange)
-        mockField(R.id.spinner_rate, mockedSpinnerRate)
         mockField(R.id.view_battery, mockedTextBattery)
         mockField(R.id.view_bt_name, mockedTextBtName)
         mockField(R.id.view_mileage, mockedTextMileage)

@@ -9,17 +9,12 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectSpinnerItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.strip
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.views.WheelChargeFragment
 
 class ChargeFragmentObject(val app: TestApp) {
-
-    fun changeRateTo(newRate: Int) {
-        selectSpinnerItem(R.id.spinner_rate, "$newRate")
-    }
 
     fun changeVoltageTo(voltage: String) {
         setText(R.id.edit_voltage_actual, strip(voltage, "V"))

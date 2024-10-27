@@ -7,10 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.TextView
 import com.google.android.material.switchmaterial.SwitchMaterial
-import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.commons.android.utils.DateUtils
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
@@ -28,23 +26,18 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var buttonConnect: Button
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
-    internal lateinit var spinnerRate: Spinner
     internal lateinit var textName: TextView
     internal lateinit var textRemainingTime: TextView
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var switchFullCharge: SwitchMaterial
 
-    internal val dateUtils = DateUtils()
+    private val dateUtils = DateUtils()
 
-    internal val parmRates: ArrayList<String> = ArrayList()
-    internal var parmSelectedRate: Int = -1
     internal var parmVoltageDisconnectedFromCharger: Float? = 0f
 
     private var calculatorService = CalculatorService()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setList(parmRates, chargeContext.rates)
-        parmSelectedRate = chargeContext.selectedRate
         parmVoltageDisconnectedFromCharger = chargeContext.voltage
 
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
@@ -56,7 +49,6 @@ open class WheelChargeFragment : BaseFragment() {
         buttonConnect = view.findViewById(R.id.button_connect_charge)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
-        spinnerRate = view.findViewById(R.id.spinner_rate)
         textName = view.findViewById(R.id.view_name)
         textRemainingTime = view.findViewById(R.id.view_remaining_time)
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
@@ -65,13 +57,10 @@ open class WheelChargeFragment : BaseFragment() {
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
-        widgets.setOnItemSelectedListener(spinnerRate, onChangeRate())
-        widgets.stringListAdapter(spinnerRate, view, parmRates)
         widgets.setOnCheckedChangeListener(switchFullCharge, onToggleFullCharge())
 
         fragments.runUI {
             textName.text = wheel!!.name
-            widgets.setSelection(spinnerRate, parmSelectedRate)
             displayVoltageActual()
 
             if (wheel!!.btName == null || wheel!!.btAddr == null) {
@@ -80,11 +69,6 @@ open class WheelChargeFragment : BaseFragment() {
 
             switchFullCharge.isChecked = true
         }
-    }
-
-    fun onChangeRate(): (View?, Int, String) -> Unit = { view, position, text ->
-        parmSelectedRate = position
-        updateEstimates()
     }
 
     fun onConnect(): (View) -> Unit = {
@@ -100,11 +84,6 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     fun onToggleFullCharge() = { useFullCharge: Boolean ->
-        if (useFullCharge)
-            widgets.disable(editKm, spinnerRate)
-        else
-            widgets.enable(editKm, spinnerRate)
-
         updateEstimates()
     }
 
@@ -155,8 +134,7 @@ open class WheelChargeFragment : BaseFragment() {
                     return
                 }
 
-                val whPerKm = floatOf(parmRates[parmSelectedRate])
-                calculatorService.requiredVoltage(wheel!!, whPerKm, km)
+                calculatorService.requiredVoltage(wheel!!, 0f, km)
             }
         }
 

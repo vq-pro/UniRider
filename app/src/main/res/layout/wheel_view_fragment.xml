@@ -102,37 +102,6 @@
                 />
             </TableRow>
 
-            <!-- Rate -->
-            <TableRow android:layout_marginTop="10dp">
-                <TextView
-                        android:labelFor="@+id/spinner_rate"
-                        android:layout_weight="1"
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_rate"
-                />
-
-                <Spinner
-                        android:id="@+id/spinner_rate"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="visible">
-                </Spinner>
-
-                <TextView
-                        android:id="@+id/label_rate"
-                        android:labelFor="@+id/spinner_rate"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_wh_per_km"
-                />
-            </TableRow>
-
             <!-- Remaining Range -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView

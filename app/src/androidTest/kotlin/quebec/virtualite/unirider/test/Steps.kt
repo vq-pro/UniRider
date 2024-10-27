@@ -218,11 +218,6 @@ class Steps {
     fun changeNothing() {
     }
 
-    @When("^I change the rate to (.*) wh/km$")
-    fun changeRate(newRate: Int) {
-        chargeFragment.changeRateTo(newRate)
-    }
-
     @When("^I change the voltage to (.*)$")
     fun changeVoltage(newVoltage: String) {
         chargeFragment.changeVoltageTo(newVoltage)

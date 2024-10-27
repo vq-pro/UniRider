@@ -6,7 +6,6 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getSpinnerText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
@@ -74,8 +73,8 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         validateEstimates(
             DataTable.create(
                 listOf(
-                    listOf("remaining", "total range", "wh/km"),
-                    listOf("", "", "")
+                    listOf("remaining", "total range"),
+                    listOf("", "")
                 )
             )
         )
@@ -93,11 +92,10 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         expectedEstimates.diff(
             DataTable.create(
                 listOf(
-                    listOf("remaining", "total range", "wh/km"),
+                    listOf("remaining", "total range"),
                     listOf(
                         getText(R.id.view_remaining_range),
-                        getText(R.id.view_total_range),
-                        getSpinnerText(R.id.spinner_rate)
+                        getText(R.id.view_total_range)
                     )
                 )
             )

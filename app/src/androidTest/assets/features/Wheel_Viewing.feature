@@ -12,13 +12,14 @@ Feature: Wheel Viewing
       | Abrams      | 95      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | 99.5V       | 1.5V           | Yes  |
     And I start the app
 
+#    FIXME-1 Remove consumption
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And I set the distance to <distance>
     When I set the actual voltage to <voltage>
     Then it displays these estimates:
-      | remaining   | total range | wh/km |
-      | <remaining> | <total>     | 0.0   |
+      | remaining   | total range |
+      | <remaining> | <total>     |
     Examples:
       | wheel       | distance | voltage | remaining | total |
       | Sherman L   | 20 km    | 141.1V  | 40.5      | 60.5  |
@@ -41,20 +42,6 @@ Feature: Wheel Viewing
       | Sherman |         | bb      |
       | Sherman | aa      | bb      |
 
-#    FIXME-1 Remove rate
-  @Ignore
-  Scenario: Calculating estimated values when changing rate
-    Given I select the Sherman Max
-    And I set the distance to 20 km
-    And I set the actual voltage to 94.1V
-    And it displays these estimates:
-      | remaining | total range | wh/km |
-      | 37.3      | 57.3        | 46.4  |
-    When I change the rate to 35 wh/km
-    Then it displays these estimates:
-      | remaining | total range | wh/km |
-      | 49.4      | 69.4        | 35    |
-
   Scenario Outline: Calculating percentage [<wheel> / <voltage>]
     Given I select the <wheel>
     When I set the actual voltage to <voltage>
@@ -67,14 +54,10 @@ Feature: Wheel Viewing
       | Sherman Max | 91.9V   | 53.6%   |
 
 #    FIXME-1 Enable charging at all times
-  Scenario Outline: => Charging the wheel [when <available>]
-    Given I select the Sherman
-    When the wh/km is <available>
-    Then I <can> charge the wheel
-    Examples:
-      | available     | can    |
-      | available     | can    |
-      | not available | cannot |
+  @Ignore
+  Scenario: => Charging the wheel
+    When I select the Sherman
+    Then I can charge the wheel
 
   Scenario: => Editing the wheel
     Given I select the Sherman
@@ -86,14 +69,14 @@ Feature: Wheel Viewing
     And I set the distance to 38 km
     And I set the actual voltage to 91.9V
     And it displays these estimates:
-      | remaining | total range | wh/km |
-      | 44.0      | 82.0        | 0.0   |
+      | remaining | total range |
+      | 44.0      | 82.0        |
     When I edit the wheel
     And I go back to view the wheel
     Then it displays a percentage of 53.6%
     And it displays these estimates:
-      | remaining | total range | wh/km |
-      | 44.0      | 82.0        | 0.0   |
+      | remaining | total range |
+      | 44.0      | 82.0        |
 
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
     Given the Sherman has a previous mileage of <previous mileage>
