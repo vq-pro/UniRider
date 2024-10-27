@@ -57,6 +57,7 @@ class CalculatorServiceTest {
 
         // Voltage lower than reserve
         estimatedValues(SHERMAN_L_5, 119.5f, 60f, 0f, 60f)
+        estimatedValues(S18_1, 67.5f, 20f, 0f, 20f);
 
         // Voltage higher than max
         estimatedValues(SHERMAN_L_5, 151.3f, 3f, -1f, -1f)
