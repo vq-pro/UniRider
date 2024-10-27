@@ -78,6 +78,7 @@ class CalculatorServiceTest {
         assertThat(values.totalRange, equalTo(expectedTotalRange))
     }
 
+    //    FIXME-0 Adjust percentage to SoR
     @Test
     fun percentage() {
         percentage(151.2f, 100.0f)
