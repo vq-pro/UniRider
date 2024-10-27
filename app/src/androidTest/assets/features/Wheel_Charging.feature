@@ -7,21 +7,29 @@ Feature: Wheel Charging
     And this wheel is connected:
       | Name        | Bt Name | Bt Address        |
       | Sherman Max | LK1234  | C0:C1:C2:C3:C4:C5 |
+    And the current time is 11:45
     And I start the app
     And I select the Sherman Max
     And I set the actual voltage to 86.4V
     And I set the distance to 50 km
+    And it displays these estimates:
+      | remaining | total range |
+      | 14.5      | 64.5        |
     And I charge the wheel
-    And the current time is 11:45
 
-#  FIXME-1 Implement partial charging estimate
+#  FIXME-0 Implement partial charging estimate
   @Ignore
   Scenario: Changing the voltage
     Given I request to charge for 40 km
     And it displays an actual voltage of 87.9V
+    # FIXME-1 Find the SoR (hence the average cell) for estimates of 40 remaining 64.5 total
+    # So 64.5 - 40 = 24.5, 24.5/64.5 = 37.9845% of the range used
+    # So SoR = 100-37.9845=62.0155, 3897 roughly
+    # So 93.5V is required, plus the charger offset
+    # So 95V is required
     And it displays these charging estimates:
       | required voltage | time  |
-      | 93.3V (+5.4)     | 12:26 |
+      | 95.0V (+7.1)     | 12:26 |
     When I change the voltage to 90V
     Then it displays these charging estimates:
       | required voltage | time  |
