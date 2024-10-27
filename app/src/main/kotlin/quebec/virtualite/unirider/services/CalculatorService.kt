@@ -73,8 +73,8 @@ open class CalculatorService {
         )
     }
 
-    open fun percentage(wheel: WheelEntity?, voltage: Float?): Float {
-        val soR = getSoR(wheel!!, voltage!!)
+    open fun percentage(wheel: WheelEntity?, voltage: Float): Float {
+        val soR = getSoR(wheel!!, voltage)
         return when {
             soR == -1f -> 100f
             else -> round(soR, NB_DECIMALS)
