@@ -30,7 +30,6 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var buttonEdit: Button
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
-    internal lateinit var editVoltageStart: EditText
     internal lateinit var labelBattery: TextView
     internal lateinit var labelRate: TextView
     internal lateinit var labelRemainingRange: TextView
@@ -63,7 +62,6 @@ open class WheelViewFragment : BaseFragment() {
         buttonEdit = view.findViewById(R.id.button_edit)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
-        editVoltageStart = view.findViewById(R.id.edit_voltage_start)
         labelBattery = view.findViewById(R.id.label_battery)
         labelRate = view.findViewById(R.id.label_rate)
         labelRemainingRange = view.findViewById(R.id.label_remaining_range)
@@ -76,7 +74,6 @@ open class WheelViewFragment : BaseFragment() {
         textTotalRange = view.findViewById(R.id.view_total_range)
         spinnerRate = view.findViewById(R.id.spinner_rate)
 
-        widgets.addTextChangedListener(editVoltageStart, onUpdateVoltageStart())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
         widgets.setOnClickListener(buttonCharge, onCharge())
@@ -88,7 +85,6 @@ open class WheelViewFragment : BaseFragment() {
         external.runDB {
             fragments.runUI {
                 if (!wheel!!.isSold) {
-                    editVoltageStart.setText("${wheel!!.voltageStart}")
                     textName.text = wheel!!.name
                     textBtName.text = wheel!!.btName
 
@@ -109,7 +105,7 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onChangeRate(): (View?, Int, String) -> Unit = { view, position, text ->
         selectedRate = position
-        refreshDisplay(readVoltageStart(), readVoltageActual(), readKm())
+        refreshDisplay(readVoltageActual(), readKm())
     }
 
     fun onCharge(): (View) -> Unit = {
@@ -146,45 +142,19 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onUpdateKm() = { rawKm: String ->
         selectedRate = null
-        refreshDisplay(readVoltageStart(), readVoltageActual(), parseKm(rawKm))
+        refreshDisplay(readVoltageActual(), parseKm(rawKm))
         refreshRates()
     }
 
     fun onUpdateVoltageActual() = { voltageActual: String ->
         selectedRate = null
-        refreshDisplay(readVoltageStart(), parseVoltage(voltageActual), readKm())
+        refreshDisplay(parseVoltage(voltageActual), readKm())
         refreshRates()
-    }
-
-    fun onUpdateVoltageStart() = { voltageStart: String ->
-        var voltage = parseVoltage(voltageStart)
-        when {
-            voltage != null && isVoltageWithinRange(voltage) -> {
-                wheel = wheel!!.copy(voltageStart = voltage)
-                external.runDB { db -> db.saveWheel(wheel) }
-            }
-
-            else -> voltage = null
-        }
-
-        selectedRate = null
-        refreshDisplay(voltage, readVoltageActual(), readKm())
-        refreshRates()
-    }
-
-    private fun isVoltageWithinRange(voltage: Float): Boolean {
-        return !(voltage < wheel!!.voltageMin || (wheel!!.voltageMax + 3f) < voltage)
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
         wheel = wheel!!.copy(mileage = newMileage)
-
-        if (newKm < 0.1f) {
-            wheel = wheel!!.copy(voltageStart = newVoltage)
-            fragments.runUI { editVoltageStart.setText("${wheel!!.voltageStart}") }
-        }
-
         external.runDB { db -> db.saveWheel(wheel) }
 
         fragments.runUI {
@@ -235,18 +205,13 @@ open class WheelViewFragment : BaseFragment() {
         return parseVoltage(widgets.getText(editVoltageActual))
     }
 
-    internal open fun readVoltageStart(): Float? {
-        return parseVoltage(widgets.getText(editVoltageStart))
-    }
-
-    internal open fun refreshDisplay(voltageStart: Float?, voltageActual: Float?, km: Float?) {
+    internal open fun refreshDisplay(voltageActual: Float?, km: Float?) {
         when (voltageActual) {
             null -> clearDisplay()
             else -> {
                 updatePercentageFor(voltageActual)
 
                 when {
-                    voltageStart == null -> clearEstimates()
                     km == null -> clearEstimates()
                     else -> refreshEstimates(voltageActual, km)
                 }

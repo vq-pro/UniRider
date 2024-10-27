@@ -61,10 +61,6 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         setText(R.id.edit_km, strip(km, "km"))
     }
 
-    fun setStartingVoltageTo(voltage: String) {
-        setText(R.id.edit_voltage_start, strip(voltage, "V"))
-    }
-
     fun useTheseUpdateMileageValues(updatedMileages: DataTable) {
         for (row in updatedMileages.cells(1)) {
             val wheelName = row[0]
@@ -128,10 +124,6 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         assertThat("Wrong title", R.id.view_name, hasText("$name (Sold)"))
         assertThat("Charge button should not appear", R.id.button_charge, isHidden())
         assertThat("Connect button should not appear", R.id.button_connect_view, isHidden())
-    }
-
-    fun validateStartingVoltage(expectedStartingVoltage: Float) {
-        assertThat(R.id.edit_voltage_start, hasText("$expectedStartingVoltage"))
     }
 
     fun validateUnsold(selectedWheel: WheelEntity) {

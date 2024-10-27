@@ -97,21 +97,10 @@ class TestDomain(applicationContext: Context) {
                 val isSold = parseYesNo(row[col++])
 
                 WheelEntity(
-                    0,
-                    name,
-                    null,
-                    null,
-                    0,
-                    mileage,
-                    wh,
-                    voltageMax,
-                    voltageMin,
-                    voltageReserve,
-                    voltageMax,
-                    chargeRate,
-                    voltageFull,
-                    chargerOffset,
-                    isSold
+                    0, name, null, null,
+                    0, mileage, wh,
+                    voltageMax, voltageMin, voltageReserve,
+                    chargeRate, voltageFull, chargerOffset, isSold
                 )
             }
             .collect(toList())

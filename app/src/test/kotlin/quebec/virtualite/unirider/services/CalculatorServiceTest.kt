@@ -86,14 +86,14 @@ class CalculatorServiceTest {
     @Ignore
     @Test
     fun requiredVoltage() {
-        requiredVoltage(151.2f, 25f, 20f, 85.5f + WHEEL.chargerOffset)
-        requiredVoltage(151.2f, 35f, 40f, 91.8f + WHEEL.chargerOffset)
-        requiredVoltage(151.2f, 25f, 200f, WHEEL.voltageFull)
+        requiredVoltage(25f, 20f, 85.5f + WHEEL.chargerOffset)
+        requiredVoltage(35f, 40f, 91.8f + WHEEL.chargerOffset)
+        requiredVoltage(25f, 200f, WHEEL.voltageFull)
     }
 
-    private fun requiredVoltage(voltageStart: Float, whPerKm: Float, km: Float, expectedRequiredVoltage: Float) {
+    private fun requiredVoltage(whPerKm: Float, km: Float, expectedRequiredVoltage: Float) {
         // When
-        val result = service.requiredVoltage(WHEEL.copy(voltageStart = voltageStart), whPerKm, km)
+        val result = service.requiredVoltage(WHEEL, whPerKm, km)
 
         // Then
         assertThat(result, equalTo(expectedRequiredVoltage))

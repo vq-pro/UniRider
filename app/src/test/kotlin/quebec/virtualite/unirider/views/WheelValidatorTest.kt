@@ -29,7 +29,6 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_START
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
@@ -43,7 +42,7 @@ class WheelValidatorTest {
     private val WHEEL = WheelEntity(
         ID, NAME, DEVICE_NAME, DEVICE_ADDR,
         PREMILEAGE, MILEAGE, WH,
-        VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
+        VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
         CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
     )
 

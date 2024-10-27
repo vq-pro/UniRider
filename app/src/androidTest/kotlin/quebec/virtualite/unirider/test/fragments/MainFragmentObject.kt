@@ -18,13 +18,13 @@ import quebec.virtualite.unirider.views.MainFragment
 import quebec.virtualite.unirider.views.WheelRow
 import java.util.stream.Collectors.toList
 
-class MainFragmentObject(val app: TestApp, val domain: TestDomain) {
+class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
     val NEW_WHEEL_ENTRY = "<New>"
     val SOLD_WHEEL_ENTRY = "<Sold>"
 
     fun addWheel(): WheelEntity {
-        val newWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        val newWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
         selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
 
         return newWheel

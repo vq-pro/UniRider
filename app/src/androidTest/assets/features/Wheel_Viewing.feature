@@ -12,10 +12,8 @@ Feature: Wheel Viewing
       | Abrams      | 95      | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | 99.5V       | 1.5V           | Yes  |
     And I start the app
 
-#  FIXME-1 Eliminate starting voltage
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
-#    And I set the starting voltage to <starting voltage>V
     And I set the distance to <distance>
     When I set the actual voltage to <voltage>
     Then it displays these estimates:
@@ -47,7 +45,6 @@ Feature: Wheel Viewing
   @Ignore
   Scenario: Calculating estimated values when changing rate
     Given I select the Sherman Max
-    And I set the starting voltage to 100.6V
     And I set the distance to 20 km
     And I set the actual voltage to 94.1V
     And it displays these estimates:
@@ -60,7 +57,6 @@ Feature: Wheel Viewing
 
   Scenario Outline: Calculating percentage [<wheel> / <voltage>]
     Given I select the <wheel>
-    And I set the starting voltage to <voltage>
     When I set the actual voltage to <voltage>
     Then it displays a percentage of <battery>
     Examples:
@@ -98,14 +94,6 @@ Feature: Wheel Viewing
     And it displays these estimates:
       | remaining | total range | wh/km |
       | 44.0      | 82.0        | 0.0   |
-
-  Scenario: Saving the starting voltage
-    Given I select the Sherman
-    And the starting voltage is 100.8V
-    When I set the starting voltage to 98.5V
-    And I go back to the main view
-    And I select the Sherman
-    Then the starting voltage is 98.5V
 
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
     Given the Sherman has a previous mileage of <previous mileage>

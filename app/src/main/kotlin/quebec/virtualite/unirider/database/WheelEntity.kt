@@ -5,8 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "wheel")
 data class WheelEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    @PrimaryKey(autoGenerate = true) val id: Long,
     val name: String,
     val btName: String?,
     val btAddr: String?,
@@ -16,7 +15,6 @@ data class WheelEntity(
     val voltageMax: Float,
     val voltageMin: Float,
     val voltageReserve: Float,
-    val voltageStart: Float,
     val chargeRate: Float,
     val voltageFull: Float,
     val chargerOffset: Float,

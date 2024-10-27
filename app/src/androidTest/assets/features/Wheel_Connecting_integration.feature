@@ -29,19 +29,4 @@ Feature: Wheel Connecting
     And the voltage is updated to 58.6V and the battery 29.5%
     And the km is updated to 12.2
 
-  Scenario Outline: When reconnecting, set the starting voltage depending on km [<km>]
-    Given this simulated device:
-      | Bt Name    | Bt Address        | Km   | Mileage | Voltage   |
-      | KS-14S-SIM | C0:C1:C2:C3:C4:C5 | <km> | 705.615 | <voltage> |
-    And this wheel is connected:
-      | Name | Bt Name    | Bt Address        |
-      | 14S  | KS-14S-SIM | C0:C1:C2:C3:C4:C5 |
-    And I select the 14S
-    When I reconnect to the wheel
-    Then the starting voltage is <starting voltage>
-    Examples:
-      | km  | voltage | starting voltage |
-      | 0.0 | 66.1V   | 66.1V            |
-      | 0.1 | 66.5V   | 67.2V            |
-
 #  FIXME-2 Scenario for adding a wheel and connecting it right away

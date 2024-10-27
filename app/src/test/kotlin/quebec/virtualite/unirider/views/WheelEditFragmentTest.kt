@@ -44,7 +44,6 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_START
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
@@ -172,7 +171,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Given
         BaseFragment.wheel = null
 
-        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -195,7 +194,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         BaseFragment.wheel = WheelEntity(
             ID, NAME, DEVICE_NAME, DEVICE_ADDR,
             0, 0, WH,
-            VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE, VOLTAGE_START,
+            VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
             CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET,
             NOT_SOLD
         )
@@ -546,7 +545,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verify(fragment).enableSaveIfChanged()
 
         assertThat(
-            fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = VOLTAGE_MAX_NEW, voltageStart = VOLTAGE_MAX_NEW))
+            fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = VOLTAGE_MAX_NEW))
         )
     }
 
@@ -559,7 +558,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageMax().invoke(" ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = 0f, voltageStart = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = 0f)))
     }
 
     @Test
@@ -571,7 +570,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageMax().invoke("ab ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = 0f, voltageStart = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = 0f)))
     }
 
     @Test
@@ -583,7 +582,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageMax().invoke("${VOLTAGE_MAX_NEW + 0.001f} ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = VOLTAGE_MAX_NEW, voltageStart = VOLTAGE_MAX_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = VOLTAGE_MAX_NEW)))
     }
 
     @Test
@@ -735,21 +734,10 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     private fun definedWheel() = WheelEntity(
-        ID,
-        NAME,
-        DEVICE_NAME,
-        DEVICE_ADDR,
-        PREMILEAGE,
-        MILEAGE,
-        WH,
-        VOLTAGE_MAX,
-        VOLTAGE_MIN,
-        VOLTAGE_RESERVE,
-        VOLTAGE_START,
-        CHARGE_RATE,
-        VOLTAGE_FULL,
-        CHARGER_OFFSET,
-        NOT_SOLD
+        ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+        PREMILEAGE, MILEAGE, WH,
+        VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
+        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
     )
 
     private fun initUpdate() {

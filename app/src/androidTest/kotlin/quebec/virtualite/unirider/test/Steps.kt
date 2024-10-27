@@ -292,12 +292,6 @@ class Steps {
     fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String, expectedStartingVoltage: Float) {
         viewFragment.validateMileageUpdated(expectedMileage)
         viewFragment.validateName(expectedName)
-        viewFragment.validateStartingVoltage(expectedStartingVoltage)
-    }
-
-    @Then("^the starting voltage is (.*)V$")
-    fun startingVoltageIs(expectedStartingVoltage: Float) {
-        viewFragment.validateStartingVoltage(expectedStartingVoltage)
     }
 
     @Then("^it displays a percentage of (.*?)%$")
@@ -428,11 +422,6 @@ class Steps {
     @Given("^I set the distance to (.*?)$")
     fun setDistanceTo(km: String) {
         viewFragment.setDistanceTo(km)
-    }
-
-    @Given("^I set the starting voltage to (.*)$")
-    fun setStartingVoltageTo(startingVoltage: String) {
-        viewFragment.setStartingVoltageTo(startingVoltage)
     }
 
     @Then("the wheel can be saved")
