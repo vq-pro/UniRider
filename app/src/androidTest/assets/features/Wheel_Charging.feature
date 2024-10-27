@@ -9,7 +9,6 @@ Feature: Wheel Charging
       | Sherman Max | LK1234  | C0:C1:C2:C3:C4:C5 |
     And I start the app
     And I select the Sherman Max
-    And I set the starting voltage to 100.6V
     And I set the actual voltage to 86.4V
     And I set the distance to 50 km
     And I charge the wheel

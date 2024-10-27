@@ -22,8 +22,10 @@ Feature: Wheel Viewing
     Examples:
       | wheel       | distance | voltage | remaining | total |
       | Sherman L   | 20 km    | 141.1V  | 40.5      | 60.5  |
-      | Sherman Max | 81 km    | 83.5V   | 9.5       | 90.5  |
       | Sherman Max | 42 km    | 91V     | 39.3      | 81.3  |
+      | Sherman Max | 81 km    | 83.5V   | 9.5       | 90.5  |
+      | Sherman Max | 60 km    | 83.5V   | 7.0       | 67.0  |
+      | Sherman Max | 40 km    | 83.5V   | 4.7       | 44.7  |
       | S18         | 21 km    | 72V     | 6.1       | 27.1  |
       | S18         | 42 km    | 67V     | 0         | 42.0  |
 
@@ -80,7 +82,7 @@ Feature: Wheel Viewing
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
     Given the Sherman has a previous mileage of <previous mileage>
     When I select the Sherman
-    Then the details view shows the Sherman with a mileage of <actual mileage> and a starting voltage of 100.8V
+    Then the details view shows the Sherman with a mileage of <actual mileage>
     Examples:
       | previous mileage | actual mileage |
       | 0 km             | 17622 km       |

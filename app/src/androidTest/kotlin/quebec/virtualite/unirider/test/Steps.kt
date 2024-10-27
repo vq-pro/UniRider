@@ -284,8 +284,8 @@ class Steps {
         editFragment.deleteWheel()
     }
 
-    @Then("^the details view shows the (.*) with a mileage of (.*) km and a starting voltage of (.*)V$")
-    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String, expectedStartingVoltage: Float) {
+    @Then("^the details view shows the (.*) with a mileage of (.*) km$")
+    fun detailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String) {
         viewFragment.validateMileageUpdated(expectedMileage)
         viewFragment.validateName(expectedName)
     }
