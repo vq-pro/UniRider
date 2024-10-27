@@ -52,10 +52,10 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 95.3%   |
       | Sherman Max | 91.9V   | 53.6%   |
 
-#    FIXME-1 Enable charging at all times
-  @Ignore
   Scenario: => Charging the wheel
-    When I select the Sherman
+    Given I select the Sherman
+    And I cannot charge the wheel
+    When I set the actual voltage to 91.9V
     Then I can charge the wheel
 
   Scenario: => Editing the wheel

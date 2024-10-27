@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.test.fragments
 
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import cucumber.api.DataTable
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
@@ -82,6 +83,10 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
     fun validateBluetoothName() {
         assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
+    }
+
+    fun validateCanCharge() {
+        assertThat("Charge button is disabled", R.id.button_charge, isEnabled())
     }
 
     fun validateCannotCharge() {

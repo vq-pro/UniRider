@@ -17,9 +17,6 @@ import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
 import kotlin.math.roundToInt
 
-const val MAXIMUM_RATE_TRESHOLD = 200f
-const val MINIMUM_RATE_TRESHOLD = 10f
-
 open class WheelViewFragment : BaseFragment() {
 
     internal lateinit var buttonCharge: Button
@@ -142,6 +139,8 @@ open class WheelViewFragment : BaseFragment() {
     internal open fun clearDisplay() {
         clearPercentage()
         clearEstimates()
+
+        widgets.disable(buttonCharge)
     }
 
     internal open fun clearEstimates() {
@@ -149,7 +148,6 @@ open class WheelViewFragment : BaseFragment() {
             widgets.hide(
                 textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
             )
-            widgets.disable(buttonCharge)
         }
     }
 
@@ -186,6 +184,8 @@ open class WheelViewFragment : BaseFragment() {
         when (voltageActual) {
             null -> clearDisplay()
             else -> {
+                widgets.enable(buttonCharge)
+
                 updatePercentageFor(voltageActual)
 
                 when {
@@ -206,7 +206,6 @@ open class WheelViewFragment : BaseFragment() {
             widgets.show(
                 textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
             )
-            widgets.enable(buttonCharge)
         }
     }
 

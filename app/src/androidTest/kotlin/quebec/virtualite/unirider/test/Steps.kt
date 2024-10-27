@@ -54,6 +54,7 @@ class Steps {
 
     @Then("I can charge the wheel")
     fun canChargeWheel() {
+        viewFragment.validateCanCharge()
         viewFragment.charge()
         chargeFragment.validateView()
     }
