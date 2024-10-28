@@ -28,5 +28,6 @@ Feature: Wheel Connecting
     Then the mileage is updated to 1706 km
     And the voltage is updated to 58.6V and the battery 29.5%
     And the km is updated to 10.2
+    And I can charge the wheel
 
 #  FIXME-2 Scenario for adding a wheel and connecting it right away

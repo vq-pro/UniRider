@@ -312,8 +312,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedEditKm).setText("$KM_NEW")
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
-
-        verify(mockedWidgets).enable(mockedButtonCharge)
     }
 
     @Test

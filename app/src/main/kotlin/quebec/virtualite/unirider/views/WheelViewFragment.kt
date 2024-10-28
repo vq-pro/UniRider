@@ -138,8 +138,6 @@ open class WheelViewFragment : BaseFragment() {
             textMileage.text = textKm(wheel!!.totalMileage())
             editKm.setText("$newKm")
             editVoltageActual.setText("$newVoltage")
-
-            widgets.enable(buttonCharge)
         }
     }
 
