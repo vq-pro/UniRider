@@ -20,8 +20,8 @@ Feature: Wheel Connecting - End-2-End
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name      | Updated mileage |
-      | Lynx      | 10867           |
-      | Sherman-L | 3356            |
+      | Lynx      | 11070           |
+      | Sherman-L | 4352            |
     And I start the app
 
   Scenario Outline: Connecting to a wheel for the first time - <wheel>
