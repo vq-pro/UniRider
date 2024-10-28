@@ -297,13 +297,13 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         injectMocks()
         mockCheckFullCharge(true)
 
-        given(mockedCalculatorService.requiredFullVoltage(any())).willReturn(WHEEL.voltageFull)
+        given(mockedCalculatorService.requiredVoltageFull(any())).willReturn(WHEEL.voltageFull)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        verify(mockedCalculatorService).requiredFullVoltage(WHEEL)
+        verify(mockedCalculatorService).requiredVoltageFull(WHEEL)
         verifyVoltageRequired(WHEEL.voltageFull)
     }
 

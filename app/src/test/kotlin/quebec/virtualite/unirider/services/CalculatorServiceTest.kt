@@ -19,15 +19,6 @@ class CalculatorServiceTest {
     private val WHEEL = SHERMAN_L_5
 
     @Test
-    fun adjustedReserve() {
-        // When
-        val result = service.adjustedReserve(WHEEL)
-
-        // Then
-        assertThat(result, equalTo(WHEEL.voltageReserve + 2))
-    }
-
-    @Test
     fun estimatedValues() {
         estimatedValues(SHERMAN_L_5, 141.1f, 20.0f, 40.5f, 60.5f);
         estimatedValues(SHERMAN_L_5, 133.0f, 39.9f, 19.7f, 59.6f);
@@ -98,9 +89,9 @@ class CalculatorServiceTest {
     }
 
     @Test
-    fun requiredFullVoltage() {
+    fun requiredVoltageFull() {
         // When
-        val result = service.requiredFullVoltage(WHEEL)
+        val result = service.requiredVoltageFull(WHEEL)
 
         // Then
         assertThat(result, equalTo(WHEEL.voltageFull))
