@@ -22,6 +22,7 @@ import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR3
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME2
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME3
+import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET3
 import quebec.virtualite.unirider.TestDomain.ID3
 import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
@@ -141,7 +142,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
                     ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
                     PREMILEAGE3, MILEAGE_NEW, WH3,
                     VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3,
-                    CHARGE_RATE3, VOLTAGE_FULL3, CHARGER_OFFSET3, SOLD
+                    CHARGE_RATE3, VOLTAGE_FULL3, CHARGER_OFFSET3, DISTANCE_OFFSET3, SOLD
                 )
             )
         )

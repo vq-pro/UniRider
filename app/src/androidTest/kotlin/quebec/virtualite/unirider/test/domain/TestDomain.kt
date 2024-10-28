@@ -76,6 +76,7 @@ class TestDomain(applicationContext: Context) {
                     "Charge Rate",
                     "Full Charge",
                     "Charger Offset",
+                    "Distance Offset",
                     "Sold"
                 )
             )
@@ -94,13 +95,14 @@ class TestDomain(applicationContext: Context) {
                 val chargeRate = voltsPerHourOf(row[col++])
                 val voltageFull = voltageOf(row[col++])
                 val chargerOffset = voltageOf(row[col++])
+                val distanceOffset = floatOf(row[col++])
                 val isSold = parseYesNo(row[col++])
 
                 WheelEntity(
                     0, name, null, null,
                     0, mileage, wh,
                     voltageMax, voltageMin, voltageReserve,
-                    chargeRate, voltageFull, chargerOffset, isSold
+                    chargeRate, voltageFull, chargerOffset, distanceOffset, isSold
                 )
             }
             .collect(toList())

@@ -23,6 +23,7 @@ import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
+import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.ITEM_SOLD
 import quebec.virtualite.unirider.TestDomain.KM
@@ -305,12 +306,14 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE_NEW, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
-                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
+                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET, NOT_SOLD
             )
         )
         verify(mockedEditKm).setText("$KM_NEW")
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
+
+        verify(mockedWidgets).enable(mockedButtonCharge)
     }
 
     @Test

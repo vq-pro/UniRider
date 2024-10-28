@@ -94,7 +94,6 @@ open class WheelViewFragment : BaseFragment() {
         fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
     }
 
-    //    FIXME-1 Use the wheel's distance correction constant
     fun onConnect(): (View) -> Unit = {
         if (wheel!!.btName == null) {
             fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
@@ -103,11 +102,15 @@ open class WheelViewFragment : BaseFragment() {
             fragments.runWithWait {
                 external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
                     fragments.doneWaiting(it) {
-                        val newKm = round(it!!.km, NB_DECIMALS)
+                        val newKm = it!!.km / wheel!!.distanceOffset
                         val newMileage = it.mileage.roundToInt()
-                        val newVoltage = round(it.voltage, NB_DECIMALS)
+                        val newVoltage = it.voltage
 
-                        updateWheel(newKm, newMileage, newVoltage)
+                        updateWheel(
+                            round(newKm, NB_DECIMALS),
+                            newMileage,
+                            round(newVoltage, NB_DECIMALS)
+                        )
                     }
                 }
             }
@@ -135,6 +138,8 @@ open class WheelViewFragment : BaseFragment() {
             textMileage.text = textKm(wheel!!.totalMileage())
             editKm.setText("$newKm")
             editVoltageActual.setText("$newVoltage")
+
+            widgets.enable(buttonCharge)
         }
     }
 

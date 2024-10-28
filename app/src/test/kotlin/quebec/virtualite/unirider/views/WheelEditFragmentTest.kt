@@ -26,6 +26,8 @@ import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE_NEW
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
+import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET
+import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET_NEW
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
@@ -66,6 +68,9 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @Mock
     lateinit var mockedEditChargerOffset: EditText
+
+    @Mock
+    lateinit var mockedEditDistanceOffset: EditText
 
     @Mock
     lateinit var mockedEditMileage: EditText
@@ -129,6 +134,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.check_sold, fragment.switchSold, mockedSwitchSold)
         verifyFieldAssignment(R.id.edit_name, fragment.editChargeRate, mockedEditChargeRate)
         verifyFieldAssignment(R.id.edit_charger_offset, fragment.editChargerOffset, mockedEditChargerOffset)
+        verifyFieldAssignment(R.id.edit_distance_offset, fragment.editDistanceOffset, mockedEditDistanceOffset)
         verifyFieldAssignment(R.id.edit_mileage, fragment.editMileage, mockedEditMileage)
         verifyFieldAssignment(R.id.edit_name, fragment.editName, mockedEditName)
         verifyFieldAssignment(R.id.edit_premileage, fragment.editPreMileage, mockedEditPreMileage)
@@ -140,6 +146,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
         verifyOnUpdateText(mockedEditChargerOffset, "onUpdateChargerOffset")
+        verifyOnUpdateText(mockedEditDistanceOffset, "onUpdateDistanceOffset")
         verifyOnUpdateText(mockedEditName, "onUpdateName")
         verifyOnUpdateText(mockedEditPreMileage, "onUpdatePreMileage")
         verifyOnUpdateText(mockedEditMileage, "onUpdateMileage")
@@ -154,6 +161,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         verify(mockedEditChargeRate).setText("$CHARGE_RATE")
         verify(mockedEditChargerOffset).setText("$CHARGER_OFFSET")
+        verify(mockedEditDistanceOffset).setText("$DISTANCE_OFFSET")
         verify(mockedEditName).setText(NAME)
         verify(mockedEditPreMileage).setText("$PREMILEAGE")
         verify(mockedEditMileage).setText("$MILEAGE")
@@ -171,7 +179,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Given
         BaseFragment.wheel = null
 
-        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -195,7 +203,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
             ID, NAME, DEVICE_NAME, DEVICE_ADDR,
             0, 0, WH,
             VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
-            CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET,
+            CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET,
             NOT_SOLD
         )
 
@@ -388,6 +396,56 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         // Then
         assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = CHARGER_OFFSET_NEW)))
+    }
+
+    @Test
+    fun onUpdateDistanceOffset() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateDistanceOffset().invoke("$DISTANCE_OFFSET_NEW ")
+
+        // Then
+        verify(fragment).enableSaveIfChanged()
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(distanceOffset = DISTANCE_OFFSET_NEW)))
+    }
+
+    @Test
+    fun onUpdateDistanceOffset_whenEmpty_zero() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateDistanceOffset().invoke(" ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(distanceOffset = 0f)))
+    }
+
+    @Test
+    fun onUpdateDistanceOffset_whenInvalid_zero() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateDistanceOffset().invoke("ab ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(distanceOffset = 0f)))
+    }
+
+    @Test
+    fun onUpdateDistanceOffset_withTooManyDecimals() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateDistanceOffset().invoke("${DISTANCE_OFFSET_NEW + 0.00001f} ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(distanceOffset = DISTANCE_OFFSET_NEW)))
     }
 
     @Test
@@ -737,7 +795,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         ID, NAME, DEVICE_NAME, DEVICE_ADDR,
         PREMILEAGE, MILEAGE, WH,
         VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
-        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
+        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET, NOT_SOLD
     )
 
     private fun initUpdate() {
@@ -757,6 +815,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         mockField(R.id.check_sold, mockedSwitchSold)
         mockField(R.id.edit_charge_rate, mockedEditChargeRate)
         mockField(R.id.edit_charger_offset, mockedEditChargerOffset)
+        mockField(R.id.edit_distance_offset, mockedEditDistanceOffset)
         mockField(R.id.edit_name, mockedEditName)
         mockField(R.id.edit_premileage, mockedEditPreMileage)
         mockField(R.id.edit_mileage, mockedEditMileage)

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "56b07a8f397535d618fc01d76b98c4d1",
+    "identityHash": "28978db4b2d6e6cfdb3650b9790e6f9f",
     "entities": [
       {
         "tableName": "wheel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `btName` TEXT, `btAddr` TEXT, `premileage` INTEGER NOT NULL, `mileage` INTEGER NOT NULL, `wh` INTEGER NOT NULL, `voltageMax` REAL NOT NULL, `voltageMin` REAL NOT NULL, `voltageReserve` REAL NOT NULL, `chargeRate` REAL NOT NULL, `voltageFull` REAL NOT NULL, `chargerOffset` REAL NOT NULL, `isSold` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `btName` TEXT, `btAddr` TEXT, `premileage` INTEGER NOT NULL, `mileage` INTEGER NOT NULL, `wh` INTEGER NOT NULL, `voltageMax` REAL NOT NULL, `voltageMin` REAL NOT NULL, `voltageReserve` REAL NOT NULL, `chargeRate` REAL NOT NULL, `voltageFull` REAL NOT NULL, `chargerOffset` REAL NOT NULL, `distanceOffset` REAL NOT NULL, `isSold` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -87,6 +87,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "distanceOffset",
+            "columnName": "distanceOffset",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
             "fieldPath": "isSold",
             "columnName": "isSold",
             "affinity": "INTEGER",
@@ -106,7 +112,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '56b07a8f397535d618fc01d76b98c4d1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '28978db4b2d6e6cfdb3650b9790e6f9f')"
     ]
   }
 }

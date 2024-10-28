@@ -5,18 +5,18 @@ Feature: Wheel Connecting - End-2-End
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Charger Offset | Sold |
-      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | 99.5V       | 1.5V           | Yes  |
-      | 14S         | 1635    | 840  | 48V         | 55V             | 67.2V       | 4V/h        | 65.5V       | 1.5V           | No   |
-      | S18         | 3143    | 1110 | 60V         | 68V             | 84V         | 4V/h        | 81.5V       | 1.5V           | Yes  |
-      | V10F        | 1600    | 960  | 65V         | 70V             | 84V         | 2V/h        | 82V         | 1.5V           | Yes  |
-      | Sherman     | 20106   | 3200 | 75.6V       | 80V             | 100.8V      | 7.5V/h      | 99.5V       | 1.5V           | No   |
-      | Sherman Max | 14530   | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.5V       | 1.5V           | Yes  |
-      | S18-SE      | 1023    | 900  | 60V         | 66V             | 84V         | 4V/h        | 81.5V       | 1.5V           | No   |
-      | Sherman-S   | 23427   | 3600 | 69.6V       | 75V             | 100.8V      | 9.5V/h      | 99.5V       | 1.5V           | No   |
-      | Abrams      | 3675    | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | 99.5V       | 1.5V           | Yes  |
-      | Lynx        | 2000    | 2700 | 104.4V      | 120V            | 151.2V      | 18.5V/h     | 149.3V      | 1.8V           | No   |
-      | Sherman-L   | 2000    | 4000 | 104.4V      | 120V            | 151.2V      | 21V/h       | 149.3V      | 1.8V           | No   |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
+      | Nikola+     | 2927    | 1800 | 78V         | 82V             | 100.8V      | 6V/h        | 99.5V       | 1.5V           | 1               | Yes  |
+      | 14S         | 1635    | 840  | 48V         | 55V             | 67.2V       | 4V/h        | 65.5V       | 1.5V           | 1               | No   |
+      | S18         | 3143    | 1110 | 60V         | 68V             | 84V         | 4V/h        | 81.5V       | 1.5V           | 1               | Yes  |
+      | V10F        | 1600    | 960  | 65V         | 70V             | 84V         | 2V/h        | 82V         | 1.5V           | 1               | Yes  |
+      | Sherman     | 20106   | 3200 | 75.6V       | 80V             | 100.8V      | 7.5V/h      | 99.5V       | 1.5V           | 1               | No   |
+      | Sherman Max | 14530   | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1               | Yes  |
+      | S18-SE      | 1023    | 900  | 60V         | 66V             | 84V         | 4V/h        | 81.5V       | 1.5V           | 1               | No   |
+      | Sherman-S   | 23427   | 3600 | 69.6V       | 75V             | 100.8V      | 9.5V/h      | 99.5V       | 1.5V           | 1               | No   |
+      | Abrams      | 3675    | 2700 | 74.5V       | 80V             | 100.8V      | 14V/h       | 99.5V       | 1.5V           | 1               | Yes  |
+      | Lynx        | 2000    | 2700 | 104.4V      | 120V            | 151.2V      | 18.5V/h     | 149.3V      | 1.8V           | 1.0181          | No   |
+      | Sherman-L   | 2000    | 4000 | 104.4V      | 120V            | 151.2V      | 21V/h       | 149.3V      | 1.8V           | 1.0181          | No   |
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name      | Updated mileage |

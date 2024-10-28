@@ -27,6 +27,7 @@ open class WheelValidator {
 
         return (updatedWheel.chargeRate != initialWheel!!.chargeRate) ||
                 (updatedWheel.chargerOffset != initialWheel.chargerOffset) ||
+                (updatedWheel.distanceOffset != initialWheel.distanceOffset) ||
                 (updatedWheel.isSold != initialWheel.isSold) ||
                 (updatedWheel.mileage != initialWheel.mileage) ||
                 (updatedWheel.name != initialWheel.name) ||

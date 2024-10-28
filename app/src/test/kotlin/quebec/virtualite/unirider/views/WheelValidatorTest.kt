@@ -12,6 +12,8 @@ import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE_NEW
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
+import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET
+import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET_NEW
 import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
@@ -43,7 +45,7 @@ class WheelValidatorTest {
         ID, NAME, DEVICE_NAME, DEVICE_ADDR,
         PREMILEAGE, MILEAGE, WH,
         VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
-        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, NOT_SOLD
+        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET, NOT_SOLD
     )
 
     @Test
@@ -95,6 +97,10 @@ class WheelValidatorTest {
         // Charger offset
         canSave(WHEEL.copy(chargerOffset = CHARGER_OFFSET_NEW))
         canSave(WHEEL.copy(chargerOffset = 0f))
+
+        // Distance offset
+        canSave(WHEEL.copy(distanceOffset = DISTANCE_OFFSET_NEW))
+        canSave(WHEEL.copy(distanceOffset = 0f))
 
         // Sold indicator
         canSave(WHEEL.copy(isSold = SOLD))
