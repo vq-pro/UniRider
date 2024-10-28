@@ -140,8 +140,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Then
         verify(fragment).clearPercentage()
         verify(fragment).clearEstimates()
-
-        verify(mockedWidgets).disable(mockedButtonCharge)
     }
 
     @Test
@@ -156,6 +154,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedWidgets).hide(
             mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
         )
+        verify(mockedWidgets).disable(mockedButtonCharge)
     }
 
     @Test
@@ -485,9 +484,8 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.refreshDisplay(VOLTAGE, KM)
 
         // Then
-        verify(mockedWidgets).enable(mockedButtonCharge)
-        verify(fragment).updatePercentageFor(VOLTAGE)
         verify(fragment).refreshEstimates(VOLTAGE, KM)
+        verify(fragment).updatePercentageFor(VOLTAGE)
     }
 
     @Test
@@ -539,6 +537,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedWidgets).show(
             mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
         )
+        verify(mockedWidgets).enable(mockedButtonCharge)
 
         assertThat(fragment.estimates, equalTo(estimates))
     }

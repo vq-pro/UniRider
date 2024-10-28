@@ -60,7 +60,8 @@ Feature: Wheel Viewing
     Given I select the Sherman
     And I cannot charge the wheel
     When I set the actual voltage to 91.9V
-    And I set the distance to 20 km
+    Then I cannot charge the wheel
+    When I set the distance to 20 km
     Then I can charge the wheel
 
   Scenario: => Editing the wheel

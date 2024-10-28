@@ -87,7 +87,6 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
-    //    FIXME-1 Make charge button appear only for voltage & km
     fun onCharge(): (View) -> Unit = {
         chargeContext.km = readKm()!!
         chargeContext.voltage = readVoltageActual()!!
@@ -142,8 +141,6 @@ open class WheelViewFragment : BaseFragment() {
     internal open fun clearDisplay() {
         clearPercentage()
         clearEstimates()
-
-        widgets.disable(buttonCharge)
     }
 
     internal open fun clearEstimates() {
@@ -151,6 +148,7 @@ open class WheelViewFragment : BaseFragment() {
             widgets.hide(
                 textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
             )
+            widgets.disable(buttonCharge)
         }
     }
 
@@ -187,8 +185,6 @@ open class WheelViewFragment : BaseFragment() {
         when (voltageActual) {
             null -> clearDisplay()
             else -> {
-                widgets.enable(buttonCharge)
-
                 updatePercentageFor(voltageActual)
 
                 when {
@@ -209,6 +205,7 @@ open class WheelViewFragment : BaseFragment() {
             widgets.show(
                 textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
             )
+            widgets.enable(buttonCharge)
         }
     }
 
