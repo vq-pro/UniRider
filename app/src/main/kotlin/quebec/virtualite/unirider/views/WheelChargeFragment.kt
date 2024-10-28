@@ -31,11 +31,9 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var switchFullCharge: SwitchMaterial
 
-    private val dateUtils = DateUtils()
-
-    //    FIXME-1 Replace by straight chargerContext.voltage
     internal var parmVoltageDisconnectedFromCharger: Float? = 0f
 
+    private val dateUtils = DateUtils()
     private var calculatorService = CalculatorService()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
