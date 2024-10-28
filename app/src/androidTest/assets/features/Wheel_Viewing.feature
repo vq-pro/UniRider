@@ -21,7 +21,9 @@ Feature: Wheel Viewing
       | <remaining> | <total>     |
     Examples:
       | wheel       | distance | voltage | remaining | total |
+      | Sherman L   | 10.5 km  | 142.8V  | 50.1      | 60.6  |
       | Sherman L   | 20 km    | 141.1V  | 40.5      | 60.5  |
+      | Sherman L   | 30 km    | 136.9V  | 30.5      | 60.5  |
       | Sherman Max | 42 km    | 91V     | 39.3      | 81.3  |
       | Sherman Max | 81 km    | 83.5V   | 9.5       | 90.5  |
       | Sherman Max | 60 km    | 83.5V   | 7.0       | 67.0  |
@@ -58,6 +60,7 @@ Feature: Wheel Viewing
     Given I select the Sherman
     And I cannot charge the wheel
     When I set the actual voltage to 91.9V
+    And I set the distance to 20 km
     Then I can charge the wheel
 
   Scenario: => Editing the wheel

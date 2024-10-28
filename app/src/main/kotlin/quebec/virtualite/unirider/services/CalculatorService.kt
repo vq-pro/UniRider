@@ -84,13 +84,36 @@ open class CalculatorService {
         return (wheel!!).voltageFull
     }
 
-    //    FIXME-1 Implement using km, voltage, and km desired
-    open fun requiredVoltage(wheel: WheelEntity?, km: Float): Float {
-        return round(0f, NB_DECIMALS)
+    open fun requiredVoltage(wheel: WheelEntity?, voltage: Float, km: Float, kmRequested: Float): Float {
+        val estimatedTotalRange = estimatedValues(wheel!!, voltage, km).totalRange
+        if (kmRequested >= estimatedTotalRange) {
+            return wheel.voltageFull
+        }
+
+        val soRRequested = kmRequested / estimatedTotalRange * 100
+
+        return getRequiredVoltage(wheel, soRRequested);
     }
 
     internal fun adjustedReserve(wheel: WheelEntity): Float {
         return wheel.voltageReserve + 2
+    }
+
+    private fun getNbCellsPerPack(wheel: WheelEntity) = wheel.voltageMax / 4.2f
+
+    private fun getRequiredVoltage(wheel: WheelEntity, soRRequested: Float): Float {
+        var upperRow = SOR_PER_CELL[0]
+        for (row in SOR_PER_CELL) {
+            if (soRRequested > row.soR) {
+                val averageCellRequested = prorateAverageCell(soRRequested, upperRow, row)
+                val requiredVoltage = averageCellRequested * getNbCellsPerPack(wheel) / 1000f
+                return round(requiredVoltage + wheel.chargerOffset, NB_DECIMALS)
+            }
+
+            upperRow = row
+        }
+
+        return round(0f, NB_DECIMALS)
     }
 
     private fun getSoR(wheel: WheelEntity, voltage: Float): Float {
@@ -100,7 +123,7 @@ open class CalculatorService {
         if (voltage > wheel.voltageMax)
             return -1f
 
-        val numberOfCellsPerPack = wheel.voltageMax / 4.2f
+        val numberOfCellsPerPack = getNbCellsPerPack(wheel)
         val averageCellFloat = voltage / numberOfCellsPerPack
         val averageCellInt = round(averageCellFloat * 1000, 0).toInt()
 
@@ -114,6 +137,17 @@ open class CalculatorService {
         }
 
         return 0f
+    }
+
+    private fun prorateAverageCell(soR: Float, upperRow: SoRPerCell, lowerRow: SoRPerCell): Float {
+        val diffSoRBetweenRows = upperRow.soR - lowerRow.soR
+        val diffActual = soR - lowerRow.soR
+        val percentActual = diffActual.toFloat() / diffSoRBetweenRows.toFloat()
+
+        val diffUpperToLowerCell = upperRow.averageCell - lowerRow.averageCell
+        val diffCell = diffUpperToLowerCell * percentActual
+
+        return lowerRow.averageCell + diffCell
     }
 
     private fun prorateSoR(averageCell: Int, upperRow: SoRPerCell, lowerRow: SoRPerCell): Float {
@@ -136,13 +170,5 @@ open class CalculatorService {
     private fun rawPercentage(wheel: WheelEntity, voltage: Float): Float {
         val voltageRange = wheel.voltageMax - wheel.voltageMin
         return rawPercentage(voltage - wheel.voltageMin, voltageRange)
-    }
-
-    private fun wh(wheel: WheelEntity, highVoltage: Float, lowVoltage: Float): Float {
-        val percentageHigh = rawPercentage(wheel, highVoltage)
-        val percentageLow = rawPercentage(wheel, lowVoltage)
-
-        val percentageForSegment = percentageHigh - percentageLow
-        return percentageForSegment * wheel.wh
     }
 }

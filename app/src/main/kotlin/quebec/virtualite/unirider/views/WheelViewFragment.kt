@@ -87,12 +87,15 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
+    //    FIXME-1 Make charge button appear only for voltage & km
     fun onCharge(): (View) -> Unit = {
+        chargeContext.km = readKm()!!
         chargeContext.voltage = readVoltageActual()!!
 
         fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
     }
 
+    //    FIXME-1 Use the wheel's distance correction constant
     fun onConnect(): (View) -> Unit = {
         if (wheel!!.btName == null) {
             fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)

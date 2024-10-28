@@ -2,7 +2,6 @@ package quebec.virtualite.unirider.services
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsEqual.equalTo
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -83,17 +82,16 @@ class CalculatorServiceTest {
         assertThat(percentage, equalTo(expectedPercentage))
     }
 
-    @Ignore
     @Test
     fun requiredVoltage() {
-        requiredVoltage(25f, 20f, 85.5f + WHEEL.chargerOffset)
-        requiredVoltage(35f, 40f, 91.8f + WHEEL.chargerOffset)
-        requiredVoltage(25f, 200f, WHEEL.voltageFull)
+        requiredVoltage(136.9f, 30f, 50f, 142.8f + WHEEL.chargerOffset)
+        requiredVoltage(129f, 40f, 25f, 136.7f + WHEEL.chargerOffset)
+        requiredVoltage(131f, 30f, 200f, WHEEL.voltageFull)
     }
 
-    private fun requiredVoltage(whPerKm: Float, km: Float, expectedRequiredVoltage: Float) {
+    private fun requiredVoltage(voltage: Float, km: Float, kmRequested: Float, expectedRequiredVoltage: Float) {
         // When
-        val result = service.requiredVoltage(WHEEL, km)
+        val result = service.requiredVoltage(WHEEL, voltage, km, kmRequested)
 
         // Then
         assertThat(result, equalTo(expectedRequiredVoltage))

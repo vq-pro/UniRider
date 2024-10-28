@@ -253,12 +253,13 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedButtonConnect).visibility = GONE
     }
 
-    //    FIXME-1 Memorize KM and VOLTAGE in the context, for partial charging
     @Test
     fun onCharge() {
         // Given
+        BaseFragment.chargeContext.km = -1f
         BaseFragment.chargeContext.voltage = -1f
 
+        doReturn(KM).`when`(fragment).readKm()
         doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
 
         // When
@@ -267,6 +268,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Then
         verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
 
+        assertThat(BaseFragment.chargeContext.km, equalTo(KM))
         assertThat(BaseFragment.chargeContext.voltage, equalTo(VOLTAGE))
     }
 
@@ -493,15 +495,15 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
-        doNothing().`when`(fragment).updatePercentageFor(VOLTAGE)
         doNothing().`when`(fragment).clearEstimates()
+        doNothing().`when`(fragment).updatePercentageFor(VOLTAGE)
 
         // When
         fragment.refreshDisplay(VOLTAGE, INVALID_KM)
 
         // Then
-        verify(fragment).updatePercentageFor(VOLTAGE)
         verify(fragment).clearEstimates()
+        verify(fragment).updatePercentageFor(VOLTAGE)
     }
 
     @Test

@@ -33,6 +33,7 @@ open class WheelChargeFragment : BaseFragment() {
 
     private val dateUtils = DateUtils()
 
+    //    FIXME-1 Replace by straight chargerContext.voltage
     internal var parmVoltageDisconnectedFromCharger: Float? = 0f
 
     private var calculatorService = CalculatorService()
@@ -134,7 +135,7 @@ open class WheelChargeFragment : BaseFragment() {
                     return
                 }
 
-                calculatorService.requiredVoltage(wheel!!, km)
+                calculatorService.requiredVoltage(wheel!!, chargeContext.voltage, chargeContext.km, km)
             }
         }
 

@@ -7,7 +7,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat
@@ -25,6 +24,7 @@ import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
+import quebec.virtualite.unirider.TestDomain.KM_REQUESTED
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
@@ -307,80 +307,80 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verifyVoltageRequired(WHEEL.voltageFull)
     }
 
-    @Ignore
     @Test
     fun updateEstimates_whenFullChargeIsNeeded_displayValue() {
         // Given
         injectMocks()
+        mockChargeContext(KM, VOLTAGE)
         mockCheckFullCharge(false)
-        mockEditKmWith(KM)
+        mockEditKmWith(KM_REQUESTED)
 
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat(), anyFloat()))
             .willReturn(WHEEL.voltageFull)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        verify(mockedCalculatorService).requiredVoltage(WHEEL, KM)
+        verify(mockedCalculatorService).requiredVoltage(WHEEL, VOLTAGE, KM, KM_REQUESTED)
         verifyVoltageRequired(WHEEL.voltageFull)
     }
 
-    @Ignore
     @Test
     fun updateEstimates_whenVoltageIsEnough_displayValue() {
         // Given
         injectMocks()
+        mockChargeContext(KM, VOLTAGE)
         mockCheckFullCharge(false)
-        mockEditKmWith(KM)
+        mockEditKmWith(KM_REQUESTED)
 
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat(), anyFloat()))
             .willReturn(VOLTAGE + WHEEL.chargerOffset - 0.1f)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        verify(mockedCalculatorService).requiredVoltage(WHEEL, KM)
+        verify(mockedCalculatorService).requiredVoltage(WHEEL, VOLTAGE, KM, KM_REQUESTED)
         verifyDisplayGo()
     }
 
-    @Ignore
     @Test
     fun updateEstimates_whenVoltageIsLimit_displayValue() {
         // Given
         injectMocks()
+        mockChargeContext(KM, VOLTAGE)
         mockCheckFullCharge(false)
-        mockEditKmWith(KM)
+        mockEditKmWith(KM_REQUESTED)
 
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat(), anyFloat()))
             .willReturn(VOLTAGE + WHEEL.chargerOffset)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        verify(mockedCalculatorService).requiredVoltage(WHEEL, KM)
+        verify(mockedCalculatorService).requiredVoltage(WHEEL, VOLTAGE, KM, KM_REQUESTED)
         verifyDisplayGo()
     }
 
-    @Ignore
     @Test
     fun updateEstimates_whenVoltageIsNotEnough_displayValue() {
         // Given
         injectMocks()
+        mockChargeContext(KM, VOLTAGE)
         mockCheckFullCharge(false)
-        mockEditKmWith(KM)
+        mockEditKmWith(KM_REQUESTED)
 
         val voltageRequired = VOLTAGE + WHEEL.chargerOffset + 0.1f
-        given(mockedCalculatorService.requiredVoltage(any(), anyFloat()))
+        given(mockedCalculatorService.requiredVoltage(any(), anyFloat(), anyFloat(), anyFloat()))
             .willReturn(voltageRequired)
 
         // When
         fragment.updateEstimates()
 
         // Then
-        verify(mockedCalculatorService).requiredVoltage(WHEEL, KM)
+        verify(mockedCalculatorService).requiredVoltage(WHEEL, VOLTAGE, KM, KM_REQUESTED)
         verifyVoltageRequired(voltageRequired)
     }
 
@@ -388,6 +388,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     fun updateEstimates_withZeroKm_noDisplay() {
         // Given
         injectMocks()
+        mockChargeContext(KM, VOLTAGE)
         mockCheckFullCharge(false)
         mockEditKmWith(0f)
 
@@ -403,6 +404,11 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.editVoltageActual = mockedEditVoltageActual
         fragment.textRemainingTime = mockedTextRemainingTime
         fragment.textVoltageRequired = mockedTextVoltageRequired
+    }
+
+    private fun mockChargeContext(km: Float, voltage: Float) {
+        BaseFragment.chargeContext.km = km
+        BaseFragment.chargeContext.voltage = voltage
     }
 
     private fun mockFields() {
