@@ -71,10 +71,8 @@ class TestDomain(applicationContext: Context) {
                     "Mileage",
                     "Wh",
                     "Voltage Min",
-                    "Voltage Reserve",
                     "Voltage Max",
                     "Charge Rate",
-                    // FIXME-0 Reorder
                     "Full Charge",
                     "Charger Offset",
                     "Distance Offset",

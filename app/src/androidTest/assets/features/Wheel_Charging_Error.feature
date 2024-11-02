@@ -2,8 +2,8 @@ Feature: Wheel Charging - ERROR
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Reserve | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 80V             | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1               | No   |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1               | No   |
     And I start the app
     And I select the Sherman Max
     And I set the actual voltage to 86.4V

@@ -753,10 +753,4 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.editVoltageMax = mockedEditVoltageMax
         given(mockedWidgets.getText(mockedEditVoltageMax)).willReturn("$VOLTAGE_MAX")
     }
-
-    // FIXME-1 Remove
-//    private fun mockVoltageMin() {
-//        fragment.editVoltageMin = mockedEditVoltageMin
-//        given(mockedWidgets.getText(mockedEditVoltageMin)).willReturn("$VOLTAGE_MIN")
-//    }
 }
