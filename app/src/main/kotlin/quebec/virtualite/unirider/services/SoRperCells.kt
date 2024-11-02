@@ -67,10 +67,7 @@ class SoRperCells {
         return round(0f, NB_DECIMALS)
     }
 
-    fun voltageToSor(wheel: WheelEntity, voltage: Float): Float {
-        if (voltage < wheel.voltageReserve)
-            return 0f
-
+    fun voltageToSoR(wheel: WheelEntity, voltage: Float): Float {
         if (voltage > wheel.voltageMax)
             return -1f
 
@@ -113,6 +110,8 @@ class SoRperCells {
         val diffUpperToLowerSoR = upperRow.soR - lowerRow.soR
         val diffSoR = diffUpperToLowerSoR * percentActual
 
-        return lowerRow.soR + diffSoR
+        val prorated = lowerRow.soR + diffSoR
+
+        return if (prorated >= 0f) prorated else 0f
     }
 }

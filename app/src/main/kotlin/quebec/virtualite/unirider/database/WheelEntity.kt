@@ -14,6 +14,7 @@ data class WheelEntity(
     val wh: Int,
     val voltageMax: Float,
     val voltageMin: Float,
+    // FIXME-0 Remove this
     val voltageReserve: Float,
     val chargeRate: Float,
     val voltageFull: Float,

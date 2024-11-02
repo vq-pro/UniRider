@@ -55,11 +55,10 @@ class CalculatorServiceTest {
         percentage(SHERMAN_L_5, 119.2f, 0.0f)
         percentage(SHERMAN_L_5, 136.9f, 50.4f)
         percentage(SHERMAN_L_5, 141.1f, 67.0f)
-        percentage(SHERMAN_L_5, 152.7f, 100.0f)
 
         // Voltage lower than reserve
-        percentage(SHERMAN_L_5, 119.5f, 0.0f)
-        percentage(S18_1, 67.5f, 0.0f)
+        percentage(SHERMAN_L_5, 119.0f, 0.0f)
+        percentage(S18_1, 66.0f, 0.0f)
 
         // Voltage higher than max
         percentage(SHERMAN_L_5, 151.3f, 100f)
