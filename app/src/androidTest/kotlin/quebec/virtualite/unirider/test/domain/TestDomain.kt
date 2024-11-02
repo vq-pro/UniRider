@@ -74,6 +74,7 @@ class TestDomain(applicationContext: Context) {
                     "Voltage Reserve",
                     "Voltage Max",
                     "Charge Rate",
+                    // FIXME-0 Reorder
                     "Full Charge",
                     "Charger Offset",
                     "Distance Offset",
@@ -90,7 +91,6 @@ class TestDomain(applicationContext: Context) {
                 val mileage = parseInt(row[col++])
                 val wh = parseInt(row[col++])
                 val voltageMin = voltageOf(row[col++])
-                val voltageReserve = voltageOf(row[col++])
                 val voltageMax = voltageOf(row[col++])
                 val chargeRate = voltsPerHourOf(row[col++])
                 val voltageFull = voltageOf(row[col++])
@@ -101,7 +101,7 @@ class TestDomain(applicationContext: Context) {
                 WheelEntity(
                     0, name, null, null,
                     0, mileage, wh,
-                    voltageMax, voltageMin, voltageReserve,
+                    voltageMax, voltageMin,
                     chargeRate, voltageFull, chargerOffset, distanceOffset, isSold
                 )
             }

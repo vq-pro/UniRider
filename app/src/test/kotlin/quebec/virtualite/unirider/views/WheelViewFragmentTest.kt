@@ -19,12 +19,8 @@ import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
-import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
-import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET
-import quebec.virtualite.unirider.TestDomain.ID
 import quebec.virtualite.unirider.TestDomain.ITEM_SOLD
 import quebec.virtualite.unirider.TestDomain.KM
 import quebec.virtualite.unirider.TestDomain.KM_NEW
@@ -36,7 +32,6 @@ import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.NAME3
-import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PERCENTAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
@@ -47,16 +42,10 @@ import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.TOTAL_RANGE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_STRING
-import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.bluetooth.WheelInfo
-import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
 
@@ -301,14 +290,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        verify(mockedDb).saveWheel(
-            WheelEntity(
-                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
-                PREMILEAGE, MILEAGE_NEW, WH,
-                VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
-                CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET, NOT_SOLD
-            )
-        )
+        verify(mockedDb).saveWheel(S18_1.copy(mileage = MILEAGE_NEW))
         verify(mockedEditKm).setText("$KM_NEW")
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")

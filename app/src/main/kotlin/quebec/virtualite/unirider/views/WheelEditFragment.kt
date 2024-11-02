@@ -17,7 +17,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
@@ -30,7 +30,6 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editVoltageFull: EditText
     internal lateinit var editVoltageMax: EditText
     internal lateinit var editVoltageMin: EditText
-    internal lateinit var editVoltageReserve: EditText
     internal lateinit var editWh: EditText
     internal lateinit var switchSold: SwitchMaterial
 
@@ -57,7 +56,6 @@ open class WheelEditFragment : BaseFragment() {
         editVoltageFull = view.findViewById(R.id.edit_voltage_full)
         editVoltageMax = view.findViewById(R.id.edit_voltage_max)
         editVoltageMin = view.findViewById(R.id.edit_voltage_min)
-        editVoltageReserve = view.findViewById(R.id.edit_voltage_reserve)
         editWh = view.findViewById(R.id.edit_wh)
         buttonDelete = view.findViewById(R.id.button_delete)
         buttonSave = view.findViewById(R.id.button_save)
@@ -72,7 +70,6 @@ open class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editVoltageFull, onUpdateVoltageFull())
         widgets.addTextChangedListener(editVoltageMax, onUpdateVoltageMax())
         widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
-        widgets.addTextChangedListener(editVoltageReserve, onUpdateVoltageReserve())
         widgets.addTextChangedListener(editWh, onUpdateWh())
         widgets.setOnLongClickListener(buttonDelete, onDelete())
         widgets.setOnClickListener(buttonSave, onSave())
@@ -90,7 +87,6 @@ open class WheelEditFragment : BaseFragment() {
                 editVoltageFull.setText("${initialWheel.voltageFull}")
                 editVoltageMax.setText("${initialWheel.voltageMax}")
                 editVoltageMin.setText("${initialWheel.voltageMin}")
-                editVoltageReserve.setText("${initialWheel.voltageReserve}")
                 editWh.setText("${initialWheel.wh}")
 
                 if (initialWheel.premileage != 0)
@@ -181,14 +177,6 @@ open class WheelEditFragment : BaseFragment() {
         updatedWheel = updatedWheel.copy(
             voltageMin = round(safeFloatOf(newVoltage), NB_DECIMALS)
         )
-        enableSaveIfChanged()
-    }
-
-    fun onUpdateVoltageReserve() = { newVoltage: String ->
-        var newVoltageReserve = round(safeFloatOf(newVoltage), NB_DECIMALS)
-        if (newVoltageReserve == 0f) newVoltageReserve = floatOf(widgets.getText(editVoltageMin))
-
-        updatedWheel = updatedWheel.copy(voltageReserve = newVoltageReserve)
         enableSaveIfChanged()
     }
 

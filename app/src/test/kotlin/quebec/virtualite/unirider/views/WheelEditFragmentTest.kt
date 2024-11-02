@@ -24,16 +24,13 @@ import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
 import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET_NEW
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE_NEW
-import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
-import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET
 import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET_NEW
-import quebec.virtualite.unirider.TestDomain.ID
+import quebec.virtualite.unirider.TestDomain.EMPTY_WHEEL
 import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.NAME_NEW
-import quebec.virtualite.unirider.TestDomain.NOT_SOLD
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.S18_1
@@ -44,11 +41,8 @@ import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE_NEW
 import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_NEW
-import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
@@ -89,9 +83,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @Mock
     lateinit var mockedEditVoltageMin: EditText
-
-    @Mock
-    lateinit var mockedEditVoltageReserve: EditText
 
     @Mock
     lateinit var mockedEditWh: EditText
@@ -141,7 +132,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_voltage_full, fragment.editVoltageFull, mockedEditVoltageFull)
         verifyFieldAssignment(R.id.edit_voltage_max, fragment.editVoltageMax, mockedEditVoltageMax)
         verifyFieldAssignment(R.id.edit_voltage_min, fragment.editVoltageMin, mockedEditVoltageMin)
-        verifyFieldAssignment(R.id.edit_voltage_reserve, fragment.editVoltageReserve, mockedEditVoltageReserve)
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
 
         verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
@@ -153,7 +143,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyOnUpdateText(mockedEditVoltageFull, "onUpdateVoltageFull")
         verifyOnUpdateText(mockedEditVoltageMax, "onUpdateVoltageMax")
         verifyOnUpdateText(mockedEditVoltageMin, "onUpdateVoltageMin")
-        verifyOnUpdateText(mockedEditVoltageReserve, "onUpdateVoltageReserve")
         verifyOnUpdateText(mockedEditWh, "onUpdateWh")
         verifyOnToggleSwitch(mockedSwitchSold, "onToggleSold")
         verifyOnLongClick(mockedButtonDelete, "onDelete")
@@ -167,7 +156,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verify(mockedEditMileage).setText("$MILEAGE")
         verify(mockedEditVoltageFull).setText("$VOLTAGE_FULL")
         verify(mockedEditVoltageMax).setText("$VOLTAGE_MAX")
-        verify(mockedEditVoltageReserve).setText("$VOLTAGE_RESERVE")
         verify(mockedEditVoltageMin).setText("$VOLTAGE_MIN")
         verify(mockedEditWh).setText("$WH")
         verify(mockedSwitchSold).isChecked = BaseFragment.wheel!!.isSold
@@ -179,7 +167,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Given
         BaseFragment.wheel = null
 
-        val newWheel = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        val newWheel = EMPTY_WHEEL
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -199,13 +187,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     @Test
     fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
         // Given
-        BaseFragment.wheel = WheelEntity(
-            ID, NAME, DEVICE_NAME, DEVICE_ADDR,
-            0, 0, WH,
-            VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
-            CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET,
-            NOT_SOLD
-        )
+        BaseFragment.wheel = S18_1.copy(premileage = 0, mileage = 0)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -694,59 +676,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageReserve() {
-        // Given
-        initUpdate()
-
-        // When
-        fragment.onUpdateVoltageReserve().invoke("$VOLTAGE_RESERVE_NEW ")
-
-        // Then
-        verify(fragment).enableSaveIfChanged()
-
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageReserve = VOLTAGE_RESERVE_NEW)))
-    }
-
-    @Test
-    fun onUpdateVoltageReserve_whenEmpty_setToMinimum() {
-        // Given
-        initUpdate()
-        mockVoltageMin()
-
-        // When
-        fragment.onUpdateVoltageReserve().invoke(" ")
-
-        // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageReserve = VOLTAGE_MIN)))
-    }
-
-    @Test
-    fun onUpdateVoltageReserve_whenInvalid_setToMinimum() {
-        // Given
-        initUpdate()
-        mockVoltageMin()
-
-        // When
-        fragment.onUpdateVoltageReserve().invoke("ab ")
-
-        // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageReserve = VOLTAGE_MIN)))
-    }
-
-    @Test
-    fun onUpdateVoltageReserve_withTooManyDecimals() {
-        // Given
-        initUpdate()
-        mockVoltageMin()
-
-        // When
-        fragment.onUpdateVoltageReserve().invoke("${VOLTAGE_RESERVE_NEW + 0.001f} ")
-
-        // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageReserve = VOLTAGE_RESERVE_NEW)))
-    }
-
-    @Test
     fun onUpdateWh() {
         // Given
         initUpdate()
@@ -791,12 +720,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         given(mockedWheelValidator.canSave(any(), any())).willReturn(canSave)
     }
 
-    private fun definedWheel() = WheelEntity(
-        ID, NAME, DEVICE_NAME, DEVICE_ADDR,
-        PREMILEAGE, MILEAGE, WH,
-        VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
-        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET, NOT_SOLD
-    )
+    private fun definedWheel() = S18_1
 
     private fun initUpdate() {
         injectMocks()
@@ -822,7 +746,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         mockField(R.id.edit_voltage_full, mockedEditVoltageFull)
         mockField(R.id.edit_voltage_max, mockedEditVoltageMax)
         mockField(R.id.edit_voltage_min, mockedEditVoltageMin)
-        mockField(R.id.edit_voltage_reserve, mockedEditVoltageReserve)
         mockField(R.id.edit_wh, mockedEditWh)
     }
 
@@ -831,8 +754,9 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         given(mockedWidgets.getText(mockedEditVoltageMax)).willReturn("$VOLTAGE_MAX")
     }
 
-    private fun mockVoltageMin() {
-        fragment.editVoltageMin = mockedEditVoltageMin
-        given(mockedWidgets.getText(mockedEditVoltageMin)).willReturn("$VOLTAGE_MIN")
-    }
+    // FIXME-1 Remove
+//    private fun mockVoltageMin() {
+//        fragment.editVoltageMin = mockedEditVoltageMin
+//        given(mockedWidgets.getText(mockedEditVoltageMin)).willReturn("$VOLTAGE_MIN")
+//    }
 }

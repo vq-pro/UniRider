@@ -13,34 +13,20 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET3
-import quebec.virtualite.unirider.TestDomain.CHARGE_RATE3
 import quebec.virtualite.unirider.TestDomain.DEVICE3
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR2
 import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR3
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
 import quebec.virtualite.unirider.TestDomain.DEVICE_NAME2
-import quebec.virtualite.unirider.TestDomain.DEVICE_NAME3
-import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET3
-import quebec.virtualite.unirider.TestDomain.ID3
 import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.NAME3
-import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
 import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
-import quebec.virtualite.unirider.TestDomain.SOLD
 import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL3
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX3
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN3
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE3
-import quebec.virtualite.unirider.TestDomain.WH3
 import quebec.virtualite.unirider.bluetooth.WheelInfo
-import quebec.virtualite.unirider.database.WheelEntity
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
@@ -137,14 +123,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
         verifyDoneWaiting(connectionPayload)
 
         assertThat(
-            BaseFragment.wheel, equalTo(
-                WheelEntity(
-                    ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
-                    PREMILEAGE3, MILEAGE_NEW, WH3,
-                    VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_RESERVE3,
-                    CHARGE_RATE3, VOLTAGE_FULL3, CHARGER_OFFSET3, DISTANCE_OFFSET3, SOLD
-                )
-            )
+            BaseFragment.wheel, equalTo(SHERMAN_MAX_3.copy(mileage = MILEAGE_NEW))
         )
 
         verify(mockedDb).saveWheel(BaseFragment.wheel)

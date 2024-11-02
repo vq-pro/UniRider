@@ -53,10 +53,6 @@ class EditFragmentObject(val app: TestApp) {
         setText(R.id.edit_premileage, value)
     }
 
-    fun changeReserveVoltage(value: String) {
-        setText(R.id.edit_voltage_reserve, value)
-    }
-
     fun changeVoltageMax(value: String) {
         setText(R.id.edit_voltage_max, value)
     }
@@ -91,7 +87,6 @@ class EditFragmentObject(val app: TestApp) {
             Pair("Sold", R.id.check_sold),
             Pair("Voltage Min", R.id.edit_voltage_min),
             Pair("Voltage Max", R.id.edit_voltage_max),
-            Pair("Voltage Reserve", R.id.edit_voltage_reserve),
             Pair("Wh", R.id.edit_wh),
         )
 
@@ -122,7 +117,6 @@ class EditFragmentObject(val app: TestApp) {
             voltageFull = floatOf(mapEntity["Full Charge"]!!),
             voltageMax = floatOf(mapEntity["Voltage Max"]!!),
             voltageMin = floatOf(mapEntity["Voltage Min"]!!),
-            voltageReserve = floatOf(mapEntity["Voltage Reserve"]!!),
             wh = intOf(mapEntity["Wh"]!!)
         )
 
@@ -141,10 +135,6 @@ class EditFragmentObject(val app: TestApp) {
 
     fun getVoltageMin(): Float {
         return floatOf(getText(R.id.edit_voltage_min))
-    }
-
-    fun getVoltageReserve(): Float {
-        return floatOf(getText(R.id.edit_voltage_reserve))
     }
 
     fun markAsSold() {

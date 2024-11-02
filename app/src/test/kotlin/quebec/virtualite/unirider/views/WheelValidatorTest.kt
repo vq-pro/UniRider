@@ -6,32 +6,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
 import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET_NEW
-import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
 import quebec.virtualite.unirider.TestDomain.CHARGE_RATE_NEW
-import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
-import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
-import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET
 import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET_NEW
-import quebec.virtualite.unirider.TestDomain.ID
-import quebec.virtualite.unirider.TestDomain.MILEAGE
 import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
-import quebec.virtualite.unirider.TestDomain.NAME
 import quebec.virtualite.unirider.TestDomain.NAME_NEW
-import quebec.virtualite.unirider.TestDomain.NOT_SOLD
-import quebec.virtualite.unirider.TestDomain.PREMILEAGE
 import quebec.virtualite.unirider.TestDomain.PREMILEAGE_NEW
+import quebec.virtualite.unirider.TestDomain.S18_1
 import quebec.virtualite.unirider.TestDomain.SOLD
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
 import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_RESERVE_NEW
-import quebec.virtualite.unirider.TestDomain.WH
 import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
 
@@ -41,12 +26,7 @@ class WheelValidatorTest {
     @InjectMocks
     lateinit var comparator: WheelValidator
 
-    private val WHEEL = WheelEntity(
-        ID, NAME, DEVICE_NAME, DEVICE_ADDR,
-        PREMILEAGE, MILEAGE, WH,
-        VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_RESERVE,
-        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET, NOT_SOLD
-    )
+    private val WHEEL = S18_1
 
     @Test
     fun canSave() {
@@ -73,12 +53,6 @@ class WheelValidatorTest {
         canSave(WHEEL.copy(voltageMin = VOLTAGE_MIN_NEW))
         cannotSave(WHEEL.copy(voltageMin = 0f))
         cannotSave(WHEEL.copy(voltageMin = WHEEL.voltageMax + 0.1f))
-
-        // Voltage reserve
-        canSave(WHEEL.copy(voltageReserve = VOLTAGE_RESERVE_NEW))
-        cannotSave(WHEEL.copy(voltageReserve = 0f))
-        cannotSave(WHEEL.copy(voltageReserve = WHEEL.voltageMax + 0.1f))
-        cannotSave(WHEEL.copy(voltageReserve = WHEEL.voltageMin - 0.1f))
 
         // Voltage max
         canSave(WHEEL.copy(voltageMax = VOLTAGE_MAX_NEW))

@@ -28,7 +28,6 @@
     <string name="label_rate">Rate</string>
     <string name="label_remaining_range">Remaining</string>
     <string name="label_remaining_time">Time</string>
-    <string name="label_reserve">reserve</string>
     <string name="label_total_range">Total</string>
     <string name="label_voltage">Voltage</string>
     <string name="label_voltage_abbr">V</string>
@@ -44,7 +43,6 @@
     <string name="label_wheel_sold">Sold</string>
     <string name="label_wheel_voltage_max">Max voltage</string>
     <string name="label_wheel_voltage_min">Min voltage</string>
-    <string name="label_wheel_voltage_reserve">Reserve</string>
     <string name="label_wheel_wh">Wh</string>
     <string name="question_are_you_sure_you_want_to_delete">Are you sure you want to delete this wheel?</string>
 </resources>

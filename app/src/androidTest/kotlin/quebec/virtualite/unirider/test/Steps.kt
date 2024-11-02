@@ -190,11 +190,6 @@ class Steps {
         editFragment.changePremileage(" ")
     }
 
-    @When("I blank the reserve voltage")
-    fun blankWheelReserveVoltage() {
-        editFragment.changeReserveVoltage(" ")
-    }
-
     @When("I blank the wh")
     fun blankWheelWh() {
         editFragment.changeWh(" ")
@@ -274,11 +269,6 @@ class Steps {
         editFragment.changePremileage("123")
     }
 
-    @When("I change the reserve voltage")
-    fun changeWheelReserveVoltage() {
-        editFragment.changeReserveVoltage("${editFragment.getVoltageReserve() + 0.1f}")
-    }
-
     @When("I change the wh")
     fun changeWheelWh() {
         editFragment.changeWh("123")
@@ -349,16 +339,6 @@ class Steps {
     @When("I set the maximum voltage lower than the minimum")
     fun setMaximumVoltageLowerThanMinimum() {
         editFragment.changeVoltageMax("${editFragment.getVoltageMin() - 0.1f}")
-    }
-
-    @When("I set the reserve voltage higher than the maximum")
-    fun setReserveVoltageHigherThanMaximum() {
-        editFragment.changeReserveVoltage("${editFragment.getVoltageMax() + 0.1f}")
-    }
-
-    @When("I set the reserve voltage lower than the minimum")
-    fun setReserveVoltageLowerThanMinimum() {
-        editFragment.changeReserveVoltage("${editFragment.getVoltageMin() - 0.1f}")
     }
 
     @When("the updated mileage for some of these wheels should be:")
