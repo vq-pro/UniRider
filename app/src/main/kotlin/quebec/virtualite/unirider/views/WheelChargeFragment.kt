@@ -119,7 +119,13 @@ open class WheelChargeFragment : BaseFragment() {
             .plusHours(hours.toLong())
             .plusMinutes(minutes.toLong())
 
-        return DTF.format(time)
+        val remainingDuration = when {
+            hours == 0 -> " (${minutes}m)"
+            minutes == 0 -> " (${hours}h)"
+            else -> " (${hours}h${minutes}m)"
+        }
+
+        return DTF.format(time) + remainingDuration
     }
 
     @SuppressLint("SetTextI18n")

@@ -275,12 +275,12 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
     @Test
     fun timeDisplay() {
-        timeDisplay(0f, "11:45")
-        timeDisplay(1f, "12:45")
-        timeDisplay(2.75f, "14:30")
-        timeDisplay(0.1625f, "11:55")
-        timeDisplay(9f / 8f, "12:53")
-        timeDisplay(0.08f, "11:50")
+        timeDisplay(0f, "11:45 (0m)")
+        timeDisplay(1f, "12:45 (1h)")
+        timeDisplay(2.75f, "14:30 (2h45m)")
+        timeDisplay(0.1625f, "11:55 (10m)")
+        timeDisplay(9f / 8f, "12:53 (1h8m)")
+        timeDisplay(0.08f, "11:50 (5m)")
     }
 
     private fun timeDisplay(rawHours: Float, expectedDisplay: String) {

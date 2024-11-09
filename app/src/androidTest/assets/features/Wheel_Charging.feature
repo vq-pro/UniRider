@@ -21,12 +21,12 @@ Feature: Wheel Charging
     Given I request to charge for 40 km
     And it displays an actual voltage of 87.9V
     And it displays these charging estimates:
-      | required voltage | time  |
-      | 95.0V (+7.1)     | 12:38 |
+      | required voltage | time        |
+      | 95.0V (+7.1)     | 12:38 (53m) |
     When I change the voltage to 90V
     Then it displays these charging estimates:
-      | required voltage | time  |
-      | 95.0V (+5.0)     | 12:23 |
+      | required voltage | time        |
+      | 95.0V (+5.0)     | 12:23 (38m) |
 
   Scenario Outline: Charging a wheel [<distance>]
     When I request to charge for <distance>
@@ -35,14 +35,14 @@ Feature: Wheel Charging
       | required voltage   | time   |
       | <required voltage> | <time> |
     Examples:
-      | distance | required voltage | time  |
-      | 10 km    | Go!              |       |
-      | 20 km    | 89.9V (+2.0)     | 12:00 |
-      | 40 km    | 95.0V (+7.1)     | 12:38 |
-      | 50 km    | 96.3V (+8.4)     | 12:48 |
-      | 60 km    | 97.7V (+9.8)     | 12:59 |
-      | 200 km   | 99.5V (+11.6)    | 13:12 |
-      | full     | 99.5V (+11.6)    | 13:12 |
+      | distance | required voltage | time          |
+      | 10 km    | Go!              |               |
+      | 20 km    | 89.9V (+2.0)     | 12:00 (15m)   |
+      | 40 km    | 95.0V (+7.1)     | 12:38 (53m)   |
+      | 50 km    | 96.3V (+8.4)     | 12:48 (1h3m)  |
+      | 60 km    | 97.7V (+9.8)     | 12:59 (1h14m) |
+      | 200 km   | 99.5V (+11.6)    | 13:12 (1h27m) |
+      | full     | 99.5V (+11.6)    | 13:12 (1h27m) |
 
   Scenario: Reconnect to update the voltage
     Given this simulated device:
@@ -52,5 +52,5 @@ Feature: Wheel Charging
     When I reconnect to update the voltage
     Then it displays an actual voltage of 88.5V
     And it displays these charging estimates:
-      | required voltage | time  |
-      | 95.0V (+6.5)     | 12:34 |
+      | required voltage | time        |
+      | 95.0V (+6.5)     | 12:34 (49m) |
