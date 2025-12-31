@@ -88,7 +88,11 @@ open class WheelChargeFragment : BaseFragment() {
 
     fun onUpdateKm() = { km: String ->
         when {
-            isNumeric(km) -> updateEstimates()
+            isNumeric(km) -> {
+                switchFullCharge.isChecked = false
+                updateEstimates()
+            }
+
             else -> blankEstimates()
         }
     }

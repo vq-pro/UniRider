@@ -51,6 +51,16 @@ class ChargeSteps : BaseSteps() {
         chargeFragment.validateEstimates(expectedEstimates)
     }
 
+    @Then("the full charge indicator is on")
+    fun validateFullChargeIndicatorOn() {
+        chargeFragment.validateFullChargeIndicatorOn();
+    }
+
+    @Then("the full charge indicator is off")
+    fun validateFullChargeIndicatorOff() {
+        chargeFragment.validateFullChargeIndicatorOff();
+    }
+
     fun validateOnChargeScreen() {
         chargeFragment.validateView()
     }

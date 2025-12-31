@@ -1,6 +1,7 @@
 package quebec.virtualite.unirider.test.fragments
 
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
+import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import cucumber.api.DataTable
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.unirider.R
@@ -53,6 +54,14 @@ class ChargeFragmentObject(val app: TestApp) {
                 )
             )
         )
+    }
+
+    fun validateFullChargeIndicatorOn() {
+        assertThat("Full Charge should be on", R.id.check_full_charge, isChecked())
+    }
+
+    fun validateFullChargeIndicatorOff() {
+        assertThat("Full Charge should be off", R.id.check_full_charge, isNotChecked())
     }
 
     fun validateView() {

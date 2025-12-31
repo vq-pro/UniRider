@@ -16,13 +16,29 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.apache.http.util.TextUtils.isBlank
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.*
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.hasEntry
+import org.hamcrest.Matchers.hasItem
+import org.hamcrest.Matchers.hasToString
+import org.hamcrest.Matchers.instanceOf
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.isA
+import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.startsWith
 import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
@@ -51,11 +67,11 @@ object StepsUtils {
     }
 
     fun <T> assertThat(actual: T, matcher: Matcher<T>) {
-        org.hamcrest.MatcherAssert.assertThat(actual, matcher)
+        MatcherAssert.assertThat(actual, matcher)
     }
 
     fun <T> assertThat(message: String, actual: T, matcher: Matcher<T>) {
-        org.hamcrest.MatcherAssert.assertThat(message, actual, matcher)
+        MatcherAssert.assertThat(message, actual, matcher)
     }
 
     fun click(id: Int) {
@@ -215,7 +231,7 @@ object StepsUtils {
         return try {
             onView?.perform(nestedScrollViewExtension)
 
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             onView
         }
     }
@@ -250,7 +266,7 @@ object StepsUtils {
 
     private fun poll(message: String, callback: () -> Unit) {
 
-        var exception: Throwable? = null
+        var exception: Throwable?
         val start = currentTimeMillis()
 
         do {
@@ -268,7 +284,7 @@ object StepsUtils {
         } while (elapsed < TIMEOUT)
 
         throw when {
-            !isBlank(message) -> AssertionError(message, exception!!)
+            !isBlank(message) -> AssertionError(message, exception)
             else -> exception!!
         }
     }

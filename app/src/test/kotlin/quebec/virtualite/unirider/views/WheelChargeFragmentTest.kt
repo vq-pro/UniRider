@@ -213,6 +213,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.onUpdateKm().invoke("$KM ")
 
         // Then
+        verify(fragment.switchFullCharge).isChecked = false
         verify(fragment).updateEstimates()
     }
 
