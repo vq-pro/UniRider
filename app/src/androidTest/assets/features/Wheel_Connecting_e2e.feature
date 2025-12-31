@@ -6,23 +6,24 @@ Feature: Wheel Connecting - End-2-End
   Background:
     Given these wheels:
       | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
+      | Sherman-L   | 20000   | 4000 | 104.4V      | 151.2V      | 21V/h       | 149.3V      | 1.8V           | 1.0667          | No   |
       | Sherman     | 20106   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1.5V           | 1               | No   |
       | Lynx        | 2000    | 2700 | 104.4V      | 151.2V      | 18.5V/h     | 149.3V      | 1.8V           | 1.0667          | No   |
-      | Sherman-L   | 2000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 149.3V      | 1.8V           | 1.0667          | No   |
-      | 14S         | 2421    | 840  | 48V         | 67.2V       | 4V/h        | 65.5V       | 1.5V           | 1               | No   |
-      | V9          | 543     | 750  | 60V         | 84V         | 12V/h       | 83.1V       | 1.0V           | 1               | No   |
+      | Aero        | 0       | 1100 | 87V         | 126V        | 12V/h       | 125.6V      | 1.0V           | 1               | No   |
       | Sherman-S   | 23427   | 3600 | 69.6V       | 100.8V      | 9.5V/h      | 99.5V       | 1.5V           | 1               | Yes  |
       | Sherman Max | 14530   | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1               | Yes  |
       | Abrams      | 3675    | 2700 | 74.5V       | 100.8V      | 14V/h       | 99.5V       | 1.5V           | 1               | Yes  |
       | S18         | 3143    | 1110 | 60V         | 84V         | 4V/h        | 81.5V       | 1.5V           | 1               | Yes  |
       | Nikola+     | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.5V       | 1.5V           | 1               | Yes  |
       | S18-SE      | 2836    | 900  | 60V         | 84V         | 4V/h        | 81.5V       | 1.5V           | 1               | Yes  |
+      | 14S         | 2421    | 840  | 48V         | 67.2V       | 4V/h        | 65.5V       | 1.5V           | 1               | Yes  |
       | V10F        | 1600    | 960  | 65V         | 84V         | 2V/h        | 82V         | 1.5V           | 1               | Yes  |
+      | V9          | 794     | 750  | 60V         | 84V         | 12V/h       | 83.1V       | 1.0V           | 1               | Yes  |
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name      | Updated mileage |
-      | Lynx      | 12278           |
-      | Sherman-L | 8483            |
+      | Lynx      | 14682           |
+      | Sherman-L | 23896           |
     And I start the app
 
   Scenario Outline: Connecting to a wheel for the first time - <wheel>
