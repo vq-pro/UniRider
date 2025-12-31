@@ -15,8 +15,8 @@ import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.services.CalculatorService
-import java.lang.Float.parseFloat
 import java.time.format.DateTimeFormatter
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 private val DTF = DateTimeFormatter.ofPattern("HH:mm")
@@ -26,18 +26,22 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var buttonConnect: Button
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
+    internal lateinit var editVoltageRequired: EditText
+    internal lateinit var textDiff: TextView
+    internal lateinit var textEstimatedDiff: TextView
+    internal lateinit var textEstimatedTime: TextView
     internal lateinit var textName: TextView
-    internal lateinit var textRemainingTime: TextView
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var switchFullCharge: SwitchMaterial
 
-    internal var parmVoltageDisconnectedFromCharger: Float? = 0f
+    internal var cacheVoltageActual: Float? = 0f
+    internal var parmVoltageActual: Float? = 0f
 
     private val dateUtils = DateUtils()
     private var calculatorService = CalculatorService()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmVoltageDisconnectedFromCharger = chargeContext.voltage
+        parmVoltageActual = chargeContext.voltage
 
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
@@ -48,19 +52,26 @@ open class WheelChargeFragment : BaseFragment() {
         buttonConnect = view.findViewById(R.id.button_connect_charge)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
+        editVoltageRequired = view.findViewById(R.id.edit_voltage_required)
+        textDiff = view.findViewById(R.id.view_diff)
+        textEstimatedDiff = view.findViewById(R.id.view_estimated_diff)
+        textEstimatedTime = view.findViewById(R.id.view_estimated_time)
         textName = view.findViewById(R.id.view_name)
-        textRemainingTime = view.findViewById(R.id.view_remaining_time)
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
         switchFullCharge = view.findViewById(R.id.check_full_charge)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
+        widgets.addTextChangedListener(editVoltageRequired, onUpdateVoltageRequired())
         widgets.setOnCheckedChangeListener(switchFullCharge, onToggleFullCharge())
 
         fragments.runUI {
+            // FIXME-1 Make a connect() method for this block
             textName.text = wheel!!.name
-            displayVoltageActual()
+
+            cacheVoltageActual = parmVoltageActual!! + wheel!!.chargerOffset
+            editVoltageActual.setText("$cacheVoltageActual")
 
             if (wheel!!.btName == null || wheel!!.btAddr == null) {
                 widgets.disable(buttonConnect)
@@ -72,99 +83,145 @@ open class WheelChargeFragment : BaseFragment() {
 
     fun onConnect(): (View) -> Unit = {
         fragments.runWithWait {
-            external.bluetooth().getDeviceInfo(wheel!!.btAddr) { live ->
-                fragments.doneWaiting(live) {
-                    parmVoltageDisconnectedFromCharger = round(live!!.voltage - wheel!!.chargerOffset, NB_DECIMALS)
-                    displayVoltageActual()
-                    updateEstimates()
+            external.bluetooth().getDeviceInfo(wheel!!.btAddr) { msg ->
+                fragments.doneWaiting(msg) {
+                    cacheVoltageActual = round(msg!!.voltage, NB_DECIMALS)
+                    editVoltageActual.setText("$cacheVoltageActual")
+
+                    display()
                 }
             }
         }
     }
 
     fun onToggleFullCharge() = { useFullCharge: Boolean ->
-        updateEstimates()
+        display()
     }
 
     fun onUpdateKm() = { km: String ->
         when {
             isNumeric(km) -> {
                 switchFullCharge.isChecked = false
-                updateEstimates()
+                display()
             }
 
-            else -> blankEstimates()
+            else -> displayBlanks()
         }
     }
 
     fun onUpdateVoltageActual() = { voltage: String ->
         when {
             isNumeric(voltage) && floatOf(voltage) >= wheel!!.voltageMin -> {
-                parmVoltageDisconnectedFromCharger = round(parseFloat(voltage) - wheel!!.chargerOffset, NB_DECIMALS)
-                updateEstimates()
+                this.cacheVoltageActual = floatOf(voltage)
+
+                if (switchFullCharge.isChecked
+                    || !widgets.getText(editKm).isEmpty()
+                    || !widgets.getText(editVoltageRequired).isEmpty()
+                )
+                    display()
+                else
+                    displayBlanks()
             }
 
-            else -> blankEstimates()
+            else -> displayBlanks()
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    internal open fun blankEstimates() {
-        textRemainingTime.text = ""
+    fun onUpdateVoltageRequired() = { voltage: String ->
+        when {
+            isNumeric(voltage) -> {
+                switchFullCharge.isChecked = false
+                editKm.setText("")
+
+                display()
+            }
+
+            else -> displayBlanks()
+        }
+    }
+
+    internal open fun display() {
+        val voltageRequired = getVoltageRequired()
+
+        when {
+            voltageRequired > cacheVoltageActual!! -> {
+
+                val diff = round(voltageRequired - cacheVoltageActual!!, NB_DECIMALS)
+                val rawHours = diff / wheel!!.chargeRate
+
+                displayEstimates(diff, rawHours)
+            }
+
+            else -> displayGo()
+        }
+    }
+
+    internal open fun displayBlanks() {
+        textDiff.text = ""
+        textEstimatedDiff.text = ""
+        textEstimatedTime.text = ""
         textVoltageRequired.text = ""
     }
 
+    @SuppressLint("SetTextI18n")
+    internal open fun displayEstimates(voltageDiff: Float, rawHours: Float) {
+        textDiff.text = "(+$voltageDiff)"
+        textEstimatedDiff.text = estimatedDiff(rawHours)
+        textEstimatedTime.text = estimatedTime(rawHours)
+    }
+
+    @SuppressLint("SetTextI18n")
+    internal open fun displayGo() {
+        textDiff.text = "Go!"
+        textEstimatedDiff.text = ""
+        textEstimatedTime.text = ""
+    }
+
     @SuppressLint("DefaultLocale")
-    internal fun timeDisplay(rawHours: Float): String {
+    internal open fun estimatedDiff(rawHours: Float): String {
         val hours = rawHours.toInt()
         val minutes = ((rawHours - hours) * 60).roundToInt()
 
-        val time = dateUtils.now()
-            .plusHours(hours.toLong())
-            .plusMinutes(minutes.toLong())
-
         val remainingDuration = when {
-            hours == 0 -> " (${minutes}m)"
-            minutes == 0 -> " (${hours}h)"
-            else -> " (${hours}h${minutes}m)"
+            hours == 0 && minutes == 0 -> ""
+            hours == 0 -> "(${minutes}m)"
+            minutes == 0 -> "(${hours}h)"
+            else -> "(${hours}h${minutes}m)"
         }
 
-        return DTF.format(time) + remainingDuration
+        return remainingDuration
     }
 
-    @SuppressLint("SetTextI18n")
-    internal open fun updateEstimates() {
-        val requiredVoltageOnCharger = when {
-            switchFullCharge.isChecked -> calculatorService.requiredVoltageFull(wheel)
+    @SuppressLint("DefaultLocale")
+    internal open fun estimatedTime(rawHours: Float): String {
+        val hours = rawHours.toInt()
+        val minutes = ((rawHours - hours) * 60).roundToInt()
+
+        val time = dateUtils.now().plusHours(hours.toLong()).plusMinutes(minutes.toLong())
+
+        return DTF.format(time)
+    }
+
+    internal open fun getVoltageRequired(): Float {
+        val fieldVoltageRequired = widgets.getText(editVoltageRequired)
+        val voltageRequired = when {
+            !fieldVoltageRequired.isEmpty() -> {
+                floatOf(fieldVoltageRequired)
+            }
+
+            switchFullCharge.isChecked -> {
+                calculatorService.requiredVoltageFull(wheel)
+            }
+
             else -> {
                 val km = floatOf(widgets.getText(editKm))
-                if (km < 0.1f) {
-                    blankEstimates()
-                    return
-                }
+                val requiredVoltageOffCharger = calculatorService.requiredVoltageOffCharger(wheel!!, chargeContext.voltage, chargeContext.km, km)
 
-                calculatorService.requiredVoltage(wheel!!, chargeContext.voltage, chargeContext.km, km)
+                min(requiredVoltageOffCharger + wheel!!.chargerOffset, wheel!!.voltageFull)
             }
         }
 
-        val requiredVoltage = requiredVoltageOnCharger - (wheel?.chargerOffset ?: 0f)
-        if (requiredVoltage > parmVoltageDisconnectedFromCharger!!) {
-            val diff = round(requiredVoltage - parmVoltageDisconnectedFromCharger!!, NB_DECIMALS)
-            val rawHours = diff / wheel!!.chargeRate
-
-            textVoltageRequired.text = "${requiredVoltageOnCharger}V (+$diff)"
-            textRemainingTime.text = timeDisplay(rawHours)
-
-        } else {
-            textVoltageRequired.text = "Go!"
-            textRemainingTime.text = ""
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    internal fun displayVoltageActual() {
-        editVoltageActual.setText(
-            "${round(parmVoltageDisconnectedFromCharger?.plus(wheel!!.chargerOffset)!!, NB_DECIMALS)}"
-        )
+        textVoltageRequired.setText("$voltageRequired")
+        return voltageRequired
     }
 }

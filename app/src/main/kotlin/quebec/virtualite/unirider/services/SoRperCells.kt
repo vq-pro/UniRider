@@ -58,7 +58,7 @@ class SoRperCells {
             if (soRRequested > row.soR) {
                 val averageCellRequested = prorateAverageCell(soRRequested, upperRow, row)
                 val requiredVoltage = averageCellRequested * getNbCellsPerPack(wheel) / 1000f
-                return round(requiredVoltage + wheel.chargerOffset, NB_DECIMALS)
+                return requiredVoltage
             }
 
             upperRow = row

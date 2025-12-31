@@ -42,7 +42,7 @@ object TestDomain {
     const val KM = 4444f
     const val KM_NEW = 3704.2f
     const val KM_NEW_RAW = 4445.012f
-    const val KM_REQUESTED = 9999f
+    const val KM_REQUESTED = 10f
     const val KM_STRING = "$KM"
     const val LABEL_KM = "km"
     const val MILEAGE = 2222
@@ -71,7 +71,7 @@ object TestDomain {
     const val SOLD = true
     const val TEMPERATURE_NEW_RAW = 3333f
     const val TOTAL_RANGE = 6666f
-    const val VOLTAGE = 82f
+    const val VOLTAGE = 79f
     const val VOLTAGE_FULL = 81.5f
     const val VOLTAGE_FULL2 = 123f
     const val VOLTAGE_FULL3 = 99.5f
@@ -84,8 +84,8 @@ object TestDomain {
     const val VOLTAGE_MAX4 = 100.8f
     const val VOLTAGE_MAX5 = 151.2f
     const val VOLTAGE_MAX_NEW = 100.9f
-    const val VOLTAGE_NEW = 84.9f
-    const val VOLTAGE_NEW_RAW = 84.9001f
+    const val VOLTAGE_NEW = 80.9f
+    const val VOLTAGE_NEW_RAW = 80.9001f
     const val VOLTAGE_MIN = 60.0f
     const val VOLTAGE_MIN2 = 90.0f
     const val VOLTAGE_MIN3 = 75.6f

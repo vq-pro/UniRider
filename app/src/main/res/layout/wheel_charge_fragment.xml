@@ -143,20 +143,63 @@
 
                 <TextView
                         android:id="@+id/view_voltage_required"
-                        android:layout_weight="2"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                        android:inputType="text"
+                />
+
+                <TextView
+                        android:id="@+id/view_diff"
+                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAlignment="viewStart"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textStyle="bold"
                         tools:ignore="RtlHardcoded"
+                />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/edit_required_voltage"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text=""
+                />
+
+                <EditText
+                        android:id="@+id/edit_voltage_required"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                        android:inputType="text"
+                />
+
+                <TextView
+                        android:labelFor="@+id/edit_required_voltage"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_abbr"
                 />
             </TableRow>
 
             <!-- Remaining time -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:labelFor="@+id/view_remaining_time"
+                        android:labelFor="@+id/view_estimated_time"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -166,11 +209,22 @@
                 />
 
                 <TextView
-                        android:id="@+id/view_remaining_time"
-                        android:layout_weight="2"
+                        android:id="@+id/view_estimated_time"
+                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                        tools:ignore="RtlHardcoded"
+                />
+
+                <TextView
+                        android:id="@+id/view_estimated_diff"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         tools:ignore="RtlHardcoded"
                 />

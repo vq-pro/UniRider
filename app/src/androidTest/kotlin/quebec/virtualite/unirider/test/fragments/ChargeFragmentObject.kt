@@ -17,15 +17,22 @@ import quebec.virtualite.unirider.views.WheelChargeFragment
 
 class ChargeFragmentObject(val app: TestApp) {
 
-    fun changeVoltageTo(voltage: String) {
+    fun changeVoltageActualTo(voltage: String) {
         setText(R.id.edit_voltage_actual, strip(voltage, "V"))
+    }
+
+    fun changeVoltageRequired(voltage: String) {
+        setText(R.id.edit_voltage_required, strip(voltage, "V"))
     }
 
     fun chargeFor(km: String) {
         assertThat("Full button is not enabled by default", R.id.check_full_charge, isChecked())
 
-        if ("full" != km) {
-            click(R.id.check_full_charge)
+        if ("full" == km) {
+            click(R.id.check_full_charge)   // Disable
+            click(R.id.check_full_charge)   // Enable again
+
+        } else {
             setText(R.id.edit_km, strip(km, "km"))
         }
     }
@@ -46,10 +53,11 @@ class ChargeFragmentObject(val app: TestApp) {
         expectedEstimates.diff(
             DataTable.create(
                 listOf(
-                    listOf("required voltage", "time"),
+                    listOf("required voltage", "diff", "time"),
                     listOf(
-                        getText(R.id.view_voltage_required),
-                        getText(R.id.view_remaining_time)
+                        getVoltageRequired(),
+                        getText(R.id.view_diff),
+                        getEstimatedTime()
                     )
                 )
             )
@@ -66,5 +74,18 @@ class ChargeFragmentObject(val app: TestApp) {
 
     fun validateView() {
         assertThat(app.activeFragment(), equalTo(WheelChargeFragment::class.java))
+    }
+
+    private fun getEstimatedTime(): String =
+        (getText(R.id.view_estimated_time) + " " + getText(R.id.view_estimated_diff))
+            .trim()
+
+    private fun getVoltageRequired(): String {
+        val voltage = getText(R.id.view_voltage_required)
+
+        return if (!voltage.isEmpty())
+            voltage + "V"
+        else
+            ""
     }
 }

@@ -21,9 +21,9 @@ class ChargeSteps : BaseSteps() {
         super.afterScenario()
     }
 
-    @When("^I change the voltage to (.*)$")
-    fun changeVoltage(newVoltage: String) {
-        chargeFragment.changeVoltageTo(newVoltage)
+    @When("^I change the actual voltage to (.*)$")
+    fun changeVoltageActual(newVoltage: String) {
+        chargeFragment.changeVoltageActualTo(newVoltage)
     }
 
     @When("I reconnect to update the voltage$")
@@ -34,6 +34,11 @@ class ChargeSteps : BaseSteps() {
     @When("^I request to charge for (.*?)$")
     fun requestChargeFor(km: String) {
         chargeFragment.chargeFor(km)
+    }
+
+    @When("^I request to charge to (.*?)$")
+    fun requestChargeTo(voltage: String) {
+        chargeFragment.changeVoltageRequired(voltage)
     }
 
     @Then("^it displays an actual voltage of (.*?)V$")

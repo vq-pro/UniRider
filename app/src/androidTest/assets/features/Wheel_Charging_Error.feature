@@ -11,10 +11,10 @@ Feature: Wheel Charging - ERROR
     And I charge the wheel
 
   Scenario Outline: Changing the voltage - ERROR [<voltage>]
-    When I change the voltage to <voltage>
+    When I change the actual voltage to <voltage>
     Then it displays these charging estimates:
-      | required voltage | time |
-      |                  |      |
+      | required voltage | diff | time |
+      |                  |      |      |
     Examples:
       | voltage |
       |         |
@@ -25,12 +25,12 @@ Feature: Wheel Charging - ERROR
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V
     And it displays these charging estimates:
-      | required voltage   | time   |
-      | <required voltage> | <time> |
+      | required voltage | diff | time |
+      |                  |      |      |
     Examples:
-      | distance | required voltage | time |
-      |          |                  |      |
-      | aa       |                  |      |
+      | distance |
+      |          |
+      | aa       |
 
   Scenario: Update the voltage - ERROR - Never connected
     When I request to charge for 40 km
