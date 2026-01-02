@@ -27,7 +27,7 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
     internal lateinit var editVoltageRequired: EditText
-    internal lateinit var textDiff: TextView
+    internal lateinit var textVoltageRequiredDiff: TextView
     internal lateinit var textEstimatedDiff: TextView
     internal lateinit var textEstimatedTime: TextView
     internal lateinit var textName: TextView
@@ -50,11 +50,11 @@ open class WheelChargeFragment : BaseFragment() {
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         editVoltageRequired = view.findViewById(R.id.edit_voltage_required)
-        textDiff = view.findViewById(R.id.view_diff)
         textEstimatedDiff = view.findViewById(R.id.view_estimated_diff)
         textEstimatedTime = view.findViewById(R.id.view_estimated_time)
         textName = view.findViewById(R.id.view_name)
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
+        textVoltageRequiredDiff = view.findViewById(R.id.view_voltage_required_diff)
         switchFullCharge = view.findViewById(R.id.check_full_charge)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
@@ -153,7 +153,7 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     internal open fun displayBlanks() {
-        textDiff.text = ""
+        textVoltageRequiredDiff.text = ""
         textEstimatedDiff.text = ""
         textEstimatedTime.text = ""
         textVoltageRequired.text = ""
@@ -161,14 +161,14 @@ open class WheelChargeFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     internal open fun displayEstimates(voltageDiff: Float, rawHours: Float) {
-        textDiff.text = "(+$voltageDiff)"
+        textVoltageRequiredDiff.text = "(+$voltageDiff)"
         textEstimatedDiff.text = estimatedDiff(rawHours)
         textEstimatedTime.text = estimatedTime(rawHours)
     }
 
     @SuppressLint("SetTextI18n")
     internal open fun displayGo() {
-        textDiff.text = "Go!"
+        textVoltageRequiredDiff.text = "Go!"
         textEstimatedDiff.text = ""
         textEstimatedTime.text = ""
     }

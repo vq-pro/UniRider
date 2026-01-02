@@ -60,7 +60,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     lateinit var mockedEditVoltageActual: EditText
 
     @Mock
-    lateinit var mockedTextDiff: TextView
+    lateinit var mockedTextVoltageRequiredDiff: TextView
 
     @Mock
     lateinit var mockedTextEstimatedTime: TextView
@@ -126,7 +126,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.displayBlanks()
 
         // Then
-        verify(mockedTextDiff).text = ""
+        verify(mockedTextVoltageRequiredDiff).text = ""
         verify(mockedTextEstimatedDiff).text = ""
         verify(mockedTextEstimatedTime).text = ""
         verify(mockedTextVoltageRequired).text = ""
@@ -150,7 +150,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.displayEstimates(voltageDiff, rawHours)
 
         // Then
-        verify(mockedTextDiff).text = "(+2.5)"
+        verify(mockedTextVoltageRequiredDiff).text = "(+2.5)"
         verify(mockedTextEstimatedTime).text = time
         verify(mockedTextEstimatedDiff).text = timeDiff
     }
@@ -164,7 +164,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.displayGo()
 
         // Then
-        verify(mockedTextDiff).text = "Go!"
+        verify(mockedTextVoltageRequiredDiff).text = "Go!"
         verify(mockedTextEstimatedDiff).text = ""
         verify(mockedTextEstimatedTime).text = ""
     }
@@ -311,11 +311,11 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.edit_voltage_required, fragment.editVoltageRequired, mockedEditVoltageRequired)
-        verifyFieldAssignment(R.id.view_diff, fragment.textDiff, mockedTextDiff)
         verifyFieldAssignment(R.id.view_estimated_diff, fragment.textEstimatedDiff, mockedTextEstimatedDiff)
         verifyFieldAssignment(R.id.view_estimated_time, fragment.textEstimatedTime, mockedTextEstimatedTime)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_voltage_required, fragment.textVoltageRequired, mockedTextVoltageRequired)
+        verifyFieldAssignment(R.id.view_voltage_required_diff, fragment.textVoltageRequiredDiff, mockedTextVoltageRequiredDiff)
 
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
@@ -557,7 +557,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.editKm = mockedEditKm
         fragment.editVoltageActual = mockedEditVoltageActual
         fragment.editVoltageRequired = mockedEditVoltageRequired
-        fragment.textDiff = mockedTextDiff
+        fragment.textVoltageRequiredDiff = mockedTextVoltageRequiredDiff
         fragment.textEstimatedDiff = mockedTextEstimatedDiff
         fragment.textEstimatedTime = mockedTextEstimatedTime
         fragment.textVoltageRequired = mockedTextVoltageRequired
@@ -574,11 +574,11 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
         mockField(R.id.edit_voltage_required, mockedEditVoltageRequired)
-        mockField(R.id.view_diff, mockedTextDiff)
         mockField(R.id.view_estimated_diff, mockedTextEstimatedDiff)
         mockField(R.id.view_estimated_time, mockedTextEstimatedTime)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_voltage_required, mockedTextVoltageRequired)
+        mockField(R.id.view_voltage_required_diff, mockedTextVoltageRequiredDiff)
     }
 
     private fun mockCheckFullCharge(value: Boolean) {

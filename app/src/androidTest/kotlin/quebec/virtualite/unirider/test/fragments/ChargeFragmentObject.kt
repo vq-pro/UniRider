@@ -56,7 +56,7 @@ class ChargeFragmentObject(val app: TestApp) {
                     listOf("required voltage", "diff", "time"),
                     listOf(
                         getVoltageRequired(),
-                        getText(R.id.view_diff),
+                        getText(R.id.view_voltage_required_diff),
                         getEstimatedTime()
                     )
                 )

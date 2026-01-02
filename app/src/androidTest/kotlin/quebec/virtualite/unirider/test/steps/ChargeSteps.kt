@@ -41,7 +41,7 @@ class ChargeSteps : BaseSteps() {
         chargeFragment.changeVoltageRequired(voltage)
     }
 
-    @Then("^it displays an actual voltage of (.*?)V$")
+    @Then("^it displays an actual voltage of (.*?)$")
     fun validateActualVoltage(expectedVoltage: String) {
         chargeFragment.validateActualVoltage(expectedVoltage)
     }

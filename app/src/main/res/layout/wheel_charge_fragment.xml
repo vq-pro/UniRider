@@ -61,40 +61,6 @@
                 />
             </TableRow>
 
-            <!-- km -->
-            <TableRow android:layout_marginTop="10dp">
-                <TextView
-                        android:labelFor="@+id/edit_km"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_distance"
-                />
-
-                <EditText
-                        android:id="@+id/edit_km"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:autofillHints=""
-                        android:inputType="text"
-                />
-
-                <TextView
-                        android:labelFor="@+id/edit_km"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_km"
-                />
-            </TableRow>
-
             <!-- Actual voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
@@ -129,6 +95,40 @@
                 />
             </TableRow>
 
+            <!-- km -->
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/edit_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_distance"
+                />
+
+                <EditText
+                        android:id="@+id/edit_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                        android:inputType="text"
+                />
+
+                <TextView
+                        android:labelFor="@+id/edit_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_km"
+                />
+            </TableRow>
+
             <!-- Required voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
@@ -152,12 +152,12 @@
                 />
 
                 <TextView
-                        android:id="@+id/view_diff"
+                        android:id="@+id/view_voltage_required_diff"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         tools:ignore="RtlHardcoded"
                 />
             </TableRow>
@@ -224,7 +224,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         tools:ignore="RtlHardcoded"
                 />
             </TableRow>
