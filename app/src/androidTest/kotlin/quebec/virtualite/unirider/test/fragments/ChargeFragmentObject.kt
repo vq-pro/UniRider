@@ -18,11 +18,11 @@ import quebec.virtualite.unirider.views.WheelChargeFragment
 class ChargeFragmentObject(val app: TestApp) {
 
     fun changeVoltageActualTo(voltage: String) {
-        setText(R.id.edit_voltage_actual, strip(voltage, "V"))
+        setText(R.id.edit_voltage_actual, parseVoltage(voltage))
     }
 
     fun changeVoltageRequired(voltage: String) {
-        setText(R.id.edit_voltage_required, strip(voltage, "V"))
+        setText(R.id.edit_voltage_required, parseVoltage(voltage))
     }
 
     fun chargeFor(km: String) {
@@ -33,7 +33,7 @@ class ChargeFragmentObject(val app: TestApp) {
             click(R.id.check_full_charge)   // Enable again
 
         } else {
-            setText(R.id.edit_km, strip(km, "km"))
+            setText(R.id.edit_km, parseKm(km))
         }
     }
 
@@ -42,7 +42,7 @@ class ChargeFragmentObject(val app: TestApp) {
     }
 
     fun validateActualVoltage(expectedVoltage: String) {
-        assertThat(R.id.edit_voltage_actual, hasText(strip(expectedVoltage, "V")))
+        assertThat(R.id.edit_voltage_actual, hasText(parseVoltage(expectedVoltage)))
     }
 
     fun validateCannotConnect() {
@@ -60,10 +60,9 @@ class ChargeFragmentObject(val app: TestApp) {
         expectedEstimates.diff(
             DataTable.create(
                 listOf(
-                    listOf("required", "diff", "target", "time"),
+                    listOf("required", "target", "time"),
                     listOf(
-                        formatV(getText(R.id.view_voltage_required)),
-                        getText(R.id.view_voltage_required_diff),
+                        getRequired(),
                         formatV(getText(R.id.view_voltage_target)),
                         getEstimatedTime()
                     )
@@ -89,4 +88,12 @@ class ChargeFragmentObject(val app: TestApp) {
     private fun getEstimatedTime(): String =
         (getText(R.id.view_estimated_time) + " " + getText(R.id.view_estimated_diff))
             .trim()
+
+    private fun getRequired(): String =
+        (formatV(getText(R.id.view_voltage_required)) + " " + getText(R.id.view_voltage_required_diff))
+            .trim()
+
+    private fun parseKm(km: String) = strip(km, " km")
+
+    private fun parseVoltage(voltage: String) = if (voltage.contains('V')) voltage.substring(0, voltage.indexOf('V')) else voltage
 }

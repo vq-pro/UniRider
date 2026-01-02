@@ -170,8 +170,8 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.displayGo()
 
         // Then
-        verify(mockedTextVoltageRequiredDiff).text = "Go!"
-        verify(mockedTextEstimatedTime).text = ""
+        verify(mockedTextVoltageRequiredDiff).text = ""
+        verify(mockedTextEstimatedTime).text = "Go!"
         verify(mockedTextEstimatedDiff).text = ""
     }
 

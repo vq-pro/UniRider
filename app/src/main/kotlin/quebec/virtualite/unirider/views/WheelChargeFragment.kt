@@ -112,8 +112,13 @@ open class WheelChargeFragment : BaseFragment() {
             isNumeric(voltage) && floatOf(voltage) >= wheel!!.voltageMin -> {
                 this.cacheVoltageActual = floatOf(voltage)
 
-                if (switchFullCharge.isChecked || !widgets.getText(editKm).isEmpty() || !widgets.getText(editVoltageRequired).isEmpty()) display()
-                else displayBlanks()
+                if (switchFullCharge.isChecked
+                    || !widgets.getText(editKm).isEmpty()
+                    || !widgets.getText(editVoltageRequired).isEmpty()
+                )
+                    display()
+                else
+                    displayBlanks()
             }
 
             else -> displayBlanks()
@@ -166,9 +171,9 @@ open class WheelChargeFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     internal open fun displayGo() {
+        textVoltageRequiredDiff.text = ""
+        textEstimatedTime.text = "Go!"
         textEstimatedDiff.text = ""
-        textEstimatedTime.text = ""
-        textVoltageRequiredDiff.text = "Go!"
     }
 
     @SuppressLint("DefaultLocale")
