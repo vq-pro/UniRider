@@ -201,12 +201,12 @@ open class WheelChargeFragment : BaseFragment() {
     internal open fun getVoltageRequired(): Float {
         val fieldVoltageRequired = widgets.getText(editVoltageRequired)
         val voltageRequired = when {
-            !fieldVoltageRequired.isEmpty() -> {
-                floatOf(fieldVoltageRequired)
-            }
-
             switchFullCharge.isChecked -> {
                 calculatorService.requiredVoltageFull(wheel)
+            }
+
+            !fieldVoltageRequired.isEmpty() -> {
+                floatOf(fieldVoltageRequired)
             }
 
             else -> {

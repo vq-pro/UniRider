@@ -5,7 +5,7 @@ Feature: Wheel Viewing
       | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
       | Sherman     | 17622   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1.5V           | 1               | No   |
       | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1               | No   |
-      | Sherman L   | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 149.3V      | 1.8V           | 1.0181          | No   |
+      | Sherman L   | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.8V           | 1.0667          | No   |
       | 14S         | 694     | 840  | 48V         | 67.2V       | 4V/h        | 65.5V       | 1.5V           | 1               | No   |
       | S18         | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.5V       | 1.5V           | 1               | No   |
       | Nikola+     | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.5V       | 1.5V           | 1               | Yes  |
@@ -56,6 +56,7 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 95.3%   |
       | Sherman Max | 91.9V   | 53.6%   |
 
+#    FIXME-1 Force a connect just before switching over to the charging screen, to get an off charge voltage actual
   Scenario: => Charging the wheel
     Given I select the Sherman
     And I cannot charge the wheel

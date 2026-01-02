@@ -16,8 +16,9 @@ Feature: Wheel Charging
       | remaining | total range |
       | 14.5      | 64.5        |
     And I charge the wheel
+#    FIXME-1 Force a popup when entering this screen, and when OK do another connect to get the voltage actual on charger. Calculate the charger offset live.
 
-#  FIXME-1 Pour charger, il faut absolument capturer le voltage initial.
+#  FIXME-2 Pour charger, il faut absolument capturer le voltage initial.
 #  Donc quand on clique sur le bouton Charger:
 #    * Se connecter pour capturer le voltage initial, AVANT de brancher le chargeur
 #    * Afficher un popup pour indiquer quand le chargeur est brancher

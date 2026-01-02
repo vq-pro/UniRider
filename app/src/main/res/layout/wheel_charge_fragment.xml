@@ -148,8 +148,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:autofillHints=""
-                        android:inputType="text"
+                        tools:ignore="RtlHardcoded"
                 />
 
                 <TextView
@@ -157,7 +156,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAlignment="viewStart"
+                        android:layout_marginStart="5dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         tools:ignore="RtlHardcoded"
                 />

@@ -10,10 +10,10 @@ private const val BLUETOOTH_SIMULATED_DELAY = 250L
 open class BluetoothServicesSim : BluetoothServices {
 
     companion object {
-        private var device = BluetoothDevice("KS-14S-SIM", "AB:CD:EF:GH:IJ:KL")
-        private var km = 15f
-        private var mileage = 123f
-        private var voltage = 61.2f
+        private var device = BluetoothDevice("LK13447", "AB:CD:EF:GH:IJ:KL")
+        private var km = 21.867f    // km wheel, returned using distance offset for GPS value
+        private var mileage = 20020.518f
+        private var voltage = 141.01f
 
         fun setDevice(device: BluetoothDevice): Companion {
             Companion.device = device

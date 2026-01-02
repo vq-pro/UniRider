@@ -276,7 +276,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     }
 
     @Test
-    fun onConnect_whenNotFirstTime_connectAndUpdate() {
+    fun onConnect_whenUpdating_connectAndUpdate() {
         // Given
         injectMocks()
 

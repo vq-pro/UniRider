@@ -6,9 +6,9 @@ Feature: Wheel Connecting - End-2-End
   Background:
     Given these wheels:
       | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
-      | Sherman-L   | 20000   | 4000 | 104.4V      | 151.2V      | 21V/h       | 149.3V      | 1.8V           | 1.0667          | No   |
+      | Sherman-L   | 20000   | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.8V           | 1.0667          | No   |
       | Sherman     | 20106   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1.5V           | 1               | No   |
-      | Lynx        | 2000    | 2700 | 104.4V      | 151.2V      | 18.5V/h     | 149.3V      | 1.8V           | 1.0667          | No   |
+      | Lynx        | 2000    | 2700 | 104.4V      | 151.2V      | 18.5V/h     | 150.1V      | 1.8V           | 1.0667          | No   |
       | Aero        | 0       | 1100 | 87V         | 126V        | 12V/h       | 125.6V      | 1.0V           | 1               | No   |
       | Sherman-S   | 23427   | 3600 | 69.6V       | 100.8V      | 9.5V/h      | 99.5V       | 1.5V           | 1               | Yes  |
       | Sherman Max | 14530   | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1               | Yes  |

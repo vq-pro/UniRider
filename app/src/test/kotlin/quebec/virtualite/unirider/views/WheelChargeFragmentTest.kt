@@ -190,11 +190,30 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     }
 
     @Test
-    fun getVoltageRequired_whenFullChargeIsEnabled() {
+    fun getVoltageRequired_whenFullCharge() {
         // Given
         injectMocks()
         mockCheckFullCharge(true)
         mockEditVoltageRequiredWith("")
+
+        given(mockedCalculatorService.requiredVoltageFull(WHEEL))
+            .willReturn(VOLTAGE_FULL)
+
+        // When
+        val result = fragment.getVoltageRequired()
+
+        // Then
+        verify(mockedTextVoltageRequired).setText("$VOLTAGE_FULL")
+
+        assertThat(result, equalTo(VOLTAGE_FULL))
+    }
+
+    @Test
+    fun getVoltageRequired_whenFullChargeAndVoltageRequired() {
+        // Given
+        injectMocks()
+        mockCheckFullCharge(true)
+        mockEditVoltageRequiredWith("$VOLTAGE")
 
         given(mockedCalculatorService.requiredVoltageFull(WHEEL))
             .willReturn(VOLTAGE_FULL)
