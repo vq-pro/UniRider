@@ -32,45 +32,45 @@ Feature: Wheel Charging
     Given I request to charge for 40 km
     And it displays an actual voltage of 138.3V
     And it displays these charging estimates:
-      | required voltage | diff   | time        |
-      | 143.1V           | (+4.8) | 11:59 (14m) |
+      | required | diff   | target | time        |
+      | 143.1V   | (+4.8) | 141.3V | 11:59 (14m) |
     When I change the actual voltage to 140.0V
     Then it displays these charging estimates:
-      | required voltage | diff   | time       |
-      | 143.1V           | (+3.1) | 11:54 (9m) |
+      | required | diff   | target | time       |
+      | 143.1V   | (+3.1) | 141.3V | 11:54 (9m) |
 
   Scenario Outline: Charging a wheel by distance [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 138.3V
     And the full charge indicator is <fc_indicator>
     And it displays these charging estimates:
-      | required voltage | diff   | time   |
-      | <voltage>        | <diff> | <time> |
+      | required   | diff   | target   | time   |
+      | <required> | <diff> | <target> | <time> |
     Examples:
-      | distance | voltage | diff    | time        | fc_indicator |
-      | 0 km     | 138.3V  | Go!     |             | off          |
-      | 10 km    | 129.3V  | Go!     |             | off          |
-      | 20 km    | 135.1V  | Go!     |             | off          |
-      | 40 km    | 143.1V  | (+4.8)  | 11:59 (14m) | off          |
-      | 50 km    | 145.0V  | (+6.7)  | 12:04 (19m) | off          |
-      | 60 km    | 150.1V  | (+11.8) | 12:19 (34m) | off          |
-      | full     | 150.1V  | (+11.8) | 12:19 (34m) | on           |
+      | distance | required | diff    | target | time        | fc_indicator |
+      | 0 km     | 138.3V   | Go!     | 136.5V |             | off          |
+      | 10 km    | 129.3V   | Go!     | 127.5V |             | off          |
+      | 20 km    | 135.1V   | Go!     | 133.3V |             | off          |
+      | 40 km    | 143.1V   | (+4.8)  | 141.3V | 11:59 (14m) | off          |
+      | 50 km    | 145.0V   | (+6.7)  | 143.2V | 12:04 (19m) | off          |
+      | 60 km    | 150.1V   | (+11.8) | 148.3V | 12:19 (34m) | off          |
+      | full     | 150.1V   | (+11.8) | 148.3V | 12:19 (34m) | on           |
 
-  Scenario Outline: Charging a wheel by voltage [<voltage>]
-    When I request to charge to <voltage>
+  Scenario Outline: Charging a wheel by voltage [<required>]
+    When I request to charge to <required>
     Then it displays an actual voltage of 138.3V
     And the full charge indicator is off
     And it displays these charging estimates:
-      | required voltage | diff   | time   |
-      | <voltage>        | <diff> | <time> |
+      | required   | diff   | target   | time   |
+      | <required> | <diff> | <target> | <time> |
     Examples:
-      | voltage | diff    | time        |
-      | 135.6V  | Go!     |             |
-      | 140.0V  | (+1.7)  | 11:50 (5m)  |
-      | 142.7V  | (+4.4)  | 11:58 (13m) |
-      | 144.5V  | (+6.2)  | 12:03 (18m) |
-      | 147.9V  | (+9.6)  | 12:12 (27m) |
-      | 150.1V  | (+11.8) | 12:19 (34m) |
+      | required | diff    | target | time        |
+      | 135.6V   | Go!     | 133.8V |             |
+      | 140.0V   | (+1.7)  | 138.2V | 11:50 (5m)  |
+      | 142.7V   | (+4.4)  | 140.9V | 11:58 (13m) |
+      | 144.5V   | (+6.2)  | 142.7V | 12:03 (18m) |
+      | 147.9V   | (+9.6)  | 146.1V | 12:12 (27m) |
+      | 150.1V   | (+11.8) | 148.3V | 12:19 (34m) |
 
   Scenario: Reconnect to update the voltage
     Given this simulated device:
@@ -80,5 +80,5 @@ Feature: Wheel Charging
     When I reconnect to update the voltage
     Then it displays an actual voltage of 141.0V
     And it displays these charging estimates:
-      | required voltage | diff   | time       |
-      | 143.1V           | (+2.1) | 11:51 (6m) |
+      | required | diff   | target | time       |
+      | 143.1V   | (+2.1) | 141.3V | 11:51 (6m) |

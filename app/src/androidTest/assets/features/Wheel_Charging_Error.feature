@@ -12,9 +12,7 @@ Feature: Wheel Charging - ERROR
 
   Scenario Outline: Changing the voltage - ERROR [<voltage>]
     When I change the actual voltage to <voltage>
-    Then it displays these charging estimates:
-      | required voltage | diff | time |
-      |                  |      |      |
+    Then it displays empty charging estimates
     Examples:
       | voltage |
       |         |
@@ -24,9 +22,7 @@ Feature: Wheel Charging - ERROR
   Scenario Outline: Charging a wheel - ERROR [<distance>]
     When I request to charge for <distance>
     Then it displays an actual voltage of 87.9V
-    And it displays these charging estimates:
-      | required voltage | diff | time |
-      |                  |      |      |
+    And it displays empty charging estimates
     Examples:
       | distance |
       |          |

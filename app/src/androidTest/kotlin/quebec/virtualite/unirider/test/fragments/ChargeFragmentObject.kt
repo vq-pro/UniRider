@@ -49,14 +49,22 @@ class ChargeFragmentObject(val app: TestApp) {
         assertThat("Connect button is not disabled", R.id.button_connect_charge, isDisabled())
     }
 
+    fun validateEmptyEstimates() {
+        assertThat(getText(R.id.view_voltage_required), equalTo(""))
+        assertThat(getText(R.id.view_voltage_required_diff), equalTo(""))
+        assertThat(getText(R.id.view_voltage_target), equalTo(""))
+        assertThat(getEstimatedTime(), equalTo(""))
+    }
+
     fun validateEstimates(expectedEstimates: DataTable) {
         expectedEstimates.diff(
             DataTable.create(
                 listOf(
-                    listOf("required voltage", "diff", "time"),
+                    listOf("required", "diff", "target", "time"),
                     listOf(
-                        getVoltageRequired(),
+                        formatV(getText(R.id.view_voltage_required)),
                         getText(R.id.view_voltage_required_diff),
+                        formatV(getText(R.id.view_voltage_target)),
                         getEstimatedTime()
                     )
                 )
@@ -76,16 +84,9 @@ class ChargeFragmentObject(val app: TestApp) {
         assertThat(app.activeFragment(), equalTo(WheelChargeFragment::class.java))
     }
 
+    private fun formatV(voltage: String): String = if (!voltage.isEmpty()) voltage + "V" else ""
+
     private fun getEstimatedTime(): String =
         (getText(R.id.view_estimated_time) + " " + getText(R.id.view_estimated_diff))
             .trim()
-
-    private fun getVoltageRequired(): String {
-        val voltage = getText(R.id.view_voltage_required)
-
-        return if (!voltage.isEmpty())
-            voltage + "V"
-        else
-            ""
-    }
 }

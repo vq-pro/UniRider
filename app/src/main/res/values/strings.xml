@@ -34,6 +34,7 @@
     <string name="label_voltage_full">Full Charge</string>
     <string name="label_voltage_required">Required</string>
     <string name="label_voltage_start">Start</string>
+    <string name="label_voltage_target">Target</string>
     <string name="label_wh">wh</string>
     <string name="label_wh_per_hour">wh/h</string>
     <string name="label_wh_per_km">wh/km</string>

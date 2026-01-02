@@ -56,6 +56,11 @@ class ChargeSteps : BaseSteps() {
         chargeFragment.validateEstimates(expectedEstimates)
     }
 
+    @Then("it displays empty charging estimates")
+    fun validateChargingEstimatesEmpty() {
+        chargeFragment.validateEmptyEstimates()
+    }
+
     @Then("the full charge indicator is on")
     fun validateFullChargeIndicatorOn() {
         chargeFragment.validateFullChargeIndicatorOn();
