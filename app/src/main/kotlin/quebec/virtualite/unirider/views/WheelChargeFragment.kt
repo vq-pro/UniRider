@@ -35,14 +35,11 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var switchFullCharge: SwitchMaterial
 
     internal var cacheVoltageActual: Float? = 0f
-    internal var parmVoltageActual: Float? = 0f
 
     private val dateUtils = DateUtils()
     private var calculatorService = CalculatorService()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        parmVoltageActual = chargeContext.voltage
-
         return inflater.inflate(R.layout.wheel_charge_fragment, container, false)
     }
 
@@ -67,10 +64,9 @@ open class WheelChargeFragment : BaseFragment() {
         widgets.setOnCheckedChangeListener(switchFullCharge, onToggleFullCharge())
 
         fragments.runUI {
-            // FIXME-1 Make a connect() method for this block
             textName.text = wheel!!.name
 
-            cacheVoltageActual = parmVoltageActual!! + wheel!!.chargerOffset
+            cacheVoltageActual = chargeContext.voltage + wheel!!.chargerOffset
             editVoltageActual.setText("$cacheVoltageActual")
 
             if (wheel!!.btName == null || wheel!!.btAddr == null) {

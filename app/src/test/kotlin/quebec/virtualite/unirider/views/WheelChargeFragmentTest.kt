@@ -80,7 +80,6 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     fun before() {
         BaseFragment.wheel = WHEEL
         fragment.cacheVoltageActual = VOLTAGE + WHEEL.chargerOffset
-        fragment.parmVoltageActual = VOLTAGE
 
         simulateNow("11:45")
         mockExternal()
@@ -271,22 +270,17 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
     @Test
     fun onCreateView() {
-        // Given
-        BaseFragment.chargeContext.voltage = VOLTAGE
-
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
         // Then
         verifyInflate(R.layout.wheel_charge_fragment)
-
-        assertThat(fragment.parmVoltageActual, equalTo(VOLTAGE))
     }
 
     @Test
     fun onViewCreated() {
         // Given
-        fragment.parmVoltageActual = VOLTAGE
+        BaseFragment.chargeContext.voltage = VOLTAGE
         val voltageActual = VOLTAGE + WHEEL.chargerOffset
 
         // When
