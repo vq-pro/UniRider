@@ -66,55 +66,53 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     @Spy
     private lateinit var fragment: WheelViewFragment
 
-// FIXME-0 Make all variables private
-
     @Captor
-    lateinit var captorExecution: ArgumentCaptor<() -> Unit>
+    private lateinit var captorExecution: ArgumentCaptor<() -> Unit>
 
     @Mock
-    lateinit var mockedButtonCharge: Button
+    private lateinit var mockedButtonCharge: Button
 
     @Mock
-    lateinit var mockedButtonConnect: Button
+    private lateinit var mockedButtonConnect: Button
 
     @Mock
-    lateinit var mockedButtonEdit: Button
+    private lateinit var mockedButtonEdit: Button
 
     @Mock
-    lateinit var mockedCalculatorService: CalculatorService
+    private lateinit var mockedCalculatorService: CalculatorService
 
     @Mock
-    lateinit var mockedEditKm: EditText
+    private lateinit var mockedEditKm: EditText
 
     @Mock
-    lateinit var mockedEditVoltageActual: EditText
+    private lateinit var mockedEditVoltageActual: EditText
 
     @Mock
-    lateinit var mockedLabelBattery: TextView
+    private lateinit var mockedLabelBattery: TextView
 
     @Mock
-    lateinit var mockedLabelRemainingRange: TextView
+    private lateinit var mockedLabelRemainingRange: TextView
 
     @Mock
-    lateinit var mockedLabelTotalRange: TextView
+    private lateinit var mockedLabelTotalRange: TextView
 
     @Mock
-    lateinit var mockedTextBattery: TextView
+    private lateinit var mockedTextBattery: TextView
 
     @Mock
-    lateinit var mockedTextBtName: TextView
+    private lateinit var mockedTextBtName: TextView
 
     @Mock
-    lateinit var mockedTextMileage: TextView
+    private lateinit var mockedTextMileage: TextView
 
     @Mock
-    lateinit var mockedTextName: TextView
+    private lateinit var mockedTextName: TextView
 
     @Mock
-    lateinit var mockedTextRemainingRange: TextView
+    private lateinit var mockedTextRemainingRange: TextView
 
     @Mock
-    lateinit var mockedTextTotalRange: TextView
+    private lateinit var mockedTextTotalRange: TextView
 
     @Before
     fun before() {

@@ -23,10 +23,8 @@ import quebec.virtualite.unirider.database.WheelEntity
 @RunWith(MockitoJUnitRunner::class)
 class WheelValidatorTest {
 
-    // FIXME-0 Make all variables private
-
     @InjectMocks
-    lateinit var comparator: WheelValidator
+    private lateinit var comparator: WheelValidator
 
     private val WHEEL = S18_1
 

@@ -31,16 +31,14 @@ import quebec.virtualite.unirider.bluetooth.WheelInfo
 @RunWith(MockitoJUnitRunner::class)
 class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
 
-    // FIXME-0 Make all variables private
-
     private val DEVICE = BluetoothDevice(DEVICE_NAME, DEVICE_ADDR)
     private val DEVICE2 = BluetoothDevice(DEVICE_NAME2, DEVICE_ADDR2)
 
     @InjectMocks
-    lateinit var fragment: WheelScanFragment
+    private lateinit var fragment: WheelScanFragment
 
     @Mock
-    lateinit var mockedLvDevices: ListView
+    private lateinit var mockedLvDevices: ListView
 
     @Before
     fun before() {

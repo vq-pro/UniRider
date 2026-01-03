@@ -47,53 +47,51 @@ import quebec.virtualite.unirider.TestDomain.WH_NEW
 @RunWith(MockitoJUnitRunner::class)
 class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
-    // FIXME-0 Make all variables private
-
     @InjectMocks
     @Spy
-    lateinit var fragment: WheelEditFragment
+    private lateinit var fragment: WheelEditFragment
 
     @Mock
-    lateinit var mockedButtonDelete: Button
+    private lateinit var mockedButtonDelete: Button
 
     @Mock
-    lateinit var mockedButtonSave: Button
+    private lateinit var mockedButtonSave: Button
 
     @Mock
-    lateinit var mockedEditChargeRate: EditText
+    private lateinit var mockedEditChargeRate: EditText
 
     @Mock
-    lateinit var mockedEditChargerOffset: EditText
+    private lateinit var mockedEditChargerOffset: EditText
 
     @Mock
-    lateinit var mockedEditDistanceOffset: EditText
+    private lateinit var mockedEditDistanceOffset: EditText
 
     @Mock
-    lateinit var mockedEditMileage: EditText
+    private lateinit var mockedEditMileage: EditText
 
     @Mock
-    lateinit var mockedEditName: EditText
+    private lateinit var mockedEditName: EditText
 
     @Mock
-    lateinit var mockedEditPreMileage: EditText
+    private lateinit var mockedEditPreMileage: EditText
 
     @Mock
-    lateinit var mockedEditVoltageFull: EditText
+    private lateinit var mockedEditVoltageFull: EditText
 
     @Mock
-    lateinit var mockedEditVoltageMax: EditText
+    private lateinit var mockedEditVoltageMax: EditText
 
     @Mock
-    lateinit var mockedEditVoltageMin: EditText
+    private lateinit var mockedEditVoltageMin: EditText
 
     @Mock
-    lateinit var mockedEditWh: EditText
+    private lateinit var mockedEditWh: EditText
 
     @Mock
-    lateinit var mockedSwitchSold: SwitchMaterial
+    private lateinit var mockedSwitchSold: SwitchMaterial
 
     @Mock
-    lateinit var mockedWheelValidator: WheelValidator
+    private lateinit var mockedWheelValidator: WheelValidator
 
     @Before
     fun before() {

@@ -45,23 +45,21 @@ private const val LIST_ENTRY4 = 3
 @RunWith(MockitoJUnitRunner::class)
 class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
 
-// FIXME-0 Make all variables private
-
     @InjectMocks
     @Spy
-    lateinit var fragment: MainFragment
+    private lateinit var fragment: MainFragment
 
     @Mock
-    lateinit var mockedLVWheels: ListView
+    private lateinit var mockedLVWheels: ListView
 
     @Mock
-    lateinit var mockedTextMileage: TextView
+    private lateinit var mockedTextMileage: TextView
 
     @Mock
-    lateinit var mockedTextName: TextView
+    private lateinit var mockedTextName: TextView
 
     @Mock
-    lateinit var mockedTextTotalMileage: TextView
+    private lateinit var mockedTextTotalMileage: TextView
 
     @Before
     fun before() {

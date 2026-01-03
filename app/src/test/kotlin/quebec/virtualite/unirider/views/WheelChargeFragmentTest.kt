@@ -39,47 +39,45 @@ import quebec.virtualite.unirider.views.BaseFragment.Companion.wheel
 @RunWith(MockitoJUnitRunner::class)
 class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java) {
 
-    // FIXME-0 Make all variables private
-
     @InjectMocks
     @Spy
-    lateinit var fragment: WheelChargeFragment
+    private lateinit var fragment: WheelChargeFragment
 
     @Mock
-    lateinit var mockedButtonConnect: Button
+    private lateinit var mockedButtonConnect: Button
 
     @Mock
-    lateinit var mockedSwitchFullCharge: SwitchMaterial
+    private lateinit var mockedSwitchFullCharge: SwitchMaterial
 
     @Mock
-    lateinit var mockedCalculatorService: CalculatorService
+    private lateinit var mockedCalculatorService: CalculatorService
 
     @Mock
-    lateinit var mockedEditKm: EditText
+    private lateinit var mockedEditKm: EditText
 
     @Mock
-    lateinit var mockedEditVoltageRequired: EditText
+    private lateinit var mockedEditVoltageRequired: EditText
 
     @Mock
-    lateinit var mockedEditVoltageActual: EditText
+    private lateinit var mockedEditVoltageActual: EditText
 
     @Mock
-    lateinit var mockedTextEstimatedTime: TextView
+    private lateinit var mockedTextEstimatedTime: TextView
 
     @Mock
-    lateinit var mockedTextEstimatedDiff: TextView
+    private lateinit var mockedTextEstimatedDiff: TextView
 
     @Mock
-    lateinit var mockedTextName: TextView
+    private lateinit var mockedTextName: TextView
 
     @Mock
-    lateinit var mockedTextVoltageRequired: TextView
+    private lateinit var mockedTextVoltageRequired: TextView
 
     @Mock
-    lateinit var mockedTextVoltageRequiredDiff: TextView
+    private lateinit var mockedTextVoltageRequiredDiff: TextView
 
     @Mock
-    lateinit var mockedTextVoltageTarget: TextView
+    private lateinit var mockedTextVoltageTarget: TextView
 
     private val WHEEL = S18_1
 
