@@ -17,6 +17,8 @@ import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
 @RunWith(MockitoJUnitRunner::class)
 class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirmationFragment::class.java) {
 
+    // FIXME-0 Make all variables private
+
     @InjectMocks
     lateinit var fragment: WheelDeleteConfirmationFragment
 

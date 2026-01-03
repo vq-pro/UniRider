@@ -6,6 +6,7 @@ import cucumber.api.DataTable
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
@@ -14,6 +15,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.strip
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.views.WheelChargeFragment
+import java.lang.Thread.sleep
 
 class ChargeFragmentObject(val app: TestApp) {
 
@@ -30,6 +32,7 @@ class ChargeFragmentObject(val app: TestApp) {
 
         if ("full" == km) {
             click(R.id.check_full_charge)   // Disable
+            sleep(250)
             click(R.id.check_full_charge)   // Enable again
 
         } else {
@@ -80,7 +83,7 @@ class ChargeFragmentObject(val app: TestApp) {
     }
 
     fun validateView() {
-        assertThat(app.activeFragment(), equalTo(WheelChargeFragment::class.java))
+        assertThatPolling({ app.activeFragment() }, equalTo(WheelChargeFragment::class.java))
     }
 
     private fun formatV(voltage: String): String = if (!voltage.isEmpty()) voltage + "V" else ""

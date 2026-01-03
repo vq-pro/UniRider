@@ -47,6 +47,8 @@ import quebec.virtualite.unirider.TestDomain.WH_NEW
 @RunWith(MockitoJUnitRunner::class)
 class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
+    // FIXME-0 Make all variables private
+
     @InjectMocks
     @Spy
     lateinit var fragment: WheelEditFragment

@@ -74,6 +74,12 @@ object StepsUtils {
         MatcherAssert.assertThat(message, actual, matcher)
     }
 
+    fun <T> assertThatPolling(getActual: () -> T, matcher: Matcher<T>) {
+        poll {
+            MatcherAssert.assertThat(getActual.invoke(), matcher)
+        }
+    }
+
     fun click(id: Int) {
         element(id)?.perform(click())
     }

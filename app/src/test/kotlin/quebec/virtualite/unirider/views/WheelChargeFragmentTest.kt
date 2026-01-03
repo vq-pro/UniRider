@@ -39,6 +39,8 @@ import quebec.virtualite.unirider.views.BaseFragment.Companion.wheel
 @RunWith(MockitoJUnitRunner::class)
 class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java) {
 
+    // FIXME-0 Make all variables private
+
     @InjectMocks
     @Spy
     lateinit var fragment: WheelChargeFragment
@@ -408,6 +410,8 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verify(mockedSwitchFullCharge).isChecked = false
         verify(fragment).display()
     }
+
+//    FIXME-0 Use numeric input for voltage & km fields
 
     @Test
     fun onUpdateKm_whenInvalid_displayBlanks() {

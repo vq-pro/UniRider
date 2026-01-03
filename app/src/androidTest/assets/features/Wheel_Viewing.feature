@@ -10,6 +10,12 @@ Feature: Wheel Viewing
       | S18         | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.5V       | 1.5V           | 1               | No   |
       | Nikola+     | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.5V       | 1.5V           | 1               | Yes  |
       | Abrams      | 95      | 2700 | 74.5V       | 100.8V      | 14V/h       | 99.5V       | 1.5V           | 1               | Yes  |
+    And this wheel is connected:
+      | Name      | Bt Name | Bt Address        |
+      | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |
+    And this simulated device:
+      | Bt Name | Bt Address        | Km     | Mileage   | Voltage |
+      | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 141.51V |
     And I start the app
 
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
@@ -56,8 +62,16 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 95.3%   |
       | Sherman Max | 91.9V   | 53.6%   |
 
-#    FIXME-1 Force a connect just before switching over to the charging screen, to get an off charge voltage actual
   Scenario: => Charging the wheel
+    Given I select the Sherman L
+    And I set the actual voltage to 140.0V
+    And I set the distance to 20 km
+    When I charge the wheel
+    Then it displays an actual voltage of 143.3V
+
+#    FIXME-1 Charging a disconnected wheel - don't connect first
+
+  Scenario: => Charging the wheel - Need to have entered voltage & km
     Given I select the Sherman
     And I cannot charge the wheel
     When I set the actual voltage to 91.9V

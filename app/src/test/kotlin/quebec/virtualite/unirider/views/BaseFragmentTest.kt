@@ -10,6 +10,8 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 open class BaseFragmentTest {
 
+    // FIXME-0 Make all variables private
+
     @InjectMocks
     lateinit var baseFragment: BaseFragment
 

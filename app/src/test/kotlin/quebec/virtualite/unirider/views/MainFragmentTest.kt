@@ -45,6 +45,8 @@ private const val LIST_ENTRY4 = 3
 @RunWith(MockitoJUnitRunner::class)
 class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
 
+// FIXME-0 Make all variables private
+
     @InjectMocks
     @Spy
     lateinit var fragment: MainFragment
