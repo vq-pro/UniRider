@@ -47,7 +47,7 @@ open class WheelViewFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonCharge = view.findViewById(R.id.button_charge)
-        buttonConnect = view.findViewById(R.id.button_connect_view)
+        buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)

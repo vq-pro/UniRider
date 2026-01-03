@@ -31,7 +31,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun connectAndAbort(deviceName: String, deviceAddr: String) {
-        click(R.id.button_connect_view)
+        click(R.id.button_connect)
         assertThat(R.id.devices, hasRow(BluetoothDevice(deviceName, deviceAddr)))
 
         app.back()
@@ -39,7 +39,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun connectTo(deviceName: String) {
-        click(R.id.button_connect_view)
+        click(R.id.button_connect)
         selectListViewItem(R.id.devices, deviceName)
 
         expectedDeviceName = deviceName
@@ -50,7 +50,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun reconnect() {
-        click(R.id.button_connect_view)
+        click(R.id.button_connect)
     }
 
     fun setActualVoltageTo(voltage: String) {
@@ -126,7 +126,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     fun validateSold(name: String) {
         assertThat("Wrong title", R.id.view_name, hasText("$name (Sold)"))
         assertThat("Charge button should not appear", R.id.button_charge, isHidden())
-        assertThat("Connect button should not appear", R.id.button_connect_view, isHidden())
+        assertThat("Connect button should not appear", R.id.button_connect, isHidden())
     }
 
     fun validateUnsold(selectedWheel: WheelEntity) {
@@ -154,8 +154,9 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         assertThat(R.id.view_battery, hasText("$expectedBattery"))
     }
 
-    private fun stripV(voltage: String): String = if (voltage.endsWith("V"))
-        voltage.substring(0, voltage.length - 1)
-    else
-        voltage
+    private fun stripV(voltage: String): String =
+        if (voltage.endsWith("V"))
+            voltage.substring(0, voltage.length - 1)
+        else
+            voltage
 }

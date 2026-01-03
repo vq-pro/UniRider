@@ -9,12 +9,12 @@ private const val BLUETOOTH_SIMULATED_DELAY = 250L
 
 open class BluetoothServicesSim : BluetoothServices {
 
-    // FIXME-0 Return multiple sets of values to simulate charging
     companion object {
         private var device = BluetoothDevice("LK13447", "AB:CD:EF:GH:IJ:KL")
         private var km = 21.867f    // km wheel, returned using distance offset for GPS value
         private var mileage = 20020.518f
-        private var voltage = 141.01f
+        private var voltages = listOf(141.01f, 142.5f, 143f, 143.2f, 143.4f, 146f)
+        private var iCurrentVoltage = 0
 
         fun setDevice(device: BluetoothDevice): Companion {
             Companion.device = device
@@ -31,14 +31,20 @@ open class BluetoothServicesSim : BluetoothServices {
             return this
         }
 
-        fun setVoltage(voltage: Float): Companion {
-            Companion.voltage = voltage
+        fun setVoltages(voltages: List<Float>): Companion {
+            iCurrentVoltage = 0
+            Companion.voltages = voltages
             return this
         }
     }
 
     override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((WheelInfo?) -> Unit)?) {
         sleep(BLUETOOTH_SIMULATED_DELAY)
+
+        val voltage = voltages[iCurrentVoltage]
+        if (++iCurrentVoltage >= voltages.size)
+            iCurrentVoltage = 0
+
         onGotInfo!!.invoke(WheelInfo(km, mileage, 0f, voltage))
     }
 

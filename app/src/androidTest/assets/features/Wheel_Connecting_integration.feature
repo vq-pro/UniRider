@@ -8,8 +8,8 @@ Feature: Wheel Connecting
       | Name      | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
       | Sherman L | 20000   | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.8V           | 1.0667          | No   |
     And this simulated device:
-      | Bt Name | Bt Address        | Km     | Mileage   | Voltage |
-      | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 141.01V |
+      | Bt Name | Bt Address        | Km     | Mileage   | Voltage          |
+      | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 141.01V, 141.96V |
     And I start the app
 
   Scenario: Connecting to a wheel to update its mileage for the first time
@@ -30,4 +30,6 @@ Feature: Wheel Connecting
     And the km is updated to 20.5
     And I can charge the wheel
 
-#  FIXME-2 Scenario for adding a wheel and connecting it right away
+#    FIXME-1 Temporary, remove after done
+    When I reconnect to the wheel
+    And the voltage is updated to 142.0V and the battery 75.4%

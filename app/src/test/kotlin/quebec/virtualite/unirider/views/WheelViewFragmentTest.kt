@@ -188,7 +188,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
         // Then
         verifyFieldAssignment(R.id.button_charge, fragment.buttonCharge, mockedButtonCharge)
-        verifyFieldAssignment(R.id.button_connect_view, fragment.buttonConnect, mockedButtonConnect)
+        verifyFieldAssignment(R.id.button_connect, fragment.buttonConnect, mockedButtonConnect)
         verifyFieldAssignment(R.id.button_edit, fragment.buttonEdit, mockedButtonEdit)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
@@ -625,7 +625,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     private fun mockFields() {
         mockField(R.id.button_charge, mockedButtonCharge)
-        mockField(R.id.button_connect_view, mockedButtonConnect)
+        mockField(R.id.button_connect, mockedButtonConnect)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)

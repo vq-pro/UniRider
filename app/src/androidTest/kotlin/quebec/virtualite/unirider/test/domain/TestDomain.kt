@@ -14,6 +14,7 @@ import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
 private const val SOLD_PREFIX = "- "
+private const val SUFFIX_VOLTAGE = "V"
 
 class TestDomain(applicationContext: Context) {
 
@@ -24,16 +25,17 @@ class TestDomain(applicationContext: Context) {
         db.deleteAll()
     }
 
+    private fun commaSeparatedList(itemsInAString: String) = itemsInAString.split(',').map { item -> item.trim() }
+
     fun forEachWheel(lambda: (Map.Entry<String, WheelEntity>) -> Unit) {
         wheels.forEach(lambda)
     }
 
-    fun getWheel(name: String): WheelEntity? {
-        return if (name.startsWith(SOLD_PREFIX))
+    fun getWheel(name: String): WheelEntity? =
+        if (name.startsWith(SOLD_PREFIX))
             wheels[name.substring(SOLD_PREFIX.length)]
         else
             wheels[name]
-    }
 
     fun loadConnectedWheels(wheels: DataTable) {
         assertThat(wheels.topCells(), equalTo(listOf("Name", "Bt Name", "Bt Address")))
@@ -58,9 +60,8 @@ class TestDomain(applicationContext: Context) {
         updateMapWheels()
     }
 
-    fun loadWheel(id: Long): WheelEntity? {
-        return db.getWheel(id)
-    }
+    fun loadWheel(id: Long): WheelEntity? =
+        db.getWheel(id)
 
     fun loadWheels(wheels: DataTable) {
         assertThat(
@@ -110,9 +111,8 @@ class TestDomain(applicationContext: Context) {
         updateMapWheels()
     }
 
-    fun locateWheel(name: String): WheelEntity? {
-        return db.findWheel(name)
-    }
+    fun locateWheel(name: String): WheelEntity? =
+        db.findWheel(name)
 
     fun simulateDevice(device: DataTable) {
         assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltage")))
@@ -122,7 +122,7 @@ class TestDomain(applicationContext: Context) {
             .setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
             .setKm(floatOf(deviceFields[2]))
             .setMileage(floatOf(deviceFields[3]))
-            .setVoltage(voltageOf(deviceFields[4]))
+            .setVoltages(voltagesOf(deviceFields[4]))
     }
 
     fun updateWheelPreviousMileage(name: String, premileage: Int) {
@@ -134,20 +134,21 @@ class TestDomain(applicationContext: Context) {
 
     private fun floatOfWithSuffix(value: String, suffix: String): Float {
         assertThat(value, endsWith(suffix))
-        return floatOf(value.substring(0, value.length - suffix.length))
+        return floatOf(value.dropLast(suffix.length))
     }
 
-    private fun voltageOf(value: String): Float {
-        return floatOfWithSuffix(value, "V")
-    }
+    private fun voltageOf(value: String): Float =
+        floatOfWithSuffix(value, SUFFIX_VOLTAGE)
 
-    private fun voltsPerHourOf(value: String): Float {
-        return floatOfWithSuffix(value, "V/h")
-    }
+    private fun voltagesOf(voltagesInAString: String): List<Float> =
+        commaSeparatedList(voltagesInAString)
+            .map { voltage -> floatOfWithSuffix(voltage, SUFFIX_VOLTAGE) }
 
-    private fun parseYesNo(value: String): Boolean {
-        return "yes".equals(value, ignoreCase = true)
-    }
+    private fun voltsPerHourOf(value: String): Float =
+        floatOfWithSuffix(value, "V/h")
+
+    private fun parseYesNo(value: String): Boolean =
+        "yes".equals(value, ignoreCase = true)
 
     private fun updateMapWheels() {
         db.getWheels().forEach { wheel ->
