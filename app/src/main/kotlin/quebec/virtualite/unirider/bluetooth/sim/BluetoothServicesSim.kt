@@ -9,7 +9,7 @@ private const val BLUETOOTH_SIMULATED_DELAY = 250L
 
 open class BluetoothServicesSim : BluetoothServices {
 
-    // FIXME-1 Return multiple sets of values to simulate charging
+    // FIXME-0 Return multiple sets of values to simulate charging
     companion object {
         private var device = BluetoothDevice("LK13447", "AB:CD:EF:GH:IJ:KL")
         private var km = 21.867f    // km wheel, returned using distance offset for GPS value

@@ -88,13 +88,10 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onCharge(): (View) -> Unit = {
-
-        reconnect({ ->
-            chargeContext.km = readKm()!!
-            chargeContext.voltage = readVoltageActual()!!
-
-            fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
-        })
+        if (wheel!!.btName == null)
+            startCharging()
+        else
+            reconnect { startCharging() }
     }
 
     fun onConnect(): (View) -> Unit = {
@@ -172,9 +169,7 @@ open class WheelViewFragment : BaseFragment() {
                     val newVoltage = it.voltage
 
                     updateWheel(
-                        round(newKm, NB_DECIMALS),
-                        newMileage,
-                        round(newVoltage, NB_DECIMALS)
+                        round(newKm, NB_DECIMALS), newMileage, round(newVoltage, NB_DECIMALS)
                     )
 
                     fragments.runUI {
@@ -211,6 +206,13 @@ open class WheelViewFragment : BaseFragment() {
             )
             widgets.enable(buttonCharge)
         }
+    }
+
+    internal open fun startCharging() {
+        chargeContext.km = readKm()!!
+        chargeContext.voltage = readVoltageActual()!!
+
+        fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
     }
 
     internal open fun updatePercentageFor(voltageActual: Float) {

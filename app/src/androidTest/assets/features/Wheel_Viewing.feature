@@ -62,14 +62,19 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 95.3%   |
       | Sherman Max | 91.9V   | 53.6%   |
 
-  Scenario: => Charging the wheel
+  Scenario: => Charging the wheel a connected wheel
     Given I select the Sherman L
     And I set the actual voltage to 140.0V
     And I set the distance to 20 km
     When I charge the wheel
     Then it displays an actual voltage of 143.3V
 
-#    FIXME-0 Charging a disconnected wheel - don't connect first
+  Scenario: => Charging the wheel a disconnected wheel
+    Given I select the Sherman
+    And I set the actual voltage to 93.0V
+    And I set the distance to 20 km
+    When I charge the wheel
+    Then it displays an actual voltage of 94.5V
 
   Scenario: => Charging the wheel - Need to have entered voltage & km
     Given I select the Sherman
