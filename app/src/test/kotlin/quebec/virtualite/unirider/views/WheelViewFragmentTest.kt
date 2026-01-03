@@ -60,8 +60,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     private val INITIAL_WHEEL = S18_1
 
-// FIXME-0 Use numeric input for voltage & km fields
-
     @InjectMocks
     @Spy
     private lateinit var fragment: WheelViewFragment

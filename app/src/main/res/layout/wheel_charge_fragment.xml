@@ -75,13 +75,13 @@
 
                 <EditText
                         android:id="@+id/edit_voltage_actual"
+                        android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:autofillHints=""
-                        android:inputType="text"
                 />
 
                 <TextView
@@ -109,13 +109,13 @@
 
                 <EditText
                         android:id="@+id/edit_km"
+                        android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:autofillHints=""
-                        android:inputType="text"
                 />
 
                 <TextView
@@ -174,13 +174,13 @@
 
                 <EditText
                         android:id="@+id/edit_voltage_required"
+                        android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:autofillHints=""
-                        android:inputType="text"
                 />
 
                 <TextView

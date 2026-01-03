@@ -409,8 +409,6 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verify(fragment).display()
     }
 
-//    FIXME-0 Use numeric input for voltage & km fields
-
     @Test
     fun onUpdateKm_whenInvalid_displayBlanks() {
         onUpdateKm_whenInvalid_displayBlanks(" ")

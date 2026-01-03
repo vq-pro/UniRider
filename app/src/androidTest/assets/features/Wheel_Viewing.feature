@@ -69,7 +69,7 @@ Feature: Wheel Viewing
     When I charge the wheel
     Then it displays an actual voltage of 143.3V
 
-#    FIXME-1 Charging a disconnected wheel - don't connect first
+#    FIXME-0 Charging a disconnected wheel - don't connect first
 
   Scenario: => Charging the wheel - Need to have entered voltage & km
     Given I select the Sherman
