@@ -149,7 +149,7 @@ open class WheelViewFragment : BaseFragment() {
     internal open fun parseVoltage(value: String): Float? = when {
         !isNumeric(value) -> null
         floatOf(value) < wheel!!.voltageMin -> null
-        else -> round(floatOf(value), NB_DECIMALS)
+        else -> round(floatOf(value))
     }
 
     internal open fun readKm(): Float? {
@@ -169,7 +169,7 @@ open class WheelViewFragment : BaseFragment() {
                     val newVoltage = it.voltage
 
                     updateWheel(
-                        round(newKm, NB_DECIMALS), newMileage, round(newVoltage, NB_DECIMALS)
+                        round(newKm), newMileage, round(newVoltage)
                     )
 
                     fragments.runUI {

@@ -16,9 +16,9 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
@@ -166,6 +166,10 @@ object StepsUtils {
 
     fun isDisabled(): Matcher<View> {
         return not(isEnabled())
+    }
+
+    fun isDisplayed(): Matcher<View> {
+        return ViewMatchers.isDisplayed()
     }
 
     fun isEmpty(): Matcher<View> {

@@ -1,6 +1,7 @@
 package quebec.virtualite.unirider.test.fragments
 
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import cucumber.api.DataTable
 import org.hamcrest.Matchers.equalTo
@@ -11,6 +12,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.formatVoltage
@@ -40,6 +42,11 @@ class ChargeFragmentObject(val app: TestApp) {
         } else {
             setText(R.id.edit_km, parseKm(km))
         }
+    }
+
+    fun chargeWarningMessage(showing: Boolean) {
+        val message = "Charge warning should be " + if (showing) " showing" else " hidden"
+        assertThat(message, R.id.view_charge_warning, if (showing) isDisplayed() else isHidden())
     }
 
     fun reconnect() {

@@ -14,8 +14,8 @@ Feature: Wheel Viewing
       | Name      | Bt Name | Bt Address        |
       | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |
     And this simulated device:
-      | Bt Name | Bt Address        | Km     | Mileage   | Voltage |
-      | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 141.51V |
+      | Bt Name | Bt Address        | Km     | Mileage   | Voltages |
+      | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 141.51V  |
     And I start the app
 
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
@@ -61,20 +61,6 @@ Feature: Wheel Viewing
       | S18         | 71.4V   | 19.5%   |
       | Sherman     | 96.5V   | 95.3%   |
       | Sherman Max | 91.9V   | 53.6%   |
-
-  Scenario: => Charging the wheel a connected wheel
-    Given I select the Sherman L
-    And I set the actual voltage to 140.0V
-    And I set the distance to 20 km
-    When I charge the wheel
-    Then it displays an actual voltage of 143.3V
-
-  Scenario: => Charging the wheel a disconnected wheel
-    Given I select the Sherman
-    And I set the actual voltage to 93.0V
-    And I set the distance to 20 km
-    When I charge the wheel
-    Then it displays an actual voltage of 94.5V
 
   Scenario: => Charging the wheel - Need to have entered voltage & km
     Given I select the Sherman

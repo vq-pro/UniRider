@@ -261,6 +261,19 @@
                         tools:ignore="RtlHardcoded"
                 />
             </TableRow>
+
+            <!-- Charge Warning -->
+            <TableRow android:layout_marginTop="20dp">
+                <TextView
+                        android:id="@+id/view_charge_warning"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                        android:text="@string/label_charge_warning"
+                />
+            </TableRow>
         </TableLayout>
 
         <!-- Buttons -->

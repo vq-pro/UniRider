@@ -2,7 +2,6 @@ package quebec.virtualite.unirider.services
 
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.views.NB_DECIMALS
 
 class SoRperCells {
     data class SoRPerCell(
@@ -64,7 +63,7 @@ class SoRperCells {
             upperRow = row
         }
 
-        return round(0f, NB_DECIMALS)
+        return round(0f)
     }
 
     fun voltageToSoR(wheel: WheelEntity, voltage: Float): Float {
@@ -92,7 +91,7 @@ class SoRperCells {
     private fun prorateAverageCell(soR: Float, upperRow: SoRPerCell, lowerRow: SoRPerCell): Float {
         val diffSoRBetweenRows = upperRow.soR - lowerRow.soR
         val diffActual = soR - lowerRow.soR
-        val percentActual = diffActual.toFloat() / diffSoRBetweenRows.toFloat()
+        val percentActual = diffActual / diffSoRBetweenRows
 
         val diffUpperToLowerCell = upperRow.averageCell - lowerRow.averageCell
         val diffCell = diffUpperToLowerCell * percentActual

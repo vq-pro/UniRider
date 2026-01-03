@@ -2,7 +2,6 @@ package quebec.virtualite.unirider.services
 
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.views.NB_DECIMALS
 
 open class CalculatorService {
 
@@ -27,8 +26,8 @@ open class CalculatorService {
         }
 
         return EstimatedValues(
-            round(remainingRange, NB_DECIMALS),
-            round(totalRange, NB_DECIMALS)
+            round(remainingRange),
+            round(totalRange)
         )
     }
 
@@ -36,7 +35,7 @@ open class CalculatorService {
         val soR = soRperCells.voltageToSoR(wheel!!, voltage)
         return when {
             soR == -1f -> 100f
-            else -> round(soR, NB_DECIMALS)
+            else -> round(soR)
         }
     }
 
@@ -51,7 +50,7 @@ open class CalculatorService {
             kmRequested <= 0.01f -> voltage
             else -> {
                 val soRRequested = kmRequested / estimatedTotalRange * 100
-                return round(soRperCells.soRtoVoltage(wheel, soRRequested), NB_DECIMALS)
+                return round(soRperCells.soRtoVoltage(wheel, soRRequested))
             }
         }
     }

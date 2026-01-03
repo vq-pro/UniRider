@@ -124,14 +124,14 @@ open class WheelEditFragment : BaseFragment() {
 
     fun onUpdateChargeRate() = { newChargeRate: String ->
         updatedWheel = updatedWheel.copy(
-            chargeRate = round(safeFloatOf(newChargeRate), NB_DECIMALS)
+            chargeRate = round(safeFloatOf(newChargeRate))
         )
         enableSaveIfChanged()
     }
 
     fun onUpdateChargerOffset() = { newChargerOffset: String ->
         updatedWheel = updatedWheel.copy(
-            chargerOffset = round(safeFloatOf(newChargerOffset), NB_DECIMALS)
+            chargerOffset = round(safeFloatOf(newChargerOffset))
         )
         enableSaveIfChanged()
     }
@@ -159,7 +159,7 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onUpdateVoltageFull() = { newVoltage: String ->
-        var newVoltageFull = round(safeFloatOf(newVoltage), NB_DECIMALS)
+        var newVoltageFull = round(safeFloatOf(newVoltage))
         if (newVoltageFull == 0f) newVoltageFull = floatOf(widgets.getText(editVoltageMax))
 
         updatedWheel = updatedWheel.copy(voltageFull = newVoltageFull)
@@ -168,14 +168,14 @@ open class WheelEditFragment : BaseFragment() {
 
     fun onUpdateVoltageMax() = { newVoltage: String ->
         updatedWheel = updatedWheel.copy(
-            voltageMax = round(safeFloatOf(newVoltage), NB_DECIMALS)
+            voltageMax = round(safeFloatOf(newVoltage))
         )
         enableSaveIfChanged()
     }
 
     fun onUpdateVoltageMin() = { newVoltage: String ->
         updatedWheel = updatedWheel.copy(
-            voltageMin = round(safeFloatOf(newVoltage), NB_DECIMALS)
+            voltageMin = round(safeFloatOf(newVoltage))
         )
         enableSaveIfChanged()
     }

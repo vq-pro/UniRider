@@ -6,6 +6,8 @@ import java.lang.Integer.parseInt
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
+const val NB_DECIMALS = 1
+
 object NumberUtils {
 
     fun floatOf(string: String): Float = if (isBlank(string.trim())) 0.0f else parseFloat(string.trim())
@@ -18,7 +20,11 @@ object NumberUtils {
 
     fun isNumeric(value: String): Boolean {
         return !isBlank(value.trim())
-                && value.trim().matches("^[0-9.]*$".toRegex())
+            && value.trim().matches("^[0-9.]*$".toRegex())
+    }
+
+    fun round(value: Float): Float {
+        return round(value, NB_DECIMALS)
     }
 
     fun round(value: Float, numDecimals: Int): Float {

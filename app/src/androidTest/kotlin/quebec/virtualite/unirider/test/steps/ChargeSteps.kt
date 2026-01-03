@@ -46,9 +46,24 @@ class ChargeSteps : BaseSteps() {
         chargeFragment.validateActualVoltage(expectedVoltage)
     }
 
+    @Then("it displays no actual voltage")
+    fun validateActualVoltageNot() {
+        chargeFragment.validateActualVoltage("")
+    }
+
     @Then("I cannot connect to the wheel on the charge screen")
     fun validateCannotConnectToWheelOnChargeScreen() {
         chargeFragment.validateCannotConnect()
+    }
+
+    @Then("I see the charge warning")
+    fun validateChargeWarningMessage() {
+        chargeFragment.chargeWarningMessage(true)
+    }
+
+    @Then("I don't see the charge warning")
+    fun validateChargeWarningMessageNot() {
+        chargeFragment.chargeWarningMessage(false)
     }
 
     @Then("it displays these charging estimates:")

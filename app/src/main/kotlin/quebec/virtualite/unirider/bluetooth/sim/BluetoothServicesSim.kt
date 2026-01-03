@@ -5,7 +5,7 @@ import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import java.lang.Thread.sleep
 
-private const val BLUETOOTH_SIMULATED_DELAY = 250L
+private const val BLUETOOTH_SIMULATED_DELAY = 0L
 
 open class BluetoothServicesSim : BluetoothServices {
 
@@ -13,7 +13,7 @@ open class BluetoothServicesSim : BluetoothServices {
         private var device = BluetoothDevice("LK13447", "AB:CD:EF:GH:IJ:KL")
         private var km = 21.867f    // km wheel, returned using distance offset for GPS value
         private var mileage = 20020.518f
-        private var voltages = listOf(141.01f, 142.5f, 143f, 143.2f, 143.4f, 146f)
+        private var voltages = listOf(141.01f, 142.5f, 144f)
         private var iCurrentVoltage = 0
 
         fun setDevice(device: BluetoothDevice): Companion {

@@ -149,7 +149,7 @@ class TestDomain(applicationContext: Context) {
         db.findWheel(name)
 
     fun simulateDevice(device: DataTable) {
-        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltage")))
+        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltages")))
         val deviceFields = device.cells(1)[0]
 
         BluetoothServicesSim
