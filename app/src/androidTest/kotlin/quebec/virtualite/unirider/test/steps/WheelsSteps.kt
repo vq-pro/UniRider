@@ -5,7 +5,7 @@ import cucumber.api.java.After
 import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
-import org.hamcrest.Matchers
+import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 
 class WheelsSteps : BaseSteps() {
@@ -25,6 +25,11 @@ class WheelsSteps : BaseSteps() {
         domain.simulateDevice(device)
     }
 
+    @Given("^the (.*?) has a previous mileage of (.*?) km$")
+    fun givenWheelHasPreviousMileage(name: String, premileage: Int) {
+        domain.updateWheelPreviousMileage(name, premileage)
+    }
+
     @Given("^(?:these|this) wheel[s]*:$")
     fun givenWheels(wheels: DataTable) {
         domain.loadWheels(wheels)
@@ -35,26 +40,21 @@ class WheelsSteps : BaseSteps() {
         domain.loadConnectedWheels(wheels)
     }
 
-    @Given("^the (.*?) has a previous mileage of (.*?) km$")
-    fun givenWheelHasPreviousMileage(name: String, premileage: Int) {
-        domain.updateWheelPreviousMileage(name, premileage)
-    }
-
     @Then("the wheel was added")
     fun validateWheelWasAdded() {
         selectedWheel = domain.locateWheel(updatedWheel.name)!!
 
-        assertThat(selectedWheel.chargeRate, Matchers.equalTo(updatedWheel.chargeRate))
-        assertThat(selectedWheel.name, Matchers.equalTo(updatedWheel.name))
-        assertThat(selectedWheel.mileage, Matchers.equalTo(updatedWheel.mileage))
-        assertThat(selectedWheel.voltageMax, Matchers.equalTo(updatedWheel.voltageMax))
-        assertThat(selectedWheel.voltageMin, Matchers.equalTo(updatedWheel.voltageMin))
-        assertThat(selectedWheel.wh, Matchers.equalTo(updatedWheel.wh))
+        assertThat(selectedWheel.chargeRate, equalTo(updatedWheel.chargeRate))
+        assertThat(selectedWheel.name, equalTo(updatedWheel.name))
+        assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))
+        assertThat(selectedWheel.voltageMax, equalTo(updatedWheel.voltageMax))
+        assertThat(selectedWheel.voltageMin, equalTo(updatedWheel.voltageMin))
+        assertThat(selectedWheel.wh, equalTo(updatedWheel.wh))
     }
 
     @Then("the wheel was updated")
     fun validateWheelWasUpdated() {
         val wheel = domain.loadWheel(selectedWheel.id)
-        assertThat(wheel, Matchers.equalTo(updatedWheel))
+        assertThat(wheel, equalTo(updatedWheel))
     }
 }

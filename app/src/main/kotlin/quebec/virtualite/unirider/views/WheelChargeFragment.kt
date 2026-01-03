@@ -108,21 +108,19 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     fun onUpdateVoltageActual() = { voltage: String ->
-        when {
-            isNumeric(voltage) && floatOf(voltage) >= wheel!!.voltageMin -> {
-                this.cacheVoltageActual = floatOf(voltage)
+        if (isNumeric(voltage) && floatOf(voltage) >= wheel!!.voltageMin) {
+            this.cacheVoltageActual = floatOf(voltage)
 
-                if (switchFullCharge.isChecked
-                    || !widgets.getText(editKm).isEmpty()
-                    || !widgets.getText(editVoltageRequired).isEmpty()
-                )
-                    display()
-                else
-                    displayBlanks()
-            }
+            if (switchFullCharge.isChecked
+                || !widgets.getText(editKm).isEmpty()
+                || !widgets.getText(editVoltageRequired).isEmpty()
+            )
+                display()
+            else
+                displayBlanks()
 
-            else -> displayBlanks()
-        }
+        } else
+            displayBlanks()
     }
 
     fun onUpdateVoltageRequired() = { voltage: String ->

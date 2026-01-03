@@ -12,8 +12,10 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.strip
 import quebec.virtualite.unirider.test.app.TestApp
+import quebec.virtualite.unirider.test.domain.TestDomain.Companion.formatVoltage
+import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKm
+import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
 import quebec.virtualite.unirider.views.WheelChargeFragment
 import java.lang.Thread.sleep
 
@@ -66,7 +68,7 @@ class ChargeFragmentObject(val app: TestApp) {
                     listOf("required", "target", "time"),
                     listOf(
                         getRequired(),
-                        formatV(getText(R.id.view_voltage_target)),
+                        formatVoltage(getText(R.id.view_voltage_target)),
                         getEstimatedTime()
                     )
                 )
@@ -86,17 +88,11 @@ class ChargeFragmentObject(val app: TestApp) {
         assertThatPolling({ app.activeFragment() }, equalTo(WheelChargeFragment::class.java))
     }
 
-    private fun formatV(voltage: String): String = if (!voltage.isEmpty()) voltage + "V" else ""
-
     private fun getEstimatedTime(): String =
         (getText(R.id.view_estimated_time) + " " + getText(R.id.view_estimated_diff))
             .trim()
 
     private fun getRequired(): String =
-        (formatV(getText(R.id.view_voltage_required)) + " " + getText(R.id.view_voltage_required_diff))
+        (formatVoltage(getText(R.id.view_voltage_required)) + " " + getText(R.id.view_voltage_required_diff))
             .trim()
-
-    private fun parseKm(km: String) = strip(km, " km")
-
-    private fun parseVoltage(voltage: String) = if (voltage.contains('V')) voltage.substring(0, voltage.indexOf('V')) else voltage
 }

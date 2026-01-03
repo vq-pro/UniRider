@@ -3,7 +3,6 @@ package quebec.virtualite.unirider.test.fragments
 import cucumber.api.DataTable
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
-import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
@@ -14,6 +13,8 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.throwAssert
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
+import quebec.virtualite.unirider.test.domain.TestDomain.Companion.formatKm
+import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKmNumeric
 import quebec.virtualite.unirider.views.MainFragment
 import quebec.virtualite.unirider.views.WheelRow
 import java.util.stream.Collectors.toList
@@ -57,7 +58,7 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
         var totalMileage = 0
         domain.forEachWheel { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
 
-        assertThat(R.id.total_mileage, hasText("$totalMileage km"))
+        assertThat(R.id.total_mileage, hasText(formatKm(totalMileage)))
     }
 
     fun validateView() {
@@ -91,22 +92,13 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
                         WheelRow(0, name, 0)
                     }
 
-                    SOLD_WHEEL_ENTRY -> WheelRow(0, name, parseMileage(mileageWithUnits))
+                    SOLD_WHEEL_ENTRY -> WheelRow(0, name, parseKmNumeric(mileageWithUnits))
 
-                    else -> WheelRow(domain.getWheel(name)!!.id, name, parseMileage(mileageWithUnits))
+                    else -> WheelRow(domain.getWheel(name)!!.id, name, parseKmNumeric(mileageWithUnits))
                 }
             }
             .collect(toList())
 
         assertThat(R.id.wheels, hasRows(expectedRows))
-    }
-
-    private fun parseMileage(mileageWithUnits: String): Int {
-        if (mileageWithUnits.endsWith(" km"))
-            return intOf(mileageWithUnits.substring(0, mileageWithUnits.length - 3))
-        else {
-            assertThat(mileageWithUnits, equalTo(""))
-            return 0
-        }
     }
 }

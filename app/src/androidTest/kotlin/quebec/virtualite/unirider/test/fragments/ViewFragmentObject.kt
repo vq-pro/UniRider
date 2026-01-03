@@ -14,10 +14,11 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.strip
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
+import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKm
+import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
 
@@ -54,11 +55,11 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun setActualVoltageTo(voltage: String) {
-        setText(R.id.edit_voltage_actual, stripV(voltage))
+        setText(R.id.edit_voltage_actual, parseVoltage(voltage))
     }
 
     fun setDistanceTo(km: String) {
-        setText(R.id.edit_km, strip(km, "km"))
+        setText(R.id.edit_km, parseKm(km))
     }
 
     fun useTheseUpdateMileageValues(updatedMileages: DataTable) {
@@ -154,9 +155,4 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         assertThat(R.id.view_battery, hasText("$expectedBattery"))
     }
 
-    private fun stripV(voltage: String): String =
-        if (voltage.endsWith("V"))
-            voltage.substring(0, voltage.length - 1)
-        else
-            voltage
 }

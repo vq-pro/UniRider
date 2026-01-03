@@ -1,10 +1,10 @@
-package quebec.virtualite.unirider
+package quebec.virtualite.unirider.test.domain
 
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelRow
 
-object TestDomain {
+object TestConstants {
     const val CHARGE_RATE = 4f
     const val CHARGE_RATE2 = 6f
     const val CHARGE_RATE3 = 8f

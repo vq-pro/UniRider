@@ -6,9 +6,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.unirider.TestDomain.S18_1
-import quebec.virtualite.unirider.TestDomain.SHERMAN_L_5
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_L_5
 
 @RunWith(MockitoJUnitRunner::class)
 class CalculatorServiceTest {

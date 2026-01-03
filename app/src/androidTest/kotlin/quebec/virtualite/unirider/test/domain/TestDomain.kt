@@ -6,6 +6,7 @@ import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
+import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.database.WheelEntity
@@ -14,9 +15,42 @@ import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
 private const val SOLD_PREFIX = "- "
+private const val SUFFIX_KM = " km"
 private const val SUFFIX_VOLTAGE = "V"
 
 class TestDomain(applicationContext: Context) {
+
+    companion object {
+
+        fun formatKm(km: Int): String =
+            "$km$SUFFIX_KM"
+
+        fun formatVoltage(voltage: Float): String =
+            "$voltage$SUFFIX_VOLTAGE"
+
+        fun formatVoltage(voltage: String): String =
+            if (!voltage.isEmpty())
+                formatVoltage(floatOf(voltage))
+            else
+                ""
+
+        fun parseKm(km: String): String =
+            km.substringBefore(SUFFIX_KM)
+
+        fun parseKmNumeric(km: String): Int =
+            if (km.endsWith(SUFFIX_KM))
+                intOf(km.substringBefore(SUFFIX_KM))
+            else {
+                assertThat(km, equalTo(""))
+                0
+            }
+
+        fun parseVoltage(voltage: String): String =
+            if (voltage.contains(SUFFIX_VOLTAGE))
+                voltage.substringBefore(SUFFIX_VOLTAGE)
+            else
+                voltage
+    }
 
     private val db = WheelDbImpl(applicationContext)
     private val wheels = HashMap<String, WheelEntity>()

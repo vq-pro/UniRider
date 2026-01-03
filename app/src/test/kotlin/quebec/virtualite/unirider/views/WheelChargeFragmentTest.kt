@@ -22,18 +22,18 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.utils.DateUtils.Companion.simulateNow
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.KM
-import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.KM_REQUESTED
-import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.S18_1
-import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.services.CalculatorService
+import quebec.virtualite.unirider.test.domain.TestConstants.KM
+import quebec.virtualite.unirider.test.domain.TestConstants.KM_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.KM_REQUESTED
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.TEMPERATURE_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.views.BaseFragment.Companion.wheel
 
 @RunWith(MockitoJUnitRunner::class)
