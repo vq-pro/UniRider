@@ -53,22 +53,23 @@ Feature: Wheel Charging
       | 50 km    | off          | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
       | full     | on           | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
 
-  Scenario Outline: Charging a wheel by voltage [<required>]
+  @WIP
+  Scenario Outline: Charging a wheel by voltage [<target>]
     Given I reconnect to update the voltage
-    When I request to charge to <required>
+    When I request to charge to <target>
     Then it displays an actual voltage of 138.0V
     And the full charge indicator is off
     And it displays these charging estimates:
       | required   | target   | time   |
       | <required> | <target> | <time> |
     Examples:
-      | required       | target        | time        |
-      | 135.6V         | 134.1V (-1.5) | Go!         |
-      | 140.0V (+2.0)  | 138.5V (-1.5) | 11:51 (6m)  |
-      | 142.7V (+4.7)  | 141.2V (-1.5) | 11:58 (13m) |
-      | 144.5V (+6.5)  | 143.0V (-1.5) | 12:04 (19m) |
-      | 147.9V (+9.9)  | 146.4V (-1.5) | 12:13 (28m) |
-      | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
+      | target        | required       | time        |
+      | 134.1V (-1.5) | 135.6V         | Go!         |
+      | 138.5V (-1.5) | 140.0V (+2.0)  | 11:51 (6m)  |
+      | 141.2V (-1.5) | 142.7V (+4.7)  | 11:58 (13m) |
+      | 143.0V (-1.5) | 144.5V (+6.5)  | 12:04 (19m) |
+      | 146.4V (-1.5) | 147.9V (+9.9)  | 12:13 (28m) |
+      | 148.6V (-1.5) | 150.1V (+12.1) | 12:20 (35m) |
 
   Scenario: Charging a wheel that is not connected
     Given I go back to view the wheel

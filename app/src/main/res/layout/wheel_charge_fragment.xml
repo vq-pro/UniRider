@@ -162,39 +162,6 @@
                 />
             </TableRow>
 
-            <TableRow android:layout_marginTop="10dp">
-                <TextView
-                        android:labelFor="@+id/edit_voltage_required"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                />
-
-                <EditText
-                        android:id="@+id/edit_voltage_required"
-                        android:inputType="numberDecimal"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:autofillHints=""
-                />
-
-                <TextView
-                        android:labelFor="@+id/edit_voltage_required"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_voltage_abbr"
-                />
-            </TableRow>
-
-
             <!-- Target voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
@@ -225,6 +192,38 @@
                         android:layout_marginStart="5dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         tools:ignore="RtlHardcoded"
+                />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/edit_voltage_target"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                />
+
+                <EditText
+                        android:id="@+id/edit_voltage_target"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                />
+
+                <TextView
+                        android:labelFor="@+id/edit_voltage_target"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_abbr"
                 />
             </TableRow>
 

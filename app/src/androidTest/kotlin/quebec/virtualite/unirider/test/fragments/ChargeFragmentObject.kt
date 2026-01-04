@@ -26,8 +26,8 @@ class ChargeFragmentObject(val app: TestApp) {
         setText(R.id.edit_voltage_actual, parseVoltage(voltage))
     }
 
-    fun changeVoltageRequired(voltage: String) {
-        setText(R.id.edit_voltage_required, parseVoltage(voltage))
+    fun changeVoltageTarget(voltage: String) {
+        setText(R.id.edit_voltage_target, parseVoltage(voltage))
     }
 
     fun chargeFor(km: String) {

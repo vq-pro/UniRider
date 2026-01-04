@@ -38,7 +38,7 @@ class ChargeSteps : BaseSteps() {
 
     @When("^I request to charge to (.*?)$")
     fun requestChargeTo(voltage: String) {
-        chargeFragment.changeVoltageRequired(voltage)
+        chargeFragment.changeVoltageTarget(voltage)
     }
 
     @Then("^it displays an actual voltage of (.*?)$")
