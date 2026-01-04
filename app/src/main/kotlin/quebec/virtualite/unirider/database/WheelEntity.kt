@@ -19,5 +19,7 @@ data class WheelEntity(
     val distanceOffset: Float,
     val isSold: Boolean
 ) {
+    fun isConnected() = (btName != null && btAddr != null)
+
     fun totalMileage() = premileage + mileage
 }

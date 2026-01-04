@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.round
@@ -22,7 +23,6 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
     internal lateinit var editChargeRate: EditText
-    internal lateinit var editChargerOffset: EditText
     internal lateinit var editDistanceOffset: EditText
     internal lateinit var editMileage: EditText
     internal lateinit var editName: EditText
@@ -32,6 +32,9 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editVoltageMin: EditText
     internal lateinit var editWh: EditText
     internal lateinit var switchSold: SwitchMaterial
+    internal lateinit var textBtAddr: TextView
+    internal lateinit var textBtName: TextView
+    internal lateinit var textBtNameLabel: TextView
 
     internal lateinit var initialWheel: WheelEntity
     internal lateinit var updatedWheel: WheelEntity
@@ -46,7 +49,8 @@ open class WheelEditFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        switchSold = view.findViewById(R.id.check_sold)
+        buttonDelete = view.findViewById(R.id.button_delete)
+        buttonSave = view.findViewById(R.id.button_save)
         editChargeRate = view.findViewById(R.id.edit_charge_rate)
         editDistanceOffset = view.findViewById(R.id.edit_distance_offset)
         editName = view.findViewById(R.id.edit_name)
@@ -56,8 +60,10 @@ open class WheelEditFragment : BaseFragment() {
         editVoltageMax = view.findViewById(R.id.edit_voltage_max)
         editVoltageMin = view.findViewById(R.id.edit_voltage_min)
         editWh = view.findViewById(R.id.edit_wh)
-        buttonDelete = view.findViewById(R.id.button_delete)
-        buttonSave = view.findViewById(R.id.button_save)
+        switchSold = view.findViewById(R.id.check_sold)
+        textBtAddr = view.findViewById(R.id.view_bt_addr_on_edit)
+        textBtName = view.findViewById(R.id.view_bt_name_on_edit)
+        textBtNameLabel = view.findViewById(R.id.view_bt_name_on_edit_label)
 
         widgets.setOnCheckedChangeListener(switchSold, onToggleSold())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
@@ -91,6 +97,9 @@ open class WheelEditFragment : BaseFragment() {
 
                 if (initialWheel.mileage != 0)
                     editMileage.setText("${initialWheel.mileage}")
+
+                if (wheel!!.isConnected())
+                    displayBluetoothSettings()
             }
         } else {
             initialWheel = NEW_WHEEL
@@ -173,6 +182,13 @@ open class WheelEditFragment : BaseFragment() {
     fun onUpdateWh() = { newWh: String ->
         updatedWheel = updatedWheel.copy(wh = safeIntOf(newWh))
         enableSaveIfChanged()
+    }
+
+    internal open fun displayBluetoothSettings() {
+        textBtName.text = wheel!!.btName
+        textBtAddr.text = wheel!!.btAddr
+
+        widgets.show(textBtName, textBtNameLabel, textBtAddr)
     }
 
     internal open fun enableSaveIfChanged() {

@@ -76,9 +76,8 @@ open class WheelChargeFragment : BaseFragment() {
             cacheVoltageActual = chargeContext.voltage
             chargerOffset = null
 
-            if (wheel!!.btName == null || wheel!!.btAddr == null) {
+            if (!wheel!!.isConnected())
                 widgets.disable(buttonConnect)
-            }
 
             switchFullCharge.isChecked = true
         }

@@ -172,6 +172,11 @@ class EditSteps : BaseSteps() {
         updatedWheel = editFragment.enterNewWheel(newWheelValues, selectedWheel)
     }
 
+    @Then("^I (can|cannot) see the bluetooth settings$")
+    fun validateCanSeeBluetoothSettings(canCannot: String) {
+        editFragment.validateCanSeeBluetoothSettings(canCannot == "can")
+    }
+
     @Then("the wheel can be saved")
     fun validateCanBeSaved() {
         editFragment.validateCanSave()

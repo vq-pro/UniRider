@@ -88,17 +88,13 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onCharge(): (View) -> Unit = {
-        if (wheel!!.btName == null)
-            startCharging()
-        else
-            reconnect { startCharging() }
+        if (wheel!!.isConnected()) reconnect { startCharging() }
+        else startCharging()
     }
 
     fun onConnect(): (View) -> Unit = {
-        if (wheel!!.btName == null)
-            connectFirstTime()
-        else
-            reconnect()
+        if (wheel!!.isConnected()) reconnect()
+        else connectFirstTime()
     }
 
     fun onEdit(): (View) -> Unit = {

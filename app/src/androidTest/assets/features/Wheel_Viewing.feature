@@ -62,6 +62,15 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 95.3%   |
       | Sherman Max | 91.9V   | 53.6%   |
 
+  Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
+    Given the Sherman has a previous mileage of <previous mileage>
+    When I select the Sherman
+    Then the details view shows the Sherman with a mileage of <actual mileage>
+    Examples:
+      | previous mileage | actual mileage |
+      | 0 km             | 17622 km       |
+      | 10000 km         | 27622 km       |
+
   Scenario: => Charging the wheel - Need to have entered voltage & km
     Given I select the Sherman
     And I cannot charge the wheel
@@ -88,12 +97,3 @@ Feature: Wheel Viewing
     And it displays these estimates:
       | remaining | total range |
       | 44.0      | 82.0        |
-
-  Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
-    Given the Sherman has a previous mileage of <previous mileage>
-    When I select the Sherman
-    Then the details view shows the Sherman with a mileage of <actual mileage>
-    Examples:
-      | previous mileage | actual mileage |
-      | 0 km             | 17622 km       |
-      | 10000 km         | 27622 km       |
