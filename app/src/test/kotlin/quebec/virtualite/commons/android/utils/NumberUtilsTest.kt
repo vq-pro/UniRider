@@ -26,7 +26,19 @@ class NumberUtilsTest {
     }
 
     @Test
-    fun round() {
+    fun round_1parm() {
+        // Given
+        val value = 1.123f
+
+        // When
+        val result = NumberUtils.round(value)
+
+        // Then
+        assertThat(result, equalTo(NumberUtils.round(value, NB_DECIMALS)))
+    }
+
+    @Test
+    fun round_2parms() {
         round(1.123f, 1.1f)
         round(2.001f, 2.0f)
         round(2.549f, 2.5f)

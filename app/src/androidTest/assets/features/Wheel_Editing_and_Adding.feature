@@ -2,10 +2,10 @@ Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
-      | Name    | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
-      | Nikola+ | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.4V       | 1.6V           | 1.0             | Yes  |
-      | Sherman | 17622   | 3200 | 75.6V       | 100.8V      | 8V/h        | 99.4V       | 1.6V           | 1.0181          | No   |
-      | S18     | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.4V       | 1.2V           | 1.0             | No   |
+      | Name    | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
+      | Nikola+ | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.4V       | 1.0             | Yes  |
+      | Sherman | 17622   | 3200 | 75.6V       | 100.8V      | 8V/h        | 99.4V       | 1.0181          | No   |
+      | S18     | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.4V       | 1.0             | No   |
     And I start the app
 
   Scenario: Adding a wheel in full
@@ -19,7 +19,6 @@ Feature: Wheel Editing & Adding
       | Voltage Min      | 75.6        |
       | Charge Rate      | 8           |
       | Full Charge      | 99.5        |
-      | Charger Offset   | 1.7         |
       | Distance Offset  | 1.0181      |
       | Sold             | No          |
     Then the wheel was added
@@ -38,7 +37,6 @@ Feature: Wheel Editing & Adding
       | Voltage Min      | 74.5        |
       | Charge Rate      | 2           |
       | Full Charge      | 99.5        |
-      | Charger Offset   | 1.7         |
       | Distance Offset  | 1.0181      |
       | Sold             | No          |
     Then the wheel was updated
@@ -54,13 +52,11 @@ Feature: Wheel Editing & Adding
     Examples:
       | can or cannot | do something                                   |
       | can           | blank the mileage                              |
-      | can           | blank the charger offset                       |
       | can           | blank the distance offset                      |
       | can           | blank the full voltage                         |
       | can           | blank the mileage                              |
       | can           | blank the previous mileage                     |
       | can           | change the charge rate                         |
-      | can           | change the charger offset                      |
       | can           | change the distance offset                     |
       | can           | change the full voltage                        |
       | can           | change the maximum voltage                     |
@@ -71,10 +67,10 @@ Feature: Wheel Editing & Adding
       | can           | change the wh                                  |
       | can           | mark the wheel as sold                         |
       | cannot        | blank the charge rate                          |
-      | cannot        | blank the name                                 |
-      | cannot        | blank the wh                                   |
       | cannot        | blank the maximum voltage                      |
       | cannot        | blank the minimum voltage                      |
+      | cannot        | blank the name                                 |
+      | cannot        | blank the wh                                   |
       | cannot        | change nothing                                 |
       | cannot        | reuse the name S18                             |
       | cannot        | set the full voltage lower than the minimum    |

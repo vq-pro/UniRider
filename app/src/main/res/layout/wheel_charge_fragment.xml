@@ -61,40 +61,6 @@
                 />
             </TableRow>
 
-            <!-- km -->
-            <TableRow android:layout_marginTop="10dp">
-                <TextView
-                        android:labelFor="@+id/edit_km"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_distance"
-                />
-
-                <EditText
-                        android:id="@+id/edit_km"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:autofillHints=""
-                        android:inputType="text"
-                />
-
-                <TextView
-                        android:labelFor="@+id/edit_km"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_km"
-                />
-            </TableRow>
-
             <!-- Actual voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
@@ -109,13 +75,13 @@
 
                 <EditText
                         android:id="@+id/edit_voltage_actual"
+                        android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:autofillHints=""
-                        android:inputType="text"
                 />
 
                 <TextView
@@ -129,10 +95,77 @@
                 />
             </TableRow>
 
+            <!-- km -->
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/edit_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_distance"
+                />
+
+                <EditText
+                        android:id="@+id/edit_km"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                />
+
+                <TextView
+                        android:labelFor="@+id/edit_km"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_km"
+                />
+            </TableRow>
+
+            <!-- Target voltage -->
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/view_voltage_target"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_target"
+                />
+
+                <TextView
+                        android:id="@+id/view_voltage_target"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        tools:ignore="RtlHardcoded"
+                />
+
+                <TextView
+                        android:id="@+id/view_voltage_target_diff"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        tools:ignore="RtlHardcoded"
+                />
+            </TableRow>
+
             <!-- Required voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:labelFor="@+id/view_required_voltage"
+                        android:labelFor="@+id/view_voltage_required"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -143,20 +176,61 @@
 
                 <TextView
                         android:id="@+id/view_voltage_required"
-                        android:layout_weight="2"
+                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textStyle="bold"
                         tools:ignore="RtlHardcoded"
+                />
+
+                <TextView
+                        android:id="@+id/view_voltage_required_diff"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        tools:ignore="RtlHardcoded"
+                />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/edit_voltage_required"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                />
+
+                <EditText
+                        android:id="@+id/edit_voltage_required"
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:autofillHints=""
+                />
+
+                <TextView
+                        android:labelFor="@+id/edit_voltage_required"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_abbr"
                 />
             </TableRow>
 
             <!-- Remaining time -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:labelFor="@+id/view_remaining_time"
+                        android:labelFor="@+id/view_estimated_time"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -166,13 +240,37 @@
                 />
 
                 <TextView
-                        android:id="@+id/view_remaining_time"
-                        android:layout_weight="2"
+                        android:id="@+id/view_estimated_time"
+                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="viewEnd"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
                         tools:ignore="RtlHardcoded"
+                />
+
+                <TextView
+                        android:id="@+id/view_estimated_diff"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        tools:ignore="RtlHardcoded"
+                />
+            </TableRow>
+
+            <!-- Charge Warning -->
+            <TableRow android:layout_marginTop="20dp">
+                <TextView
+                        android:id="@+id/view_charge_warning"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                        android:text="@string/label_charge_warning"
                 />
             </TableRow>
         </TableLayout>

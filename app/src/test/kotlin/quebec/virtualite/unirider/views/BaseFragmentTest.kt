@@ -11,7 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner
 open class BaseFragmentTest {
 
     @InjectMocks
-    lateinit var baseFragment: BaseFragment
+    private lateinit var baseFragment: BaseFragment
 
     @Test
     fun textPercentageWithDecimal() {

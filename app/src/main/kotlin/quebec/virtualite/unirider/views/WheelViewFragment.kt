@@ -47,7 +47,7 @@ open class WheelViewFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonCharge = view.findViewById(R.id.button_charge)
-        buttonConnect = view.findViewById(R.id.button_connect_view)
+        buttonConnect = view.findViewById(R.id.button_connect)
         buttonEdit = view.findViewById(R.id.button_edit)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
@@ -88,33 +88,17 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     fun onCharge(): (View) -> Unit = {
-        chargeContext.km = readKm()!!
-        chargeContext.voltage = readVoltageActual()!!
-
-        fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
+        if (wheel!!.btName == null)
+            startCharging()
+        else
+            reconnect { startCharging() }
     }
 
     fun onConnect(): (View) -> Unit = {
-        if (wheel!!.btName == null) {
-            fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
-
-        } else {
-            fragments.runWithWait {
-                external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
-                    fragments.doneWaiting(it) {
-                        val newKm = it!!.km / wheel!!.distanceOffset
-                        val newMileage = it.mileage.roundToInt()
-                        val newVoltage = it.voltage
-
-                        updateWheel(
-                            round(newKm, NB_DECIMALS),
-                            newMileage,
-                            round(newVoltage, NB_DECIMALS)
-                        )
-                    }
-                }
-            }
-        }
+        if (wheel!!.btName == null)
+            connectFirstTime()
+        else
+            reconnect()
     }
 
     fun onEdit(): (View) -> Unit = {
@@ -127,18 +111,6 @@ open class WheelViewFragment : BaseFragment() {
 
     fun onUpdateVoltageActual() = { voltageActual: String ->
         refreshDisplay(parseVoltage(voltageActual), readKm())
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
-        wheel = wheel!!.copy(mileage = newMileage)
-        external.runDB { db -> db.saveWheel(wheel) }
-
-        fragments.runUI {
-            textMileage.text = textKm(wheel!!.totalMileage())
-            editKm.setText("$newKm")
-            editVoltageActual.setText("$newVoltage")
-        }
     }
 
     internal open fun clearDisplay() {
@@ -161,6 +133,10 @@ open class WheelViewFragment : BaseFragment() {
         )
     }
 
+    internal open fun connectFirstTime() {
+        fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
+    }
+
     internal open fun parseKm(value: String): Float? = when {
         isNumeric(value) -> when {
             floatOf(value) == 0f -> null
@@ -173,7 +149,7 @@ open class WheelViewFragment : BaseFragment() {
     internal open fun parseVoltage(value: String): Float? = when {
         !isNumeric(value) -> null
         floatOf(value) < wheel!!.voltageMin -> null
-        else -> round(floatOf(value), NB_DECIMALS)
+        else -> round(floatOf(value))
     }
 
     internal open fun readKm(): Float? {
@@ -182,6 +158,26 @@ open class WheelViewFragment : BaseFragment() {
 
     internal open fun readVoltageActual(): Float? {
         return parseVoltage(widgets.getText(editVoltageActual))
+    }
+
+    internal open fun reconnect(execution: (() -> Unit)? = {}) {
+        fragments.runWithWait {
+            external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
+                fragments.doneWaiting(it) {
+                    val newKm = it!!.km / wheel!!.distanceOffset
+                    val newMileage = it.mileage.roundToInt()
+                    val newVoltage = it.voltage
+
+                    updateWheel(
+                        round(newKm), newMileage, round(newVoltage)
+                    )
+
+                    fragments.runUI {
+                        execution?.invoke()
+                    }
+                }
+            }
+        }
     }
 
     internal open fun refreshDisplay(voltageActual: Float?, km: Float?) {
@@ -212,12 +208,31 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
+    internal open fun startCharging() {
+        chargeContext.km = readKm()!!
+        chargeContext.voltage = readVoltageActual()!!
+
+        fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
+    }
+
     internal open fun updatePercentageFor(voltageActual: Float) {
         fragments.runUI {
             val percentage = calculatorService.percentage(wheel!!, voltageActual)
 
             textBattery.text = textPercentageWithDecimal(percentage)
             widgets.show(textBattery, labelBattery)
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
+        wheel = wheel!!.copy(mileage = newMileage)
+        external.runDB { db -> db.saveWheel(wheel) }
+
+        fragments.runUI {
+            textMileage.text = textKm(wheel!!.totalMileage())
+            editKm.setText("$newKm")
+            editVoltageActual.setText("$newVoltage")
         }
     }
 }

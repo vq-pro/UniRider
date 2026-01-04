@@ -12,22 +12,22 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
+import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirmationFragment::class.java) {
 
     @InjectMocks
-    lateinit var fragment: WheelDeleteConfirmationFragment
+    private lateinit var fragment: WheelDeleteConfirmationFragment
 
     @Mock
-    lateinit var mockedButtonDeleteConfirmation: Button
+    private lateinit var mockedButtonDeleteConfirmation: Button
 
     @Mock
-    lateinit var mockedButtonDeleteCancel: Button
+    private lateinit var mockedButtonDeleteCancel: Button
 
     @Mock
-    lateinit var mockedTextName: TextView
+    private lateinit var mockedTextName: TextView
 
     @Before
     fun before() {

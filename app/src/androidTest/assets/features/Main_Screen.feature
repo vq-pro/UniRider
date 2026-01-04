@@ -2,12 +2,12 @@ Feature: Main Screen
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
-      | Sherman     | 17622   | 3200 | 75.6V       | 100.8V      | 6V/h        | 99.5V       | 1.5V           | 1               | No   |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1               | Yes  |
-      | 14S         | 694     | 840  | 48V         | 67.2V       | 4V/h        | 65.5V       | 1.5V           | 1               | No   |
-      | Nikola+     | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.5V       | 1.5V           | 1               | Yes  |
-      | S18         | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.5V       | 1.5V           | 1               | Yes  |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
+      | Sherman     | 17622   | 3200 | 75.6V       | 100.8V      | 6V/h        | 99.5V       | 1               | No   |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1               | Yes  |
+      | 14S         | 694     | 840  | 48V         | 67.2V       | 4V/h        | 65.5V       | 1               | No   |
+      | Nikola+     | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.5V       | 1               | Yes  |
+      | S18         | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.5V       | 1               | Yes  |
     And the Sherman has a previous mileage of 3600 km
 
   Scenario: On entering, we see a list of registered wheels and their mileage

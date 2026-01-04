@@ -9,8 +9,12 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.doNothing
+import org.mockito.BDDMockito.given
+import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.doReturn
@@ -19,35 +23,35 @@ import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
-import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
-import quebec.virtualite.unirider.TestDomain.ITEM_SOLD
-import quebec.virtualite.unirider.TestDomain.KM
-import quebec.virtualite.unirider.TestDomain.KM_NEW
-import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.KM_STRING
-import quebec.virtualite.unirider.TestDomain.MILEAGE
-import quebec.virtualite.unirider.TestDomain.MILEAGE3
-import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
-import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.NAME
-import quebec.virtualite.unirider.TestDomain.NAME3
-import quebec.virtualite.unirider.TestDomain.PERCENTAGE
-import quebec.virtualite.unirider.TestDomain.PREMILEAGE
-import quebec.virtualite.unirider.TestDomain.PREMILEAGE3
-import quebec.virtualite.unirider.TestDomain.REMAINING_RANGE
-import quebec.virtualite.unirider.TestDomain.S18_1
-import quebec.virtualite.unirider.TestDomain.S18_DISCONNECTED
-import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
-import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.TOTAL_RANGE
-import quebec.virtualite.unirider.TestDomain.VOLTAGE
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_STRING
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
+import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_ADDR
+import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_NAME
+import quebec.virtualite.unirider.test.domain.TestConstants.ITEM_SOLD
+import quebec.virtualite.unirider.test.domain.TestConstants.KM
+import quebec.virtualite.unirider.test.domain.TestConstants.KM_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.KM_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE3
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.NAME
+import quebec.virtualite.unirider.test.domain.TestConstants.NAME3
+import quebec.virtualite.unirider.test.domain.TestConstants.PERCENTAGE
+import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE
+import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE3
+import quebec.virtualite.unirider.test.domain.TestConstants.REMAINING_RANGE
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_DISCONNECTED
+import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3
+import quebec.virtualite.unirider.test.domain.TestConstants.TEMPERATURE_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.TOTAL_RANGE
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW5
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW_RAW
+import quebec.virtualite.unirider.views.BaseFragment.Companion.wheel
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
@@ -59,52 +63,55 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     @InjectMocks
     @Spy
-    lateinit var fragment: WheelViewFragment
+    private lateinit var fragment: WheelViewFragment
+
+    @Captor
+    private lateinit var captorExecution: ArgumentCaptor<() -> Unit>
 
     @Mock
-    lateinit var mockedButtonCharge: Button
+    private lateinit var mockedButtonCharge: Button
 
     @Mock
-    lateinit var mockedButtonConnect: Button
+    private lateinit var mockedButtonConnect: Button
 
     @Mock
-    lateinit var mockedButtonEdit: Button
+    private lateinit var mockedButtonEdit: Button
 
     @Mock
-    lateinit var mockedCalculatorService: CalculatorService
+    private lateinit var mockedCalculatorService: CalculatorService
 
     @Mock
-    lateinit var mockedEditKm: EditText
+    private lateinit var mockedEditKm: EditText
 
     @Mock
-    lateinit var mockedEditVoltageActual: EditText
+    private lateinit var mockedEditVoltageActual: EditText
 
     @Mock
-    lateinit var mockedLabelBattery: TextView
+    private lateinit var mockedLabelBattery: TextView
 
     @Mock
-    lateinit var mockedLabelRemainingRange: TextView
+    private lateinit var mockedLabelRemainingRange: TextView
 
     @Mock
-    lateinit var mockedLabelTotalRange: TextView
+    private lateinit var mockedLabelTotalRange: TextView
 
     @Mock
-    lateinit var mockedTextBattery: TextView
+    private lateinit var mockedTextBattery: TextView
 
     @Mock
-    lateinit var mockedTextBtName: TextView
+    private lateinit var mockedTextBtName: TextView
 
     @Mock
-    lateinit var mockedTextMileage: TextView
+    private lateinit var mockedTextMileage: TextView
 
     @Mock
-    lateinit var mockedTextName: TextView
+    private lateinit var mockedTextName: TextView
 
     @Mock
-    lateinit var mockedTextRemainingRange: TextView
+    private lateinit var mockedTextRemainingRange: TextView
 
     @Mock
-    lateinit var mockedTextTotalRange: TextView
+    private lateinit var mockedTextTotalRange: TextView
 
     @Before
     fun before() {
@@ -181,7 +188,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
         // Then
         verifyFieldAssignment(R.id.button_charge, fragment.buttonCharge, mockedButtonCharge)
-        verifyFieldAssignment(R.id.button_connect_view, fragment.buttonConnect, mockedButtonConnect)
+        verifyFieldAssignment(R.id.button_connect, fragment.buttonConnect, mockedButtonConnect)
         verifyFieldAssignment(R.id.button_edit, fragment.buttonEdit, mockedButtonEdit)
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
@@ -243,57 +250,59 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     }
 
     @Test
-    fun onCharge() {
+    fun onCharge_withConnectedWheel() {
         // Given
-        BaseFragment.chargeContext.km = -1f
-        BaseFragment.chargeContext.voltage = -1f
+        wheel = S18_1
 
-        doReturn(KM).`when`(fragment).readKm()
-        doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
+        doNothing().`when`(fragment).startCharging()
 
         // When
         fragment.onCharge().invoke(mockedView)
 
         // Then
-        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
+        verify(fragment).reconnect(captorExecution.capture())
+        captorExecution.value.invoke()
 
-        assertThat(BaseFragment.chargeContext.km, equalTo(KM))
-        assertThat(BaseFragment.chargeContext.voltage, equalTo(VOLTAGE))
+        verify(fragment).startCharging()
     }
 
     @Test
-    fun onConnect_whenFirstTime_gotoScanFragment() {
+    fun onCharge_withDisconnectedWheel() {
         // Given
-        injectMocks()
+        wheel = S18_DISCONNECTED
 
-        BaseFragment.wheel = S18_DISCONNECTED
+        doNothing().`when`(fragment).startCharging()
+
+        // When
+        fragment.onCharge().invoke(mockedView)
+
+        // Then
+        verify(fragment).startCharging()
+        verify(fragment, never()).reconnect(any())
+    }
+
+    @Test
+    fun onConnect_withConnectedWheel() {
+        // Given
+        wheel = S18_1
 
         // When
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
+        verify(fragment).reconnect()
     }
 
     @Test
-    fun onConnect_whenNotFirstTime_connectAndUpdate() {
+    fun onConnect_withDisconnectedWheel() {
         // Given
-        injectMocks()
-
-        val connectionPayload = WheelInfo(KM_NEW_RAW, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
+        wheel = S18_DISCONNECTED
 
         // When
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verifyRunWithWaitDialog()
-        verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)
-        verifyDoneWaiting(connectionPayload)
-
-        verify(mockedDb).saveWheel(S18_1.copy(mileage = MILEAGE_NEW))
-        verify(mockedEditKm).setText("$KM_NEW")
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
-        verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
+        verify(fragment).connectFirstTime()
     }
 
     @Test
@@ -308,16 +317,16 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     @Test
     fun onUpdateKm() {
         // Given
-        doReturn(KM).`when`(fragment).parseKm(KM_STRING)
+        doReturn(KM).`when`(fragment).parseKm("$KM")
         doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
 
         doNothing().`when`(fragment).refreshDisplay(VOLTAGE, KM)
 
         // When
-        fragment.onUpdateKm().invoke(KM_STRING)
+        fragment.onUpdateKm().invoke("$KM")
 
         // Then
-        verify(fragment).parseKm(KM_STRING)
+        verify(fragment).parseKm("$KM")
         verify(fragment).readVoltageActual()
 
         verify(fragment).refreshDisplay(VOLTAGE, KM)
@@ -326,19 +335,29 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     @Test
     fun onUpdateVoltageActual() {
         // Given
-        val value = "$VOLTAGE "
-        doReturn(VOLTAGE).`when`(fragment).parseVoltage(value)
+        injectMocks()
+
+        doReturn(VOLTAGE_NEW).`when`(fragment).parseVoltage("$VOLTAGE_NEW_RAW ")
         doReturn(KM).`when`(fragment).readKm()
-        doNothing().`when`(fragment).refreshDisplay(VOLTAGE, KM)
+        doNothing().`when`(fragment).refreshDisplay(VOLTAGE_NEW, KM)
 
         // When
-        fragment.onUpdateVoltageActual().invoke(value)
+        fragment.onUpdateVoltageActual().invoke("$VOLTAGE_NEW_RAW ")
 
         // Then
-        verify(fragment).parseVoltage(value)
+        verify(fragment).parseVoltage("$VOLTAGE_NEW_RAW ")
         verify(fragment).readKm()
 
-        verify(fragment).refreshDisplay(VOLTAGE, KM)
+        verify(fragment).refreshDisplay(VOLTAGE_NEW, KM)
+    }
+
+    @Test
+    fun connectFirstTime() {
+        // When
+        fragment.connectFirstTime()
+
+        // Then
+        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
     }
 
     @Test
@@ -424,15 +443,15 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
-        doReturn(KM_STRING).`when`(mockedWidgets).getText(mockedEditKm)
-        doReturn(KM).`when`(fragment).parseKm(KM_STRING)
+        doReturn("$KM").`when`(mockedWidgets).getText(mockedEditKm)
+        doReturn(KM).`when`(fragment).parseKm("$KM")
 
         // When
         val result = fragment.readKm()
 
         // Then
         verify(mockedWidgets).getText(mockedEditKm)
-        verify(fragment).parseKm(KM_STRING)
+        verify(fragment).parseKm("$KM")
 
         assertThat(result, equalTo(KM))
     }
@@ -442,17 +461,41 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
-        doReturn(VOLTAGE_STRING).`when`(mockedWidgets).getText(mockedEditVoltageActual)
-        doReturn(VOLTAGE).`when`(fragment).parseVoltage(VOLTAGE_STRING)
+        doReturn("$VOLTAGE").`when`(mockedWidgets).getText(mockedEditVoltageActual)
+        doReturn(VOLTAGE).`when`(fragment).parseVoltage("$VOLTAGE")
 
         // When
         val result = fragment.readVoltageActual()
 
         // Then
         verify(mockedWidgets).getText(mockedEditVoltageActual)
-        verify(fragment).parseVoltage(VOLTAGE_STRING)
+        verify(fragment).parseVoltage("$VOLTAGE")
 
         assertThat(result, equalTo(VOLTAGE))
+    }
+
+    @Test
+    fun reconnect() {
+        // Given
+        injectMocks()
+
+        val connectionPayload = WheelInfo(KM_NEW_RAW, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
+        var executed = false
+
+        // When
+        fragment.reconnect { executed = true }
+
+        // Then
+        verifyRunWithWaitDialog()
+        verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)
+        verifyDoneWaiting(connectionPayload)
+
+        verify(mockedDb).saveWheel(S18_1.copy(mileage = MILEAGE_NEW))
+        verify(mockedEditKm).setText("$KM_NEW")
+        verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
+
+        assertThat(executed, equalTo(true))
     }
 
     @Test
@@ -542,6 +585,27 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedWidgets).show(mockedTextBattery, mockedLabelBattery)
     }
 
+    @Test
+    fun startCharging() {
+        // Given
+        injectMocks()
+
+        BaseFragment.chargeContext.km = -1f
+        BaseFragment.chargeContext.voltage = -1f
+
+        given(mockedWidgets.getText(mockedEditKm)).willReturn(KM_NEW.toString())
+        given(mockedWidgets.getText(mockedEditVoltageActual)).willReturn(VOLTAGE_NEW5.toString())
+
+        // When
+        fragment.startCharging()
+
+        // Then
+        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
+
+        assertThat(BaseFragment.chargeContext.km, equalTo(KM_NEW))
+        assertThat(BaseFragment.chargeContext.voltage, equalTo(VOLTAGE_NEW5))
+    }
+
     private fun injectMocks() {
         fragment.buttonCharge = mockedButtonCharge
         fragment.buttonConnect = mockedButtonConnect
@@ -561,7 +625,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     private fun mockFields() {
         mockField(R.id.button_charge, mockedButtonCharge)
-        mockField(R.id.button_connect_view, mockedButtonConnect)
+        mockField(R.id.button_connect, mockedButtonConnect)
         mockField(R.id.button_edit, mockedButtonEdit)
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)

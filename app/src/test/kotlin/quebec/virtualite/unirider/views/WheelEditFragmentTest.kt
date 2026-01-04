@@ -20,78 +20,73 @@ import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET
-import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET_NEW
-import quebec.virtualite.unirider.TestDomain.CHARGE_RATE
-import quebec.virtualite.unirider.TestDomain.CHARGE_RATE_NEW
-import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET
-import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET_NEW
-import quebec.virtualite.unirider.TestDomain.EMPTY_WHEEL
-import quebec.virtualite.unirider.TestDomain.MILEAGE
-import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
-import quebec.virtualite.unirider.TestDomain.NAME
-import quebec.virtualite.unirider.TestDomain.NAME_NEW
-import quebec.virtualite.unirider.TestDomain.PREMILEAGE
-import quebec.virtualite.unirider.TestDomain.PREMILEAGE_NEW
-import quebec.virtualite.unirider.TestDomain.S18_1
-import quebec.virtualite.unirider.TestDomain.SOLD
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
-import quebec.virtualite.unirider.TestDomain.WH
-import quebec.virtualite.unirider.TestDomain.WH_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE
+import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.DISTANCE_OFFSET
+import quebec.virtualite.unirider.test.domain.TestConstants.DISTANCE_OFFSET_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.EMPTY_WHEEL
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.NAME
+import quebec.virtualite.unirider.test.domain.TestConstants.NAME_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE
+import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.SOLD
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MAX
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MAX_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MIN
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MIN_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.WH
+import quebec.virtualite.unirider.test.domain.TestConstants.WH_NEW
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @InjectMocks
     @Spy
-    lateinit var fragment: WheelEditFragment
+    private lateinit var fragment: WheelEditFragment
 
     @Mock
-    lateinit var mockedButtonDelete: Button
+    private lateinit var mockedButtonDelete: Button
 
     @Mock
-    lateinit var mockedButtonSave: Button
+    private lateinit var mockedButtonSave: Button
 
     @Mock
-    lateinit var mockedEditChargeRate: EditText
+    private lateinit var mockedEditChargeRate: EditText
 
     @Mock
-    lateinit var mockedEditChargerOffset: EditText
+    private lateinit var mockedEditDistanceOffset: EditText
 
     @Mock
-    lateinit var mockedEditDistanceOffset: EditText
+    private lateinit var mockedEditMileage: EditText
 
     @Mock
-    lateinit var mockedEditMileage: EditText
+    private lateinit var mockedEditName: EditText
 
     @Mock
-    lateinit var mockedEditName: EditText
+    private lateinit var mockedEditPreMileage: EditText
 
     @Mock
-    lateinit var mockedEditPreMileage: EditText
+    private lateinit var mockedEditVoltageFull: EditText
 
     @Mock
-    lateinit var mockedEditVoltageFull: EditText
+    private lateinit var mockedEditVoltageMax: EditText
 
     @Mock
-    lateinit var mockedEditVoltageMax: EditText
+    private lateinit var mockedEditVoltageMin: EditText
 
     @Mock
-    lateinit var mockedEditVoltageMin: EditText
+    private lateinit var mockedEditWh: EditText
 
     @Mock
-    lateinit var mockedEditWh: EditText
+    private lateinit var mockedSwitchSold: SwitchMaterial
 
     @Mock
-    lateinit var mockedSwitchSold: SwitchMaterial
-
-    @Mock
-    lateinit var mockedWheelValidator: WheelValidator
+    private lateinit var mockedWheelValidator: WheelValidator
 
     @Before
     fun before() {
@@ -124,7 +119,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.button_save, fragment.buttonSave, mockedButtonSave)
         verifyFieldAssignment(R.id.check_sold, fragment.switchSold, mockedSwitchSold)
         verifyFieldAssignment(R.id.edit_name, fragment.editChargeRate, mockedEditChargeRate)
-        verifyFieldAssignment(R.id.edit_charger_offset, fragment.editChargerOffset, mockedEditChargerOffset)
         verifyFieldAssignment(R.id.edit_distance_offset, fragment.editDistanceOffset, mockedEditDistanceOffset)
         verifyFieldAssignment(R.id.edit_mileage, fragment.editMileage, mockedEditMileage)
         verifyFieldAssignment(R.id.edit_name, fragment.editName, mockedEditName)
@@ -135,7 +129,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
 
         verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
-        verifyOnUpdateText(mockedEditChargerOffset, "onUpdateChargerOffset")
         verifyOnUpdateText(mockedEditDistanceOffset, "onUpdateDistanceOffset")
         verifyOnUpdateText(mockedEditName, "onUpdateName")
         verifyOnUpdateText(mockedEditPreMileage, "onUpdatePreMileage")
@@ -149,7 +142,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyOnClick(mockedButtonSave, "onSave")
 
         verify(mockedEditChargeRate).setText("$CHARGE_RATE")
-        verify(mockedEditChargerOffset).setText("$CHARGER_OFFSET")
         verify(mockedEditDistanceOffset).setText("$DISTANCE_OFFSET")
         verify(mockedEditName).setText(NAME)
         verify(mockedEditPreMileage).setText("$PREMILEAGE")
@@ -328,56 +320,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         // Then
         assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = CHARGE_RATE_NEW)))
-    }
-
-    @Test
-    fun onUpdateChargerOffset() {
-        // Given
-        initUpdate()
-
-        // When
-        fragment.onUpdateChargerOffset().invoke("$CHARGER_OFFSET_NEW ")
-
-        // Then
-        verify(fragment).enableSaveIfChanged()
-
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = CHARGER_OFFSET_NEW)))
-    }
-
-    @Test
-    fun onUpdateChargerOffset_whenEmpty_zero() {
-        // Given
-        initUpdate()
-
-        // When
-        fragment.onUpdateChargerOffset().invoke(" ")
-
-        // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = 0f)))
-    }
-
-    @Test
-    fun onUpdateChargerOffset_whenInvalid_zero() {
-        // Given
-        initUpdate()
-
-        // When
-        fragment.onUpdateChargerOffset().invoke("ab ")
-
-        // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = 0f)))
-    }
-
-    @Test
-    fun onUpdateChargerOffset_withTooManyDecimals() {
-        // Given
-        initUpdate()
-
-        // When
-        fragment.onUpdateChargerOffset().invoke("${CHARGER_OFFSET_NEW + 0.001f} ")
-
-        // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = CHARGER_OFFSET_NEW)))
     }
 
     @Test
@@ -738,7 +680,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         mockField(R.id.button_save, mockedButtonSave)
         mockField(R.id.check_sold, mockedSwitchSold)
         mockField(R.id.edit_charge_rate, mockedEditChargeRate)
-        mockField(R.id.edit_charger_offset, mockedEditChargerOffset)
         mockField(R.id.edit_distance_offset, mockedEditDistanceOffset)
         mockField(R.id.edit_name, mockedEditName)
         mockField(R.id.edit_premileage, mockedEditPreMileage)

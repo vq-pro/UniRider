@@ -1,20 +1,27 @@
 Feature: Wheel Charging - ERROR
 
   Background:
-    Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1               | No   |
+    Given this wheel:
+      | Name      | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
+      | Sherman L | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.0667          | No   |
+    And this wheel is connected:
+      | Name      | Bt Name | Bt Address        |
+      | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |
+    And this simulated device:
+      | Bt Name | Bt Address        | Km     | Mileage   | Voltages     |
+      | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 136.5V, 138V |
+
     And I start the app
-    And I select the Sherman Max
-    And I set the actual voltage to 86.4V
+
+    And I select the Sherman L
+    And I set the actual voltage to 137.0V
     And I set the distance to 50 km
     And I charge the wheel
+    And I reconnect to update the voltage
 
   Scenario Outline: Changing the voltage - ERROR [<voltage>]
-    When I change the voltage to <voltage>
-    Then it displays these charging estimates:
-      | required voltage | time |
-      |                  |      |
+    When I change the actual voltage to <voltage>
+    Then it displays empty charging estimates
     Examples:
       | voltage |
       |         |
@@ -23,15 +30,9 @@ Feature: Wheel Charging - ERROR
 
   Scenario Outline: Charging a wheel - ERROR [<distance>]
     When I request to charge for <distance>
-    Then it displays an actual voltage of 87.9V
-    And it displays these charging estimates:
-      | required voltage   | time   |
-      | <required voltage> | <time> |
+    Then it displays an actual voltage of 138.0V
+    And it displays empty charging estimates
     Examples:
-      | distance | required voltage | time |
-      |          |                  |      |
-      | aa       |                  |      |
-
-  Scenario: Update the voltage - ERROR - Never connected
-    When I request to charge for 40 km
-    Then I cannot connect to the wheel on the charge screen
+      | distance |
+      |          |
+      | aa       |

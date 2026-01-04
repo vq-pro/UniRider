@@ -13,20 +13,20 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.DEVICE3
-import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR
-import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR2
-import quebec.virtualite.unirider.TestDomain.DEVICE_ADDR3
-import quebec.virtualite.unirider.TestDomain.DEVICE_NAME
-import quebec.virtualite.unirider.TestDomain.DEVICE_NAME2
-import quebec.virtualite.unirider.TestDomain.KM_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
-import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.S18_1
-import quebec.virtualite.unirider.TestDomain.SHERMAN_MAX_3
-import quebec.virtualite.unirider.TestDomain.TEMPERATURE_NEW_RAW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.bluetooth.WheelInfo
+import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE3
+import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_ADDR
+import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_ADDR2
+import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_ADDR3
+import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_NAME
+import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_NAME2
+import quebec.virtualite.unirider.test.domain.TestConstants.KM_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3
+import quebec.virtualite.unirider.test.domain.TestConstants.TEMPERATURE_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW_RAW
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
@@ -35,10 +35,10 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
     private val DEVICE2 = BluetoothDevice(DEVICE_NAME2, DEVICE_ADDR2)
 
     @InjectMocks
-    lateinit var fragment: WheelScanFragment
+    private lateinit var fragment: WheelScanFragment
 
     @Mock
-    lateinit var mockedLvDevices: ListView
+    private lateinit var mockedLvDevices: ListView
 
     @Before
     fun before() {

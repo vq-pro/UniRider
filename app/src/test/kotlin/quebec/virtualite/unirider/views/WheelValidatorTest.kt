@@ -6,25 +6,24 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
-import quebec.virtualite.unirider.TestDomain.CHARGER_OFFSET_NEW
-import quebec.virtualite.unirider.TestDomain.CHARGE_RATE_NEW
-import quebec.virtualite.unirider.TestDomain.DISTANCE_OFFSET_NEW
-import quebec.virtualite.unirider.TestDomain.MILEAGE_NEW
-import quebec.virtualite.unirider.TestDomain.NAME_NEW
-import quebec.virtualite.unirider.TestDomain.PREMILEAGE_NEW
-import quebec.virtualite.unirider.TestDomain.S18_1
-import quebec.virtualite.unirider.TestDomain.SOLD
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_FULL_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MAX_NEW
-import quebec.virtualite.unirider.TestDomain.VOLTAGE_MIN_NEW
-import quebec.virtualite.unirider.TestDomain.WH_NEW
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.DISTANCE_OFFSET_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.NAME_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.SOLD
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MAX_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MIN_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.WH_NEW
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelValidatorTest {
 
     @InjectMocks
-    lateinit var comparator: WheelValidator
+    private lateinit var comparator: WheelValidator
 
     private val WHEEL = S18_1
 
@@ -67,10 +66,6 @@ class WheelValidatorTest {
         cannotSave(WHEEL.copy(voltageFull = 0f))
         cannotSave(WHEEL.copy(voltageFull = WHEEL.voltageMax + 0.1f))
         cannotSave(WHEEL.copy(voltageFull = WHEEL.voltageMin - 0.1f))
-
-        // Charger offset
-        canSave(WHEEL.copy(chargerOffset = CHARGER_OFFSET_NEW))
-        canSave(WHEEL.copy(chargerOffset = 0f))
 
         // Distance offset
         canSave(WHEEL.copy(distanceOffset = DISTANCE_OFFSET_NEW))

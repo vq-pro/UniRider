@@ -6,8 +6,6 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.ExternalServices
 import java.util.Locale.ENGLISH
 
-const val NB_DECIMALS = 1
-
 open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait) {
 
     companion object {

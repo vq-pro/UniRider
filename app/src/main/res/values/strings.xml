@@ -16,6 +16,7 @@
     <string name="label_battery">Battery</string>
     <string name="label_bt_name">Bluetooth</string>
     <string name="label_charge_rate">Charge Rate</string>
+    <string name="label_charge_warning">Charging will start as soon as you connect...</string>
     <string name="label_charger_offset">Charger Offset</string>
     <string name="label_charging">Charging</string>
     <string name="label_devices">Devices</string>
@@ -34,6 +35,7 @@
     <string name="label_voltage_full">Full Charge</string>
     <string name="label_voltage_required">Required</string>
     <string name="label_voltage_start">Start</string>
+    <string name="label_voltage_target">Target</string>
     <string name="label_wh">wh</string>
     <string name="label_wh_per_hour">wh/h</string>
     <string name="label_wh_per_km">wh/km</string>

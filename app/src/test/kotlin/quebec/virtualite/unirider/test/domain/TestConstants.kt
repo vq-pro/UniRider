@@ -1,10 +1,10 @@
-package quebec.virtualite.unirider
+package quebec.virtualite.unirider.test.domain
 
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelRow
 
-object TestDomain {
+object TestConstants {
     const val CHARGE_RATE = 4f
     const val CHARGE_RATE2 = 6f
     const val CHARGE_RATE3 = 8f
@@ -12,11 +12,6 @@ object TestDomain {
     const val CHARGE_RATE5 = 21f
     const val CHARGE_RATE_NEW = 10f
     const val CHARGER_OFFSET = 1.4f
-    const val CHARGER_OFFSET2 = 1.5f
-    const val CHARGER_OFFSET3 = 1.6f
-    const val CHARGER_OFFSET4 = 1.7f
-    const val CHARGER_OFFSET5 = 1.8f
-    const val CHARGER_OFFSET_NEW = 1.8f
     const val DEVICE_ADDR = "AA:BB:CC:DD:EE:FF"
     const val DEVICE_ADDR2 = "BB:CC:DD:EE:FF:GG"
     const val DEVICE_ADDR3 = "CC:DD:EE:FF:GG:HH"
@@ -42,8 +37,7 @@ object TestDomain {
     const val KM = 4444f
     const val KM_NEW = 3704.2f
     const val KM_NEW_RAW = 4445.012f
-    const val KM_REQUESTED = 9999f
-    const val KM_STRING = "$KM"
+    const val KM_REQUESTED = 10f
     const val LABEL_KM = "km"
     const val MILEAGE = 2222
     const val MILEAGE2 = 2222
@@ -71,7 +65,7 @@ object TestDomain {
     const val SOLD = true
     const val TEMPERATURE_NEW_RAW = 3333f
     const val TOTAL_RANGE = 6666f
-    const val VOLTAGE = 82f
+    const val VOLTAGE = 79f
     const val VOLTAGE_FULL = 81.5f
     const val VOLTAGE_FULL2 = 123f
     const val VOLTAGE_FULL3 = 99.5f
@@ -84,15 +78,15 @@ object TestDomain {
     const val VOLTAGE_MAX4 = 100.8f
     const val VOLTAGE_MAX5 = 151.2f
     const val VOLTAGE_MAX_NEW = 100.9f
-    const val VOLTAGE_NEW = 84.9f
-    const val VOLTAGE_NEW_RAW = 84.9001f
+    const val VOLTAGE_NEW = 80.9f
+    const val VOLTAGE_NEW5 = 146.1f
+    const val VOLTAGE_NEW_RAW = 80.9001f
     const val VOLTAGE_MIN = 60.0f
     const val VOLTAGE_MIN2 = 90.0f
     const val VOLTAGE_MIN3 = 75.6f
     const val VOLTAGE_MIN4 = 75.6f
     const val VOLTAGE_MIN5 = 104.4f
     const val VOLTAGE_MIN_NEW = 62.0f
-    const val VOLTAGE_STRING = "$VOLTAGE"
     const val WH = 1110
     const val WH2 = 2220
     const val WH3 = 3600
@@ -112,40 +106,40 @@ object TestDomain {
         ID, NAME, DEVICE_NAME, DEVICE_ADDR,
         PREMILEAGE, MILEAGE, WH,
         VOLTAGE_MAX, VOLTAGE_MIN,
-        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET, NOT_SOLD
+        CHARGE_RATE, VOLTAGE_FULL, DISTANCE_OFFSET, NOT_SOLD
     )
     val S20_2 = WheelEntity(
         ID2, NAME2, DEVICE_NAME2, DEVICE_ADDR2,
         PREMILEAGE2, MILEAGE2, WH2,
         VOLTAGE_MAX2, VOLTAGE_MIN2,
-        CHARGE_RATE2, VOLTAGE_FULL2, CHARGER_OFFSET2, DISTANCE_OFFSET2, NOT_SOLD
+        CHARGE_RATE2, VOLTAGE_FULL2, DISTANCE_OFFSET2, NOT_SOLD
     )
     val SHERMAN_MAX_3 = WheelEntity(
         ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
         PREMILEAGE3, MILEAGE3, WH3,
         VOLTAGE_MAX3, VOLTAGE_MIN3,
-        CHARGE_RATE3, VOLTAGE_FULL3, CHARGER_OFFSET3, DISTANCE_OFFSET3, SOLD
+        CHARGE_RATE3, VOLTAGE_FULL3, DISTANCE_OFFSET3, SOLD
     )
     val ABRAMS_4 = WheelEntity(
         ID4, NAME4, DEVICE_NAME4, DEVICE_ADDR4,
         PREMILEAGE4, MILEAGE4, WH4,
         VOLTAGE_MAX4, VOLTAGE_MIN4,
-        CHARGE_RATE4, VOLTAGE_FULL4, CHARGER_OFFSET4, DISTANCE_OFFSET4, SOLD
+        CHARGE_RATE4, VOLTAGE_FULL4, DISTANCE_OFFSET4, SOLD
     )
 
     val SHERMAN_L_5 = WheelEntity(
         ID5, NAME5, DEVICE_NAME5, DEVICE_ADDR5,
         PREMILEAGE5, MILEAGE5, WH5,
         VOLTAGE_MAX5, VOLTAGE_MIN5,
-        CHARGE_RATE5, VOLTAGE_FULL5, CHARGER_OFFSET5, DISTANCE_OFFSET5, NOT_SOLD
+        CHARGE_RATE5, VOLTAGE_FULL5, DISTANCE_OFFSET5, NOT_SOLD
     )
 
     val S18_DISCONNECTED = WheelEntity(
         ID, NAME, null, null,
         PREMILEAGE, MILEAGE, WH,
         VOLTAGE_MAX, VOLTAGE_MIN,
-        CHARGE_RATE, VOLTAGE_FULL, CHARGER_OFFSET, DISTANCE_OFFSET, NOT_SOLD
+        CHARGE_RATE, VOLTAGE_FULL, DISTANCE_OFFSET, NOT_SOLD
     )
 
-    val EMPTY_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+    val EMPTY_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
 }

@@ -2,55 +2,105 @@ Feature: Wheel Charging
 
   Background:
     Given this wheel:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1.1             | No   |
+      | Name      | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
+      | Sherman   | 17622   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1               | No   |
+      | Sherman L | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.0667          | No   |
     And this wheel is connected:
-      | Name        | Bt Name | Bt Address        |
-      | Sherman Max | LK1234  | C0:C1:C2:C3:C4:C5 |
+      | Name      | Bt Name | Bt Address        |
+      | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |
+    And this simulated device:
+      | Bt Name | Bt Address        | Km     | Mileage   | Voltages     |
+      | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 136.5V, 138V |
+
     And the current time is 11:45
     And I start the app
-    And I select the Sherman Max
-    And I set the actual voltage to 86.4V
-    And I set the distance to 50 km
+
+    And I select the Sherman L
+    And I set the actual voltage to 137.0V
+    And I set the distance to 30 km
     And it displays these estimates:
       | remaining | total range |
-      | 14.5      | 64.5        |
+      | 31.2      | 61.2        |
     And I charge the wheel
 
-  Scenario: Changing the voltage
-    Given I request to charge for 40 km
-    And it displays an actual voltage of 87.9V
+  Scenario: Changing the actual voltage
+    Given I reconnect to update the voltage
+    And I request to charge for 30 km
+    And it displays an actual voltage of 138.0V
     And it displays these charging estimates:
-      | required voltage | time        |
-      | 95.0V (+7.1)     | 12:38 (53m) |
-    When I change the voltage to 90V
+      | target        | required      | time        |
+      | 143.5V (+5.5) | 142.0V (-1.5) | 12:01 (16m) |
+    When I change the actual voltage to 140.0V
     Then it displays these charging estimates:
-      | required voltage | time        |
-      | 95.0V (+5.0)     | 12:23 (38m) |
+      | target        | required      | time        |
+      | 143.5V (+3.5) | 142.0V (-1.5) | 11:55 (10m) |
 
-  Scenario Outline: Charging a wheel [<distance>]
+  Scenario Outline: Charging a wheel by distance [<distance>]
+    Given I reconnect to update the voltage
     When I request to charge for <distance>
-    Then it displays an actual voltage of 87.9V
+    Then it displays an actual voltage of 138.0V
+    And the full charge indicator is <fc_indicator>
     And it displays these charging estimates:
-      | required voltage   | time   |
-      | <required voltage> | <time> |
+      | target   | required   | time   |
+      | <target> | <required> | <time> |
     Examples:
-      | distance | required voltage | time          |
-      | 10 km    | Go!              |               |
-      | 20 km    | 89.9V (+2.0)     | 12:00 (15m)   |
-      | 40 km    | 95.0V (+7.1)     | 12:38 (53m)   |
-      | 50 km    | 96.3V (+8.4)     | 12:48 (1h3m)  |
-      | 60 km    | 97.7V (+9.8)     | 12:59 (1h14m) |
-      | 200 km   | 99.5V (+11.6)    | 13:12 (1h27m) |
-      | full     | 99.5V (+11.6)    | 13:12 (1h27m) |
+      | distance | fc_indicator | target         | required      | time        |
+      | 0 km     | off          | 138.0V         | 136.5V (-1.5) | Go!         |
+      | 10 km    | off          | 132.0V         | 130.5V (-1.5) | Go!         |
+      | 20 km    | off          | 138.4V (+0.4)  | 136.9V (-1.5) | 11:46 (1m)  |
+      | 30 km    | off          | 143.5V (+5.5)  | 142.0V (-1.5) | 12:01 (16m) |
+      | 40 km    | off          | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
+      | 50 km    | off          | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
+      | full     | on           | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
+
+  Scenario Outline: Charging a wheel by voltage [<required>]
+    Given I reconnect to update the voltage
+    When I request to charge to <required>
+    Then it displays an actual voltage of 138.0V
+    And the full charge indicator is off
+    And it displays these charging estimates:
+      | target   | required   | time   |
+      | <target> | <required> | <time> |
+    Examples:
+      | target         | required      | time        |
+      | 135.6V         | 134.1V (-1.5) | Go!         |
+      | 140.0V (+2.0)  | 138.5V (-1.5) | 11:51 (6m)  |
+      | 142.7V (+4.7)  | 141.2V (-1.5) | 11:58 (13m) |
+      | 144.5V (+6.5)  | 143.0V (-1.5) | 12:04 (19m) |
+      | 147.9V (+9.9)  | 146.4V (-1.5) | 12:13 (28m) |
+      | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
+
+  Scenario: Charging a wheel that is not connected
+    Given I go back to view the wheel
+    And I go back to the main view
+    And I select the Sherman
+    And I set the actual voltage to 89.0V
+    And I set the distance to 30 km
+    And I charge the wheel
+    When I change the actual voltage to 91.0V
+    And I request to charge for 40 km
+    Then it displays an actual voltage of 91.0V
+    And it displays these charging estimates:
+      | target       | required     | time        |
+      | 97.5V (+6.5) | 95.5V (-2.0) | 12:37 (52m) |
+
+  Scenario: Start charging
+    Given I see the charge warning
+    And it displays no actual voltage
+    And it displays empty charging estimates
+    When I reconnect to update the voltage
+    Then I don't see the charge warning
+    And it displays an actual voltage of 138.0V
+    And it displays these charging estimates:
+      | target         | required      | time        |
+      | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
 
   Scenario: Reconnect to update the voltage
-    Given this simulated device:
-      | Bt Name | Bt Address        | Km     | Mileage | Voltage  |
-      | LK1234  | C0:C1:C2:C3:C4:C5 | 12.218 | 705.615 | 88.5001V |
-    And I request to charge for 40 km
+    Given I reconnect to update the voltage
+    And I request to charge for 20 km
+    And I change the actual voltage to 140.0V
     When I reconnect to update the voltage
-    Then it displays an actual voltage of 88.5V
+    Then it displays an actual voltage of 136.5V
     And it displays these charging estimates:
-      | required voltage | time        |
-      | 95.0V (+6.5)     | 12:34 (49m) |
+      | target        | required      | time       |
+      | 138.4V (+1.9) | 136.9V (-1.5) | 11:50 (5m) |

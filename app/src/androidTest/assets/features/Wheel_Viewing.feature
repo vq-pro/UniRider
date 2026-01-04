@@ -2,14 +2,20 @@ Feature: Wheel Viewing
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
-      | Sherman     | 17622   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1.5V           | 1               | No   |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1.5V           | 1               | No   |
-      | Sherman L   | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 149.3V      | 1.8V           | 1.0181          | No   |
-      | 14S         | 694     | 840  | 48V         | 67.2V       | 4V/h        | 65.5V       | 1.5V           | 1               | No   |
-      | S18         | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.5V       | 1.5V           | 1               | No   |
-      | Nikola+     | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.5V       | 1.5V           | 1               | Yes  |
-      | Abrams      | 95      | 2700 | 74.5V       | 100.8V      | 14V/h       | 99.5V       | 1.5V           | 1               | Yes  |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
+      | Sherman     | 17622   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1               | No   |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1               | No   |
+      | Sherman L   | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.0667          | No   |
+      | 14S         | 694     | 840  | 48V         | 67.2V       | 4V/h        | 65.5V       | 1               | No   |
+      | S18         | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.5V       | 1               | No   |
+      | Nikola+     | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.5V       | 1               | Yes  |
+      | Abrams      | 95      | 2700 | 74.5V       | 100.8V      | 14V/h       | 99.5V       | 1               | Yes  |
+    And this wheel is connected:
+      | Name      | Bt Name | Bt Address        |
+      | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |
+    And this simulated device:
+      | Bt Name | Bt Address        | Km     | Mileage   | Voltages |
+      | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 141.51V  |
     And I start the app
 
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
@@ -56,7 +62,7 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 95.3%   |
       | Sherman Max | 91.9V   | 53.6%   |
 
-  Scenario: => Charging the wheel
+  Scenario: => Charging the wheel - Need to have entered voltage & km
     Given I select the Sherman
     And I cannot charge the wheel
     When I set the actual voltage to 91.9V

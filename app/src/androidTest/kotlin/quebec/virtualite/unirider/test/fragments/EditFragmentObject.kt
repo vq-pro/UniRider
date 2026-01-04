@@ -29,10 +29,6 @@ class EditFragmentObject(val app: TestApp) {
         setText(R.id.edit_charge_rate, value)
     }
 
-    fun changeChargerOffset(value: String) {
-        setText(R.id.edit_charger_offset, value)
-    }
-
     fun changeDistanceOffset(value: String) {
         setText(R.id.edit_distance_offset, value)
     }
@@ -78,7 +74,6 @@ class EditFragmentObject(val app: TestApp) {
 
         val mapDetailToId = mapOf(
             Pair("Charge Rate", R.id.edit_charge_rate),
-            Pair("Charger Offset", R.id.edit_charger_offset),
             Pair("Distance Offset", R.id.edit_distance_offset),
             Pair("Full Charge", R.id.edit_voltage_full),
             Pair("Mileage", R.id.edit_mileage),
@@ -108,9 +103,8 @@ class EditFragmentObject(val app: TestApp) {
 
         val updatedWheel = selectedWheel.copy(
             chargeRate = floatOf(mapEntity["Charge Rate"]!!),
-            chargerOffset = floatOf(mapEntity["Charger Offset"]!!),
             distanceOffset = floatOf(mapEntity["Distance Offset"]!!),
-            isSold = "yes".equals(mapEntity["Sold"]!!),
+            isSold = "yes" == mapEntity["Sold"]!!,
             mileage = intOf(mapEntity["Mileage"]!!),
             name = mapEntity["Name"]!!,
             premileage = intOf(mapEntity["Previous Mileage"]!!),

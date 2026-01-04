@@ -23,12 +23,12 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.views.CommonFragmentServices
 import quebec.virtualite.commons.android.views.CommonWidgetServices
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.TestDomain.ITEM_SOLD
-import quebec.virtualite.unirider.TestDomain.LABEL_KM
 import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.services.ExternalServices
+import quebec.virtualite.unirider.test.domain.TestConstants.ITEM_SOLD
+import quebec.virtualite.unirider.test.domain.TestConstants.LABEL_KM
 
 open class FragmentTestBase(fragmentType: Class<*>) {
 
