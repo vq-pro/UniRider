@@ -22,7 +22,7 @@ Feature: Wheel Connecting - End-2-End
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
       | Name      | Updated mileage |
-      | Lynx      | 14682           |
+      | Lynx      | 14683           |
       | Sherman L | 23896           |
     And I start the app
 
@@ -68,7 +68,7 @@ Feature: Wheel Connecting - End-2-End
       | Sherman-S | LK6474       | 88:25:83:F4:E4:89 |
       | Lynx      | LK9622       | 88:25:83:F5:36:17 |
       | Sherman L | LK13447      | 88:25:83:F5:75:80 |
-    And I select the 14S
+    And I select the Aero
     And I reconnect to the wheel
     And I cancel the scan and go back
     And I select the Lynx
