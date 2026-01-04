@@ -2,7 +2,6 @@ package quebec.virtualite.unirider.views
 
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -23,8 +22,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE_NEW
-import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_ADDR
-import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_NAME
 import quebec.virtualite.unirider.test.domain.TestConstants.DISTANCE_OFFSET
 import quebec.virtualite.unirider.test.domain.TestConstants.DISTANCE_OFFSET_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.EMPTY_WHEEL
@@ -90,15 +87,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     private lateinit var mockedSwitchSold: SwitchMaterial
 
     @Mock
-    private lateinit var mockedTextBluetoothAddr: TextView
-
-    @Mock
-    private lateinit var mockedTextBluetoothName: TextView
-
-    @Mock
-    private lateinit var mockedTextBluetoothNameLabel: TextView
-
-    @Mock
     private lateinit var mockedWheelValidator: WheelValidator
 
     @Before
@@ -140,10 +128,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_voltage_max, fragment.editVoltageMax, mockedEditVoltageMax)
         verifyFieldAssignment(R.id.edit_voltage_min, fragment.editVoltageMin, mockedEditVoltageMin)
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
-//        FIXME-1 Delete bt on the edit
-        verifyFieldAssignment(R.id.view_bt_addr_on_edit, fragment.textBtAddr, mockedTextBluetoothAddr)
-        verifyFieldAssignment(R.id.view_bt_name_on_edit, fragment.textBtName, mockedTextBluetoothName)
-        verifyFieldAssignment(R.id.view_bt_name_on_edit_label, fragment.textBtNameLabel, mockedTextBluetoothNameLabel)
 
         verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
         verifyOnUpdateText(mockedEditDistanceOffset, "onUpdateDistanceOffset")
@@ -194,18 +178,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated_withBluetoothConnectedWheel() {
-        // Given
-        BaseFragment.wheel = S18_1_CONNECTED
-
-        // When
-        fragment.onViewCreated(mockedView, mockedBundle)
-
-        // Then
-        verify(fragment).displayBluetoothSettings()
-    }
-
-    @Test
     fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
         // Given
         BaseFragment.wheel = S18_1_CONNECTED.copy(premileage = 0, mileage = 0)
@@ -216,27 +188,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(mockedEditPreMileage, never()).setText(anyString())
         verify(mockedEditMileage, never()).setText(anyString())
-    }
-
-    @Test
-    fun displayBluetoothSettings() {
-        // Given
-        BaseFragment.wheel = S18_1_CONNECTED
-
-        injectMocks()
-
-        // When
-        fragment.displayBluetoothSettings()
-
-        // Then
-        verify(mockedTextBluetoothAddr).setText(DEVICE_ADDR)
-        verify(mockedTextBluetoothName).setText(DEVICE_NAME)
-
-        verify(mockedWidgets).show(
-            mockedTextBluetoothName,
-            mockedTextBluetoothNameLabel,
-            mockedTextBluetoothAddr
-        )
     }
 
     @Test
@@ -723,9 +674,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     private fun injectMocks() {
         fragment.buttonSave = mockedButtonSave
-        fragment.textBtAddr = mockedTextBluetoothAddr
-        fragment.textBtName = mockedTextBluetoothName
-        fragment.textBtNameLabel = mockedTextBluetoothNameLabel
     }
 
     private fun mockFields() {
@@ -741,9 +689,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         mockField(R.id.edit_voltage_max, mockedEditVoltageMax)
         mockField(R.id.edit_voltage_min, mockedEditVoltageMin)
         mockField(R.id.edit_wh, mockedEditWh)
-        mockField(R.id.view_bt_addr_on_edit, mockedTextBluetoothAddr)
-        mockField(R.id.view_bt_name_on_edit, mockedTextBluetoothName)
-        mockField(R.id.view_bt_name_on_edit_label, mockedTextBluetoothNameLabel)
     }
 
     private fun mockVoltageMax() {

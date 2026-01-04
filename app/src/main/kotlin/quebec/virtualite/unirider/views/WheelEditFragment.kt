@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.round
@@ -32,9 +31,6 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var editVoltageMin: EditText
     internal lateinit var editWh: EditText
     internal lateinit var switchSold: SwitchMaterial
-    internal lateinit var textBtAddr: TextView
-    internal lateinit var textBtName: TextView
-    internal lateinit var textBtNameLabel: TextView
 
     internal lateinit var initialWheel: WheelEntity
     internal lateinit var updatedWheel: WheelEntity
@@ -61,9 +57,6 @@ open class WheelEditFragment : BaseFragment() {
         editVoltageMin = view.findViewById(R.id.edit_voltage_min)
         editWh = view.findViewById(R.id.edit_wh)
         switchSold = view.findViewById(R.id.check_sold)
-        textBtAddr = view.findViewById(R.id.view_bt_addr_on_edit)
-        textBtName = view.findViewById(R.id.view_bt_name_on_edit)
-        textBtNameLabel = view.findViewById(R.id.view_bt_name_on_edit_label)
 
         widgets.setOnCheckedChangeListener(switchSold, onToggleSold())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
@@ -97,9 +90,6 @@ open class WheelEditFragment : BaseFragment() {
 
                 if (initialWheel.mileage != 0)
                     editMileage.setText("${initialWheel.mileage}")
-
-                if (wheel!!.isConnected())
-                    displayBluetoothSettings()
             }
         } else {
             initialWheel = NEW_WHEEL
@@ -182,13 +172,6 @@ open class WheelEditFragment : BaseFragment() {
     fun onUpdateWh() = { newWh: String ->
         updatedWheel = updatedWheel.copy(wh = safeIntOf(newWh))
         enableSaveIfChanged()
-    }
-
-    internal open fun displayBluetoothSettings() {
-        textBtName.text = wheel!!.btName
-        textBtAddr.text = wheel!!.btAddr
-
-        widgets.show(textBtName, textBtNameLabel, textBtAddr)
     }
 
     internal open fun enableSaveIfChanged() {
