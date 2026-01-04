@@ -26,8 +26,8 @@ class ChargeFragmentObject(val app: TestApp) {
         setText(R.id.edit_voltage_actual, parseVoltage(voltage))
     }
 
-    fun changeVoltageTarget(voltage: String) {
-        setText(R.id.edit_voltage_target, parseVoltage(voltage))
+    fun changeVoltageRequired(voltage: String) {
+        setText(R.id.edit_voltage_required, parseVoltage(voltage))
     }
 
     fun chargeFor(km: String) {
@@ -62,8 +62,8 @@ class ChargeFragmentObject(val app: TestApp) {
 
     fun validateEmptyEstimates() {
         assertThat(getText(R.id.view_voltage_required), equalTo(""))
-        assertThat(getText(R.id.view_voltage_required_diff), equalTo(""))
         assertThat(getText(R.id.view_voltage_target), equalTo(""))
+        assertThat(getText(R.id.view_voltage_target_diff), equalTo(""))
         assertThat(getEstimatedTime(), equalTo(""))
     }
 
@@ -71,10 +71,10 @@ class ChargeFragmentObject(val app: TestApp) {
         expectedEstimates.diff(
             DataTable.create(
                 listOf(
-                    listOf("required", "target", "time"),
+                    listOf("target", "required", "time"),
                     listOf(
-                        getRequired(),
                         getTarget(),
+                        getRequired(),
                         getEstimatedTime()
                     )
                 )

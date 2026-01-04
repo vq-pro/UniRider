@@ -26,7 +26,7 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var buttonConnect: Button
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
-    internal lateinit var editVoltageTarget: EditText
+    internal lateinit var editVoltageRequired: EditText
     internal lateinit var switchFullCharge: SwitchMaterial
     internal lateinit var textChargeWarning: TextView
     internal lateinit var textEstimatedDiff: TextView
@@ -53,7 +53,7 @@ open class WheelChargeFragment : BaseFragment() {
         buttonConnect = view.findViewById(R.id.button_connect_charge)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
-        editVoltageTarget = view.findViewById(R.id.edit_voltage_target)
+        editVoltageRequired = view.findViewById(R.id.edit_voltage_required)
         switchFullCharge = view.findViewById(R.id.check_full_charge)
         textChargeWarning = view.findViewById(R.id.view_charge_warning)
         textEstimatedDiff = view.findViewById(R.id.view_estimated_diff)
@@ -67,7 +67,7 @@ open class WheelChargeFragment : BaseFragment() {
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
-        widgets.addTextChangedListener(editVoltageTarget, onUpdateVoltageTarget())
+        widgets.addTextChangedListener(editVoltageRequired, onUpdateVoltageRequired())
         widgets.setOnCheckedChangeListener(switchFullCharge, onToggleFullCharge())
 
         fragments.runUI {
@@ -116,7 +116,7 @@ open class WheelChargeFragment : BaseFragment() {
 
             if (switchFullCharge.isChecked
                 || !widgets.getText(editKm).isEmpty()
-                || !widgets.getText(editVoltageTarget).isEmpty()
+                || !widgets.getText(editVoltageRequired).isEmpty()
             )
 
                 display()
@@ -127,7 +127,7 @@ open class WheelChargeFragment : BaseFragment() {
             displayBlanks()
     }
 
-    fun onUpdateVoltageTarget() = { voltage: String ->
+    fun onUpdateVoltageRequired() = { voltage: String ->
         when {
             isNumeric(voltage) -> {
                 switchFullCharge.isChecked = false
@@ -144,11 +144,11 @@ open class WheelChargeFragment : BaseFragment() {
         if (chargerOffset == null)
             return
 
-        val voltageRequired = getVoltageRequired()
+        val voltageTarget = onCharge(getVoltageRequired())
         when {
-            voltageRequired > cacheVoltageActual!! -> {
+            voltageTarget > cacheVoltageActual!! -> {
 
-                val diff = round(voltageRequired - cacheVoltageActual!!)
+                val diff = round(voltageTarget - cacheVoltageActual!!)
                 val rawHours = diff / wheel!!.chargeRate
 
                 displayEstimates(diff, rawHours)
@@ -169,14 +169,14 @@ open class WheelChargeFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     internal open fun displayEstimates(voltageDiff: Float, rawHours: Float) {
-        textVoltageRequiredDiff.text = "V (+$voltageDiff)"
+        textVoltageTargetDiff.text = "V (+$voltageDiff)"
         textEstimatedDiff.text = estimatedDiff(rawHours)
         textEstimatedTime.text = estimatedTime(rawHours)
     }
 
     @SuppressLint("SetTextI18n")
     internal open fun displayGo() {
-        textVoltageRequiredDiff.text = "V"
+        textVoltageTargetDiff.text = "V"
         textEstimatedTime.text = "Go!"
         textEstimatedDiff.text = ""
     }
@@ -207,25 +207,25 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     internal open fun getVoltageRequired(): Float {
-        val fieldVoltageTarget = widgets.getText(editVoltageTarget)
+        val fieldVoltageRequired = widgets.getText(editVoltageRequired)
         val voltageRequired = when {
             switchFullCharge.isChecked -> {
-                calculatorService.requiredVoltageFull(wheel)
+                offCharge(calculatorService.requiredVoltageFull(wheel))
             }
 
-            !fieldVoltageTarget.isEmpty() -> {
-                onCharge(round(floatOf(fieldVoltageTarget)))
+            !fieldVoltageRequired.isEmpty() -> {
+                round(floatOf(fieldVoltageRequired))
             }
 
             else -> {
                 val km = floatOf(widgets.getText(editKm))
                 val voltageRequired = calculatorService.requiredVoltageOffCharger(wheel!!, chargeContext.voltage, chargeContext.km, km)
 
-                min(onCharge(voltageRequired), wheel!!.voltageFull)
+                min(voltageRequired, offCharge(wheel!!.voltageFull))
             }
         }
 
-        displayVoltageRequiredAndTarget(voltageRequired)
+        displayVoltageTargetAndRequired(voltageRequired)
 
         return voltageRequired
     }
@@ -242,10 +242,10 @@ open class WheelChargeFragment : BaseFragment() {
         }
     }
 
-    private fun displayVoltageRequiredAndTarget(voltageRequired: Float) {
+    private fun displayVoltageTargetAndRequired(voltageRequired: Float) {
+        textVoltageTarget.setText("${onCharge(voltageRequired)}")
         textVoltageRequired.setText("$voltageRequired")
-        textVoltageTarget.setText("${offCharge(voltageRequired)}")
-        textVoltageTargetDiff.setText("V (-$chargerOffset)")
+        textVoltageRequiredDiff.setText("V (-$chargerOffset)")
     }
 
     private fun offCharge(voltage: Float) = round(voltage - chargerOffset!!)

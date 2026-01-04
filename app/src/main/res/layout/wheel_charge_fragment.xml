@@ -129,39 +129,6 @@
                 />
             </TableRow>
 
-            <!-- Required voltage -->
-            <TableRow android:layout_marginTop="10dp">
-                <TextView
-                        android:labelFor="@+id/view_required_voltage"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_voltage_required"
-                />
-
-                <TextView
-                        android:id="@+id/view_voltage_required"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        tools:ignore="RtlHardcoded"
-                />
-
-                <TextView
-                        android:id="@+id/view_voltage_required_diff"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        tools:ignore="RtlHardcoded"
-                />
-            </TableRow>
-
             <!-- Target voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
@@ -195,9 +162,42 @@
                 />
             </TableRow>
 
+            <!-- Required voltage -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView
-                        android:labelFor="@+id/edit_voltage_target"
+                        android:labelFor="@+id/view_voltage_required"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_required"
+                />
+
+                <TextView
+                        android:id="@+id/view_voltage_required"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        tools:ignore="RtlHardcoded"
+                />
+
+                <TextView
+                        android:id="@+id/view_voltage_required_diff"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        tools:ignore="RtlHardcoded"
+                />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/edit_voltage_required"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -206,7 +206,7 @@
                 />
 
                 <EditText
-                        android:id="@+id/edit_voltage_target"
+                        android:id="@+id/edit_voltage_required"
                         android:inputType="numberDecimal"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -217,7 +217,7 @@
                 />
 
                 <TextView
-                        android:labelFor="@+id/edit_voltage_target"
+                        android:labelFor="@+id/edit_voltage_required"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
