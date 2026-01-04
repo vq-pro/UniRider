@@ -20,8 +20,6 @@ import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.test.domain.TestConstants.CHARGER_OFFSET
-import quebec.virtualite.unirider.test.domain.TestConstants.CHARGER_OFFSET_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.DISTANCE_OFFSET
@@ -59,9 +57,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @Mock
     private lateinit var mockedEditChargeRate: EditText
-
-    @Mock
-    private lateinit var mockedEditChargerOffset: EditText
 
     @Mock
     private lateinit var mockedEditDistanceOffset: EditText
@@ -124,7 +119,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.button_save, fragment.buttonSave, mockedButtonSave)
         verifyFieldAssignment(R.id.check_sold, fragment.switchSold, mockedSwitchSold)
         verifyFieldAssignment(R.id.edit_name, fragment.editChargeRate, mockedEditChargeRate)
-        verifyFieldAssignment(R.id.edit_charger_offset, fragment.editChargerOffset, mockedEditChargerOffset)
         verifyFieldAssignment(R.id.edit_distance_offset, fragment.editDistanceOffset, mockedEditDistanceOffset)
         verifyFieldAssignment(R.id.edit_mileage, fragment.editMileage, mockedEditMileage)
         verifyFieldAssignment(R.id.edit_name, fragment.editName, mockedEditName)
@@ -135,7 +129,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
 
         verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
-        verifyOnUpdateText(mockedEditChargerOffset, "onUpdateChargerOffset")
         verifyOnUpdateText(mockedEditDistanceOffset, "onUpdateDistanceOffset")
         verifyOnUpdateText(mockedEditName, "onUpdateName")
         verifyOnUpdateText(mockedEditPreMileage, "onUpdatePreMileage")
@@ -149,7 +142,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyOnClick(mockedButtonSave, "onSave")
 
         verify(mockedEditChargeRate).setText("$CHARGE_RATE")
-        verify(mockedEditChargerOffset).setText("$CHARGER_OFFSET")
         verify(mockedEditDistanceOffset).setText("$DISTANCE_OFFSET")
         verify(mockedEditName).setText(NAME)
         verify(mockedEditPreMileage).setText("$PREMILEAGE")
@@ -328,56 +320,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         // Then
         assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = CHARGE_RATE_NEW)))
-    }
-
-    @Test
-    fun onUpdateChargerOffset() {
-        // Given
-        initUpdate()
-
-        // When
-        fragment.onUpdateChargerOffset().invoke("$CHARGER_OFFSET_NEW ")
-
-        // Then
-        verify(fragment).enableSaveIfChanged()
-
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = CHARGER_OFFSET_NEW)))
-    }
-
-    @Test
-    fun onUpdateChargerOffset_whenEmpty_zero() {
-        // Given
-        initUpdate()
-
-        // When
-        fragment.onUpdateChargerOffset().invoke(" ")
-
-        // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = 0f)))
-    }
-
-    @Test
-    fun onUpdateChargerOffset_whenInvalid_zero() {
-        // Given
-        initUpdate()
-
-        // When
-        fragment.onUpdateChargerOffset().invoke("ab ")
-
-        // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = 0f)))
-    }
-
-    @Test
-    fun onUpdateChargerOffset_withTooManyDecimals() {
-        // Given
-        initUpdate()
-
-        // When
-        fragment.onUpdateChargerOffset().invoke("${CHARGER_OFFSET_NEW + 0.001f} ")
-
-        // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargerOffset = CHARGER_OFFSET_NEW)))
     }
 
     @Test
@@ -738,7 +680,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         mockField(R.id.button_save, mockedButtonSave)
         mockField(R.id.check_sold, mockedSwitchSold)
         mockField(R.id.edit_charge_rate, mockedEditChargeRate)
-        mockField(R.id.edit_charger_offset, mockedEditChargerOffset)
         mockField(R.id.edit_distance_offset, mockedEditDistanceOffset)
         mockField(R.id.edit_name, mockedEditName)
         mockField(R.id.edit_premileage, mockedEditPreMileage)

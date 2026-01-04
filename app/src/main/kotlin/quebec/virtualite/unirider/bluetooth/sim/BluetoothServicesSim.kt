@@ -13,7 +13,7 @@ open class BluetoothServicesSim : BluetoothServices {
         private var device = BluetoothDevice("LK13447", "AB:CD:EF:GH:IJ:KL")
         private var km = 21.867f    // km wheel, returned using distance offset for GPS value
         private var mileage = 20020.518f
-        private var voltages = listOf(141.01f, 142.5f, 144f)
+        private var voltages = listOf(141.01f, 142.5f, 143.5f, 144.0f)
         private var iCurrentVoltage = 0
 
         fun setDevice(device: BluetoothDevice): Companion {

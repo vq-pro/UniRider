@@ -2,9 +2,9 @@ Feature: Wheel Charging
 
   Background:
     Given this wheel:
-      | Name      | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Charger Offset | Distance Offset | Sold |
-      | Sherman   | 17622   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1.5V           | 1               | No   |
-      | Sherman L | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.8V           | 1.0667          | No   |
+      | Name      | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
+      | Sherman   | 17622   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1               | No   |
+      | Sherman L | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.0667          | No   |
     And this wheel is connected:
       | Name      | Bt Name | Bt Address        |
       | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |
@@ -40,6 +40,7 @@ Feature: Wheel Charging
     When I request to charge for <distance>
     Then it displays an actual voltage of 138.0V
     And the full charge indicator is <fc_indicator>
+#    FIXME-1 Display gap between required and target as a diff
     And it displays these charging estimates:
       | required   | target   | time   |
       | <required> | <target> | <time> |

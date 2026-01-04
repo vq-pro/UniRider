@@ -17,7 +17,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
@@ -48,7 +48,6 @@ open class WheelEditFragment : BaseFragment() {
 
         switchSold = view.findViewById(R.id.check_sold)
         editChargeRate = view.findViewById(R.id.edit_charge_rate)
-        editChargerOffset = view.findViewById(R.id.edit_charger_offset)
         editDistanceOffset = view.findViewById(R.id.edit_distance_offset)
         editName = view.findViewById(R.id.edit_name)
         editPreMileage = view.findViewById(R.id.edit_premileage)
@@ -62,7 +61,6 @@ open class WheelEditFragment : BaseFragment() {
 
         widgets.setOnCheckedChangeListener(switchSold, onToggleSold())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
-        widgets.addTextChangedListener(editChargerOffset, onUpdateChargerOffset())
         widgets.addTextChangedListener(editDistanceOffset, onUpdateDistanceOffset())
         widgets.addTextChangedListener(editName, onUpdateName())
         widgets.addTextChangedListener(editPreMileage, onUpdatePreMileage())
@@ -81,7 +79,6 @@ open class WheelEditFragment : BaseFragment() {
             fragments.runUI {
                 switchSold.setChecked(initialWheel.isSold)
                 editChargeRate.setText("${initialWheel.chargeRate}")
-                editChargerOffset.setText("${initialWheel.chargerOffset}")
                 editDistanceOffset.setText("${initialWheel.distanceOffset}")
                 editName.setText(initialWheel.name)
                 editVoltageFull.setText("${initialWheel.voltageFull}")
@@ -125,13 +122,6 @@ open class WheelEditFragment : BaseFragment() {
     fun onUpdateChargeRate() = { newChargeRate: String ->
         updatedWheel = updatedWheel.copy(
             chargeRate = round(safeFloatOf(newChargeRate))
-        )
-        enableSaveIfChanged()
-    }
-
-    fun onUpdateChargerOffset() = { newChargerOffset: String ->
-        updatedWheel = updatedWheel.copy(
-            chargerOffset = round(safeFloatOf(newChargerOffset))
         )
         enableSaveIfChanged()
     }

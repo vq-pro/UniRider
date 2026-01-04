@@ -23,15 +23,14 @@ open class WheelValidator {
             return false
 
         return (updatedWheel.chargeRate != initialWheel!!.chargeRate) ||
-                (updatedWheel.chargerOffset != initialWheel.chargerOffset) ||
-                (updatedWheel.distanceOffset != initialWheel.distanceOffset) ||
-                (updatedWheel.isSold != initialWheel.isSold) ||
-                (updatedWheel.mileage != initialWheel.mileage) ||
-                (updatedWheel.name != initialWheel.name) ||
-                (updatedWheel.premileage != initialWheel.premileage) ||
-                (updatedWheel.voltageFull != initialWheel.voltageFull) ||
-                (updatedWheel.voltageMax != initialWheel.voltageMax) ||
-                (updatedWheel.voltageMin != initialWheel.voltageMin) ||
-                (updatedWheel.wh != initialWheel.wh)
+            (updatedWheel.distanceOffset != initialWheel.distanceOffset) ||
+            (updatedWheel.isSold != initialWheel.isSold) ||
+            (updatedWheel.mileage != initialWheel.mileage) ||
+            (updatedWheel.name != initialWheel.name) ||
+            (updatedWheel.premileage != initialWheel.premileage) ||
+            (updatedWheel.voltageFull != initialWheel.voltageFull) ||
+            (updatedWheel.voltageMax != initialWheel.voltageMax) ||
+            (updatedWheel.voltageMin != initialWheel.voltageMin) ||
+            (updatedWheel.wh != initialWheel.wh)
     }
 }

@@ -26,11 +26,6 @@ class EditSteps : BaseSteps() {
         editFragment.changeChargeRate(" ")
     }
 
-    @When("I blank the charger offset")
-    fun blankChargerOffset() {
-        editFragment.changeChargerOffset(" ")
-    }
-
     @When("I blank the distance offset")
     fun blankDistanceOffset() {
         editFragment.changeDistanceOffset(" ")
@@ -74,11 +69,6 @@ class EditSteps : BaseSteps() {
     @When("I change the charge rate")
     fun changeChargeRate() {
         editFragment.changeChargeRate("3")
-    }
-
-    @When("I change the charger offset")
-    fun changeChargerOffset() {
-        editFragment.changeChargerOffset("3")
     }
 
     @When("I change the distance offset")

@@ -16,8 +16,6 @@ data class WheelEntity(
     val voltageMin: Float,
     val chargeRate: Float,
     val voltageFull: Float,
-    // FIXME-1 Get rid of this
-    val chargerOffset: Float,
     val distanceOffset: Float,
     val isSold: Boolean
 ) {
