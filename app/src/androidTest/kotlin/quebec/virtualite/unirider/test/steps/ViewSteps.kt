@@ -84,14 +84,14 @@ class ViewSteps : BaseSteps() {
         viewFragment.validateBluetoothName()
     }
 
-    @Then("I can charge the wheel")
-    fun validateCanChargeWheel() {
-        viewFragment.validateCanCharge()
+    @Then("^I (can|cannot) charge the wheel$")
+    fun validateCanChargeWheel(canOrCannot: String) {
+        viewFragment.validateCanCharge(isCan(canOrCannot))
     }
 
-    @Then("I cannot charge the wheel")
-    fun validateCannotChargeWheel() {
-        viewFragment.validateCannotCharge()
+    @Then("^I (can|cannot) see the bluetooth settings$")
+    fun validateCanSeeBluetoothSettings(canOrCannot: String) {
+        viewFragment.validateCanSeeBluetoothSettings(isCan(canOrCannot))
     }
 
     @Then("^the details view shows the (.*) with a mileage of (.*) km$")
@@ -154,4 +154,6 @@ class ViewSteps : BaseSteps() {
     fun validateOnViewScreen() {
         viewFragment.validateView()
     }
+
+    private fun isCan(canOrCannot: String): Boolean = "can" == canOrCannot
 }

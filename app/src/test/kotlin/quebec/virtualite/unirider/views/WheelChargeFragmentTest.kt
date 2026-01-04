@@ -33,7 +33,7 @@ import quebec.virtualite.unirider.test.domain.TestConstants.KM
 import quebec.virtualite.unirider.test.domain.TestConstants.KM_NEW_RAW
 import quebec.virtualite.unirider.test.domain.TestConstants.KM_REQUESTED
 import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW_RAW
-import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_CONNECTED
 import quebec.virtualite.unirider.test.domain.TestConstants.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL
@@ -90,7 +90,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     @Mock
     private lateinit var mockedTextVoltageTargetDiff: TextView
 
-    private val WHEEL = S18_1
+    private val WHEEL = S18_1_CONNECTED
 
     @Before
     fun before() {

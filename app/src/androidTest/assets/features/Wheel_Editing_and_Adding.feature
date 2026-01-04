@@ -28,15 +28,6 @@ Feature: Wheel Editing & Adding
     And it shows the updated name and a mileage of 150 on the main view
     And the wheel's Bluetooth name is undefined
 
-  Scenario Outline: Bluetooth settings [<wheel>]
-    Given I select the <wheel>
-    When I edit the wheel
-    Then I <can> see the bluetooth settings
-    Examples:
-      | wheel   | can    |
-      | S18     | cannot |
-      | Sherman | can    |
-
   Scenario: Editing a wheel in full
     Given I select the Sherman
     When I edit the wheel

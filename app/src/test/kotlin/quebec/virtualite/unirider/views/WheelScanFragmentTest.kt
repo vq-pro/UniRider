@@ -23,8 +23,8 @@ import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_NAME2
 import quebec.virtualite.unirider.test.domain.TestConstants.KM_NEW_RAW
 import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW_RAW
-import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
-import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_CONNECTED
+import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3_SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW_RAW
 
@@ -42,7 +42,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
 
     @Before
     fun before() {
-        BaseFragment.wheel = S18_1
+        BaseFragment.wheel = S18_1_CONNECTED
 
         mockField(R.id.devices, mockedLvDevices)
 
@@ -110,7 +110,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
         setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
         val selectedDevice = 2
 
-        BaseFragment.wheel = SHERMAN_MAX_3
+        BaseFragment.wheel = SHERMAN_MAX_3_SOLD
 
         // When
         fragment.onSelectDevice().invoke(mockedView, selectedDevice)
@@ -123,7 +123,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
         verifyDoneWaiting(connectionPayload)
 
         assertThat(
-            BaseFragment.wheel, equalTo(SHERMAN_MAX_3.copy(mileage = MILEAGE_NEW))
+            BaseFragment.wheel, equalTo(SHERMAN_MAX_3_SOLD.copy(mileage = MILEAGE_NEW))
         )
 
         verify(mockedDb).saveWheel(BaseFragment.wheel)

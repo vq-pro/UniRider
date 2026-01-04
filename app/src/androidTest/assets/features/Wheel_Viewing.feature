@@ -18,6 +18,14 @@ Feature: Wheel Viewing
       | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 141.51V  |
     And I start the app
 
+  Scenario Outline: Bluetooth settings [<wheel>]
+    When I select the <wheel>
+    Then I <can> see the bluetooth settings
+    Examples:
+      | wheel     | can    |
+      | Sherman L | can    |
+      | Sherman   | cannot |
+
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And I set the distance to <distance>

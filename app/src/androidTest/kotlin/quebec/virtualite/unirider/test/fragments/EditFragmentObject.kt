@@ -12,7 +12,6 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisplayed
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setChecked
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
@@ -146,13 +145,6 @@ class EditFragmentObject(val app: TestApp) {
 
     fun validateCanSave() {
         assertThat("Save button should be enabled", R.id.button_save, isEnabled())
-    }
-
-    fun validateCanSeeBluetoothSettings(show: Boolean) {
-        val message = "Bluetooth settings ${if (show) "should" else "shouldn't"} be displayed"
-        assertThat(message, R.id.view_bt_name_on_edit_label, isDisplayed(show))
-        assertThat(message, R.id.view_bt_name_on_edit, isDisplayed(show))
-        assertThat(message, R.id.view_bt_addr_on_edit, isDisplayed(show))
     }
 
     fun validateCannotSave() {

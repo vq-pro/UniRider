@@ -29,9 +29,9 @@ import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE
 import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE2
 import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE3
 import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE4
-import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_CONNECTED
 import quebec.virtualite.unirider.test.domain.TestConstants.S20_2
-import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3
+import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3_SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.WHEEL_ROW_ABRAMS_4
 import quebec.virtualite.unirider.test.domain.TestConstants.WHEEL_ROW_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.WHEEL_ROW_S18_1_123
@@ -286,8 +286,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
                 listOf(
                     ABRAMS_4,
                     S20_2,
-                    SHERMAN_MAX_3,
-                    S18_1,
+                    SHERMAN_MAX_3_SOLD,
+                    S18_1_CONNECTED,
                 )
             )
 
@@ -321,8 +321,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
                 listOf(
                     ABRAMS_4,
                     S20_2,
-                    SHERMAN_MAX_3,
-                    S18_1,
+                    SHERMAN_MAX_3_SOLD,
+                    S18_1_CONNECTED,
                 )
             )
 

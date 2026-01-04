@@ -12,7 +12,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3
+import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3_SOLD
 
 @RunWith(MockitoJUnitRunner::class)
 class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirmationFragment::class.java) {
@@ -31,7 +31,7 @@ class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirma
 
     @Before
     fun before() {
-        BaseFragment.wheel = SHERMAN_MAX_3
+        BaseFragment.wheel = SHERMAN_MAX_3_SOLD
 
         mockField(R.id.button_delete_confirmation, mockedButtonDeleteConfirmation)
         mockField(R.id.button_delete_cancel, mockedButtonDeleteCancel)

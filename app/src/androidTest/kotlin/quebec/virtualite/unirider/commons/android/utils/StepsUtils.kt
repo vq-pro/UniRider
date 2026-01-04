@@ -159,6 +159,14 @@ object StepsUtils {
 
     fun isEmpty(): Matcher<View> = hasText("")
 
+    fun isEmpty(shouldBeEmpty: Boolean): Matcher<View> =
+        if (shouldBeEmpty) hasText("")
+        else not(hasText(""))
+
+    fun isEnabled(enabled: Boolean): Matcher<View> =
+        if (enabled) isEnabled()
+        else ViewMatchers.isNotEnabled()
+
     fun isHidden(): Matcher<View> = isDisplayed(false)
 
     fun longClick(id: Int) {

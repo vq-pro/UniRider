@@ -34,8 +34,8 @@ import quebec.virtualite.unirider.test.domain.TestConstants.NAME
 import quebec.virtualite.unirider.test.domain.TestConstants.NAME_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE
 import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE_NEW
-import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
-import quebec.virtualite.unirider.test.domain.TestConstants.S18_DISCONNECTED
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_CONNECTED
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_DISCONNECTED
 import quebec.virtualite.unirider.test.domain.TestConstants.SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL_NEW
@@ -103,7 +103,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @Before
     fun before() {
-        BaseFragment.wheel = S18_DISCONNECTED
+        BaseFragment.wheel = S18_1_DISCONNECTED
 
         mockExternal()
         mockFields()
@@ -140,6 +140,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_voltage_max, fragment.editVoltageMax, mockedEditVoltageMax)
         verifyFieldAssignment(R.id.edit_voltage_min, fragment.editVoltageMin, mockedEditVoltageMin)
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
+//        FIXME-1 Delete bt on the edit
         verifyFieldAssignment(R.id.view_bt_addr_on_edit, fragment.textBtAddr, mockedTextBluetoothAddr)
         verifyFieldAssignment(R.id.view_bt_name_on_edit, fragment.textBtName, mockedTextBluetoothName)
         verifyFieldAssignment(R.id.view_bt_name_on_edit_label, fragment.textBtNameLabel, mockedTextBluetoothNameLabel)
@@ -195,7 +196,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     @Test
     fun onViewCreated_withBluetoothConnectedWheel() {
         // Given
-        BaseFragment.wheel = S18_1
+        BaseFragment.wheel = S18_1_CONNECTED
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -207,7 +208,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     @Test
     fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
         // Given
-        BaseFragment.wheel = S18_1.copy(premileage = 0, mileage = 0)
+        BaseFragment.wheel = S18_1_CONNECTED.copy(premileage = 0, mileage = 0)
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -220,7 +221,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     @Test
     fun displayBluetoothSettings() {
         // Given
-        BaseFragment.wheel = S18_1
+        BaseFragment.wheel = S18_1_CONNECTED
 
         injectMocks()
 
@@ -318,7 +319,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(fragment).enableSaveIfChanged()
 
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(isSold = SOLD)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(isSold = SOLD)))
     }
 
     @Test
@@ -332,7 +333,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(fragment).enableSaveIfChanged()
 
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = CHARGE_RATE_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(chargeRate = CHARGE_RATE_NEW)))
     }
 
     @Test
@@ -344,7 +345,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateChargeRate().invoke(" ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(chargeRate = 0f)))
     }
 
     @Test
@@ -356,7 +357,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateChargeRate().invoke("ab ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(chargeRate = 0f)))
     }
 
     @Test
@@ -368,7 +369,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateChargeRate().invoke("${CHARGE_RATE_NEW + 0.001f} ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(chargeRate = CHARGE_RATE_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(chargeRate = CHARGE_RATE_NEW)))
     }
 
     @Test
@@ -382,7 +383,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(fragment).enableSaveIfChanged()
 
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(distanceOffset = DISTANCE_OFFSET_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(distanceOffset = DISTANCE_OFFSET_NEW)))
     }
 
     @Test
@@ -394,7 +395,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateDistanceOffset().invoke(" ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(distanceOffset = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(distanceOffset = 0f)))
     }
 
     @Test
@@ -406,7 +407,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateDistanceOffset().invoke("ab ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(distanceOffset = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(distanceOffset = 0f)))
     }
 
     @Test
@@ -418,7 +419,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateDistanceOffset().invoke("${DISTANCE_OFFSET_NEW + 0.00001f} ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(distanceOffset = DISTANCE_OFFSET_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(distanceOffset = DISTANCE_OFFSET_NEW)))
     }
 
     @Test
@@ -432,7 +433,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(fragment).enableSaveIfChanged()
 
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(mileage = MILEAGE_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(mileage = MILEAGE_NEW)))
     }
 
     @Test
@@ -444,7 +445,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateMileage().invoke(" ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(mileage = 0)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(mileage = 0)))
     }
 
     @Test
@@ -456,7 +457,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateMileage().invoke("ab ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(mileage = 0)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(mileage = 0)))
     }
 
     @Test
@@ -470,7 +471,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(fragment).enableSaveIfChanged()
 
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(name = NAME_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(name = NAME_NEW)))
     }
 
     @Test
@@ -484,7 +485,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(fragment).enableSaveIfChanged()
 
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(premileage = PREMILEAGE_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(premileage = PREMILEAGE_NEW)))
     }
 
     @Test
@@ -496,7 +497,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdatePreMileage().invoke(" ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(premileage = 0)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(premileage = 0)))
     }
 
     @Test
@@ -508,7 +509,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdatePreMileage().invoke("ab ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(premileage = 0)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(premileage = 0)))
     }
 
     @Test
@@ -522,7 +523,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(fragment).enableSaveIfChanged()
 
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageFull = VOLTAGE_FULL_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageFull = VOLTAGE_FULL_NEW)))
     }
 
     @Test
@@ -535,7 +536,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageFull().invoke(" ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageFull = VOLTAGE_MAX)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageFull = VOLTAGE_MAX)))
     }
 
     @Test
@@ -548,7 +549,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageFull().invoke("ab ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageFull = VOLTAGE_MAX)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageFull = VOLTAGE_MAX)))
     }
 
     @Test
@@ -561,7 +562,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageFull().invoke("${VOLTAGE_FULL_NEW + 0.001f} ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageFull = VOLTAGE_FULL_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageFull = VOLTAGE_FULL_NEW)))
     }
 
     @Test
@@ -576,7 +577,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verify(fragment).enableSaveIfChanged()
 
         assertThat(
-            fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = VOLTAGE_MAX_NEW))
+            fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageMax = VOLTAGE_MAX_NEW))
         )
     }
 
@@ -589,7 +590,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageMax().invoke(" ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageMax = 0f)))
     }
 
     @Test
@@ -601,7 +602,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageMax().invoke("ab ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageMax = 0f)))
     }
 
     @Test
@@ -613,7 +614,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageMax().invoke("${VOLTAGE_MAX_NEW + 0.001f} ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMax = VOLTAGE_MAX_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageMax = VOLTAGE_MAX_NEW)))
     }
 
     @Test
@@ -627,7 +628,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(fragment).enableSaveIfChanged()
 
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMin = VOLTAGE_MIN_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageMin = VOLTAGE_MIN_NEW)))
     }
 
     @Test
@@ -639,7 +640,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageMin().invoke(" ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMin = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageMin = 0f)))
     }
 
     @Test
@@ -651,7 +652,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageMin().invoke("ab ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMin = 0f)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageMin = 0f)))
     }
 
     @Test
@@ -663,7 +664,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateVoltageMin().invoke("${VOLTAGE_MIN_NEW + 0.001f} ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(voltageMin = VOLTAGE_MIN_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(voltageMin = VOLTAGE_MIN_NEW)))
     }
 
     @Test
@@ -677,7 +678,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         // Then
         verify(fragment).enableSaveIfChanged()
 
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(wh = WH_NEW)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(wh = WH_NEW)))
     }
 
     @Test
@@ -689,7 +690,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateWh().invoke(" ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(wh = 0)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(wh = 0)))
     }
 
     @Test
@@ -701,7 +702,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onUpdateWh().invoke("ab ")
 
         // Then
-        assertThat(fragment.updatedWheel, equalTo(S18_1.copy(wh = 0)))
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(wh = 0)))
     }
 
     private fun changeCanBeSaved(canSave: Boolean) {
@@ -711,7 +712,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         given(mockedWheelValidator.canSave(any(), any())).willReturn(canSave)
     }
 
-    private fun definedWheel() = S18_1
+    private fun definedWheel() = S18_1_CONNECTED
 
     private fun initUpdate() {
         injectMocks()

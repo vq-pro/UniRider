@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.test.fragments
 
-import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import cucumber.api.DataTable
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
@@ -11,6 +10,8 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEnabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
@@ -86,8 +87,15 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
     }
 
-    fun validateCanCharge() {
-        assertThat("Charge button is disabled", R.id.button_charge, isEnabled())
+    fun validateCanCharge(canCharge: Boolean) {
+        val message = "Charge button should ${if (!canCharge) "not " else ""} be enabled"
+        assertThat(message, R.id.button_charge, isEnabled(canCharge))
+    }
+
+    fun validateCanSeeBluetoothSettings(show: Boolean) {
+        val message = "Bluetooth settings ${if (show) "shouldn't" else "should"} be empty"
+        assertThat(message, R.id.view_bt_name, isEmpty(!show))
+        assertThat(message, R.id.view_bt_addr, isEmpty(!show))
     }
 
     fun validateCannotCharge() {
@@ -154,5 +162,4 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery"))
     }
-
 }

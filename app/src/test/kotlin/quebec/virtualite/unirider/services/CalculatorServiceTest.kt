@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.database.WheelEntity
-import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_CONNECTED
 import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_L_5
 
 @RunWith(MockitoJUnitRunner::class)
@@ -24,11 +24,11 @@ class CalculatorServiceTest {
         estimatedValues(SHERMAN_L_5, 133.0f, 39.9f, 19.7f, 59.6f);
         estimatedValues(SHERMAN_L_5, 132.0f, 39.9f, 16.9f, 56.8f);
         estimatedValues(SHERMAN_L_5, 125.6f, 65.0f, 9.0f, 74.0f);
-        estimatedValues(S18_1, 76.2f, 15.0f, 16.1f, 31.1f);
+        estimatedValues(S18_1_CONNECTED, 76.2f, 15.0f, 16.1f, 31.1f);
 
         // Voltage lower than reserve
         estimatedValues(SHERMAN_L_5, 119.5f, 60f, 0f, 60f)
-        estimatedValues(S18_1, 67.5f, 20f, 0f, 20f);
+        estimatedValues(S18_1_CONNECTED, 67.5f, 20f, 0f, 20f);
 
         // Voltage higher than max
         estimatedValues(SHERMAN_L_5, 151.3f, 3f, -1f, -1f)
@@ -58,7 +58,7 @@ class CalculatorServiceTest {
 
         // Voltage lower than reserve
         percentage(SHERMAN_L_5, 119.0f, 0.0f)
-        percentage(S18_1, 66.0f, 0.0f)
+        percentage(S18_1_CONNECTED, 66.0f, 0.0f)
 
         // Voltage higher than max
         percentage(SHERMAN_L_5, 151.3f, 100f)

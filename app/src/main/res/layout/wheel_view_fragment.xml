@@ -209,9 +209,10 @@
                 />
             </TableRow>
 
-            <!-- Bluetooth Name -->
-            <TableRow android:layout_marginTop="10dp">
+            <!-- Bluetooth -->
+            <TableRow android:layout_marginTop="25dp">
                 <TextView
+                        android:id="@+id/label_bt_name"
                         android:labelFor="@+id/view_bt_name"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -219,10 +220,31 @@
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="@string/label_bt_name"
+                        android:visibility="invisible"
                 />
 
                 <TextView
                         android:id="@+id/view_bt_name"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textStyle="italic"
+                />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                        android:labelFor="@+id/view_bt_addr"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                />
+
+                <TextView
+                        android:id="@+id/view_bt_addr"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
