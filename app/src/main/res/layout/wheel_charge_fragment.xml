@@ -218,13 +218,13 @@
                 />
 
                 <TextView
-                        android:labelFor="@+id/view_voltage_target"
+                        android:id="@+id/view_voltage_target_diff"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_voltage_abbr"
+                        tools:ignore="RtlHardcoded"
                 />
             </TableRow>
 

@@ -15,7 +15,6 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.test.app.TestApp
-import quebec.virtualite.unirider.test.domain.TestDomain.Companion.formatVoltage
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKm
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
 import quebec.virtualite.unirider.views.WheelChargeFragment
@@ -75,7 +74,7 @@ class ChargeFragmentObject(val app: TestApp) {
                     listOf("required", "target", "time"),
                     listOf(
                         getRequired(),
-                        formatVoltage(getText(R.id.view_voltage_target)),
+                        getTarget(),
                         getEstimatedTime()
                     )
                 )
@@ -100,6 +99,10 @@ class ChargeFragmentObject(val app: TestApp) {
             .trim()
 
     private fun getRequired(): String =
-        (formatVoltage(getText(R.id.view_voltage_required)) + " " + getText(R.id.view_voltage_required_diff))
+        (getText(R.id.view_voltage_required) + getText(R.id.view_voltage_required_diff))
+            .trim()
+
+    private fun getTarget(): String =
+        (getText(R.id.view_voltage_target) + getText(R.id.view_voltage_target_diff))
             .trim()
 }

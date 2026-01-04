@@ -35,6 +35,7 @@ open class WheelChargeFragment : BaseFragment() {
     internal lateinit var textVoltageRequired: TextView
     internal lateinit var textVoltageRequiredDiff: TextView
     internal lateinit var textVoltageTarget: TextView
+    internal lateinit var textVoltageTargetDiff: TextView
 
     internal var cacheVoltageActual: Float? = null
     internal var chargerOffset: Float? = null
@@ -61,6 +62,7 @@ open class WheelChargeFragment : BaseFragment() {
         textVoltageRequired = view.findViewById(R.id.view_voltage_required)
         textVoltageRequiredDiff = view.findViewById(R.id.view_voltage_required_diff)
         textVoltageTarget = view.findViewById(R.id.view_voltage_target)
+        textVoltageTargetDiff = view.findViewById(R.id.view_voltage_target_diff)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.addTextChangedListener(editKm, onUpdateKm())
@@ -155,18 +157,19 @@ open class WheelChargeFragment : BaseFragment() {
         textVoltageRequired.text = ""
         textVoltageRequiredDiff.text = ""
         textVoltageTarget.text = ""
+        textVoltageTargetDiff.text = ""
     }
 
     @SuppressLint("SetTextI18n")
     internal open fun displayEstimates(voltageDiff: Float, rawHours: Float) {
-        textVoltageRequiredDiff.text = "(+$voltageDiff)"
+        textVoltageRequiredDiff.text = "V (+$voltageDiff)"
         textEstimatedDiff.text = estimatedDiff(rawHours)
         textEstimatedTime.text = estimatedTime(rawHours)
     }
 
     @SuppressLint("SetTextI18n")
     internal open fun displayGo() {
-        textVoltageRequiredDiff.text = ""
+        textVoltageRequiredDiff.text = "V"
         textEstimatedTime.text = "Go!"
         textEstimatedDiff.text = ""
     }
@@ -215,8 +218,7 @@ open class WheelChargeFragment : BaseFragment() {
             }
         }
 
-        textVoltageRequired.setText("$voltageRequired")
-        textVoltageTarget.setText("${offCharge(voltageRequired)}")
+        displayVoltageRequiredAndTarget(voltageRequired)
 
         return voltageRequired
     }
@@ -231,6 +233,12 @@ open class WheelChargeFragment : BaseFragment() {
 
             chargerOffset = round(cacheVoltageActual!! - chargeContext.voltage)
         }
+    }
+
+    private fun displayVoltageRequiredAndTarget(voltageRequired: Float) {
+        textVoltageRequired.setText("$voltageRequired")
+        textVoltageTarget.setText("${offCharge(voltageRequired)}")
+        textVoltageTargetDiff.setText("V (-$chargerOffset)")
     }
 
     private fun offCharge(voltage: Float) = round(voltage - chargerOffset!!)

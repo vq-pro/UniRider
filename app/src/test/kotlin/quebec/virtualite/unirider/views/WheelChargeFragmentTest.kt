@@ -87,6 +87,9 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     @Mock
     private lateinit var mockedTextVoltageTarget: TextView
 
+    @Mock
+    private lateinit var mockedTextVoltageTargetDiff: TextView
+
     private val WHEEL = S18_1
 
     @Before
@@ -158,6 +161,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verify(mockedTextEstimatedTime).text = ""
         verify(mockedTextVoltageRequired).text = ""
         verify(mockedTextVoltageTarget).text = ""
+        verify(mockedTextVoltageTargetDiff).text = ""
     }
 
     @Test
@@ -178,7 +182,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.displayEstimates(voltageDiff, rawHours)
 
         // Then
-        verify(mockedTextVoltageRequiredDiff).text = "(+2.5)"
+        verify(mockedTextVoltageRequiredDiff).text = "V (+2.5)"
         verify(mockedTextEstimatedTime).text = time
         verify(mockedTextEstimatedDiff).text = timeDiff
     }
@@ -192,7 +196,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.displayGo()
 
         // Then
-        verify(mockedTextVoltageRequiredDiff).text = ""
+        verify(mockedTextVoltageRequiredDiff).text = "V"
         verify(mockedTextEstimatedTime).text = "Go!"
         verify(mockedTextEstimatedDiff).text = ""
     }
@@ -304,7 +308,6 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     fun getVoltageRequired_whenVoltageIsSetRequired() {
         // Given
         injectMocks()
-//        mockChargeContext(KM, VOLTAGE, CHARGER_OFFSET)
         mockChargeContext(CHARGER_OFFSET)
         mockCheckFullCharge(false)
         mockEditVoltageRequiredWith("$VOLTAGE_NEW_RAW")
@@ -347,8 +350,9 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verifyFieldAssignment(R.id.view_estimated_time, fragment.textEstimatedTime, mockedTextEstimatedTime)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_voltage_required, fragment.textVoltageRequired, mockedTextVoltageRequired)
-        verifyFieldAssignment(R.id.view_voltage_target, fragment.textVoltageTarget, mockedTextVoltageTarget)
         verifyFieldAssignment(R.id.view_voltage_required_diff, fragment.textVoltageRequiredDiff, mockedTextVoltageRequiredDiff)
+        verifyFieldAssignment(R.id.view_voltage_target, fragment.textVoltageTarget, mockedTextVoltageTarget)
+        verifyFieldAssignment(R.id.view_voltage_target_diff, fragment.textVoltageTargetDiff, mockedTextVoltageTargetDiff)
 
         verifyOnClick(mockedButtonConnect, "onConnect")
         verifyOnUpdateText(mockedEditKm, "onUpdateKm")
@@ -624,6 +628,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.textVoltageRequired = mockedTextVoltageRequired
         fragment.textVoltageRequiredDiff = mockedTextVoltageRequiredDiff
         fragment.textVoltageTarget = mockedTextVoltageTarget
+        fragment.textVoltageTargetDiff = mockedTextVoltageTargetDiff
     }
 
     private fun mockChargeContext(km: Float, voltage: Float) {
@@ -653,6 +658,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         mockField(R.id.view_voltage_required, mockedTextVoltageRequired)
         mockField(R.id.view_voltage_required_diff, mockedTextVoltageRequiredDiff)
         mockField(R.id.view_voltage_target, mockedTextVoltageTarget)
+        mockField(R.id.view_voltage_target_diff, mockedTextVoltageTargetDiff)
     }
 
     private fun mockCheckFullCharge(value: Boolean) {
@@ -674,5 +680,6 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
     private fun verifyVoltage(voltage: Float) {
         verify(mockedTextVoltageRequired).setText("$voltage")
         verify(mockedTextVoltageTarget).setText("${offCharge(voltage)}")
+        verify(mockedTextVoltageTargetDiff).setText("V (-$CHARGER_OFFSET)")
     }
 }
