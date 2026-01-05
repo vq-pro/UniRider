@@ -70,6 +70,7 @@ open class WheelViewFragment : BaseFragment() {
         widgets.setOnClickListener(buttonCharge, onCharge())
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.setOnClickListener(buttonEdit, onEdit())
+        widgets.setOnLongClickListener(textBtName, onDisconnect())
 
         external.runDB {
             fragments.runUI {
@@ -89,6 +90,10 @@ open class WheelViewFragment : BaseFragment() {
     fun onConnect(): (View) -> Unit = {
         if (wheel!!.isConnected()) reconnect()
         else scan()
+    }
+
+    fun onDisconnect(): (View) -> Unit = {
+        fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelConfirmationDisconnectFragment)
     }
 
     fun onEdit(): (View) -> Unit = {

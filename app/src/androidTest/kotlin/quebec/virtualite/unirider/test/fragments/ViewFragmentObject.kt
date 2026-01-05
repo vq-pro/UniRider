@@ -9,10 +9,10 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEnabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.database.WheelEntity
@@ -20,6 +20,7 @@ import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKm
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
+import quebec.virtualite.unirider.views.WheelConfirmationDisconnectFragment
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
 
@@ -45,6 +46,15 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         selectListViewItem(R.id.devices, deviceName)
 
         expectedDeviceName = deviceName
+    }
+
+    fun disconnectConfirmation() {
+        assertThat(app.activeFragment(), equalTo(WheelConfirmationDisconnectFragment::class.java))
+        click(R.id.button_disconnect_confirmation)
+    }
+
+    fun disconnectWheel() {
+        longClick(R.id.view_bt_name)
     }
 
     fun editWheel() {
@@ -87,19 +97,17 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
     }
 
-    fun validateCanCharge(canCharge: Boolean) {
+    fun validateCanCharge(strCanCharge: String) {
+        val canCharge = canOrCannot(strCanCharge)
         val message = "Charge button should ${if (!canCharge) "not " else ""} be enabled"
         assertThat(message, R.id.button_charge, isEnabled(canCharge))
     }
 
-    fun validateCanSeeBluetoothSettings(show: Boolean) {
+    fun validateCanSeeBluetoothSettings(strShow: String) {
+        val show = canOrCannot(strShow)
         val message = "Bluetooth settings ${if (show) "shouldn't" else "should"} be empty"
         assertThat(message, R.id.view_bt_name, isEmpty(!show))
         assertThat(message, R.id.view_bt_addr, isEmpty(!show))
-    }
-
-    fun validateCannotCharge() {
-        assertThat("Charge button is not disabled", R.id.button_charge, isDisabled())
     }
 
     fun validateEstimates(expectedEstimates: DataTable) {
@@ -162,4 +170,6 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
         assertThat(R.id.view_battery, hasText("$expectedBattery"))
     }
+
+    private fun canOrCannot(canOrCannot: String): Boolean = "can" == canOrCannot
 }

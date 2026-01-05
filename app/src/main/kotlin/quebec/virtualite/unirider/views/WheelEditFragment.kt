@@ -102,7 +102,7 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onDelete(): (View) -> Unit = {
-        fragments.navigateTo(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment)
+        fragments.navigateTo(R.id.action_WheelEditFragment_to_WheelConfirmationDeleteFragment)
     }
 
     fun onSave(): (View) -> Unit = {

@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".views.WheelDeleteConfirmationFragment">
+        tools:context=".views.WheelConfirmationDisconnectFragment">
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/view_name"
                 android:layout_margin="30dp"
-                android:text="@string/question_are_you_sure_you_want_to_delete"
+                android:text="@string/confirmation_disconnect"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textStyle="italic"
         />
@@ -43,15 +43,15 @@
                 android:layout_alignParentBottom="true"
         >
             <Button
-                    android:id="@+id/button_delete_confirmation"
+                    android:id="@+id/button_disconnect_confirmation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    android:text="@string/button_delete"
+                    android:text="@string/button_disconnect"
             />
 
             <Button
-                    android:id="@+id/button_delete_cancel"
+                    android:id="@+id/button_disconnect_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/button_cancel"

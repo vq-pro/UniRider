@@ -240,7 +240,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onDelete().invoke(mockedView)
 
         // Then
-        verify(mockedFragments).navigateTo(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment)
+        verify(mockedFragments).navigateTo(R.id.action_WheelEditFragment_to_WheelConfirmationDeleteFragment)
     }
 
     @Test

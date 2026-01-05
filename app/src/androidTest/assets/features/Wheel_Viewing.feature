@@ -26,6 +26,13 @@ Feature: Wheel Viewing
       | Sherman L | can    |
       | Sherman   | cannot |
 
+  Scenario: Bluetooth - disconnect wheel
+    Given I select the Sherman L
+    And I can see the bluetooth settings
+    When I delete the bluetooth settings
+    And I confirm the disconnect
+    Then I cannot see the bluetooth settings
+
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And I set the distance to <distance>

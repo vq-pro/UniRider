@@ -205,21 +205,22 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.view_remaining_range, fragment.textRemainingRange, mockedTextRemainingRange)
         verifyFieldAssignment(R.id.view_total_range, fragment.textTotalRange, mockedTextTotalRange)
 
+        verifyOnClick(mockedButtonCharge, "onCharge")
+        verifyOnClick(mockedButtonConnect, "onConnect")
+        verifyOnClick(mockedButtonEdit, "onEdit")
+        verifyOnUpdateText(mockedEditKm, "onUpdateKm")
+        verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
+        verifyOnLongClick(mockedTextBtName, "onDisconnect")
+
+        verify(fragment).initialDisplayWheel()
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
+
         assertThat(fragment.buttonCharge, equalTo(mockedButtonCharge))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
         assertThat(fragment.textName, equalTo(mockedTextName))
         assertThat(fragment.textRemainingRange, equalTo(mockedTextRemainingRange))
         assertThat(fragment.textTotalRange, equalTo(mockedTextTotalRange))
-
-        verifyOnUpdateText(mockedEditKm, "onUpdateKm")
-        verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
-        verifyOnClick(mockedButtonCharge, "onCharge")
-        verifyOnClick(mockedButtonConnect, "onConnect")
-        verifyOnClick(mockedButtonEdit, "onEdit")
-
-        verify(fragment).initialDisplayWheel()
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
     }
 
     @Test
@@ -290,6 +291,15 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
         // Then
         verify(fragment).scan()
+    }
+
+    @Test
+    fun onDisconnect() {
+        // When
+        fragment.onDisconnect().invoke(mockedView)
+
+        // Then
+        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelConfirmationDisconnectFragment)
     }
 
     @Test

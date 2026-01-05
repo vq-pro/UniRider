@@ -32,6 +32,11 @@
         />
 
         <action
+                android:id="@+id/action_WheelViewFragment_to_WheelConfirmationDisconnectFragment"
+                app:destination="@+id/WheelConfirmationDisconnectFragment"
+        />
+
+        <action
                 android:id="@+id/action_WheelViewFragment_to_WheelEditFragment"
                 app:destination="@+id/WheelEditFragment"
         />
@@ -49,20 +54,26 @@
     </fragment>
 
     <fragment
+            android:id="@+id/WheelConfirmationDeleteFragment"
+            android:name="quebec.virtualite.unirider.views.WheelConfirmationDeleteFragment"
+            tools:layout="@layout/wheel_confirmation_delete_fragment">
+    </fragment>
+
+    <fragment
+            android:id="@+id/WheelConfirmationDisconnectFragment"
+            android:name="quebec.virtualite.unirider.views.WheelConfirmationDisconnectFragment"
+            tools:layout="@layout/wheel_confirmation_disconnect_fragment">
+    </fragment>
+
+    <fragment
             android:id="@+id/WheelEditFragment"
             android:name="quebec.virtualite.unirider.views.WheelEditFragment"
             tools:layout="@layout/wheel_edit_fragment">
 
         <action
-                android:id="@+id/action_WheelEditFragment_to_WheelDeleteConfirmationFragment"
-                app:destination="@+id/WheelDeleteConfirmationFragment"
+                android:id="@+id/action_WheelEditFragment_to_WheelConfirmationDeleteFragment"
+                app:destination="@+id/WheelConfirmationDeleteFragment"
         />
-    </fragment>
-
-    <fragment
-            android:id="@+id/WheelDeleteConfirmationFragment"
-            android:name="quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment"
-            tools:layout="@layout/wheel_delete_confirmation_fragment">
     </fragment>
 
     <fragment

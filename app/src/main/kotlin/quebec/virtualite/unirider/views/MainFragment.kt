@@ -85,7 +85,7 @@ open class MainFragment : BaseFragment() {
                 } else {
                     activeWheelList = addTo(
                         activeWheelList,
-                        WheelRow(0, SOLD_ENTRY, soldWheels.map { it.mileage() }.sum()),
+                        WheelRow(0, SOLD_ENTRY, soldWheels.sumOf { it.mileage() }),
                     )
                 }
             }
@@ -93,7 +93,7 @@ open class MainFragment : BaseFragment() {
 
             fragments.runUI {
                 widgets.setListViewEntries(lvWheels, wheelList, activeWheelList)
-                textTotalMileage.text = "${activeWheelList.map { it.mileage() }.sum()} $labelKm"
+                textTotalMileage.text = "${activeWheelList.sumOf { it.mileage() }} $labelKm"
             }
         }
     }

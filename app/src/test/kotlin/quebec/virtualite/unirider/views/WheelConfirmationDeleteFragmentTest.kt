@@ -15,10 +15,10 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3_SOLD
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirmationFragment::class.java) {
+class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDeleteFragment::class.java) {
 
     @InjectMocks
-    private lateinit var fragment: WheelDeleteConfirmationFragment
+    private lateinit var fragment: WheelConfirmationDeleteFragment
 
     @Mock
     private lateinit var mockedButtonDeleteConfirmation: Button
@@ -47,7 +47,7 @@ class WheelDeleteConfirmationFragmentTest : FragmentTestBase(WheelDeleteConfirma
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
         // Then
-        verifyInflate(R.layout.wheel_delete_confirmation_fragment)
+        verifyInflate(R.layout.wheel_confirmation_delete_fragment)
     }
 
     @Test
