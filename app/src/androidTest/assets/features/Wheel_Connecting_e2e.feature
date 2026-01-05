@@ -21,28 +21,23 @@ Feature: Wheel Connecting - End-2-End
       | V9          | 794     | 750  | 60V         | 84V         | 12V/h       | 83.1V       | 1               | Yes  |
     And the Sherman has a previous mileage of 3600 km
     And the updated mileage for some of these wheels should be:
-      | Name      | Updated mileage |
-      | Lynx      | 14683           |
-      | Sherman L | 23896           |
+      | Name | Updated mileage |
+      | Aero | 322             |
     And I start the app
 
-  Scenario Outline: Connecting to a wheel for the first time - <wheel>
-    Given I select the <wheel>
-    When I connect to the <bt name>
+  Scenario: Connecting to a wheel for the first time
+    Given I select the Aero
+    When I connect to the NF3079
     Then the mileage is updated to its up-to-date value
     And the wheel's Bluetooth name is updated
-    Examples:
-      | wheel     | bt name |
-      | Lynx      | LK9622  |
-      | Sherman L | LK13447 |
 
   Scenario: Connecting to a wheel for the first time - ERROR - Wheel should be detectable repeatedly
-    Given I select the Lynx
-    And I do a scan and see the LK9622 (88:25:83:F5:36:17) but go back without connecting
-    When I connect to the LK9622
+    Given I select the Aero
+    And I do a scan and see the NF3079 (88:25:83:F5:DB:28) but go back without connecting
+    When I connect to the NF3079
     Then the wheel's Bluetooth name is updated
 
-  Scenario Outline: Reconnecting to a previously connected wheel [<wheel>]
+  Scenario: Reconnecting to a previously connected wheel
     Given these wheels are connected:
       | Name      | Bt Name      | Bt Address        |
       | 14S       | KS-14SMD2107 | FC:69:47:68:79:8A |
@@ -51,13 +46,10 @@ Feature: Wheel Connecting - End-2-End
       | Sherman-S | LK6474       | 88:25:83:F4:E4:89 |
       | Lynx      | LK9622       | 88:25:83:F5:36:17 |
       | Sherman L | LK13447      | 88:25:83:F5:75:80 |
-    And I select the <wheel>
+      | Aero      | NF3079       | 88:25:83:F5:DB:28 |
+    And I select the Aero
     When I reconnect to the wheel
     Then the mileage is updated to its up-to-date value
-    Examples:
-      | wheel     |
-      | Lynx      |
-      | Sherman L |
 
   Scenario: Reconnecting to a previously connected wheel - ERROR - Connection following failure to connect
     Given these wheels are connected:
@@ -68,9 +60,10 @@ Feature: Wheel Connecting - End-2-End
       | Sherman-S | LK6474       | 88:25:83:F4:E4:89 |
       | Lynx      | LK9622       | 88:25:83:F5:36:17 |
       | Sherman L | LK13447      | 88:25:83:F5:75:80 |
-    And I select the Aero
+      | Aero      | NF3079       | 88:25:83:F5:DB:28 |
+    And I select the Lynx
     And I reconnect to the wheel
     And I cancel the scan and go back
-    And I select the Lynx
+    And I select the Aero
     When I reconnect to the wheel
     Then the mileage is updated to its up-to-date value
