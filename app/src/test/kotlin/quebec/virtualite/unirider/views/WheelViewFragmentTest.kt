@@ -361,7 +361,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Then
         verify(mockedWidgets).show(mockedLabelBtName)
         verify(mockedTextBtName).text = DEVICE_NAME
-        verify(mockedTextBtAddr).text = "( $DEVICE_ADDR )"
+        verify(mockedTextBtAddr).text = DEVICE_ADDR
     }
 
     @Test

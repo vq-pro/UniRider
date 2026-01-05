@@ -128,11 +128,10 @@ open class WheelViewFragment : BaseFragment() {
         )
     }
 
-    @SuppressLint("SetTextI18n")
     internal open fun initialDisplayBluetoothSettings() {
         widgets.show(labelBtName)
         textBtName.setText(wheel!!.btName)
-        textBtAddr.setText("( ${wheel!!.btAddr} )")
+        textBtAddr.setText(wheel!!.btAddr)
     }
 
     @SuppressLint("SetTextI18n")
