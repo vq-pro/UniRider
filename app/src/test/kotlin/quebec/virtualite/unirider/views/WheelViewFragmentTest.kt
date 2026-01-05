@@ -11,13 +11,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.BDDMockito.doNothing
 import org.mockito.BDDMockito.given
 import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.lenient
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Spy
@@ -33,18 +34,15 @@ import quebec.virtualite.unirider.test.domain.TestConstants.KM
 import quebec.virtualite.unirider.test.domain.TestConstants.KM_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.KM_NEW_RAW
 import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE
-import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE3
 import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW_RAW
 import quebec.virtualite.unirider.test.domain.TestConstants.NAME
-import quebec.virtualite.unirider.test.domain.TestConstants.NAME3
 import quebec.virtualite.unirider.test.domain.TestConstants.PERCENTAGE
 import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE
-import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE3
 import quebec.virtualite.unirider.test.domain.TestConstants.REMAINING_RANGE
-import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
-import quebec.virtualite.unirider.test.domain.TestConstants.S18_DISCONNECTED
-import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_CONNECTED
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_DISCONNECTED
+import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3_SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.test.domain.TestConstants.TOTAL_RANGE
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE
@@ -59,7 +57,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     private val INVALID_KM = null
     private val INVALID_VOLTAGE_ACTUAL = null
 
-    private val INITIAL_WHEEL = S18_1
+    private val INITIAL_WHEEL = S18_1_DISCONNECTED
 
     @InjectMocks
     @Spy
@@ -90,6 +88,9 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     private lateinit var mockedLabelBattery: TextView
 
     @Mock
+    private lateinit var mockedLabelBtName: TextView
+
+    @Mock
     private lateinit var mockedLabelRemainingRange: TextView
 
     @Mock
@@ -97,6 +98,9 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     @Mock
     private lateinit var mockedTextBattery: TextView
+
+    @Mock
+    private lateinit var mockedTextBtAddr: TextView
 
     @Mock
     private lateinit var mockedTextBtName: TextView
@@ -115,7 +119,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
 
     @Before
     fun before() {
-        BaseFragment.wheel = INITIAL_WHEEL
+        wheel = INITIAL_WHEEL
 
         mockExternal()
         mockFields()
@@ -178,10 +182,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     @Test
     fun onViewCreated() {
         // Given
-        doReturn(KM).`when`(fragment).readKm()
-        doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
-
-        doNothing().`when`(fragment).refreshDisplay(VOLTAGE, KM)
+        mockInitialDisplay()
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
@@ -193,14 +194,26 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.edit_km, fragment.editKm, mockedEditKm)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.label_battery, fragment.labelBattery, mockedLabelBattery)
+        verifyFieldAssignment(R.id.label_bt_name, fragment.labelBtName, mockedLabelBtName)
         verifyFieldAssignment(R.id.label_remaining_range, fragment.labelRemainingRange, mockedLabelRemainingRange)
         verifyFieldAssignment(R.id.label_total_range, fragment.labelTotalRange, mockedLabelTotalRange)
         verifyFieldAssignment(R.id.view_battery, fragment.textBattery, mockedTextBattery)
+        verifyFieldAssignment(R.id.view_bt_addr, fragment.textBtAddr, mockedTextBtAddr)
         verifyFieldAssignment(R.id.view_bt_name, fragment.textBtName, mockedTextBtName)
         verifyFieldAssignment(R.id.view_mileage, fragment.textMileage, mockedTextMileage)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_remaining_range, fragment.textRemainingRange, mockedTextRemainingRange)
         verifyFieldAssignment(R.id.view_total_range, fragment.textTotalRange, mockedTextTotalRange)
+
+        verifyOnClick(mockedButtonCharge, "onCharge")
+        verifyOnClick(mockedButtonConnect, "onConnect")
+        verifyOnClick(mockedButtonEdit, "onEdit")
+        verifyOnUpdateText(mockedEditKm, "onUpdateKm")
+        verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
+        verifyOnLongClick(mockedTextBtName, "onDisconnect")
+
+        verify(fragment).initialDisplayWheel()
+        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
 
         assertThat(fragment.buttonCharge, equalTo(mockedButtonCharge))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
@@ -208,51 +221,26 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         assertThat(fragment.textName, equalTo(mockedTextName))
         assertThat(fragment.textRemainingRange, equalTo(mockedTextRemainingRange))
         assertThat(fragment.textTotalRange, equalTo(mockedTextTotalRange))
-
-        verifyOnUpdateText(mockedEditKm, "onUpdateKm")
-        verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
-        verifyOnClick(mockedButtonCharge, "onCharge")
-        verifyOnClick(mockedButtonConnect, "onConnect")
-        verifyOnClick(mockedButtonEdit, "onEdit")
-
-        verify(mockedTextName).text = NAME
-        verify(mockedTextBtName).text = DEVICE_NAME
-        verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
-
-        verify(fragment).readKm()
-        verify(fragment).readVoltageActual()
-        verify(fragment).refreshDisplay(VOLTAGE, KM)
     }
 
     @Test
     fun onViewCreated_whenWheelIsSold() {
         // Given
-        BaseFragment.wheel = SHERMAN_MAX_3
+        wheel = SHERMAN_MAX_3_SOLD
 
-        doReturn(null).`when`(fragment).readKm()
-        doReturn(null).`when`(fragment).readVoltageActual()
-
-        doNothing().`when`(fragment).refreshDisplay(null, null)
+        injectMocks()
 
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedFragments).string(R.string.label_wheel_sold)
-
-        verify(mockedTextName).text = "$NAME3 ($ITEM_SOLD)"
-        verify(mockedTextMileage).text = "${PREMILEAGE3 + MILEAGE3}"
-
-        verify(mockedTextBtName, never()).text = anyString()
-
-        verify(mockedButtonCharge).visibility = GONE
-        verify(mockedButtonConnect).visibility = GONE
+        verify(fragment).initialDisplaySoldWheel()
     }
 
     @Test
     fun onCharge_withConnectedWheel() {
         // Given
-        wheel = S18_1
+        wheel = S18_1_CONNECTED
 
         doNothing().`when`(fragment).startCharging()
 
@@ -269,7 +257,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     @Test
     fun onCharge_withDisconnectedWheel() {
         // Given
-        wheel = S18_DISCONNECTED
+        wheel = S18_1_DISCONNECTED
 
         doNothing().`when`(fragment).startCharging()
 
@@ -284,7 +272,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     @Test
     fun onConnect_withConnectedWheel() {
         // Given
-        wheel = S18_1
+        wheel = S18_1_CONNECTED
 
         // When
         fragment.onConnect().invoke(mockedView)
@@ -296,13 +284,22 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     @Test
     fun onConnect_withDisconnectedWheel() {
         // Given
-        wheel = S18_DISCONNECTED
+        wheel = S18_1_DISCONNECTED
 
         // When
         fragment.onConnect().invoke(mockedView)
 
         // Then
-        verify(fragment).connectFirstTime()
+        verify(fragment).scan()
+    }
+
+    @Test
+    fun onDisconnect() {
+        // When
+        fragment.onDisconnect().invoke(mockedView)
+
+        // Then
+        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelConfirmationDisconnectFragment)
     }
 
     @Test
@@ -352,12 +349,74 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     }
 
     @Test
-    fun connectFirstTime() {
+    fun initialDisplayBluetoothSettings() {
+        // Given
+        injectMocks()
+
+        wheel = S18_1_CONNECTED
+
         // When
-        fragment.connectFirstTime()
+        fragment.initialDisplayBluetoothSettings()
 
         // Then
-        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
+        verify(mockedWidgets).show(mockedLabelBtName)
+        verify(mockedTextBtName).text = DEVICE_NAME
+        verify(mockedTextBtAddr).text = DEVICE_ADDR
+    }
+
+    @Test
+    fun initialDisplaySoldWheel() {
+        // Given
+        injectMocks()
+
+        // When
+        fragment.initialDisplaySoldWheel()
+
+        // Then
+        verify(mockedFragments).string(R.string.label_wheel_sold)
+
+        verify(mockedTextName).text = "${wheel?.name} ($ITEM_SOLD)"
+
+        verify(mockedButtonCharge).visibility = GONE
+        verify(mockedButtonConnect).visibility = GONE
+
+        verify(fragment, never()).refreshDisplay(anyFloat(), anyFloat())
+    }
+
+    @Test
+    fun initialDisplayWheel_whenConnected() {
+        // Given
+        injectMocks()
+        mockRefreshDisplay(VOLTAGE, KM)
+
+        wheel = S18_1_CONNECTED
+
+        // When
+        fragment.initialDisplayWheel()
+
+        // Then
+        verify(mockedTextName).text = NAME
+        verify(fragment).initialDisplayBluetoothSettings()
+
+        verify(fragment).refreshDisplay(VOLTAGE, KM)
+    }
+
+    @Test
+    fun initialDisplayWheel_whenDisconnected() {
+        // Given
+        injectMocks()
+        mockRefreshDisplay(VOLTAGE, KM)
+
+        wheel = S18_1_DISCONNECTED
+
+        // When
+        fragment.initialDisplayWheel()
+
+        // Then
+        verify(mockedTextName).text = NAME
+        verify(fragment, never()).initialDisplayBluetoothSettings()
+
+        verify(fragment).refreshDisplay(VOLTAGE, KM)
     }
 
     @Test
@@ -479,6 +538,8 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
+        wheel = S18_1_CONNECTED
+
         val connectionPayload = WheelInfo(KM_NEW_RAW, MILEAGE_NEW_RAW, TEMPERATURE_NEW_RAW, VOLTAGE_NEW_RAW)
         var executed = false
 
@@ -490,7 +551,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verifyConnectorGetDeviceInfo(DEVICE_ADDR, connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        verify(mockedDb).saveWheel(S18_1.copy(mileage = MILEAGE_NEW))
+        verify(mockedDb).saveWheel(S18_1_CONNECTED.copy(mileage = MILEAGE_NEW))
         verify(mockedEditKm).setText("$KM_NEW")
         verify(mockedEditVoltageActual).setText("$VOLTAGE_NEW")
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
@@ -586,6 +647,15 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     }
 
     @Test
+    fun scan() {
+        // When
+        fragment.scan()
+
+        // Then
+        verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
+    }
+
+    @Test
     fun startCharging() {
         // Given
         injectMocks()
@@ -612,15 +682,16 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.editKm = mockedEditKm
         fragment.editVoltageActual = mockedEditVoltageActual
         fragment.labelBattery = mockedLabelBattery
+        fragment.labelBtName = mockedLabelBtName
         fragment.labelRemainingRange = mockedLabelRemainingRange
         fragment.labelTotalRange = mockedLabelTotalRange
         fragment.textBattery = mockedTextBattery
+        fragment.textBtAddr = mockedTextBtAddr
         fragment.textBtName = mockedTextBtName
         fragment.textMileage = mockedTextMileage
+        fragment.textName = mockedTextName
         fragment.textRemainingRange = mockedTextRemainingRange
         fragment.textTotalRange = mockedTextTotalRange
-
-        BaseFragment.wheel = INITIAL_WHEEL
     }
 
     private fun mockFields() {
@@ -630,13 +701,28 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         mockField(R.id.edit_km, mockedEditKm)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
         mockField(R.id.label_battery, mockedLabelBattery)
+        mockField(R.id.label_bt_name, mockedLabelBtName)
         mockField(R.id.label_remaining_range, mockedLabelRemainingRange)
         mockField(R.id.label_total_range, mockedLabelTotalRange)
         mockField(R.id.view_battery, mockedTextBattery)
+        mockField(R.id.view_bt_addr, mockedTextBtAddr)
         mockField(R.id.view_bt_name, mockedTextBtName)
         mockField(R.id.view_mileage, mockedTextMileage)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_remaining_range, mockedTextRemainingRange)
         mockField(R.id.view_total_range, mockedTextTotalRange)
+    }
+
+    private fun mockInitialDisplay() {
+        lenient().doNothing().`when`(fragment).initialDisplayBluetoothSettings()
+        lenient().doNothing().`when`(fragment).initialDisplaySoldWheel()
+        lenient().doNothing().`when`(fragment).initialDisplayWheel()
+    }
+
+    private fun mockRefreshDisplay(voltage: Float, km: Float) {
+        doReturn(KM).`when`(fragment).readKm()
+        doReturn(VOLTAGE).`when`(fragment).readVoltageActual()
+
+        doNothing().`when`(fragment).refreshDisplay(VOLTAGE, KM)
     }
 }

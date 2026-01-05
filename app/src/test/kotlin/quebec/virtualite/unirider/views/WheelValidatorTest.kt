@@ -12,7 +12,7 @@ import quebec.virtualite.unirider.test.domain.TestConstants.DISTANCE_OFFSET_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.NAME_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE_NEW
-import quebec.virtualite.unirider.test.domain.TestConstants.S18_1
+import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_CONNECTED
 import quebec.virtualite.unirider.test.domain.TestConstants.SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MAX_NEW
@@ -25,7 +25,7 @@ class WheelValidatorTest {
     @InjectMocks
     private lateinit var comparator: WheelValidator
 
-    private val WHEEL = S18_1
+    private val WHEEL = S18_1_CONNECTED
 
     @Test
     fun canSave() {

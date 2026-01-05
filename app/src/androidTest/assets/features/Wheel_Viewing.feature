@@ -18,6 +18,21 @@ Feature: Wheel Viewing
       | LK13447 | AB:CD:EF:GH:IJ:KL | 21.867 | 20020.518 | 141.51V  |
     And I start the app
 
+  Scenario Outline: Bluetooth settings [<wheel>]
+    When I select the <wheel>
+    Then I <can> see the bluetooth settings
+    Examples:
+      | wheel     | can    |
+      | Sherman L | can    |
+      | Sherman   | cannot |
+
+  Scenario: Bluetooth - disconnect wheel
+    Given I select the Sherman L
+    And I can see the bluetooth settings
+    When I delete the bluetooth settings
+    And I confirm the disconnect
+    Then I cannot see the bluetooth settings
+
   Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
     And I set the distance to <distance>
@@ -62,6 +77,15 @@ Feature: Wheel Viewing
       | Sherman     | 96.5V   | 95.3%   |
       | Sherman Max | 91.9V   | 53.6%   |
 
+  Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
+    Given the Sherman has a previous mileage of <previous mileage>
+    When I select the Sherman
+    Then the details view shows the Sherman with a mileage of <actual mileage>
+    Examples:
+      | previous mileage | actual mileage |
+      | 0 km             | 17622 km       |
+      | 10000 km         | 27622 km       |
+
   Scenario: => Charging the wheel - Need to have entered voltage & km
     Given I select the Sherman
     And I cannot charge the wheel
@@ -88,12 +112,3 @@ Feature: Wheel Viewing
     And it displays these estimates:
       | remaining | total range |
       | 44.0      | 82.0        |
-
-  Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
-    Given the Sherman has a previous mileage of <previous mileage>
-    When I select the Sherman
-    Then the details view shows the Sherman with a mileage of <actual mileage>
-    Examples:
-      | previous mileage | actual mileage |
-      | 0 km             | 17622 km       |
-      | 10000 km         | 27622 km       |

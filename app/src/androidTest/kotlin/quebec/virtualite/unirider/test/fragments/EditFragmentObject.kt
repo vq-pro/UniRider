@@ -17,7 +17,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setChecked
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
-import quebec.virtualite.unirider.views.WheelDeleteConfirmationFragment
+import quebec.virtualite.unirider.views.WheelConfirmationDeleteFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 
 class EditFragmentObject(val app: TestApp) {
@@ -62,7 +62,7 @@ class EditFragmentObject(val app: TestApp) {
     }
 
     fun confirmDeletion() {
-        assertThat(app.activeFragment(), equalTo(WheelDeleteConfirmationFragment::class.java))
+        assertThat(app.activeFragment(), equalTo(WheelConfirmationDeleteFragment::class.java))
         click(R.id.button_delete_confirmation)
     }
 

@@ -20,11 +20,6 @@ Feature: Main Screen
       | <New>   |          |
     And I see the total mileage
 
-  Scenario: => Viewing a wheel's details
-    Given I start the app
-    When I select the Sherman
-    Then the details view shows the details for that wheel
-
   Scenario: Viewing sold wheels
     Given I start the app
     When I open up the sold wheels
@@ -53,3 +48,8 @@ Feature: Main Screen
     Given I start the app
     When I add a new wheel
     Then I can enter the details for that wheel
+
+  Scenario: => Viewing a wheel's details
+    Given I start the app
+    When I select the Sherman
+    Then the details view shows the details for that wheel

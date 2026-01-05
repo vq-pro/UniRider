@@ -30,7 +30,7 @@ import quebec.virtualite.unirider.test.domain.TestConstants.NAME2
 import quebec.virtualite.unirider.test.domain.TestConstants.NOT_SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.PREMILEAGE
 import quebec.virtualite.unirider.test.domain.TestConstants.S20_2
-import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3
+import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3_SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL2
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MAX
@@ -166,7 +166,7 @@ class WheelDbImplTest {
     @Test
     fun getWheels() {
         // Given
-        val wheels = listOf(SHERMAN_MAX_3, S20_2)
+        val wheels = listOf(SHERMAN_MAX_3_SOLD, S20_2)
 
         given(mockedDao.getAllWheels())
             .willReturn(wheels)

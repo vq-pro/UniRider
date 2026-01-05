@@ -22,7 +22,6 @@ open class WheelEditFragment : BaseFragment() {
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
     internal lateinit var editChargeRate: EditText
-    internal lateinit var editChargerOffset: EditText
     internal lateinit var editDistanceOffset: EditText
     internal lateinit var editMileage: EditText
     internal lateinit var editName: EditText
@@ -46,7 +45,8 @@ open class WheelEditFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        switchSold = view.findViewById(R.id.check_sold)
+        buttonDelete = view.findViewById(R.id.button_delete)
+        buttonSave = view.findViewById(R.id.button_save)
         editChargeRate = view.findViewById(R.id.edit_charge_rate)
         editDistanceOffset = view.findViewById(R.id.edit_distance_offset)
         editName = view.findViewById(R.id.edit_name)
@@ -56,8 +56,7 @@ open class WheelEditFragment : BaseFragment() {
         editVoltageMax = view.findViewById(R.id.edit_voltage_max)
         editVoltageMin = view.findViewById(R.id.edit_voltage_min)
         editWh = view.findViewById(R.id.edit_wh)
-        buttonDelete = view.findViewById(R.id.button_delete)
-        buttonSave = view.findViewById(R.id.button_save)
+        switchSold = view.findViewById(R.id.check_sold)
 
         widgets.setOnCheckedChangeListener(switchSold, onToggleSold())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
@@ -103,7 +102,7 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     fun onDelete(): (View) -> Unit = {
-        fragments.navigateTo(R.id.action_WheelEditFragment_to_WheelDeleteConfirmationFragment)
+        fragments.navigateTo(R.id.action_WheelEditFragment_to_WheelConfirmationDeleteFragment)
     }
 
     fun onSave(): (View) -> Unit = {

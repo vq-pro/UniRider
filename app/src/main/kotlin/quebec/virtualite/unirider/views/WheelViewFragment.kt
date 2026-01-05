@@ -25,9 +25,11 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
     internal lateinit var labelBattery: TextView
+    internal lateinit var labelBtName: TextView
     internal lateinit var labelRemainingRange: TextView
     internal lateinit var labelTotalRange: TextView
     internal lateinit var textBattery: TextView
+    internal lateinit var textBtAddr: TextView
     internal lateinit var textBtName: TextView
     internal lateinit var textMileage: TextView
     internal lateinit var textName: TextView
@@ -52,9 +54,11 @@ open class WheelViewFragment : BaseFragment() {
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         labelBattery = view.findViewById(R.id.label_battery)
+        labelBtName = view.findViewById(R.id.label_bt_name)
         labelRemainingRange = view.findViewById(R.id.label_remaining_range)
         labelTotalRange = view.findViewById(R.id.label_total_range)
         textBattery = view.findViewById(R.id.view_battery)
+        textBtAddr = view.findViewById(R.id.view_bt_addr)
         textBtName = view.findViewById(R.id.view_bt_name)
         textMileage = view.findViewById(R.id.view_mileage)
         textName = view.findViewById(R.id.view_name)
@@ -66,39 +70,30 @@ open class WheelViewFragment : BaseFragment() {
         widgets.setOnClickListener(buttonCharge, onCharge())
         widgets.setOnClickListener(buttonConnect, onConnect())
         widgets.setOnClickListener(buttonEdit, onEdit())
+        widgets.setOnLongClickListener(textBtName, onDisconnect())
 
         external.runDB {
             fragments.runUI {
-                if (!wheel!!.isSold) {
-                    textName.text = wheel!!.name
-                    textBtName.text = wheel!!.btName
-
-                } else {
-                    textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
-
-                    buttonCharge.visibility = GONE
-                    buttonConnect.visibility = GONE
-                }
+                if (!wheel!!.isSold) initialDisplayWheel()
+                else initialDisplaySoldWheel()
 
                 textMileage.text = textKm(wheel!!.totalMileage())
-
-                refreshDisplay(readVoltageActual(), readKm())
             }
         }
     }
 
     fun onCharge(): (View) -> Unit = {
-        if (wheel!!.btName == null)
-            startCharging()
-        else
-            reconnect { startCharging() }
+        if (wheel!!.isConnected()) reconnect { startCharging() }
+        else startCharging()
     }
 
     fun onConnect(): (View) -> Unit = {
-        if (wheel!!.btName == null)
-            connectFirstTime()
-        else
-            reconnect()
+        if (wheel!!.isConnected()) reconnect()
+        else scan()
+    }
+
+    fun onDisconnect(): (View) -> Unit = {
+        fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelConfirmationDisconnectFragment)
     }
 
     fun onEdit(): (View) -> Unit = {
@@ -133,32 +128,46 @@ open class WheelViewFragment : BaseFragment() {
         )
     }
 
-    internal open fun connectFirstTime() {
-        fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
+    internal open fun initialDisplayBluetoothSettings() {
+        widgets.show(labelBtName)
+        textBtName.setText(wheel!!.btName)
+        textBtAddr.setText(wheel!!.btAddr)
     }
 
-    internal open fun parseKm(value: String): Float? = when {
-        isNumeric(value) -> when {
-            floatOf(value) == 0f -> null
-            else -> floatOf(value)
+    @SuppressLint("SetTextI18n")
+    internal open fun initialDisplaySoldWheel() {
+        textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
+
+        buttonCharge.visibility = GONE
+        buttonConnect.visibility = GONE
+    }
+
+    internal open fun initialDisplayWheel() {
+        textName.text = wheel!!.name
+
+        if (wheel!!.isConnected())
+            initialDisplayBluetoothSettings()
+
+        refreshDisplay(readVoltageActual(), readKm())
+    }
+
+    internal open fun parseKm(value: String): Float? =
+        if (!isNumeric(value)) null
+        else if (floatOf(value) == 0f) null
+        else floatOf(value)
+
+    internal open fun parseVoltage(value: String): Float? =
+        when {
+            !isNumeric(value) -> null
+            floatOf(value) < wheel!!.voltageMin -> null
+            else -> round(floatOf(value))
         }
 
-        else -> null
-    }
+    internal open fun readKm() =
+        parseKm(widgets.getText(editKm))
 
-    internal open fun parseVoltage(value: String): Float? = when {
-        !isNumeric(value) -> null
-        floatOf(value) < wheel!!.voltageMin -> null
-        else -> round(floatOf(value))
-    }
-
-    internal open fun readKm(): Float? {
-        return parseKm(widgets.getText(editKm))
-    }
-
-    internal open fun readVoltageActual(): Float? {
-        return parseVoltage(widgets.getText(editVoltageActual))
-    }
+    internal open fun readVoltageActual() =
+        parseVoltage(widgets.getText(editVoltageActual))
 
     internal open fun reconnect(execution: (() -> Unit)? = {}) {
         fragments.runWithWait {
@@ -181,16 +190,12 @@ open class WheelViewFragment : BaseFragment() {
     }
 
     internal open fun refreshDisplay(voltageActual: Float?, km: Float?) {
-        when (voltageActual) {
-            null -> clearDisplay()
-            else -> {
-                updatePercentageFor(voltageActual)
+        if (voltageActual == null) clearDisplay()
+        else {
+            updatePercentageFor(voltageActual)
 
-                when {
-                    km == null -> clearEstimates()
-                    else -> refreshEstimates(voltageActual, km)
-                }
-            }
+            if (km == null) clearEstimates()
+            else refreshEstimates(voltageActual, km)
         }
     }
 
@@ -202,10 +207,17 @@ open class WheelViewFragment : BaseFragment() {
             textTotalRange.text = textKmWithDecimal(estimates!!.totalRange)
 
             widgets.show(
-                textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
+                textRemainingRange,
+                labelRemainingRange,
+                textTotalRange,
+                labelTotalRange
             )
             widgets.enable(buttonCharge)
         }
+    }
+
+    internal open fun scan() {
+        fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
     }
 
     internal open fun startCharging() {

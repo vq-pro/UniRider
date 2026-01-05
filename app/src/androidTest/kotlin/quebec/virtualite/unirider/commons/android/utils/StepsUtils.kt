@@ -50,9 +50,7 @@ object StepsUtils {
 
     private val nestedScrollViewExtension = NestedScrollViewExtension()
 
-    fun applicationContext(): Context {
-        return ApplicationProvider.getApplicationContext()!!
-    }
+    fun applicationContext(): Context = ApplicationProvider.getApplicationContext()!!
 
     fun assertThat(id: Int, assertion: Matcher<View>) {
         poll {
@@ -97,12 +95,11 @@ object StepsUtils {
 
             override fun perform(uiController: UiController?, view: View?) {
                 val spinner = view as Spinner
-                text = when {
-                    spinner.selectedItemPosition == -1 -> ""
-                    else -> "${spinner.selectedItem}"
-                }
+                text = if (spinner.selectedItemPosition == -1) ""
+                else "${spinner.selectedItem}"
             }
         })
+
         return text
     }
 
@@ -124,61 +121,53 @@ object StepsUtils {
         return text
     }
 
-    fun hasMinimumRows(expected: Int): Matcher<View> {
-        return hasMinimumChildCount(expected)
-    }
+    fun hasMinimumRows(expected: Int) = hasMinimumChildCount(expected)
 
-    fun <T> hasRow(expectedRow: T): Matcher<View> {
-        return object : FeatureMatcher<View, List<T>?>(
+    fun <T> hasRow(expectedRow: T) =
+        object : FeatureMatcher<View, List<T>?>(
             hasItem(expectedRow), "list", "list"
         ) {
             override fun featureValueOf(view: View?): List<T> {
                 return actualListViewItemsFor(view)
             }
         }
-    }
 
-    fun <T> hasRows(expectedRows: List<T>): Matcher<View> {
-        return object : FeatureMatcher<View, List<T>?>(
+    fun <T> hasRows(expectedRows: List<T>) =
+        object : FeatureMatcher<View, List<T>?>(
             equalTo(expectedRows), "list", "list"
         ) {
             override fun featureValueOf(view: View?): List<T> {
                 return actualListViewItemsFor(view)
             }
         }
-    }
 
-    fun hasSelectedText(expected: String): Matcher<View> {
-        return allOf(
-            isDisplayed(), isEnabled(), withText(equalTo(expected))
-        )
-    }
+    fun hasSelectedText(expected: String): Matcher<View> =
+        allOf(isDisplayed(), isEnabled(), withText(equalTo(expected)))
 
-    fun hasSpinnerText(expected: String): Matcher<View> {
-        return allOf(
-            isDisplayed(), isEnabled(), withSpinnerText(equalTo(expected))
-        )
-    }
+    fun hasSpinnerText(expected: String): Matcher<View> =
+        allOf(isDisplayed(), isEnabled(), withSpinnerText(equalTo(expected)))
 
-    fun hasText(expected: String?): Matcher<View> {
-        return withText(equalTo(expected))
-    }
+    fun hasText(expected: String?): Matcher<View> = withText(equalTo(expected))
 
-    fun isDisabled(): Matcher<View> {
-        return not(isEnabled())
-    }
+    fun isDisabled(): Matcher<View> = not(isEnabled())
 
-    fun isDisplayed(): Matcher<View> {
-        return ViewMatchers.isDisplayed()
-    }
+    fun isDisplayed(): Matcher<View> = isDisplayed(true)
 
-    fun isEmpty(): Matcher<View> {
-        return hasText("")
-    }
+    fun isDisplayed(shouldDisplay: Boolean): Matcher<View> =
+        if (shouldDisplay) ViewMatchers.isDisplayed()
+        else not(ViewMatchers.isDisplayed())
 
-    fun isHidden(): Matcher<View> {
-        return not(isDisplayed())
-    }
+    fun isEmpty(): Matcher<View> = hasText("")
+
+    fun isEmpty(shouldBeEmpty: Boolean): Matcher<View> =
+        if (shouldBeEmpty) hasText("")
+        else not(hasText(""))
+
+    fun isEnabled(enabled: Boolean): Matcher<View> =
+        if (enabled) isEnabled()
+        else ViewMatchers.isNotEnabled()
+
+    fun isHidden(): Matcher<View> = isDisplayed(false)
 
     fun longClick(id: Int) {
         element(id)?.perform(longClick())
@@ -212,12 +201,9 @@ object StepsUtils {
         element(id)?.perform(replaceText(newText))
     }
 
-    fun strip(value: String, stripValue: String): String {
-        return when {
-            value.endsWith(stripValue) -> value.substring(0, value.length - stripValue.length).trim()
-            else -> value.trim()
-        }
-    }
+    fun strip(value: String, stripValue: String): String =
+        if (value.endsWith(stripValue)) value.dropLast(stripValue.length).trim()
+        else value.trim()
 
     fun <T> throwAssert(message: String): T {
         throw AssertionError(message)
@@ -246,36 +232,30 @@ object StepsUtils {
         }
     }
 
-    private fun internalSetChecked(checked: Boolean): ViewAction {
-        return object : ViewAction {
-            override fun getConstraints(): BaseMatcher<View> {
-                return object : BaseMatcher<View>() {
-                    override fun matches(item: Any): Boolean {
-                        return isA(Checkable::class.java).matches(item)
-                    }
+    private fun internalSetChecked(checked: Boolean): ViewAction =
+        object : ViewAction {
+            override fun getConstraints() =
+                object : BaseMatcher<View>() {
+                    override fun matches(item: Any) = isA(Checkable::class.java).matches(item)
 
                     override fun describeMismatch(item: Any, mismatchDescription: Description) {}
+
                     override fun describeTo(description: Description) {}
                 }
-            }
 
-            override fun getDescription(): String {
-                return ""
-            }
+            override fun getDescription() = ""
 
             override fun perform(uiController: UiController, view: View) {
                 val checkableView = view as Checkable
                 checkableView.isChecked = checked
             }
         }
-    }
 
     private fun poll(callback: () -> Unit) {
         poll("", callback)
     }
 
     private fun poll(message: String, callback: () -> Unit) {
-
         var exception: Throwable?
         val start = currentTimeMillis()
 

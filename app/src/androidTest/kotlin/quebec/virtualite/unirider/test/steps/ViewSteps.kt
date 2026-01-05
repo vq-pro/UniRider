@@ -33,6 +33,16 @@ class ViewSteps : BaseSteps() {
         viewFragment.connectTo(deviceName)
     }
 
+    @When("I confirm the disconnect")
+    fun disconnectConfirm() {
+        viewFragment.disconnectConfirmation()
+    }
+
+    @When("I delete the bluetooth settings")
+    fun disconnectWheel() {
+        viewFragment.disconnectWheel()
+    }
+
     @When("I edit the wheel")
     fun editWheel() {
         viewFragment.editWheel()
@@ -84,14 +94,14 @@ class ViewSteps : BaseSteps() {
         viewFragment.validateBluetoothName()
     }
 
-    @Then("I can charge the wheel")
-    fun validateCanChargeWheel() {
-        viewFragment.validateCanCharge()
+    @Then("^I (can|cannot) charge the wheel$")
+    fun validateCanChargeWheel(canOrCannot: String) {
+        viewFragment.validateCanCharge(canOrCannot)
     }
 
-    @Then("I cannot charge the wheel")
-    fun validateCannotChargeWheel() {
-        viewFragment.validateCannotCharge()
+    @Then("^I (can|cannot) see the bluetooth settings$")
+    fun validateCanSeeBluetoothSettings(canOrCannot: String) {
+        viewFragment.validateCanSeeBluetoothSettings(canOrCannot)
     }
 
     @Then("^the details view shows the (.*) with a mileage of (.*) km$")

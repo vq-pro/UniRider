@@ -8,14 +8,14 @@ import android.widget.Button
 import android.widget.TextView
 import quebec.virtualite.unirider.R
 
-open class WheelDeleteConfirmationFragment : BaseFragment() {
+open class WheelConfirmationDeleteFragment : BaseFragment() {
 
     internal lateinit var buttonDeleteCancel: Button
     internal lateinit var buttonDeleteConfirmation: Button
     internal lateinit var textName: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.wheel_delete_confirmation_fragment, container, false)
+        return inflater.inflate(R.layout.wheel_confirmation_delete_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -50,8 +50,7 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun validateBluetoothDeviceUndefined(selectedWheel: WheelEntity) {
-        assertThat(selectedWheel.btName, equalTo(null))
-        assertThat(selectedWheel.btAddr, equalTo(null))
+        assertThat(selectedWheel.isConnected(), equalTo(false))
     }
 
     fun validateTotalMileage() {

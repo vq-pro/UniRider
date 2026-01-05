@@ -102,8 +102,14 @@ object TestConstants {
     val WHEEL_ROW_ABRAMS_4 = WheelRow(ID4, "- $NAME4", PREMILEAGE4 + MILEAGE4)
     val WHEEL_ROW_NEW = WheelRow(0, NAME_NEW, 0)
 
-    val S18_1 = WheelEntity(
+    val S18_1_CONNECTED = WheelEntity(
         ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+        PREMILEAGE, MILEAGE, WH,
+        VOLTAGE_MAX, VOLTAGE_MIN,
+        CHARGE_RATE, VOLTAGE_FULL, DISTANCE_OFFSET, NOT_SOLD
+    )
+    val S18_1_DISCONNECTED = WheelEntity(
+        ID, NAME, null, null,
         PREMILEAGE, MILEAGE, WH,
         VOLTAGE_MAX, VOLTAGE_MIN,
         CHARGE_RATE, VOLTAGE_FULL, DISTANCE_OFFSET, NOT_SOLD
@@ -114,7 +120,7 @@ object TestConstants {
         VOLTAGE_MAX2, VOLTAGE_MIN2,
         CHARGE_RATE2, VOLTAGE_FULL2, DISTANCE_OFFSET2, NOT_SOLD
     )
-    val SHERMAN_MAX_3 = WheelEntity(
+    val SHERMAN_MAX_3_SOLD = WheelEntity(
         ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
         PREMILEAGE3, MILEAGE3, WH3,
         VOLTAGE_MAX3, VOLTAGE_MIN3,
@@ -132,13 +138,6 @@ object TestConstants {
         PREMILEAGE5, MILEAGE5, WH5,
         VOLTAGE_MAX5, VOLTAGE_MIN5,
         CHARGE_RATE5, VOLTAGE_FULL5, DISTANCE_OFFSET5, NOT_SOLD
-    )
-
-    val S18_DISCONNECTED = WheelEntity(
-        ID, NAME, null, null,
-        PREMILEAGE, MILEAGE, WH,
-        VOLTAGE_MAX, VOLTAGE_MIN,
-        CHARGE_RATE, VOLTAGE_FULL, DISTANCE_OFFSET, NOT_SOLD
     )
 
     val EMPTY_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
