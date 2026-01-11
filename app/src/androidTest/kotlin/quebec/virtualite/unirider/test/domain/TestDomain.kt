@@ -107,7 +107,9 @@ class TestDomain(applicationContext: Context) {
                     "Wh",
                     "Voltage Min",
                     "Voltage Max",
+                    "Charge Amperage",
                     "Charge Rate",
+//                    FIXME-1 move Full Charge with the other voltages
                     "Full Charge",
                     "Distance Offset",
                     "Sold"
@@ -124,6 +126,7 @@ class TestDomain(applicationContext: Context) {
                 val wh = parseInt(row[col++])
                 val voltageMin = voltageOf(row[col++])
                 val voltageMax = voltageOf(row[col++])
+                val chargeAmperage = amps(row[col++])
                 val chargeRate = voltsPerHourOf(row[col++])
                 val voltageFull = voltageOf(row[col++])
                 val distanceOffset = floatOf(row[col++])
@@ -133,7 +136,9 @@ class TestDomain(applicationContext: Context) {
                     0, name, null, null,
                     0, mileage, wh,
                     voltageMax, voltageMin,
-                    chargeRate, voltageFull, distanceOffset, isSold
+//                    FIXME-1 move voltageFull one row up
+                    chargeAmperage, chargeRate, voltageFull,
+                    distanceOffset, isSold
                 )
             }
             .collect(toList())
@@ -163,6 +168,9 @@ class TestDomain(applicationContext: Context) {
             updateMapWheels()
         }
     }
+
+    private fun amps(value: String): Float =
+        floatOfWithSuffix(value, "A")
 
     private fun floatOfWithSuffix(value: String, suffix: String): Float {
         assertThat(value, endsWith(suffix))

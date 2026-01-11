@@ -17,10 +17,11 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 open class WheelEditFragment : BaseFragment() {
 
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, false)
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
+    internal lateinit var editChargeAmperage: EditText
     internal lateinit var editChargeRate: EditText
     internal lateinit var editDistanceOffset: EditText
     internal lateinit var editMileage: EditText
@@ -47,6 +48,7 @@ open class WheelEditFragment : BaseFragment() {
 
         buttonDelete = view.findViewById(R.id.button_delete)
         buttonSave = view.findViewById(R.id.button_save)
+        editChargeAmperage = view.findViewById(R.id.edit_charge_amperage)
         editChargeRate = view.findViewById(R.id.edit_charge_rate)
         editDistanceOffset = view.findViewById(R.id.edit_distance_offset)
         editName = view.findViewById(R.id.edit_name)
@@ -58,7 +60,9 @@ open class WheelEditFragment : BaseFragment() {
         editWh = view.findViewById(R.id.edit_wh)
         switchSold = view.findViewById(R.id.check_sold)
 
-        widgets.setOnCheckedChangeListener(switchSold, onToggleSold())
+        widgets.setOnLongClickListener(buttonDelete, onDelete())
+        widgets.setOnClickListener(buttonSave, onSave())
+        widgets.addTextChangedListener(editChargeAmperage, onUpdateChargeAmperage())
         widgets.addTextChangedListener(editChargeRate, onUpdateChargeRate())
         widgets.addTextChangedListener(editDistanceOffset, onUpdateDistanceOffset())
         widgets.addTextChangedListener(editName, onUpdateName())
@@ -68,15 +72,14 @@ open class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editVoltageMax, onUpdateVoltageMax())
         widgets.addTextChangedListener(editVoltageMin, onUpdateVoltageMin())
         widgets.addTextChangedListener(editWh, onUpdateWh())
-        widgets.setOnLongClickListener(buttonDelete, onDelete())
-        widgets.setOnClickListener(buttonSave, onSave())
+        widgets.setOnCheckedChangeListener(switchSold, onToggleSold())
 
         if (wheel != null) {
             initialWheel = wheel!!
             updatedWheel = initialWheel
 
             fragments.runUI {
-                switchSold.setChecked(initialWheel.isSold)
+                editChargeAmperage.setText("${initialWheel.chargeAmperage}")
                 editChargeRate.setText("${initialWheel.chargeRate}")
                 editDistanceOffset.setText("${initialWheel.distanceOffset}")
                 editName.setText(initialWheel.name)
@@ -84,6 +87,7 @@ open class WheelEditFragment : BaseFragment() {
                 editVoltageMax.setText("${initialWheel.voltageMax}")
                 editVoltageMin.setText("${initialWheel.voltageMin}")
                 editWh.setText("${initialWheel.wh}")
+                switchSold.setChecked(initialWheel.isSold)
 
                 if (initialWheel.premileage != 0)
                     editPreMileage.setText("${initialWheel.premileage}")
@@ -115,6 +119,13 @@ open class WheelEditFragment : BaseFragment() {
 
     fun onToggleSold() = { newSold: Boolean ->
         updatedWheel = updatedWheel.copy(isSold = newSold)
+        enableSaveIfChanged()
+    }
+
+    fun onUpdateChargeAmperage() = { newChargeAmperage: String ->
+        updatedWheel = updatedWheel.copy(
+            chargeAmperage = round(safeFloatOf(newChargeAmperage))
+        )
         enableSaveIfChanged()
     }
 

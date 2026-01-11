@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a711701a7a706e66634ea9b46239641f",
+    "identityHash": "9c1bcaaff42d42f35d1d4e0f84a8eb17",
     "entities": [
       {
         "tableName": "wheel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `btName` TEXT, `btAddr` TEXT, `premileage` INTEGER NOT NULL, `mileage` INTEGER NOT NULL, `wh` INTEGER NOT NULL, `voltageMax` REAL NOT NULL, `voltageMin` REAL NOT NULL, `chargeRate` REAL NOT NULL, `voltageFull` REAL NOT NULL, `distanceOffset` REAL NOT NULL, `isSold` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `btName` TEXT, `btAddr` TEXT, `premileage` INTEGER NOT NULL, `mileage` INTEGER NOT NULL, `wh` INTEGER NOT NULL, `voltageMax` REAL NOT NULL, `voltageMin` REAL NOT NULL, `chargeAmperage` REAL NOT NULL, `chargeRate` REAL NOT NULL, `voltageFull` REAL NOT NULL, `distanceOffset` REAL NOT NULL, `isSold` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -63,6 +63,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "chargeAmperage",
+            "columnName": "chargeAmperage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
             "fieldPath": "chargeRate",
             "columnName": "chargeRate",
             "affinity": "REAL",
@@ -100,7 +106,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a711701a7a706e66634ea9b46239641f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9c1bcaaff42d42f35d1d4e0f84a8eb17')"
     ]
   }
 }

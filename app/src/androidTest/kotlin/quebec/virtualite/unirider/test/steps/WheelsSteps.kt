@@ -44,6 +44,7 @@ class WheelsSteps : BaseSteps() {
     fun validateWheelWasAdded() {
         selectedWheel = domain.locateWheel(updatedWheel.name)!!
 
+        assertThat(selectedWheel.chargeAmperage, equalTo(updatedWheel.chargeAmperage))
         assertThat(selectedWheel.chargeRate, equalTo(updatedWheel.chargeRate))
         assertThat(selectedWheel.name, equalTo(updatedWheel.name))
         assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))

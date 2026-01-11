@@ -16,10 +16,12 @@
     <string name="fragment_label_device">Device</string>
     <string name="fragment_label_scan">Devices</string>
     <string name="fragment_label_total_mileage">Total</string>
+    <string name="label_amperage">A</string>
     <string name="label_battery">Battery</string>
     <string name="label_bt_name">Bluetooth</string>
+    <string name="label_charge_amperage">Charge Amperage</string>
     <string name="label_charge_rate">Charge Rate</string>
-    <string name="label_charge_warning">Charging will start as soon as you connect...</string>
+    <string name="label_charge_warning">Charging will start as soon as you connect…</string>
     <string name="label_charger_offset">Charger Offset</string>
     <string name="label_charging">Charging</string>
     <string name="label_devices">Devices</string>

@@ -1,11 +1,12 @@
+@WIP
 Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
-      | Name    | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
-      | Nikola+ | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.4V       | 1.0             | Yes  |
-      | Sherman | 17622   | 3200 | 75.6V       | 100.8V      | 8V/h        | 99.4V       | 1.0181          | No   |
-      | S18     | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.4V       | 1.0             | No   |
+      | Name    | Mileage | Wh   | Voltage Min | Voltage Max | Charge Amperage | Charge Rate | Full Charge | Distance Offset | Sold |
+      | Nikola+ | 2927    | 1800 | 78V         | 100.8V      | 3A              | 6V/h        | 99.4V       | 1.0             | Yes  |
+      | Sherman | 17622   | 3200 | 75.6V       | 100.8V      | 10A             | 8V/h        | 99.4V       | 1.0181          | No   |
+      | S18     | 2850    | 1110 | 60V         | 84V         | 2.5A            | 4V/h        | 81.4V       | 1.0             | No   |
     And this wheel is connected:
       | Name    | Bt Name | Bt Address        |
       | Sherman | LK1000  | AB:CD:EF:GH:IJ:KL |
@@ -16,12 +17,13 @@ Feature: Wheel Editing & Adding
     And I set these new values:
       | Previous Mileage | 0           |
       | Name             | Sherman Max |
-      | Mileage          | 150         |
-      | Wh               | 3600        |
-      | Voltage Max      | 100.8       |
-      | Voltage Min      | 75.6        |
-      | Charge Rate      | 8           |
-      | Full Charge      | 99.5        |
+      | Mileage          | 150 km      |
+      | Wh               | 3600 Wh     |
+      | Voltage Max      | 100.8V      |
+      | Voltage Min      | 75.6V       |
+      | Charge Amperage  | 10A         |
+      | Charge Rate      | 8V/h        |
+      | Full Charge      | 99.5V       |
       | Distance Offset  | 1.0181      |
       | Sold             | No          |
     Then the wheel was added
@@ -33,13 +35,14 @@ Feature: Wheel Editing & Adding
     When I edit the wheel
     And I set these new values:
       | Name             | Sherman Max |
-      | Previous Mileage | 50          |
-      | Mileage          | 150         |
-      | Wh               | 3600        |
-      | Voltage Max      | 100.9       |
-      | Voltage Min      | 74.5        |
-      | Charge Rate      | 2           |
-      | Full Charge      | 99.5        |
+      | Previous Mileage | 50 km       |
+      | Mileage          | 150 km      |
+      | Wh               | 3600 Wh     |
+      | Voltage Max      | 100.9V      |
+      | Voltage Min      | 74.5V       |
+      | Charge Amperage  | 5A          |
+      | Charge Rate      | 2V/h        |
+      | Full Charge      | 99.5V       |
       | Distance Offset  | 1.0181      |
       | Sold             | No          |
     Then the wheel was updated
@@ -59,6 +62,7 @@ Feature: Wheel Editing & Adding
       | can           | blank the full voltage                         |
       | can           | blank the mileage                              |
       | can           | blank the previous mileage                     |
+      | can           | change the charge amperage                     |
       | can           | change the charge rate                         |
       | can           | change the distance offset                     |
       | can           | change the full voltage                        |
@@ -69,6 +73,7 @@ Feature: Wheel Editing & Adding
       | can           | change the previous mileage                    |
       | can           | change the wh                                  |
       | can           | mark the wheel as sold                         |
+      | cannot        | blank the charge amperage                      |
       | cannot        | blank the charge rate                          |
       | cannot        | blank the maximum voltage                      |
       | cannot        | blank the minimum voltage                      |

@@ -15,6 +15,8 @@ Feature: Wheel Charging
     And the current time is 11:45
     And I start the app
 
+#  FIXME-1 Overriding the default amperage with another value
+
     And I select the Sherman L
     And I set the actual voltage to 137.0V
     And I set the distance to 30 km

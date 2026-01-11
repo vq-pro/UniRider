@@ -20,10 +20,22 @@ import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.views.WheelConfirmationDeleteFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 
+val UNITS = arrayOf(
+    " km",
+    " Wh",
+    "V",
+    "A",
+    "V/h"
+);
+
 class EditFragmentObject(val app: TestApp) {
 
     private val IS_NOT_SOLD = false
     private val IS_SOLD = true
+
+    fun changeChargeAmperage(value: String) {
+        setText(R.id.edit_charge_amperage, value)
+    }
 
     fun changeChargeRate(value: String) {
         setText(R.id.edit_charge_rate, value)
@@ -73,6 +85,7 @@ class EditFragmentObject(val app: TestApp) {
     fun enterNewWheel(newValues: DataTable, selectedWheel: WheelEntity): WheelEntity {
 
         val mapDetailToId = mapOf(
+            Pair("Charge Amperage", R.id.edit_charge_amperage),
             Pair("Charge Rate", R.id.edit_charge_rate),
             Pair("Distance Offset", R.id.edit_distance_offset),
             Pair("Full Charge", R.id.edit_voltage_full),
@@ -88,7 +101,7 @@ class EditFragmentObject(val app: TestApp) {
         val mapEntity = mutableMapOf<String, String>()
         newValues.cells(0).forEach { row ->
             val field = row[0]
-            val value = row[1]
+            val value = stripUnits(row[1])
             mapEntity[field] = value
 
             val rawField = mapDetailToId[field]
@@ -102,6 +115,7 @@ class EditFragmentObject(val app: TestApp) {
         }
 
         val updatedWheel = selectedWheel.copy(
+            chargeAmperage = floatOf(mapEntity["Charge Amperage"]!!),
             chargeRate = floatOf(mapEntity["Charge Rate"]!!),
             distanceOffset = floatOf(mapEntity["Distance Offset"]!!),
             isSold = "yes" == mapEntity["Sold"]!!,
@@ -153,5 +167,14 @@ class EditFragmentObject(val app: TestApp) {
 
     fun validateView() {
         assertThat(app.activeFragment(), equalTo(WheelEditFragment::class.java))
+    }
+
+    private fun stripUnits(value: String): String {
+        for (unit in UNITS) {
+            if (value.endsWith(unit))
+                return value.substringBefore(unit)
+        }
+
+        return value
     }
 }
