@@ -151,17 +151,13 @@ open class WheelChargeFragment : BaseFragment() {
             return
 
         val voltageTarget = onCharge(getVoltageRequired())
-        when {
-            voltageTarget > cacheVoltageActual!! -> {
+        if (voltageTarget <= cacheVoltageActual!!) displayGo()
+        else {
+            val diff = round(voltageTarget - cacheVoltageActual!!)
+            val chargeRateMultiplier = getAmperage() / wheel!!.chargeAmperage
+            val rawHours = diff / (chargeRateMultiplier * wheel!!.chargeRate)
 
-                val diff = round(voltageTarget - cacheVoltageActual!!)
-                val chargeRateMultiplier = getAmperage() / wheel!!.chargeAmperage
-                val rawHours = diff / (chargeRateMultiplier * wheel!!.chargeRate)
-
-                displayEstimates(diff, rawHours)
-            }
-
-            else -> displayGo()
+            displayEstimates(diff, rawHours)
         }
     }
 
