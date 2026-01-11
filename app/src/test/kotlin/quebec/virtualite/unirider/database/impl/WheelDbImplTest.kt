@@ -86,7 +86,8 @@ class WheelDbImplTest {
                 ID2, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN,
-                CHARGE_AMPERAGE, CHARGE_RATE, VOLTAGE_FULL, DISTANCE_OFFSET, NOT_SOLD
+                VOLTAGE_FULL, CHARGE_AMPERAGE, CHARGE_RATE,
+                DISTANCE_OFFSET, NOT_SOLD
             )
         )
 
@@ -107,7 +108,7 @@ class WheelDbImplTest {
                 ID, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN,
-                CHARGE_AMPERAGE, CHARGE_RATE, VOLTAGE_FULL,
+                VOLTAGE_FULL, CHARGE_AMPERAGE, CHARGE_RATE,
                 DISTANCE_OFFSET, NOT_SOLD
             )
         )
@@ -215,7 +216,7 @@ class WheelDbImplTest {
                 0, NAME, DEVICE_NAME, DEVICE_ADDR,
                 PREMILEAGE, MILEAGE, WH,
                 VOLTAGE_MAX, VOLTAGE_MIN,
-                CHARGE_AMPERAGE, CHARGE_RATE, VOLTAGE_FULL,
+                VOLTAGE_FULL, CHARGE_AMPERAGE, CHARGE_RATE,
                 DISTANCE_OFFSET, NOT_SOLD
             )
         val wheel2 =
@@ -223,7 +224,7 @@ class WheelDbImplTest {
                 0, NAME2, DEVICE_NAME2, DEVICE_ADDR2,
                 PREMILEAGE, MILEAGE2, WH2,
                 VOLTAGE_MAX2, VOLTAGE_MIN2,
-                CHARGE_AMPERAGE2, CHARGE_RATE2, VOLTAGE_FULL2,
+                VOLTAGE_FULL2, CHARGE_AMPERAGE2, CHARGE_RATE2,
                 DISTANCE_OFFSET2, NOT_SOLD
             )
 

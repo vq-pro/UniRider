@@ -107,10 +107,9 @@ class TestDomain(applicationContext: Context) {
                     "Wh",
                     "Voltage Min",
                     "Voltage Max",
+                    "Full Charge",
                     "Charge Amperage",
                     "Charge Rate",
-//                    FIXME-1 move Full Charge with the other voltages
-                    "Full Charge",
                     "Distance Offset",
                     "Sold"
                 )
@@ -126,9 +125,9 @@ class TestDomain(applicationContext: Context) {
                 val wh = parseInt(row[col++])
                 val voltageMin = voltageOf(row[col++])
                 val voltageMax = voltageOf(row[col++])
+                val voltageFull = voltageOf(row[col++])
                 val chargeAmperage = amps(row[col++])
                 val chargeRate = voltsPerHourOf(row[col++])
-                val voltageFull = voltageOf(row[col++])
                 val distanceOffset = floatOf(row[col++])
                 val isSold = parseYesNo(row[col++])
 
@@ -136,8 +135,7 @@ class TestDomain(applicationContext: Context) {
                     0, name, null, null,
                     0, mileage, wh,
                     voltageMax, voltageMin,
-//                    FIXME-1 move voltageFull one row up
-                    chargeAmperage, chargeRate, voltageFull,
+                    voltageFull, chargeAmperage, chargeRate,
                     distanceOffset, isSold
                 )
             }

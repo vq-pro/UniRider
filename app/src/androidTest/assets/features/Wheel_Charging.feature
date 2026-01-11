@@ -37,6 +37,15 @@ Feature: Wheel Charging
       | target        | required      | time        |
       | 143.5V (+3.5) | 142.0V (-1.5) | 11:55 (10m) |
 
+#  Scenario: Changing the amperage of the voltage
+#    Given I reconnect to update the voltage
+#    When I request to charge for <distance>
+#    Then it displays an actual voltage of 138.0V
+#    And the full charge indicator is <fc_indicator>
+#    And it displays these charging estimates:
+#      | target   | required   | time   |
+#      | <target> | <required> | <time> |
+
   Scenario Outline: Charging a wheel by distance [<distance>]
     Given I reconnect to update the voltage
     When I request to charge for <distance>

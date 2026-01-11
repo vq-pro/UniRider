@@ -50,6 +50,7 @@ class WheelsSteps : BaseSteps() {
         assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))
         assertThat(selectedWheel.voltageMax, equalTo(updatedWheel.voltageMax))
         assertThat(selectedWheel.voltageMin, equalTo(updatedWheel.voltageMin))
+        assertThat(selectedWheel.voltageFull, equalTo(updatedWheel.voltageFull))
         assertThat(selectedWheel.wh, equalTo(updatedWheel.wh))
     }
 

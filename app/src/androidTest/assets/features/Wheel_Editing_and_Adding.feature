@@ -3,10 +3,10 @@ Feature: Wheel Editing & Adding
 
   Background:
     Given these wheels:
-      | Name    | Mileage | Wh   | Voltage Min | Voltage Max | Charge Amperage | Charge Rate | Full Charge | Distance Offset | Sold |
-      | Nikola+ | 2927    | 1800 | 78V         | 100.8V      | 3A              | 6V/h        | 99.4V       | 1.0             | Yes  |
-      | Sherman | 17622   | 3200 | 75.6V       | 100.8V      | 10A             | 8V/h        | 99.4V       | 1.0181          | No   |
-      | S18     | 2850    | 1110 | 60V         | 84V         | 2.5A            | 4V/h        | 81.4V       | 1.0             | No   |
+      | Name    | Mileage | Wh   | Voltage Min | Voltage Max | Full Charge | Charge Amperage | Charge Rate | Distance Offset | Sold |
+      | Nikola+ | 2927    | 1800 | 78V         | 100.8V      | 99.4V       | 3A              | 6V/h        | 1.0             | Yes  |
+      | Sherman | 17622   | 3200 | 75.6V       | 100.8V      | 99.4V       | 10A             | 8V/h        | 1.0181          | No   |
+      | S18     | 2850    | 1110 | 60V         | 84V         | 81.4V       | 2.5A            | 4V/h        | 1.0             | No   |
     And this wheel is connected:
       | Name    | Bt Name | Bt Address        |
       | Sherman | LK1000  | AB:CD:EF:GH:IJ:KL |
