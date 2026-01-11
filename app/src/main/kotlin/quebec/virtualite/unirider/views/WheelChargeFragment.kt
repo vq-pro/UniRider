@@ -75,7 +75,7 @@ open class WheelChargeFragment : BaseFragment() {
 
         fragments.runUI {
             textName.text = wheel!!.name
-            editAmperage.setText("${wheel!!.chargeAmperage}")
+            editAmperage.setText(stripZeroDecimals(wheel!!.chargeAmperage))
 
             cacheVoltageActual = chargeContext.voltage
             chargerOffset = null
@@ -111,6 +111,7 @@ open class WheelChargeFragment : BaseFragment() {
         if (!isNumeric(km)) displayBlanks()
         else {
             switchFullCharge.isChecked = false
+            editVoltageRequired.setText("")
             display()
         }
     }
@@ -216,7 +217,7 @@ open class WheelChargeFragment : BaseFragment() {
         var amperageString = widgets.getText(editAmperage)
 
         if (amperageString.isEmpty()) {
-            amperageString = "${wheel?.chargeAmperage}"
+            amperageString = stripZeroDecimals(wheel!!.chargeAmperage)
             editAmperage.setText(amperageString)
         }
 
@@ -268,4 +269,6 @@ open class WheelChargeFragment : BaseFragment() {
     private fun offCharge(voltage: Float) = round(voltage - chargerOffset!!)
 
     private fun onCharge(voltage: Float) = round(voltage + chargerOffset!!)
+
+    private fun stripZeroDecimals(f: Float): String = "$f".substringBefore(".0")
 }

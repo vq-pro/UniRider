@@ -39,6 +39,7 @@ Feature: Wheel Charging
     Given I reconnect to update the voltage
     And I request to charge for 30 km
     And it displays an actual voltage of 138.0V
+    And it displays an amperage of 20A
     And it displays these charging estimates:
       | target        | required      | time        |
       | 143.5V (+5.5) | 142.0V (-1.5) | 12:01 (16m) |

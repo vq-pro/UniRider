@@ -271,7 +271,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
         // Then
         verify(mockedWidgets).getText(mockedEditAmperage)
-        verify(mockedEditAmperage).setText("${WHEEL.chargeAmperage}")
+        verify(mockedEditAmperage).setText(formatAmperage(WHEEL.chargeAmperage))
 
         assertThat(result, equalTo(WHEEL.chargeAmperage))
     }
@@ -427,7 +427,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
         verify(mockedTextName).text = WHEEL.name
         verify(mockedSwitchFullCharge).isChecked = true
-        verify(mockedEditAmperage).setText("${WHEEL.chargeAmperage}")
+        verify(mockedEditAmperage).setText(formatAmperage(WHEEL.chargeAmperage))
         verify(mockedEditVoltageActual, never()).setText(anyString())
         verify(mockedEditVoltageRequired, never()).setText(anyString())
 
@@ -535,6 +535,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
         // Then
         verify(mockedSwitchFullCharge).isChecked = false
+        verify(mockedEditVoltageRequired).setText("")
         verify(fragment).display()
     }
 
@@ -715,6 +716,10 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         // Then
         assertThat(fragment.cacheVoltageActual, equalTo(VOLTAGE_NEW))
         assertThat(fragment.chargerOffset, equalTo(value))
+    }
+
+    private fun formatAmperage(amperage: Float): String {
+        return "$amperage".substringBefore(".0")
     }
 
     private fun injectMocks() {

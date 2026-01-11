@@ -61,6 +61,10 @@ class ChargeFragmentObject(val app: TestApp) {
         assertThat(R.id.edit_voltage_actual, hasText(parseVoltage(expectedVoltage)))
     }
 
+    fun validateAmperage(expectedAmperage: String) {
+        assertThat(R.id.edit_charge_amperage, hasText(parseAmps(expectedAmperage)))
+    }
+
     fun validateCannotConnect() {
         assertThat("Connect button is not disabled", R.id.button_connect_charge, isDisabled())
     }
