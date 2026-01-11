@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.database.WheelEntity
+import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_AMPERAGE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.DISTANCE_OFFSET_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW
@@ -56,6 +57,10 @@ class WheelValidatorTest {
         // Voltage max
         canSave(WHEEL.copy(voltageMax = VOLTAGE_MAX_NEW))
         cannotSave(WHEEL.copy(voltageMax = 0f))
+
+        // Charge amperage
+        canSave(WHEEL.copy(chargeAmperage = CHARGE_AMPERAGE_NEW))
+        cannotSave(WHEEL.copy(chargeAmperage = 0f))
 
         // Charge rate
         canSave(WHEEL.copy(chargeRate = CHARGE_RATE_NEW))

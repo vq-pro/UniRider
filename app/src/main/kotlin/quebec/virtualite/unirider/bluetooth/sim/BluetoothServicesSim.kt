@@ -16,6 +16,10 @@ open class BluetoothServicesSim : BluetoothServices {
         private var voltages = listOf(141.01f, 142.5f, 143.5f, 144.0f)
         private var iCurrentVoltage = 0
 
+        fun reset() {
+            iCurrentVoltage = 0
+        }
+
         fun setDevice(device: BluetoothDevice): Companion {
             Companion.device = device
             return this

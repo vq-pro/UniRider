@@ -15,6 +15,7 @@ import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
 private const val SOLD_PREFIX = "- "
+private const val SUFFIX_AMPS = "A"
 private const val SUFFIX_KM = " km"
 private const val SUFFIX_VOLTAGE = "V"
 
@@ -44,6 +45,12 @@ class TestDomain(applicationContext: Context) {
                 assertThat(km, equalTo(""))
                 0
             }
+
+        fun parseAmps(amperage: String): String =
+            if (amperage.contains(SUFFIX_AMPS))
+                amperage.substringBefore(SUFFIX_AMPS)
+            else
+                amperage
 
         fun parseVoltage(voltage: String): String =
             if (voltage.contains(SUFFIX_VOLTAGE))
@@ -107,8 +114,9 @@ class TestDomain(applicationContext: Context) {
                     "Wh",
                     "Voltage Min",
                     "Voltage Max",
-                    "Charge Rate",
                     "Full Charge",
+                    "Charge Amperage",
+                    "Charge Rate",
                     "Distance Offset",
                     "Sold"
                 )
@@ -124,8 +132,9 @@ class TestDomain(applicationContext: Context) {
                 val wh = parseInt(row[col++])
                 val voltageMin = voltageOf(row[col++])
                 val voltageMax = voltageOf(row[col++])
-                val chargeRate = voltsPerHourOf(row[col++])
                 val voltageFull = voltageOf(row[col++])
+                val chargeAmperage = amps(row[col++])
+                val chargeRate = voltsPerHourOf(row[col++])
                 val distanceOffset = floatOf(row[col++])
                 val isSold = parseYesNo(row[col++])
 
@@ -133,7 +142,8 @@ class TestDomain(applicationContext: Context) {
                     0, name, null, null,
                     0, mileage, wh,
                     voltageMax, voltageMin,
-                    chargeRate, voltageFull, distanceOffset, isSold
+                    voltageFull, chargeAmperage, chargeRate,
+                    distanceOffset, isSold
                 )
             }
             .collect(toList())
@@ -163,6 +173,9 @@ class TestDomain(applicationContext: Context) {
             updateMapWheels()
         }
     }
+
+    private fun amps(value: String): Float =
+        floatOfWithSuffix(value, "A")
 
     private fun floatOfWithSuffix(value: String, suffix: String): Float {
         assertThat(value, endsWith(suffix))

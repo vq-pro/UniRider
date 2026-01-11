@@ -2,14 +2,14 @@ Feature: Wheel Viewing
 
   Background:
     Given these wheels:
-      | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
-      | Sherman     | 17622   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1               | No   |
-      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 8V/h        | 99.5V       | 1               | No   |
-      | Sherman L   | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.0667          | No   |
-      | 14S         | 694     | 840  | 48V         | 67.2V       | 4V/h        | 65.5V       | 1               | No   |
-      | S18         | 2850    | 1110 | 60V         | 84V         | 4V/h        | 81.5V       | 1               | No   |
-      | Nikola+     | 2927    | 1800 | 78V         | 100.8V      | 6V/h        | 99.5V       | 1               | Yes  |
-      | Abrams      | 95      | 2700 | 74.5V       | 100.8V      | 14V/h       | 99.5V       | 1               | Yes  |
+      | Name        | Mileage | Wh   | Voltage Min | Voltage Max | Full Charge | Charge Amperage | Charge Rate | Distance Offset | Sold |
+      | Sherman     | 17622   | 3200 | 75.6V       | 100.8V      | 99.5V       | 10A             | 7.5V/h      | 1               | No   |
+      | Sherman Max | 2000    | 3600 | 75.6V       | 100.8V      | 99.5V       | 10A             | 8V/h        | 1               | No   |
+      | Sherman L   | 4000    | 4000 | 104.4V      | 151.2V      | 150.1V      | 20A             | 21V/h       | 1.0667          | No   |
+      | 14S         | 694     | 840  | 48V         | 67.2V       | 65.5V       | 2.5A            | 4V/h        | 1               | No   |
+      | S18         | 2850    | 1110 | 60V         | 84V         | 81.5V       | 2.5A            | 4V/h        | 1               | No   |
+      | Nikola+     | 2927    | 1800 | 78V         | 100.8V      | 99.5V       | 3A              | 6V/h        | 1               | Yes  |
+      | Abrams      | 95      | 2700 | 74.5V       | 100.8V      | 99.5V       | 10A             | 14V/h       | 1               | Yes  |
     And this wheel is connected:
       | Name      | Bt Name | Bt Address        |
       | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |

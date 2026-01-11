@@ -15,12 +15,17 @@ import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
 import quebec.virtualite.unirider.test.app.TestApp
+import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseAmps
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKm
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
 import quebec.virtualite.unirider.views.WheelChargeFragment
 import java.lang.Thread.sleep
 
 class ChargeFragmentObject(val app: TestApp) {
+
+    fun changeAmperageTo(amperage: String) {
+        setText(R.id.edit_charge_amperage, parseAmps(amperage))
+    }
 
     fun changeVoltageActualTo(voltage: String) {
         setText(R.id.edit_voltage_actual, parseVoltage(voltage))
@@ -54,6 +59,10 @@ class ChargeFragmentObject(val app: TestApp) {
 
     fun validateActualVoltage(expectedVoltage: String) {
         assertThat(R.id.edit_voltage_actual, hasText(parseVoltage(expectedVoltage)))
+    }
+
+    fun validateAmperage(expectedAmperage: String) {
+        assertThat(R.id.edit_charge_amperage, hasText(parseAmps(expectedAmperage)))
     }
 
     fun validateCannotConnect() {

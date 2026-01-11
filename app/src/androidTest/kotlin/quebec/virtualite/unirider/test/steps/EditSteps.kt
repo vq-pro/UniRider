@@ -21,6 +21,11 @@ class EditSteps : BaseSteps() {
         super.afterScenario()
     }
 
+    @When("I blank the charge amperage")
+    fun blankChargeAmperage() {
+        editFragment.changeChargeAmperage(" ")
+    }
+
     @When("I blank the charge rate")
     fun blankChargeRate() {
         editFragment.changeChargeRate(" ")
@@ -64,6 +69,11 @@ class EditSteps : BaseSteps() {
     @When("I blank the wh")
     fun blankWh() {
         editFragment.changeWh(" ")
+    }
+
+    @When("I change the charge amperage")
+    fun changeChargeAmperage() {
+        editFragment.changeChargeAmperage("2")
     }
 
     @When("I change the charge rate")

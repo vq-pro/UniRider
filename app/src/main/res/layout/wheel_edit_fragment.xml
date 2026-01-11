@@ -175,7 +175,31 @@
                     />
                 </TableRow>
 
-                <!-- Charge Rate-->
+                <!-- Charge Amperage -->
+                <TableRow>
+                    <TextView
+                            android:labelFor="@+id/edit_charge_amperage"
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:text="@string/label_charge_amperage"
+                    />
+
+                    <EditText
+                            android:id="@+id/edit_charge_amperage"
+                            android:inputType="numberDecimal"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:hint="@string/label_amperage"
+                            android:autofillHints=""
+                    />
+                </TableRow>
+
+                <!-- Charge Rate -->
                 <TableRow>
                     <TextView
                             android:labelFor="@+id/edit_charge_rate"

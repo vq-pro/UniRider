@@ -20,6 +20,8 @@ import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
 import quebec.virtualite.unirider.R
+import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_AMPERAGE
+import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_AMPERAGE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_RATE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.DISTANCE_OFFSET
@@ -55,6 +57,9 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     @Mock
     private lateinit var mockedButtonSave: Button
+
+    @Mock
+    private lateinit var mockedEditChargeAmperage: EditText
 
     @Mock
     private lateinit var mockedEditChargeRate: EditText
@@ -119,7 +124,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.button_delete, fragment.buttonDelete, mockedButtonDelete)
         verifyFieldAssignment(R.id.button_save, fragment.buttonSave, mockedButtonSave)
         verifyFieldAssignment(R.id.check_sold, fragment.switchSold, mockedSwitchSold)
-        verifyFieldAssignment(R.id.edit_name, fragment.editChargeRate, mockedEditChargeRate)
+        verifyFieldAssignment(R.id.edit_charge_amperage, fragment.editChargeAmperage, mockedEditChargeAmperage)
+        verifyFieldAssignment(R.id.edit_charge_rate, fragment.editChargeRate, mockedEditChargeRate)
         verifyFieldAssignment(R.id.edit_distance_offset, fragment.editDistanceOffset, mockedEditDistanceOffset)
         verifyFieldAssignment(R.id.edit_mileage, fragment.editMileage, mockedEditMileage)
         verifyFieldAssignment(R.id.edit_name, fragment.editName, mockedEditName)
@@ -129,6 +135,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyFieldAssignment(R.id.edit_voltage_min, fragment.editVoltageMin, mockedEditVoltageMin)
         verifyFieldAssignment(R.id.edit_wh, fragment.editWh, mockedEditWh)
 
+        verifyOnUpdateText(mockedEditChargeAmperage, "onUpdateChargeAmperage")
         verifyOnUpdateText(mockedEditChargeRate, "onUpdateChargeRate")
         verifyOnUpdateText(mockedEditDistanceOffset, "onUpdateDistanceOffset")
         verifyOnUpdateText(mockedEditName, "onUpdateName")
@@ -142,6 +149,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verifyOnLongClick(mockedButtonDelete, "onDelete")
         verifyOnClick(mockedButtonSave, "onSave")
 
+        verify(mockedEditChargeAmperage).setText("$CHARGE_AMPERAGE")
         verify(mockedEditChargeRate).setText("$CHARGE_RATE")
         verify(mockedEditDistanceOffset).setText("$DISTANCE_OFFSET")
         verify(mockedEditName).setText(NAME)
@@ -271,6 +279,56 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         verify(fragment).enableSaveIfChanged()
 
         assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(isSold = SOLD)))
+    }
+
+    @Test
+    fun onUpdateChargeAmperage() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateChargeAmperage().invoke("$CHARGE_AMPERAGE_NEW ")
+
+        // Then
+        verify(fragment).enableSaveIfChanged()
+
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(chargeAmperage = CHARGE_AMPERAGE_NEW)))
+    }
+
+    @Test
+    fun onUpdateChargeAmperage_whenEmpty_zero() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateChargeAmperage().invoke(" ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(chargeAmperage = 0f)))
+    }
+
+    @Test
+    fun onUpdateChargeAmperage_whenInvalid_zero() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateChargeAmperage().invoke("ab ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(chargeAmperage = 0f)))
+    }
+
+    @Test
+    fun onUpdateChargeAmperage_withTooManyDecimals() {
+        // Given
+        initUpdate()
+
+        // When
+        fragment.onUpdateChargeAmperage().invoke("${CHARGE_AMPERAGE_NEW + 0.001f} ")
+
+        // Then
+        assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(chargeAmperage = CHARGE_AMPERAGE_NEW)))
     }
 
     @Test
@@ -680,6 +738,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_save, mockedButtonSave)
         mockField(R.id.check_sold, mockedSwitchSold)
+        mockField(R.id.edit_charge_amperage, mockedEditChargeAmperage)
         mockField(R.id.edit_charge_rate, mockedEditChargeRate)
         mockField(R.id.edit_distance_offset, mockedEditDistanceOffset)
         mockField(R.id.edit_name, mockedEditName)

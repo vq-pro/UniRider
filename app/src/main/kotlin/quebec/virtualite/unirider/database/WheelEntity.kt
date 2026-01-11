@@ -14,8 +14,9 @@ data class WheelEntity(
     val wh: Int,
     val voltageMax: Float,
     val voltageMin: Float,
-    val chargeRate: Float,
     val voltageFull: Float,
+    val chargeAmperage: Float,
+    val chargeRate: Float,
     val distanceOffset: Float,
     val isSold: Boolean
 ) {
