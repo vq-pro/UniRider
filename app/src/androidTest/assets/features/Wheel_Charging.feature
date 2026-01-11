@@ -2,9 +2,9 @@ Feature: Wheel Charging
 
   Background:
     Given this wheel:
-      | Name      | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
-      | Sherman   | 17622   | 3200 | 75.6V       | 100.8V      | 7.5V/h      | 99.5V       | 1               | No   |
-      | Sherman L | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.0667          | No   |
+      | Name      | Mileage | Wh   | Voltage Min | Voltage Max | Full Charge | Charge Amperage | Charge Rate | Distance Offset | Sold |
+      | Sherman L | 4000    | 4000 | 104.4V      | 151.2V      | 150.1V      | 20A             | 21V/h       | 1.0667          | No   |
+      | Sherman   | 17622   | 3200 | 75.6V       | 100.8V      | 99.5V       | 9.5A            | 7.5V/h      | 1               | No   |
     And this wheel is connected:
       | Name      | Bt Name | Bt Address        |
       | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |
@@ -14,8 +14,6 @@ Feature: Wheel Charging
 
     And the current time is 11:45
     And I start the app
-
-#  FIXME-1 Overriding the default amperage with another value
 
     And I select the Sherman L
     And I set the actual voltage to 137.0V
@@ -37,14 +35,17 @@ Feature: Wheel Charging
       | target        | required      | time        |
       | 143.5V (+3.5) | 142.0V (-1.5) | 11:55 (10m) |
 
-#  Scenario: Changing the amperage of the voltage
-#    Given I reconnect to update the voltage
-#    When I request to charge for <distance>
-#    Then it displays an actual voltage of 138.0V
-#    And the full charge indicator is <fc_indicator>
-#    And it displays these charging estimates:
-#      | target   | required   | time   |
-#      | <target> | <required> | <time> |
+  Scenario: Changing the amperage
+    Given I reconnect to update the voltage
+    And I request to charge for 30 km
+    And it displays an actual voltage of 138.0V
+    And it displays these charging estimates:
+      | target        | required      | time        |
+      | 143.5V (+5.5) | 142.0V (-1.5) | 12:01 (16m) |
+    When I change the amperage to 9.5A
+    Then it displays these charging estimates:
+      | target        | required      | time        |
+      | 143.5V (+5.5) | 142.0V (-1.5) | 12:18 (33m) |
 
   Scenario Outline: Charging a wheel by distance [<distance>]
     Given I reconnect to update the voltage

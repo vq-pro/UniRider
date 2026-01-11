@@ -24,6 +24,7 @@ private val DTF = DateTimeFormatter.ofPattern("HH:mm")
 open class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var buttonConnect: Button
+    internal lateinit var editAmperage: EditText
     internal lateinit var editKm: EditText
     internal lateinit var editVoltageActual: EditText
     internal lateinit var editVoltageRequired: EditText
@@ -51,6 +52,7 @@ open class WheelChargeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonConnect = view.findViewById(R.id.button_connect_charge)
+        editAmperage = view.findViewById(R.id.edit_charge_amperage)
         editKm = view.findViewById(R.id.edit_km)
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         editVoltageRequired = view.findViewById(R.id.edit_voltage_required)
@@ -65,6 +67,7 @@ open class WheelChargeFragment : BaseFragment() {
         textVoltageTargetDiff = view.findViewById(R.id.view_voltage_target_diff)
 
         widgets.setOnClickListener(buttonConnect, onConnect())
+        widgets.addTextChangedListener(editAmperage, onUpdateAmperage())
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
         widgets.addTextChangedListener(editVoltageRequired, onUpdateVoltageRequired())
@@ -72,6 +75,7 @@ open class WheelChargeFragment : BaseFragment() {
 
         fragments.runUI {
             textName.text = wheel!!.name
+            editAmperage.setText("${wheel!!.chargeAmperage}")
 
             cacheVoltageActual = chargeContext.voltage
             chargerOffset = null
@@ -98,14 +102,16 @@ open class WheelChargeFragment : BaseFragment() {
         display()
     }
 
-    fun onUpdateKm() = { km: String ->
-        when {
-            isNumeric(km) -> {
-                switchFullCharge.isChecked = false
-                display()
-            }
+    fun onUpdateAmperage() = { amperage: String ->
+        if (!isNumeric(amperage)) displayBlanks()
+        else display()
+    }
 
-            else -> displayBlanks()
+    fun onUpdateKm() = { km: String ->
+        if (!isNumeric(km)) displayBlanks()
+        else {
+            switchFullCharge.isChecked = false
+            display()
         }
     }
 
@@ -148,7 +154,8 @@ open class WheelChargeFragment : BaseFragment() {
             voltageTarget > cacheVoltageActual!! -> {
 
                 val diff = round(voltageTarget - cacheVoltageActual!!)
-                val rawHours = diff / wheel!!.chargeRate
+                val chargeRateMultiplier = getAmperage() / wheel!!.chargeAmperage
+                val rawHours = diff / (chargeRateMultiplier * wheel!!.chargeRate)
 
                 displayEstimates(diff, rawHours)
             }
@@ -203,6 +210,10 @@ open class WheelChargeFragment : BaseFragment() {
         val time = dateUtils.now().plusHours(hours.toLong()).plusMinutes(minutes.toLong())
 
         return DTF.format(time)
+    }
+
+    internal open fun getAmperage(): Float {
+        return round(floatOf(widgets.getText(editAmperage)))
     }
 
     internal open fun getVoltageRequired(): Float {

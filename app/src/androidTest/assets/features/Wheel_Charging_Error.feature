@@ -2,8 +2,8 @@ Feature: Wheel Charging - ERROR
 
   Background:
     Given this wheel:
-      | Name      | Mileage | Wh   | Voltage Min | Voltage Max | Charge Rate | Full Charge | Distance Offset | Sold |
-      | Sherman L | 4000    | 4000 | 104.4V      | 151.2V      | 21V/h       | 150.1V      | 1.0667          | No   |
+      | Name      | Mileage | Wh   | Voltage Min | Voltage Max | Full Charge | Charge Amperage | Charge Rate | Distance Offset | Sold |
+      | Sherman L | 4000    | 4000 | 104.4V      | 151.2V      | 150.1V      | 20A             | 21V/h       | 1.0667          | No   |
     And this wheel is connected:
       | Name      | Bt Name | Bt Address        |
       | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |

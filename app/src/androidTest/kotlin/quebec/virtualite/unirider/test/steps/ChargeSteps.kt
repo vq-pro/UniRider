@@ -5,6 +5,7 @@ import cucumber.api.java.After
 import cucumber.api.java.Before
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
 import quebec.virtualite.unirider.test.fragments.ChargeFragmentObject
 
 class ChargeSteps : BaseSteps() {
@@ -19,6 +20,13 @@ class ChargeSteps : BaseSteps() {
     @After
     override fun afterScenario() {
         super.afterScenario()
+
+        BluetoothServicesSim.reset()
+    }
+
+    @When("^I change the amperage to (.*)$")
+    fun changeAmperage(newAmperage: String) {
+        chargeFragment.changeAmperageTo(newAmperage)
     }
 
     @When("^I change the actual voltage to (.*)$")

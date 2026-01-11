@@ -15,6 +15,7 @@ import java.lang.Integer.parseInt
 import java.util.stream.Collectors.toList
 
 private const val SOLD_PREFIX = "- "
+private const val SUFFIX_AMPS = "A"
 private const val SUFFIX_KM = " km"
 private const val SUFFIX_VOLTAGE = "V"
 
@@ -44,6 +45,12 @@ class TestDomain(applicationContext: Context) {
                 assertThat(km, equalTo(""))
                 0
             }
+
+        fun parseAmps(amperage: String): String =
+            if (amperage.contains(SUFFIX_AMPS))
+                amperage.substringBefore(SUFFIX_AMPS)
+            else
+                amperage
 
         fun parseVoltage(voltage: String): String =
             if (voltage.contains(SUFFIX_VOLTAGE))
