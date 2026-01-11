@@ -252,10 +252,28 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         mockEditAmperageWith(WHEEL.chargeAmperage)
 
         // When
-        fragment.getAmperage()
+        val result = fragment.getAmperage()
 
         // Then
         verify(mockedWidgets).getText(mockedEditAmperage)
+
+        assertThat(result, equalTo(WHEEL.chargeAmperage))
+    }
+
+    @Test
+    fun getAmperage_whenEmpty() {
+        // Given
+        injectMocks()
+        mockEditAmperageWithEmpty()
+
+        // When
+        val result = fragment.getAmperage()
+
+        // Then
+        verify(mockedWidgets).getText(mockedEditAmperage)
+        verify(mockedEditAmperage).setText("${WHEEL.chargeAmperage}")
+
+        assertThat(result, equalTo(WHEEL.chargeAmperage))
     }
 
     @Test
@@ -752,12 +770,16 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         given(mockedWidgets.getText(mockedEditAmperage)).willReturn("$amperage")
     }
 
-    private fun mockEditKmWithEmpty() {
-        given(mockedWidgets.getText(mockedEditKm)).willReturn("")
+    private fun mockEditAmperageWithEmpty() {
+        given(mockedWidgets.getText(mockedEditAmperage)).willReturn("")
     }
 
     private fun mockEditKmWith(km: Float) {
         given(mockedWidgets.getText(mockedEditKm)).willReturn("$km")
+    }
+
+    private fun mockEditKmWithEmpty() {
+        given(mockedWidgets.getText(mockedEditKm)).willReturn("")
     }
 
     private fun mockEditVoltageRequiredWith(voltage: Float) {

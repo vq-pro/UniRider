@@ -213,7 +213,14 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     internal open fun getAmperage(): Float {
-        return round(floatOf(widgets.getText(editAmperage)))
+        var amperageString = widgets.getText(editAmperage)
+
+        if (amperageString.isEmpty()) {
+            amperageString = "${wheel?.chargeAmperage}"
+            editAmperage.setText(amperageString)
+        }
+
+        return round(floatOf(amperageString))
     }
 
     internal open fun getVoltageRequired(): Float {

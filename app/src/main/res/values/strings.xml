@@ -16,7 +16,8 @@
     <string name="fragment_label_device">Device</string>
     <string name="fragment_label_scan">Devices</string>
     <string name="fragment_label_total_mileage">Total</string>
-    <string name="label_amperage">A</string>
+    <string name="label_amperage">Amperage</string>
+    <string name="label_amperage_suffix">A</string>
     <string name="label_battery">Battery</string>
     <string name="label_bt_name">Bluetooth</string>
     <string name="label_charge_amperage">Charge Amperage</string>

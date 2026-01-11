@@ -236,7 +236,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_charge_amperage"
+                        android:text="@string/label_amperage"
                 />
 
                 <EditText
@@ -257,7 +257,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="@string/label_amperage"
+                        android:text="@string/label_amperage_suffix"
                 />
             </TableRow>
 
