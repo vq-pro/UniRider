@@ -30,9 +30,9 @@ open class ExternalServices(val fragment: CommonFragment<ExternalServices>) : Co
         return db!!
     }
 
-    open fun runDB(function: ((WheelDb) -> Unit)?) {
+    open fun runDB(function: (WheelDb) -> Unit) {
         fragment.fragments.runBackground {
-            function!!(db!!)
+            function(db!!)
         }
     }
 }

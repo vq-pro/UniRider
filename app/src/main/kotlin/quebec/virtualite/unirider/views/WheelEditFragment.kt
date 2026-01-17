@@ -89,20 +89,16 @@ open class WheelEditFragment : BaseFragment() {
                 editWh.setText("${initialWheel.wh}")
                 switchSold.setChecked(initialWheel.isSold)
 
-                if (initialWheel.premileage != 0)
-                    editPreMileage.setText("${initialWheel.premileage}")
+                if (initialWheel.premileage != 0) editPreMileage.setText("${initialWheel.premileage}")
 
-                if (initialWheel.mileage != 0)
-                    editMileage.setText("${initialWheel.mileage}")
+                if (initialWheel.mileage != 0) editMileage.setText("${initialWheel.mileage}")
             }
         } else {
             initialWheel = NEW_WHEEL
             updatedWheel = initialWheel
         }
 
-        fragments.runUI {
-            widgets.disable(buttonSave)
-        }
+        fragments.runUI { widgets.disable(buttonSave) }
     }
 
     fun onDelete(): (View) -> Unit = {
@@ -186,11 +182,9 @@ open class WheelEditFragment : BaseFragment() {
     }
 
     internal open fun enableSaveIfChanged() {
-        if (wheelValidator.canSave(updatedWheel, initialWheel)) {
-            external.runDB { db ->
-                if (db.findDuplicate(updatedWheel)) widgets.disable(buttonSave)
-                else widgets.enable(buttonSave)
-            }
-        } else widgets.disable(buttonSave)
+        val canSave = wheelValidator.canSave(updatedWheel, initialWheel)
+
+        if (!canSave) widgets.disable(buttonSave)
+        else external.runDB { db -> widgets.setEnabled(!db.findDuplicate(updatedWheel), buttonSave) }
     }
 }

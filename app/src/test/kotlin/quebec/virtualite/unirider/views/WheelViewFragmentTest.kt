@@ -4,17 +4,14 @@ import android.view.View.GONE
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.view.isVisible
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.BDDMockito.doNothing
 import org.mockito.BDDMockito.given
-import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.doReturn
@@ -23,6 +20,9 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.services.CalculatorService
@@ -62,9 +62,6 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
     @InjectMocks
     @Spy
     private lateinit var fragment: WheelViewFragment
-
-    @Captor
-    private lateinit var captorExecution: ArgumentCaptor<() -> Unit>
 
     @Mock
     private lateinit var mockedButtonCharge: Button
@@ -152,9 +149,10 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.clearEstimates()
 
         // Then
-        verify(mockedWidgets).hide(
-            mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
-        )
+        verify(mockedTextRemainingRange).isVisible = false
+        verify(mockedLabelRemainingRange).isVisible = false
+        verify(mockedTextTotalRange).isVisible = false
+        verify(mockedLabelTotalRange).isVisible = false
         verify(mockedWidgets).disable(mockedButtonCharge)
     }
 
@@ -167,7 +165,8 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.clearPercentage()
 
         // Then
-        verify(mockedWidgets).hide(mockedTextBattery, mockedLabelBattery)
+        verify(mockedTextBattery).isVisible = false
+        verify(mockedLabelBattery).isVisible = false
     }
 
     @Test
@@ -248,8 +247,10 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.onCharge().invoke(mockedView)
 
         // Then
-        verify(fragment).reconnect(captorExecution.capture())
-        captorExecution.value.invoke()
+        argumentCaptor<() -> Unit>().apply {
+            verify(fragment).reconnect(capture())
+            firstValue.invoke()
+        }
 
         verify(fragment).startCharging()
     }
@@ -359,9 +360,9 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         fragment.initialDisplayBluetoothSettings()
 
         // Then
-        verify(mockedWidgets).show(mockedLabelBtName)
         verify(mockedTextBtName).text = DEVICE_NAME
         verify(mockedTextBtAddr).text = DEVICE_ADDR
+        verify(mockedLabelBtName, atLeastOnce()).isVisible = true
     }
 
     @Test
@@ -380,7 +381,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedButtonCharge).visibility = GONE
         verify(mockedButtonConnect).visibility = GONE
 
-        verify(fragment, never()).refreshDisplay(anyFloat(), anyFloat())
+        verify(fragment, never()).refreshDisplay(any(), any())
     }
 
     @Test
@@ -564,7 +565,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
-        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(BaseFragment.wheel, VOLTAGE)
+        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(wheel, VOLTAGE)
         doNothing().`when`(fragment).refreshEstimates(VOLTAGE, KM)
 
         // When
@@ -610,20 +611,20 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         injectMocks()
 
         val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE)
-        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
+        doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(wheel!!, VOLTAGE, KM)
 
         // When
         fragment.refreshEstimates(VOLTAGE, KM)
 
         // Then
-        verify(mockedCalculatorService).estimatedValues(BaseFragment.wheel!!, VOLTAGE, KM)
+        verify(mockedCalculatorService).estimatedValues(wheel!!, VOLTAGE, KM)
 
+        verify(mockedTextRemainingRange).isVisible = true
         verify(mockedTextRemainingRange).text = "$REMAINING_RANGE"
+        verify(mockedLabelRemainingRange).isVisible = true
+        verify(mockedTextTotalRange).isVisible = true
         verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
-
-        verify(mockedWidgets).show(
-            mockedTextRemainingRange, mockedLabelRemainingRange, mockedTextTotalRange, mockedLabelTotalRange
-        )
+        verify(mockedLabelTotalRange).isVisible = true
         verify(mockedWidgets).enable(mockedButtonCharge)
 
         assertThat(fragment.estimates, equalTo(estimates))
@@ -634,16 +635,17 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
-        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(BaseFragment.wheel, VOLTAGE)
+        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(wheel, VOLTAGE)
 
         // When
         fragment.updatePercentageFor(VOLTAGE)
 
         // Then
-        verify(mockedCalculatorService).percentage(BaseFragment.wheel, VOLTAGE)
+        verify(mockedCalculatorService).percentage(wheel, VOLTAGE)
 
         verify(mockedTextBattery).text = "$PERCENTAGE"
-        verify(mockedWidgets).show(mockedTextBattery, mockedLabelBattery)
+        verify(mockedTextBattery).isVisible = true
+        verify(mockedLabelBattery).isVisible = true
     }
 
     @Test

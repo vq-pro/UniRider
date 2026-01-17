@@ -5,10 +5,9 @@ import java.util.Objects.equals
 
 open class WheelValidator {
 
-    // Parameters need to be nullable for unit testing - any()
-    open fun canSave(updatedWheel: WheelEntity?, initialWheel: WheelEntity?): Boolean {
+    open fun canSave(updatedWheel: WheelEntity, initialWheel: WheelEntity): Boolean {
         if (equals(updatedWheel, initialWheel)
-            || updatedWheel!!.name == ""
+            || updatedWheel.name == ""
             || updatedWheel.wh == 0
             || updatedWheel.voltageMin == 0f
             || updatedWheel.voltageMax == 0f
@@ -23,7 +22,7 @@ open class WheelValidator {
         )
             return false
 
-        return (updatedWheel.chargeAmperage != initialWheel!!.chargeAmperage) ||
+        return (updatedWheel.chargeAmperage != initialWheel.chargeAmperage) ||
             (updatedWheel.chargeRate != initialWheel.chargeRate) ||
             (updatedWheel.distanceOffset != initialWheel.distanceOffset) ||
             (updatedWheel.isSold != initialWheel.isSold) ||

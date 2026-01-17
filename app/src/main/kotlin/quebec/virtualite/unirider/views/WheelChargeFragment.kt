@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.google.android.material.switchmaterial.SwitchMaterial
 import quebec.virtualite.commons.android.utils.DateUtils
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
@@ -80,18 +81,16 @@ open class WheelChargeFragment : BaseFragment() {
             cacheVoltageActual = chargeContext.voltage
             chargerOffset = null
 
-            if (!wheel!!.isConnected())
-                widgets.disable(buttonConnect)
-
             switchFullCharge.isChecked = true
+            widgets.setEnabled(wheel!!.isConnected(), buttonConnect)
         }
     }
 
     fun onConnect(): (View) -> Unit = {
         fragments.runWithWait {
-            external.bluetooth().getDeviceInfo(wheel!!.btAddr) { msg ->
+            external.bluetooth().getDeviceInfo(wheel!!.btAddr!!) { msg ->
                 fragments.doneWaiting(msg) {
-                    editVoltageActual.setText("${round(msg!!.voltage)}")
+                    editVoltageActual.setText("${round(msg.voltage)}")
                     display()
                 }
             }
@@ -120,17 +119,12 @@ open class WheelChargeFragment : BaseFragment() {
         if (isNumeric(voltage) && floatOf(voltage) >= wheel!!.voltageMin) {
             updateVoltageActual(floatOf(voltage))
 
-            if (switchFullCharge.isChecked
-                || !widgets.getText(editKm).isEmpty()
-                || !widgets.getText(editVoltageRequired).isEmpty()
-            )
+            if (switchFullCharge.isChecked || !widgets.getText(editKm).isEmpty() || !widgets.getText(editVoltageRequired).isEmpty())
 
                 display()
-            else
-                displayBlanks()
+            else displayBlanks()
 
-        } else
-            displayBlanks()
+        } else displayBlanks()
     }
 
     fun onUpdateVoltageRequired() = { voltage: String ->
@@ -147,8 +141,7 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     internal open fun display() {
-        if (chargerOffset == null)
-            return
+        if (chargerOffset == null) return
 
         val voltageTarget = onCharge(getVoltageRequired())
         if (voltageTarget <= cacheVoltageActual!!) displayGo()
@@ -248,10 +241,7 @@ open class WheelChargeFragment : BaseFragment() {
         cacheVoltageActual = voltage
 
         if (chargerOffset == null) {
-            fragments.runUI {
-                widgets.hide(textChargeWarning)
-            }
-
+            fragments.runUI { textChargeWarning.isVisible = false }
             chargerOffset = round(cacheVoltageActual!! - chargeContext.voltage)
         }
     }

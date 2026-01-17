@@ -11,14 +11,13 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.StringContains.containsString
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.lenient
-import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.verify
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.views.CommonFragmentServices
 import quebec.virtualite.commons.android.views.CommonWidgetServices
@@ -64,33 +63,6 @@ open class FragmentTestBase(fragmentType: Class<*>) {
     @Mock
     lateinit var mockedWidgets: CommonWidgetServices
 
-    @Captor
-    private lateinit var captorOnClick: ArgumentCaptor<(View) -> Unit>
-
-    @Captor
-    private lateinit var captorOnDisplay: ArgumentCaptor<(View, Any) -> Unit>
-
-    @Captor
-    private lateinit var captorOnFoundDevice: ArgumentCaptor<(BluetoothDevice) -> Unit>
-
-    @Captor
-    private lateinit var captorOnGotDeviceInfo: ArgumentCaptor<(WheelInfo?) -> Unit>
-
-    @Captor
-    private lateinit var captorOnItemClick: ArgumentCaptor<(View, Int) -> Unit>
-
-    @Captor
-    private lateinit var captorOnItemSelected: ArgumentCaptor<(View?, Int, String) -> Unit>
-
-    @Captor
-    private lateinit var captorOnUpdateSwitch: ArgumentCaptor<(Boolean) -> Unit>
-
-    @Captor
-    private lateinit var captorOnUpdateText: ArgumentCaptor<(String) -> Unit>
-
-    @Captor
-    private lateinit var captorRunWithWaitDialog: ArgumentCaptor<() -> Unit>
-
     @Suppress("UNCHECKED_CAST")
     fun mockExternal() {
         lenient().doReturn(mockedConnector)
@@ -99,7 +71,7 @@ open class FragmentTestBase(fragmentType: Class<*>) {
         lenient().doReturn(mockedDb)
             .`when`(mockedExternal).db()
 
-        lenient().doAnswer { (it.arguments[0] as ((WheelDb) -> Unit)).invoke(mockedDb) }
+        lenient().doAnswer { (it.arguments[0] as (WheelDb) -> Unit).invoke(mockedDb) }
             .`when`(mockedExternal).runDB(any())
     }
 
@@ -125,18 +97,24 @@ open class FragmentTestBase(fragmentType: Class<*>) {
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {
-        verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), captorOnGotDeviceInfo.capture())
-        captorOnGotDeviceInfo.value.invoke(wheelInfo)
+        argumentCaptor<(WheelInfo?) -> Unit>().apply {
+            verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), capture())
+            firstValue.invoke(wheelInfo)
+        }
     }
 
     fun verifyConnectorScanWith(device: BluetoothDevice) {
-        verify(mockedConnector).scan(captorOnFoundDevice.capture())
-        captorOnFoundDevice.value.invoke(device)
+        argumentCaptor<(BluetoothDevice) -> Unit>().apply {
+            verify(mockedConnector).scan(capture())
+            firstValue.invoke(device)
+        }
     }
 
     fun verifyDoneWaiting(connectionPayload: Any) {
-        verify(mockedFragments).doneWaiting(eq(connectionPayload), captorRunWithWaitDialog.capture())
-        captorRunWithWaitDialog.value.invoke()
+        argumentCaptor<() -> Unit>().apply {
+            verify(mockedFragments).doneWaiting(eq(connectionPayload), capture())
+            firstValue.invoke()
+        }
     }
 
     fun <T : View?> verifyFieldAssignment(id: Int, field: T, mock: T) {
@@ -158,51 +136,72 @@ open class FragmentTestBase(fragmentType: Class<*>) {
     fun <T> verifyMultiFieldListAdapter(
         mockedField: ListView, expectedId: Int, expectedData: List<T>, methodName: String
     ) {
-        verify(mockedWidgets).multifieldListAdapter(
-            eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData),
-            (captorOnDisplay as ArgumentCaptor<(View, T) -> Unit>).capture()
-        )
-        assertThat(captorOnDisplay.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        argumentCaptor<(View, T) -> Unit>().apply {
+            verify(mockedWidgets).multifieldListAdapter(
+                eq(mockedField),
+                eq(mockedView),
+                eq(expectedId),
+                eq(expectedData),
+                capture()
+            )
+            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        }
     }
 
     fun verifyOnClick(mockedField: View, methodName: String) {
-        verify(mockedWidgets).setOnClickListener(eq(mockedField), captorOnClick.capture())
-        assertThat(captorOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        argumentCaptor<(View) -> Unit>().apply {
+            verify(mockedWidgets).setOnClickListener(eq(mockedField), capture())
+            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        }
     }
 
     fun verifyOnItemClick(mockedField: ListView, methodName: String) {
-        verify(mockedWidgets).setOnItemClickListener(eq(mockedField), captorOnItemClick.capture())
-        assertThat(captorOnItemClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        argumentCaptor<(View, Int) -> Unit>().apply {
+            verify(mockedWidgets).setOnItemClickListener(eq(mockedField), capture())
+            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        }
     }
 
     fun verifyOnItemSelected(mockedField: Spinner, methodName: String) {
-        verify(mockedWidgets).setOnItemSelectedListener(eq(mockedField), captorOnItemSelected.capture())
-        assertThat(captorOnItemSelected.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        argumentCaptor<(View, Int, String) -> Unit>().apply {
+            verify(mockedWidgets).setOnItemSelectedListener(eq(mockedField), capture())
+            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        }
     }
 
     fun verifyOnLongClick(mockedField: View, methodName: String) {
-        verify(mockedWidgets).setOnLongClickListener(eq(mockedField), captorOnClick.capture())
-        assertThat(captorOnClick.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        argumentCaptor<(View) -> Unit>().apply {
+            verify(mockedWidgets).setOnLongClickListener(eq(mockedField), capture())
+            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        }
     }
 
     fun verifyOnToggleSwitch(mockedField: SwitchMaterial, methodName: String) {
-        verify(mockedWidgets).setOnCheckedChangeListener(eq(mockedField), captorOnUpdateSwitch.capture())
-        assertThat(captorOnUpdateSwitch.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        argumentCaptor<(Boolean) -> Unit>().apply {
+            verify(mockedWidgets).setOnCheckedChangeListener(eq(mockedField), capture())
+            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        }
     }
 
     fun verifyOnUpdateText(mockedField: EditText, methodName: String) {
-        verify(mockedWidgets).addTextChangedListener(eq(mockedField), captorOnUpdateText.capture())
-        assertThat(captorOnUpdateText.value.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        argumentCaptor<(String) -> Unit>().apply {
+            verify(mockedWidgets).addTextChangedListener(eq(mockedField), capture())
+            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+        }
     }
 
     fun verifyRunWithWaitDialog() {
-        verify(mockedFragments).runWithWait(captorRunWithWaitDialog.capture())
-        captorRunWithWaitDialog.value.invoke()
+        argumentCaptor<() -> Unit>().apply {
+            verify(mockedFragments).runWithWait(capture())
+            firstValue.invoke()
+        }
     }
 
     fun verifyRunWithWaitDialogAndBack() {
-        verify(mockedFragments).runWithWaitAndBack(captorRunWithWaitDialog.capture())
-        captorRunWithWaitDialog.value.invoke()
+        argumentCaptor<() -> Unit>().apply {
+            verify(mockedFragments).runWithWaitAndBack(capture())
+            firstValue.invoke()
+        }
     }
 
     fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {

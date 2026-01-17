@@ -8,9 +8,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -19,6 +16,7 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_AMPERAGE
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_AMPERAGE_NEW
@@ -174,12 +172,12 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedDb, never()).getWheel(anyLong())
-        verify(mockedWidgets).disable(mockedButtonSave)
+        verify(mockedDb, never()).getWheel(any())
 
-        verify(mockedEditName, never()).setText(anyString())
-        verify(mockedEditVoltageMax, never()).setText(anyString())
-        verify(mockedEditVoltageMin, never()).setText(anyString())
+        verify(mockedEditName, never()).setText(any<String>())
+        verify(mockedEditVoltageMax, never()).setText(any<String>())
+        verify(mockedEditVoltageMin, never()).setText(any<String>())
+        verify(mockedWidgets).disable(mockedButtonSave)
 
         assertThat(fragment.initialWheel, equalTo(newWheel))
         assertThat(fragment.updatedWheel, equalTo(newWheel))
@@ -194,8 +192,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedEditPreMileage, never()).setText(anyString())
-        verify(mockedEditMileage, never()).setText(anyString())
+        verify(mockedEditPreMileage, never()).setText(any<String>())
+        verify(mockedEditMileage, never()).setText(any<String>())
     }
 
     @Test
@@ -209,7 +207,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(definedWheel())
-        verify(mockedWidgets).enable(mockedButtonSave)
+        verify(mockedWidgets).setEnabled(true, mockedButtonSave)
     }
 
     @Test
@@ -225,7 +223,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(definedWheel())
-        verify(mockedWidgets).disable(mockedButtonSave)
+        verify(mockedWidgets).setEnabled(false, mockedButtonSave)
     }
 
     @Test

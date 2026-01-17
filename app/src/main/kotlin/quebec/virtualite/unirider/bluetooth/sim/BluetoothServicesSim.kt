@@ -42,19 +42,19 @@ open class BluetoothServicesSim : BluetoothServices {
         }
     }
 
-    override fun getDeviceInfo(deviceAddress: String?, onGotInfo: ((WheelInfo?) -> Unit)?) {
+    override fun getDeviceInfo(deviceAddress: String, onGotInfo: (WheelInfo) -> Unit) {
         sleep(BLUETOOTH_SIMULATED_DELAY)
 
         val voltage = voltages[iCurrentVoltage]
         if (++iCurrentVoltage >= voltages.size)
             iCurrentVoltage = 0
 
-        onGotInfo!!.invoke(WheelInfo(km, mileage, 0f, voltage))
+        onGotInfo.invoke(WheelInfo(km, mileage, 0f, voltage))
     }
 
-    override fun scan(onFound: ((BluetoothDevice) -> Unit)?) {
+    override fun scan(onFound: (BluetoothDevice) -> Unit) {
         sleep(BLUETOOTH_SIMULATED_DELAY)
-        onFound!!.invoke(device)
+        onFound.invoke(device)
     }
 
     override fun stopScanning() {

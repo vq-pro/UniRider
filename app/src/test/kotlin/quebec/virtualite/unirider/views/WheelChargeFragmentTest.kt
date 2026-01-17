@@ -3,6 +3,7 @@ package quebec.virtualite.unirider.views
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.nullValue
@@ -10,8 +11,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyFloat
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.doNothing
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
@@ -23,6 +22,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.Spy
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import quebec.virtualite.commons.android.utils.DateUtils.Companion.simulateNow
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
@@ -256,6 +256,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
         // Then
         verify(mockedWidgets).getText(mockedEditAmperage)
+        verify(mockedEditAmperage, never()).getText()
 
         assertThat(result, equalTo(WHEEL.chargeAmperage))
     }
@@ -428,8 +429,8 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verify(mockedTextName).text = WHEEL.name
         verify(mockedSwitchFullCharge).isChecked = true
         verify(mockedEditAmperage).setText(formatAmperage(WHEEL.chargeAmperage))
-        verify(mockedEditVoltageActual, never()).setText(anyString())
-        verify(mockedEditVoltageRequired, never()).setText(anyString())
+        verify(mockedEditVoltageActual, never()).setText(any<String>())
+        verify(mockedEditVoltageRequired, never()).setText(any<String>())
 
         assertThat(fragment.cacheVoltageActual, equalTo(VOLTAGE))
         assertThat(fragment.chargerOffset, nullValue())
@@ -444,7 +445,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
-        verify(mockedWidgets).disable(mockedButtonConnect)
+        verify(mockedWidgets).setEnabled(false, mockedButtonConnect)
     }
 
     @Test
@@ -646,7 +647,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
         // Then
         verify(fragment).displayBlanks()
-        verify(fragment, never()).updateVoltageActual(anyFloat())
+        verify(fragment, never()).updateVoltageActual(any<Float>())
     }
 
     @Test
@@ -696,7 +697,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.updateVoltageActual(VOLTAGE_NEW)
 
         // Then
-        verify(mockedWidgets).hide(mockedTextChargeWarning)
+        verify(mockedTextChargeWarning).isVisible = false
 
         assertThat(fragment.cacheVoltageActual, equalTo(VOLTAGE_NEW))
         assertThat(fragment.chargerOffset, equalTo(round(VOLTAGE_NEW - VOLTAGE)))

@@ -33,7 +33,7 @@ open class WheelScanFragment : BaseFragment() {
 
     fun onDisplayDevice() = { view: View, item: BluetoothDevice ->
         val textName = view.findViewById<TextView?>(android.R.id.text1)
-        textName.text = item.name
+        textName?.text = item.name
     }
 
     fun onSelectDevice(): (View, Int) -> Unit = { _: View, pos: Int ->
@@ -53,7 +53,7 @@ open class WheelScanFragment : BaseFragment() {
                     wheel = wheel!!.copy(
                         btName = device.name,
                         btAddr = device.address,
-                        mileage = info!!.mileage.roundToInt()
+                        mileage = info.mileage.roundToInt()
                     )
                     db.saveWheel(wheel)
                 }

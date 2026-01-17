@@ -13,12 +13,12 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
 
     private var waitDialog: ProgressDialog? = null
 
-    open fun doneWaiting(payload: Any?, function: (() -> Unit)?) {
+    open fun doneWaiting(payload: Any, function: () -> Unit) {
         if (waitDialogWasDismissed())
             return
 
         hideWaitDialog()
-        payload?.let { function!!.invoke() }
+        payload.let { function.invoke() }
     }
 
     internal open fun navigateBack(nb: Int = 1) {
@@ -36,21 +36,21 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         runUI { fragment.findNavController().navigate(id) }
     }
 
-    open fun runBackground(function: (() -> Unit)?) {
+    open fun runBackground(function: () -> Unit) {
         fragment.lifecycleScope.launch(Dispatchers.IO) {
-            function!!()
+            function()
         }
     }
 
-    open fun runWithWait(function: (() -> Unit)?) {
-        waitDialog(STAY_IN_FRAGMENT, function!!)
+    open fun runWithWait(function: () -> Unit) {
+        waitDialog(STAY_IN_FRAGMENT, function)
     }
 
-    open fun runWithWaitAndBack(function: (() -> Unit)?) {
-        waitDialog(BACK_ON_CANCEL, function!!)
+    open fun runWithWaitAndBack(function: () -> Unit) {
+        waitDialog(BACK_ON_CANCEL, function)
     }
 
-    open fun runUI(function: (() -> Unit)?) {
+    open fun runUI(function: () -> Unit) {
         fragment.activity?.runOnUiThread(function)
     }
 

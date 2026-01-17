@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.view.isVisible
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.isNumeric
 import quebec.virtualite.commons.android.utils.NumberUtils.round
@@ -36,7 +37,7 @@ open class WheelViewFragment : BaseFragment() {
     internal lateinit var textRemainingRange: TextView
     internal lateinit var textTotalRange: TextView
 
-    internal var estimates: EstimatedValues? = null
+    internal lateinit var estimates: EstimatedValues
 
     private var calculatorService = CalculatorService()
 
@@ -115,23 +116,19 @@ open class WheelViewFragment : BaseFragment() {
 
     internal open fun clearEstimates() {
         fragments.runUI {
-            widgets.hide(
-                textRemainingRange, labelRemainingRange, textTotalRange, labelTotalRange
-            )
+            hide(textRemainingRange)
+            hide(textTotalRange)
             widgets.disable(buttonCharge)
         }
     }
 
     internal open fun clearPercentage() {
-        widgets.hide(
-            textBattery, labelBattery
-        )
+        hide(textBattery)
     }
 
     internal open fun initialDisplayBluetoothSettings() {
-        widgets.show(labelBtName)
-        textBtName.setText(wheel!!.btName)
-        textBtAddr.setText(wheel!!.btAddr)
+        show(textBtName, wheel!!.btName!!)
+        show(textBtAddr, wheel!!.btAddr!!)
     }
 
     @SuppressLint("SetTextI18n")
@@ -169,11 +166,11 @@ open class WheelViewFragment : BaseFragment() {
     internal open fun readVoltageActual() =
         parseVoltage(widgets.getText(editVoltageActual))
 
-    internal open fun reconnect(execution: (() -> Unit)? = {}) {
+    internal open fun reconnect(execution: () -> Unit = {}) {
         fragments.runWithWait {
-            external.bluetooth().getDeviceInfo(wheel!!.btAddr) {
+            external.bluetooth().getDeviceInfo(wheel!!.btAddr!!) {
                 fragments.doneWaiting(it) {
-                    val newKm = it!!.km / wheel!!.distanceOffset
+                    val newKm = it.km / wheel!!.distanceOffset
                     val newMileage = it.mileage.roundToInt()
                     val newVoltage = it.voltage
 
@@ -181,9 +178,7 @@ open class WheelViewFragment : BaseFragment() {
                         round(newKm), newMileage, round(newVoltage)
                     )
 
-                    fragments.runUI {
-                        execution?.invoke()
-                    }
+                    fragments.runUI { execution.invoke() }
                 }
             }
         }
@@ -203,15 +198,8 @@ open class WheelViewFragment : BaseFragment() {
         fragments.runUI {
             estimates = calculatorService.estimatedValues(wheel!!, voltage, km)
 
-            textRemainingRange.text = textKmWithDecimal(estimates!!.remainingRange)
-            textTotalRange.text = textKmWithDecimal(estimates!!.totalRange)
-
-            widgets.show(
-                textRemainingRange,
-                labelRemainingRange,
-                textTotalRange,
-                labelTotalRange
-            )
+            show(textRemainingRange, textKmWithDecimal(estimates.remainingRange))
+            show(textTotalRange, textKmWithDecimal(estimates.totalRange))
             widgets.enable(buttonCharge)
         }
     }
@@ -230,10 +218,30 @@ open class WheelViewFragment : BaseFragment() {
     internal open fun updatePercentageFor(voltageActual: Float) {
         fragments.runUI {
             val percentage = calculatorService.percentage(wheel!!, voltageActual)
-
-            textBattery.text = textPercentageWithDecimal(percentage)
-            widgets.show(textBattery, labelBattery)
+            show(textBattery, textPercentageWithDecimal(percentage))
         }
+    }
+
+    private fun hide(field: TextView) {
+        show(field, false)
+    }
+
+    private fun show(field: TextView, display: Boolean) {
+        field.isVisible = display
+
+        when (field) {
+            textBtName,
+            textBtAddr -> labelBtName.isVisible = display
+
+            textBattery -> labelBattery.isVisible = display
+            textRemainingRange -> labelRemainingRange.isVisible = display
+            textTotalRange -> labelTotalRange.isVisible = display
+        }
+    }
+
+    private fun show(field: TextView, value: String) {
+        field.text = value
+        show(field, true)
     }
 
     @SuppressLint("SetTextI18n")
