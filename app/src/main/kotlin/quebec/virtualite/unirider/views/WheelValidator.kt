@@ -3,9 +3,9 @@ package quebec.virtualite.unirider.views
 import quebec.virtualite.unirider.database.WheelEntity
 import java.util.Objects.equals
 
-open class WheelValidator {
+class WheelValidator {
 
-    open fun canSave(updatedWheel: WheelEntity, initialWheel: WheelEntity): Boolean {
+    fun canSave(updatedWheel: WheelEntity, initialWheel: WheelEntity): Boolean {
         if (equals(updatedWheel, initialWheel)
             || updatedWheel.name == ""
             || updatedWheel.wh == 0

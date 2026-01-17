@@ -15,11 +15,11 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.commons.android.views.impl.CustomListAdapter
 
-open class CommonWidgetServices {
+class CommonWidgetServices {
 
     private val POST_DELAY = 10L
 
-    open fun <T> addListViewEntry(listView: ListView, items: ArrayList<T>, entry: T) {
+    fun <T> addListViewEntry(listView: ListView, items: ArrayList<T>, entry: T) {
         val updatedList = ArrayList<T>()
         setList(updatedList, items)
         updatedList.add(entry)
@@ -27,7 +27,7 @@ open class CommonWidgetServices {
         setListViewEntries(listView, items, updatedList.sortedBy { it.toString() })
     }
 
-    open fun addTextChangedListener(widget: EditText, callback: (text: String) -> Unit) {
+    fun addTextChangedListener(widget: EditText, callback: (text: String) -> Unit) {
         widget.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(field: Editable?) {}
 
@@ -39,27 +39,27 @@ open class CommonWidgetServices {
         })
     }
 
-    open fun clearSelection(spinner: Spinner) {
+    fun clearSelection(spinner: Spinner) {
         notifyOnChanged(spinner)
     }
 
-    open fun disable(vararg widgets: View) {
+    fun disable(vararg widgets: View) {
         setEnabled(false, *widgets)
     }
 
-    open fun enable(vararg widgets: View) {
+    fun enable(vararg widgets: View) {
         setEnabled(true, *widgets)
     }
 
-    open fun getText(edit: EditText): String {
+    fun getText(edit: EditText): String {
         return edit.text.toString().trim()
     }
 
-    open fun <T> multifieldListAdapter(listView: ListView, view: View, id: Int, items: List<T>, display: (View, T) -> Unit) {
+    fun <T> multifieldListAdapter(listView: ListView, view: View, id: Int, items: List<T>, display: (View, T) -> Unit) {
         listView.adapter = CustomListAdapter(view.context, id, items, display)
     }
 
-    open fun onItemSelectedListener(callback: (index: Int) -> Unit): OnItemSelectedListener {
+    fun onItemSelectedListener(callback: (index: Int) -> Unit): OnItemSelectedListener {
         return object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 callback(position)
@@ -69,7 +69,7 @@ open class CommonWidgetServices {
         }
     }
 
-    open fun setEnabled(isEnabled: Boolean, vararg widgets: View) {
+    fun setEnabled(isEnabled: Boolean, vararg widgets: View) {
         for (widget in widgets) {
             widget.postDelayed({
                 widget.isEnabled = isEnabled
@@ -78,29 +78,29 @@ open class CommonWidgetServices {
         }
     }
 
-    open fun <T> setListViewEntries(listView: ListView, listViewItems: ArrayList<T>, newItems: List<T>) {
+    fun <T> setListViewEntries(listView: ListView, listViewItems: ArrayList<T>, newItems: List<T>) {
         setList(listViewItems, newItems)
         notifyOnChanged(listView)
     }
 
-    open fun setOnCheckedChangeListener(widget: SwitchMaterial, callback: (value: Boolean) -> Unit) {
+    fun setOnCheckedChangeListener(widget: SwitchMaterial, callback: (value: Boolean) -> Unit) {
         widget.setOnCheckedChangeListener { buttonView, isChecked ->
             callback.invoke(isChecked)
         }
     }
 
-    open fun setOnClickListener(widget: View, callback: (View) -> Unit) {
+    fun setOnClickListener(widget: View, callback: (View) -> Unit) {
         widget.setOnClickListener { view -> callback(view) }
     }
 
-    open fun setOnItemClickListener(listView: ListView, callback: (View, Int) -> Unit) {
+    fun setOnItemClickListener(listView: ListView, callback: (View, Int) -> Unit) {
         listView.setOnItemClickListener { _: AdapterView<*>, view: View, position: Int, _: Long ->
 //            val item = listView.getItemAtPosition(position) as String
             callback(view, position)
         }
     }
 
-    open fun setOnItemSelectedListener(spinner: Spinner, callback: (View, Int, String) -> Unit) {
+    fun setOnItemSelectedListener(spinner: Spinner, callback: (View, Int, String) -> Unit) {
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val text = spinner.getItemAtPosition(position) as String
@@ -114,23 +114,23 @@ open class CommonWidgetServices {
         }
     }
 
-    open fun setOnLongClickListener(widget: View, callback: (View) -> Unit) {
+    fun setOnLongClickListener(widget: View, callback: (View) -> Unit) {
         widget.setOnLongClickListener { view ->
             callback(view)
             true
         }
     }
 
-    open fun setSelection(spinner: Spinner, index: Int) {
+    fun setSelection(spinner: Spinner, index: Int) {
         notifyOnChanged(spinner)
         spinner.setSelection(index, true)
     }
 
-    open fun stringListAdapter(listView: ListView, view: View, contents: List<String>) {
+    fun stringListAdapter(listView: ListView, view: View, contents: List<String>) {
         listView.adapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, contents)
     }
 
-    open fun stringListAdapter(spinner: Spinner, view: View, contents: List<String>) {
+    fun stringListAdapter(spinner: Spinner, view: View, contents: List<String>) {
         val spinnerAdapter = object : ArrayAdapter<String>(view.context, android.R.layout.simple_spinner_item, contents) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val textView = super.getView(position, convertView, parent) as TextView

@@ -7,7 +7,7 @@ import java.lang.Thread.sleep
 
 private const val BLUETOOTH_SIMULATED_DELAY = 0L
 
-open class BluetoothServicesSim : BluetoothServices {
+class BluetoothServicesSim : BluetoothServices {
 
     companion object {
         private var device = BluetoothDevice("LK13447", "AB:CD:EF:GH:IJ:KL")

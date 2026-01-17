@@ -6,14 +6,14 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-open class CommonFragmentServices(val fragment: CommonFragment<*>, private val idStringPleaseWait: Int) {
+class CommonFragmentServices(val fragment: CommonFragment<*>, private val idStringPleaseWait: Int) {
 
     private val BACK_ON_CANCEL = true
     private val STAY_IN_FRAGMENT = false
 
     private var waitDialog: ProgressDialog? = null
 
-    open fun doneWaiting(payload: Any, function: () -> Unit) {
+    fun doneWaiting(payload: Any, function: () -> Unit) {
         if (waitDialogWasDismissed())
             return
 
@@ -21,7 +21,33 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
         payload.let { function.invoke() }
     }
 
-    internal open fun navigateBack(nb: Int = 1) {
+    fun navigateTo(id: Int) {
+        runUI { fragment.findNavController().navigate(id) }
+    }
+
+    fun runBackground(function: () -> Unit) {
+        fragment.lifecycleScope.launch(Dispatchers.IO) {
+            function()
+        }
+    }
+
+    fun runWithWait(function: () -> Unit) {
+        waitDialog(STAY_IN_FRAGMENT, function)
+    }
+
+    fun runWithWaitAndBack(function: () -> Unit) {
+        waitDialog(BACK_ON_CANCEL, function)
+    }
+
+    fun runUI(function: () -> Unit) {
+        fragment.activity?.runOnUiThread(function)
+    }
+
+    fun string(id: Int): String {
+        return fragment.activity?.applicationContext?.getString(id)!!
+    }
+
+    internal fun navigateBack(nb: Int = 1) {
         runUI {
             if (nb < 1)
                 throw RuntimeException("Cannot go back $nb times")
@@ -30,32 +56,6 @@ open class CommonFragmentServices(val fragment: CommonFragment<*>, private val i
             while (i-- > 0)
                 fragment.findNavController().popBackStack()
         }
-    }
-
-    open fun navigateTo(id: Int) {
-        runUI { fragment.findNavController().navigate(id) }
-    }
-
-    open fun runBackground(function: () -> Unit) {
-        fragment.lifecycleScope.launch(Dispatchers.IO) {
-            function()
-        }
-    }
-
-    open fun runWithWait(function: () -> Unit) {
-        waitDialog(STAY_IN_FRAGMENT, function)
-    }
-
-    open fun runWithWaitAndBack(function: () -> Unit) {
-        waitDialog(BACK_ON_CANCEL, function)
-    }
-
-    open fun runUI(function: () -> Unit) {
-        fragment.activity?.runOnUiThread(function)
-    }
-
-    open fun string(id: Int): String {
-        return fragment.activity?.applicationContext?.getString(id)!!
     }
 
     private fun hideWaitDialog() {

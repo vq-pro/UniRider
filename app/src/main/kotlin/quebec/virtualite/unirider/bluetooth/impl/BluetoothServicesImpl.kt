@@ -9,8 +9,7 @@ import quebec.virtualite.commons.android.bluetooth.impl.BluetoothDeviceScannerIm
 import quebec.virtualite.unirider.bluetooth.BluetoothServices
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 
-// FIXME-1 Need to be open for testing?
-open class BluetoothServicesImpl(activity: Activity) : BluetoothServices {
+class BluetoothServicesImpl(activity: Activity) : BluetoothServices {
 
     private val connector: BluetoothDeviceConnector = BluetoothDeviceConnectorImpl(activity, WheelFactory())
     private val scanner: BluetoothDeviceScanner = BluetoothDeviceScannerImpl(activity)

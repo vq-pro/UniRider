@@ -3,7 +3,7 @@ package quebec.virtualite.commons.android.utils
 import java.lang.Integer.parseInt
 import java.time.LocalDateTime
 
-open class DateUtils {
+class DateUtils {
     companion object {
 
         var simulatedNow: LocalDateTime? = null
@@ -17,10 +17,9 @@ open class DateUtils {
         }
     }
 
-    open fun now(): LocalDateTime {
-        return when (simulatedNow) {
+    fun now(): LocalDateTime =
+        when (simulatedNow) {
             null -> LocalDateTime.now()
             else -> simulatedNow!!
         }
-    }
 }

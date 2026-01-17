@@ -7,7 +7,7 @@ import quebec.virtualite.unirider.bluetooth.BluetoothServicesFactory
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 
-open class ExternalServices(val fragment: CommonFragment<ExternalServices>) : CommonExternalServices() {
+class ExternalServices(val fragment: CommonFragment<ExternalServices>) : CommonExternalServices() {
 
     companion object {
         private var bluetooth: BluetoothServices? = null
@@ -22,15 +22,15 @@ open class ExternalServices(val fragment: CommonFragment<ExternalServices>) : Co
             db = WheelDbImpl(fragment.activity?.applicationContext!!)
     }
 
-    open fun bluetooth(): BluetoothServices {
+    fun bluetooth(): BluetoothServices {
         return bluetooth!!
     }
 
-    open fun db(): WheelDb {
+    fun db(): WheelDb {
         return db!!
     }
 
-    open fun runDB(function: (WheelDb) -> Unit) {
+    fun runDB(function: (WheelDb) -> Unit) {
         fragment.fragments.runBackground {
             function(db!!)
         }

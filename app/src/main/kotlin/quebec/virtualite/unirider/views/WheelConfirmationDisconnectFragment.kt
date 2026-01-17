@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import quebec.virtualite.unirider.R
 
-open class WheelConfirmationDisconnectFragment : BaseFragment() {
+class WheelConfirmationDisconnectFragment : BaseFragment() {
 
     internal lateinit var buttonDisconnectCancel: Button
     internal lateinit var buttonDisconnectConfirmation: Button

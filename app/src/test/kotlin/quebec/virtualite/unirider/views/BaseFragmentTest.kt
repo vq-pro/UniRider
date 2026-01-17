@@ -8,7 +8,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-open class BaseFragmentTest {
+class BaseFragmentTest {
 
     @InjectMocks
     private lateinit var baseFragment: BaseFragment

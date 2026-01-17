@@ -10,7 +10,7 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
 import kotlin.math.roundToInt
 
-open class WheelScanFragment : BaseFragment() {
+class WheelScanFragment : BaseFragment() {
 
     internal lateinit var lvDevices: ListView
 

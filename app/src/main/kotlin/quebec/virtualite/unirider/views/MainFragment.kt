@@ -12,7 +12,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 import java.util.stream.Collectors.toList
 
-open class MainFragment : BaseFragment() {
+class MainFragment : BaseFragment() {
 
     private val SOLD_ENTRY = "<Sold>"
     private val NEW_ENTRY = "<New>"
@@ -32,7 +32,7 @@ open class MainFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lvWheels = view.findViewById(R.id.wheels) as ListView
+        lvWheels = view.findViewById(R.id.wheels)!!
         textTotalMileage = view.findViewById(R.id.total_mileage)
 
         widgets.multifieldListAdapter(lvWheels, view, R.layout.wheels_item, wheelList, onDisplayWheel())
@@ -46,10 +46,10 @@ open class MainFragment : BaseFragment() {
 
     fun onDisplayWheel() = { view: View, item: WheelRow ->
         val textName = view.findViewById<TextView?>(R.id.row_name)
-        textName.text = item.name()
+        textName?.text = item.name()
 
         val textMileage = view.findViewById<TextView?>(R.id.row_mileage)
-        textMileage.text = when {
+        textMileage?.text = when {
             item.name() == NEW_ENTRY -> ""
             item.name() == SOLD_ENTRY && item.mileage() == 0 -> ""
             else -> "${item.mileage()} $labelKm"
@@ -65,7 +65,7 @@ open class MainFragment : BaseFragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    open fun showWheels() {
+    internal fun showWheels() {
         external.runDB { db ->
             val wheels = db.getWheels()
             var activeWheelList = getSortedWheelItems(wheels.filter { !it.isSold })

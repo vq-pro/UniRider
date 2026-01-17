@@ -22,7 +22,7 @@ import kotlin.math.roundToInt
 
 private val DTF = DateTimeFormatter.ofPattern("HH:mm")
 
-open class WheelChargeFragment : BaseFragment() {
+class WheelChargeFragment : BaseFragment() {
 
     internal lateinit var buttonConnect: Button
     internal lateinit var editAmperage: EditText
@@ -140,7 +140,7 @@ open class WheelChargeFragment : BaseFragment() {
         }
     }
 
-    internal open fun display() {
+    internal fun display() {
         if (chargerOffset == null) return
 
         val voltageTarget = onCharge(getVoltageRequired())
@@ -154,7 +154,7 @@ open class WheelChargeFragment : BaseFragment() {
         }
     }
 
-    internal open fun displayBlanks() {
+    internal fun displayBlanks() {
         textEstimatedDiff.text = ""
         textEstimatedTime.text = ""
         textVoltageRequired.text = ""
@@ -164,21 +164,21 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    internal open fun displayEstimates(voltageDiff: Float, rawHours: Float) {
+    internal fun displayEstimates(voltageDiff: Float, rawHours: Float) {
         textVoltageTargetDiff.text = "V (+$voltageDiff)"
         textEstimatedDiff.text = estimatedDiff(rawHours)
         textEstimatedTime.text = estimatedTime(rawHours)
     }
 
     @SuppressLint("SetTextI18n")
-    internal open fun displayGo() {
+    internal fun displayGo() {
         textVoltageTargetDiff.text = "V"
         textEstimatedTime.text = "Go!"
         textEstimatedDiff.text = ""
     }
 
     @SuppressLint("DefaultLocale")
-    internal open fun estimatedDiff(rawHours: Float): String {
+    internal fun estimatedDiff(rawHours: Float): String {
         val hours = rawHours.toInt()
         val minutes = ((rawHours - hours) * 60).roundToInt()
 
@@ -193,7 +193,7 @@ open class WheelChargeFragment : BaseFragment() {
     }
 
     @SuppressLint("DefaultLocale")
-    internal open fun estimatedTime(rawHours: Float): String {
+    internal fun estimatedTime(rawHours: Float): String {
         val hours = rawHours.toInt()
         val minutes = ((rawHours - hours) * 60).roundToInt()
 
@@ -202,7 +202,7 @@ open class WheelChargeFragment : BaseFragment() {
         return DTF.format(time)
     }
 
-    internal open fun getAmperage(): Float {
+    internal fun getAmperage(): Float {
         var amperageString = widgets.getText(editAmperage)
 
         if (amperageString.isEmpty()) {
@@ -213,7 +213,7 @@ open class WheelChargeFragment : BaseFragment() {
         return round(floatOf(amperageString))
     }
 
-    internal open fun getVoltageRequired(): Float {
+    internal fun getVoltageRequired(): Float {
         val fieldVoltageRequired = widgets.getText(editVoltageRequired)
         val voltageRequired = when {
             switchFullCharge.isChecked -> {
@@ -237,7 +237,7 @@ open class WheelChargeFragment : BaseFragment() {
         return voltageRequired
     }
 
-    internal open fun updateVoltageActual(voltage: Float) {
+    internal fun updateVoltageActual(voltage: Float) {
         cacheVoltageActual = voltage
 
         if (chargerOffset == null) {

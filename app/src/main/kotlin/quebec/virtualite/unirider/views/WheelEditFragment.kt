@@ -15,7 +15,7 @@ import quebec.virtualite.commons.android.utils.NumberUtils.safeIntOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 
-open class WheelEditFragment : BaseFragment() {
+class WheelEditFragment : BaseFragment() {
 
     private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
@@ -181,7 +181,7 @@ open class WheelEditFragment : BaseFragment() {
         enableSaveIfChanged()
     }
 
-    internal open fun enableSaveIfChanged() {
+    internal fun enableSaveIfChanged() {
         val canSave = wheelValidator.canSave(updatedWheel, initialWheel)
 
         if (!canSave) widgets.disable(buttonSave)

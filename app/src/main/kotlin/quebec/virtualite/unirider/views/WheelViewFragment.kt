@@ -18,7 +18,7 @@ import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
 import kotlin.math.roundToInt
 
-open class WheelViewFragment : BaseFragment() {
+class WheelViewFragment : BaseFragment() {
 
     internal lateinit var buttonCharge: Button
     internal lateinit var buttonConnect: Button
@@ -109,12 +109,12 @@ open class WheelViewFragment : BaseFragment() {
         refreshDisplay(parseVoltage(voltageActual), readKm())
     }
 
-    internal open fun clearDisplay() {
+    internal fun clearDisplay() {
         clearPercentage()
         clearEstimates()
     }
 
-    internal open fun clearEstimates() {
+    internal fun clearEstimates() {
         fragments.runUI {
             hide(textRemainingRange)
             hide(textTotalRange)
@@ -122,24 +122,24 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
-    internal open fun clearPercentage() {
+    internal fun clearPercentage() {
         hide(textBattery)
     }
 
-    internal open fun initialDisplayBluetoothSettings() {
+    internal fun initialDisplayBluetoothSettings() {
         show(textBtName, wheel!!.btName!!)
         show(textBtAddr, wheel!!.btAddr!!)
     }
 
     @SuppressLint("SetTextI18n")
-    internal open fun initialDisplaySoldWheel() {
+    internal fun initialDisplaySoldWheel() {
         textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
 
         buttonCharge.visibility = GONE
         buttonConnect.visibility = GONE
     }
 
-    internal open fun initialDisplayWheel() {
+    internal fun initialDisplayWheel() {
         textName.text = wheel!!.name
 
         if (wheel!!.isConnected())
@@ -148,25 +148,25 @@ open class WheelViewFragment : BaseFragment() {
         refreshDisplay(readVoltageActual(), readKm())
     }
 
-    internal open fun parseKm(value: String): Float? =
+    internal fun parseKm(value: String): Float? =
         if (!isNumeric(value)) null
         else if (floatOf(value) == 0f) null
         else floatOf(value)
 
-    internal open fun parseVoltage(value: String): Float? =
+    internal fun parseVoltage(value: String): Float? =
         when {
             !isNumeric(value) -> null
             floatOf(value) < wheel!!.voltageMin -> null
             else -> round(floatOf(value))
         }
 
-    internal open fun readKm() =
+    internal fun readKm() =
         parseKm(widgets.getText(editKm))
 
-    internal open fun readVoltageActual() =
+    internal fun readVoltageActual() =
         parseVoltage(widgets.getText(editVoltageActual))
 
-    internal open fun reconnect(execution: () -> Unit = {}) {
+    internal fun reconnect(execution: () -> Unit = {}) {
         fragments.runWithWait {
             external.bluetooth().getDeviceInfo(wheel!!.btAddr!!) {
                 fragments.doneWaiting(it) {
@@ -184,7 +184,7 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
-    internal open fun refreshDisplay(voltageActual: Float?, km: Float?) {
+    internal fun refreshDisplay(voltageActual: Float?, km: Float?) {
         if (voltageActual == null) clearDisplay()
         else {
             updatePercentageFor(voltageActual)
@@ -194,7 +194,7 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
-    internal open fun refreshEstimates(voltage: Float, km: Float) {
+    internal fun refreshEstimates(voltage: Float, km: Float) {
         fragments.runUI {
             estimates = calculatorService.estimatedValues(wheel!!, voltage, km)
 
@@ -204,18 +204,18 @@ open class WheelViewFragment : BaseFragment() {
         }
     }
 
-    internal open fun scan() {
+    internal fun scan() {
         fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
     }
 
-    internal open fun startCharging() {
+    internal fun startCharging() {
         chargeContext.km = readKm()!!
         chargeContext.voltage = readVoltageActual()!!
 
         fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
     }
 
-    internal open fun updatePercentageFor(voltageActual: Float) {
+    internal fun updatePercentageFor(voltageActual: Float) {
         fragments.runUI {
             val percentage = calculatorService.percentage(wheel!!, voltageActual)
             show(textBattery, textPercentageWithDecimal(percentage))

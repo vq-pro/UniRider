@@ -3,7 +3,7 @@ package quebec.virtualite.unirider.services
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.database.WheelEntity
 
-open class CalculatorService {
+class CalculatorService {
 
     data class EstimatedValues(
         val remainingRange: Float,
@@ -12,7 +12,7 @@ open class CalculatorService {
 
     private val soRperCells = SoRperCells()
 
-    open fun estimatedValues(wheel: WheelEntity, voltage: Float, km: Float): EstimatedValues {
+    fun estimatedValues(wheel: WheelEntity, voltage: Float, km: Float): EstimatedValues {
         val sor = soRperCells.voltageToSoR(wheel, voltage)
         if (sor == -1f)
             return EstimatedValues(-1f, -1f)
@@ -31,7 +31,7 @@ open class CalculatorService {
         )
     }
 
-    open fun percentage(wheel: WheelEntity?, voltage: Float): Float {
+    fun percentage(wheel: WheelEntity?, voltage: Float): Float {
         val soR = soRperCells.voltageToSoR(wheel!!, voltage)
         return when {
             soR == -1f -> 100f
@@ -39,11 +39,11 @@ open class CalculatorService {
         }
     }
 
-    open fun requiredVoltageFull(wheel: WheelEntity?): Float {
+    fun requiredVoltageFull(wheel: WheelEntity?): Float {
         return (wheel!!).voltageFull
     }
 
-    open fun requiredVoltageOffCharger(wheel: WheelEntity?, voltage: Float, km: Float, kmRequested: Float): Float {
+    fun requiredVoltageOffCharger(wheel: WheelEntity?, voltage: Float, km: Float, kmRequested: Float): Float {
         val estimatedTotalRange = estimatedValues(wheel!!, voltage, km).totalRange
         return when {
             kmRequested >= estimatedTotalRange -> wheel.voltageFull
