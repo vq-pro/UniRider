@@ -31,20 +31,18 @@ class CalculatorService {
         )
     }
 
-    fun percentage(wheel: WheelEntity?, voltage: Float): Float {
-        val soR = soRperCells.voltageToSoR(wheel!!, voltage)
+    fun percentage(wheel: WheelEntity, voltage: Float): Float {
+        val soR = soRperCells.voltageToSoR(wheel, voltage)
         return when {
             soR == -1f -> 100f
             else -> round(soR)
         }
     }
 
-    fun requiredVoltageFull(wheel: WheelEntity?): Float {
-        return (wheel!!).voltageFull
-    }
+    fun requiredVoltageFull(wheel: WheelEntity) = wheel.voltageFull
 
-    fun requiredVoltageOffCharger(wheel: WheelEntity?, voltage: Float, km: Float, kmRequested: Float): Float {
-        val estimatedTotalRange = estimatedValues(wheel!!, voltage, km).totalRange
+    fun requiredVoltageOffCharger(wheel: WheelEntity, voltage: Float, km: Float, kmRequested: Float): Float {
+        val estimatedTotalRange = estimatedValues(wheel, voltage, km).totalRange
         return when {
             kmRequested >= estimatedTotalRange -> wheel.voltageFull
             kmRequested <= 0.01f -> voltage

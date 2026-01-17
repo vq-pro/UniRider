@@ -21,6 +21,17 @@ class CommonFragmentServices(val fragment: CommonFragment<*>, private val idStri
         payload.let { function.invoke() }
     }
 
+    fun navigateBack(nb: Int = 1) {
+        runUI {
+            if (nb < 1)
+                throw RuntimeException("Cannot go back $nb times")
+
+            var i = nb
+            while (i-- > 0)
+                fragment.findNavController().popBackStack()
+        }
+    }
+
     fun navigateTo(id: Int) {
         runUI { fragment.findNavController().navigate(id) }
     }
@@ -45,17 +56,6 @@ class CommonFragmentServices(val fragment: CommonFragment<*>, private val idStri
 
     fun string(id: Int): String {
         return fragment.activity?.applicationContext?.getString(id)!!
-    }
-
-    internal fun navigateBack(nb: Int = 1) {
-        runUI {
-            if (nb < 1)
-                throw RuntimeException("Cannot go back $nb times")
-
-            var i = nb
-            while (i-- > 0)
-                fragment.findNavController().popBackStack()
-        }
     }
 
     private fun hideWaitDialog() {

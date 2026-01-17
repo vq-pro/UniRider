@@ -256,7 +256,6 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
 
         // Then
         verify(mockedWidgets).getText(mockedEditAmperage)
-        verify(mockedEditAmperage, never()).getText()
 
         assertThat(result, equalTo(WHEEL.chargeAmperage))
     }

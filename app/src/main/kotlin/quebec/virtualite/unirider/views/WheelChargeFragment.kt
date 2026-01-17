@@ -217,7 +217,7 @@ class WheelChargeFragment : BaseFragment() {
         val fieldVoltageRequired = widgets.getText(editVoltageRequired)
         val voltageRequired = when {
             switchFullCharge.isChecked -> {
-                offCharge(calculatorService.requiredVoltageFull(wheel))
+                offCharge(calculatorService.requiredVoltageFull(wheel!!))
             }
 
             !fieldVoltageRequired.isEmpty() -> {

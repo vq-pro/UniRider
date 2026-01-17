@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
@@ -135,8 +134,8 @@ class WheelViewFragment : BaseFragment() {
     internal fun initialDisplaySoldWheel() {
         textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
 
-        buttonCharge.visibility = GONE
-        buttonConnect.visibility = GONE
+        buttonCharge.isVisible = false
+        buttonConnect.isVisible = false
     }
 
     internal fun initialDisplayWheel() {

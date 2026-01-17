@@ -207,7 +207,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(definedWheel())
-        verify(mockedWidgets).setEnabled(true, mockedButtonSave)
+        verify(mockedWidgets).enable(mockedButtonSave)
     }
 
     @Test
@@ -223,7 +223,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
         // Then
         verify(mockedDb).findDuplicate(definedWheel())
-        verify(mockedWidgets).setEnabled(false, mockedButtonSave)
+        verify(mockedWidgets).disable(mockedButtonSave)
     }
 
     @Test

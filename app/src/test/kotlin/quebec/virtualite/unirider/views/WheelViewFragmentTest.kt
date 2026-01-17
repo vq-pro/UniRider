@@ -1,6 +1,5 @@
 package quebec.virtualite.unirider.views
 
-import android.view.View.GONE
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -377,11 +376,10 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verify(mockedFragments).string(R.string.label_wheel_sold)
 
         verify(mockedTextName).text = "${wheel?.name} ($ITEM_SOLD)"
+        verify(mockedButtonCharge).isVisible = false
+        verify(mockedButtonConnect).isVisible = false
 
-        verify(mockedButtonCharge).visibility = GONE
-        verify(mockedButtonConnect).visibility = GONE
-
-        verify(fragment, never()).refreshDisplay(any(), any())
+        verify(fragment, never()).refreshDisplay(any<Float>(), any<Float>())
     }
 
     @Test
@@ -565,7 +563,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
-        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(wheel, VOLTAGE)
+        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(wheel!!, VOLTAGE)
         doNothing().`when`(fragment).refreshEstimates(VOLTAGE, KM)
 
         // When
@@ -635,13 +633,13 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         // Given
         injectMocks()
 
-        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(wheel, VOLTAGE)
+        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(wheel!!, VOLTAGE)
 
         // When
         fragment.updatePercentageFor(VOLTAGE)
 
         // Then
-        verify(mockedCalculatorService).percentage(wheel, VOLTAGE)
+        verify(mockedCalculatorService).percentage(wheel!!, VOLTAGE)
 
         verify(mockedTextBattery).text = "$PERCENTAGE"
         verify(mockedTextBattery).isVisible = true
