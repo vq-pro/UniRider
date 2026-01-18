@@ -97,7 +97,7 @@ open class FragmentTestBase(fragmentType: Class<*>) {
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {
-        argumentCaptor<(WheelInfo?) -> Unit>().apply {
+        argumentCaptor<(WheelInfo) -> Unit>().apply {
             verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), capture())
             firstValue.invoke(wheelInfo)
         }

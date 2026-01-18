@@ -55,7 +55,7 @@ class WheelScanFragment : BaseFragment() {
                         btAddr = device.address,
                         mileage = info.mileage.roundToInt()
                     )
-                    db.saveWheel(wheel)
+                    db.saveWheel(wheel!!)
                 }
 
                 fragments.navigateBack()

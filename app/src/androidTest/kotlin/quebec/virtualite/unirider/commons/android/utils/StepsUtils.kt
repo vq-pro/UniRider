@@ -147,7 +147,7 @@ object StepsUtils {
     fun hasSpinnerText(expected: String): Matcher<View> =
         allOf(isDisplayed(), isEnabled(), withSpinnerText(equalTo(expected)))
 
-    fun hasText(expected: String?): Matcher<View> = withText(equalTo(expected))
+    fun hasText(expected: String): Matcher<View> = withText(equalTo(expected))
 
     fun isDisabled(): Matcher<View> = not(isEnabled())
 

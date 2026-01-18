@@ -38,7 +38,7 @@ class WheelConfirmationDisconnectFragment : BaseFragment() {
     fun onDisconnect(): (View) -> Unit = {
         external.runDB { db ->
             wheel = wheel!!.copy(btName = null, btAddr = null)
-            db.saveWheel(wheel)
+            db.saveWheel(wheel!!)
         }
 
         fragments.navigateBack()

@@ -126,7 +126,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
             BaseFragment.wheel, equalTo(SHERMAN_MAX_3_SOLD.copy(mileage = MILEAGE_NEW))
         )
 
-        verify(mockedDb).saveWheel(BaseFragment.wheel)
+        verify(mockedDb).saveWheel(BaseFragment.wheel!!)
         verify(mockedFragments).navigateBack()
     }
 }

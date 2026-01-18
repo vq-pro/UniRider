@@ -112,7 +112,7 @@ class WheelEditFragment : BaseFragment() {
     fun onSave(): (View) -> Unit = {
         external.runDB { db ->
             wheel = updatedWheel
-            db.saveWheel(wheel)
+            db.saveWheel(wheel!!)
         }
         fragments.navigateBack()
     }

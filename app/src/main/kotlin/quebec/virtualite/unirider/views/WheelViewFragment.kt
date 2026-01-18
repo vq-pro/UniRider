@@ -244,7 +244,7 @@ class WheelViewFragment : BaseFragment() {
     @SuppressLint("SetTextI18n")
     private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
         wheel = wheel!!.copy(mileage = newMileage)
-        external.runDB { db -> db.saveWheel(wheel) }
+        external.runDB { db -> db.saveWheel(wheel!!) }
 
         fragments.runUI {
             textMileage.text = textKm(wheel!!.totalMileage())
