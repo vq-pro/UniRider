@@ -169,13 +169,11 @@ class WheelViewFragment : BaseFragment() {
         fragments.runWithWait {
             external.bluetooth().getDeviceInfo(wheel!!.btAddr!!) {
                 fragments.doneWaiting(it) {
-                    val newKm = it.km / wheel!!.distanceOffset
+                    val newKm = round(it.km / wheel!!.distanceOffset)
                     val newMileage = it.mileage.roundToInt()
-                    val newVoltage = it.voltage
+                    val newVoltage = round(it.voltage)
 
-                    updateWheel(
-                        round(newKm), newMileage, round(newVoltage)
-                    )
+                    updateWheel(newKm, newMileage, newVoltage)
 
                     fragments.runUI { execution.invoke() }
                 }
