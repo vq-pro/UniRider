@@ -1,10 +1,10 @@
 package quebec.virtualite.unirider.test.steps
 
-import cucumber.api.DataTable
 import cucumber.api.java.After
 import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
+import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
 
@@ -26,8 +26,8 @@ class WheelsSteps : BaseSteps() {
     }
 
     @Given("^the (.*?) has a previous mileage of (.*?) km$")
-    fun givenWheelHasPreviousMileage(name: String, premileage: Int) {
-        domain.updateWheelPreviousMileage(name, premileage)
+    fun givenWheelHasPreviousMileage(name: String, premileage: String) {
+        domain.updateWheelPreviousMileage(name, premileage.toInt())
     }
 
     @Given("^(?:these|this) wheel[s]*:$")

@@ -1,10 +1,10 @@
 package quebec.virtualite.unirider.test.steps
 
-import cucumber.api.DataTable
 import cucumber.api.java.After
 import cucumber.api.java.Before
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import io.cucumber.datatable.DataTable
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
 import quebec.virtualite.unirider.test.fragments.ChargeFragmentObject
 

@@ -1,14 +1,17 @@
 package quebec.virtualite.unirider.test.fragments
 
-import cucumber.api.DataTable
+import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThatField
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableHeader
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableRows
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.throwAssert
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
@@ -57,7 +60,7 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
         var totalMileage = 0
         domain.forEachWheel { (_, wheel) -> totalMileage += (wheel.totalMileage()) }
 
-        assertThat(R.id.total_mileage, hasText(formatKm(totalMileage)))
+        assertThatField(R.id.total_mileage, hasText(formatKm(totalMileage)))
     }
 
     fun validateView() {
@@ -66,20 +69,21 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
     fun validateUpdatedNameAndMileage(expectedId: Long, expectedName: String, expectedMileage: Int) {
         validateView()
-        assertThat(R.id.wheels, hasRow(WheelRow(expectedId, expectedName, expectedMileage)))
+
+        assertThatField(R.id.wheels, hasRow(WheelRow(expectedId, expectedName, expectedMileage)))
     }
 
     fun validateWheelIsGone(selectedWheel: WheelEntity) {
-        assertThat(
+        assertThatField(
             "The wheel is not gone", R.id.wheels,
             not(hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage)))
         )
     }
 
     fun validateWheels(expectedWheels: DataTable) {
-        assertThat(expectedWheels.topCells(), equalTo(listOf("Name", "Mileage")))
+        assertThat(tableHeader(expectedWheels), equalTo(listOf("Name", "Mileage")))
 
-        val expectedRows = expectedWheels.cells(1)
+        val expectedRows = tableRows(expectedWheels)
             .stream()
             .map { row ->
                 val name = row[0]
@@ -98,6 +102,6 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
             }
             .collect(toList())
 
-        assertThat(R.id.wheels, hasRows(expectedRows))
+        assertThatField(R.id.wheels, hasRows(expectedRows))
     }
 }

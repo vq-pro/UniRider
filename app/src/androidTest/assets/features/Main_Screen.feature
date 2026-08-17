@@ -1,3 +1,4 @@
+@WIP
 Feature: Main Screen
 
   Background:
@@ -52,4 +53,4 @@ Feature: Main Screen
   Scenario: => Viewing a wheel's details
     Given I start the app
     When I select the Sherman
-    Then the details view shows the details for that wheel
+    Then I can view the details for that wheel

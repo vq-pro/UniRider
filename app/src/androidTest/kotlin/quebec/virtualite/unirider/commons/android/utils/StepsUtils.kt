@@ -13,6 +13,7 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -23,46 +24,37 @@ import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import org.apache.http.util.TextUtils.isBlank
+import androidx.test.platform.app.InstrumentationRegistry
+import io.cucumber.datatable.DataTable
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
 import org.hamcrest.Matchers.hasItem
+import org.hamcrest.Matchers.hasProperty
 import org.hamcrest.Matchers.hasToString
 import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.isA
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.startsWith
+import quebec.virtualite.commons.android.utils.StringUtils.isBlank
 import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
+import quebec.virtualite.unirider.views.WheelRow
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
 object StepsUtils {
 
-    private val INTERVAL = 250L
+    private const val INTERVAL = 250L
     private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
 
-    private val nestedScrollViewExtension = NestedScrollViewExtension()
-
     fun applicationContext(): Context = ApplicationProvider.getApplicationContext()!!
-
-    fun assertThat(id: Int, assertion: Matcher<View>) {
-        poll {
-            element(id)?.check(matches(assertion))
-        }
-    }
-
-    fun assertThat(message: String, id: Int, assertion: Matcher<View>) {
-        poll(message) {
-            element(id)?.check(matches(assertion))
-        }
-    }
 
     fun <T> assertThat(actual: T, matcher: Matcher<T>) {
         MatcherAssert.assertThat(actual, matcher)
@@ -72,8 +64,26 @@ object StepsUtils {
         MatcherAssert.assertThat(message, actual, matcher)
     }
 
+    fun assertThatField(id: Int, assertion: Matcher<View>) {
+        poll {
+            element(id)?.check(matches(assertion))
+        }
+    }
+
+    fun assertThatField(message: String, id: Int, assertion: Matcher<View>) {
+        poll(message) {
+            element(id)?.check(matches(assertion))
+        }
+    }
+
     fun <T> assertThatPolling(getActual: () -> T, matcher: Matcher<T>) {
         poll {
+            MatcherAssert.assertThat(getActual.invoke(), matcher)
+        }
+    }
+
+    fun <T> assertThatPolling(message: String, getActual: () -> T, matcher: Matcher<T>) {
+        poll(message) {
             MatcherAssert.assertThat(getActual.invoke(), matcher)
         }
     }
@@ -142,32 +152,37 @@ object StepsUtils {
         }
 
     fun hasSelectedText(expected: String): Matcher<View> =
-        allOf(isDisplayed(), isEnabled(), withText(equalTo(expected)))
+        allOf(isVisible(), isEnabled(), withText(equalTo(expected)))
 
     fun hasSpinnerText(expected: String): Matcher<View> =
-        allOf(isDisplayed(), isEnabled(), withSpinnerText(equalTo(expected)))
+        allOf(isVisible(), isEnabled(), withSpinnerText(equalTo(expected)))
 
-    fun hasText(expected: String): Matcher<View> = withText(equalTo(expected))
+    fun hasText(expected: String): Matcher<View> =
+        withText(equalTo(expected))
 
-    fun isDisabled(): Matcher<View> = not(isEnabled())
+    fun isDisabled(): Matcher<View> =
+        not(isEnabled())
 
-    fun isDisplayed(): Matcher<View> = isDisplayed(true)
-
-    fun isDisplayed(shouldDisplay: Boolean): Matcher<View> =
-        if (shouldDisplay) ViewMatchers.isDisplayed()
-        else not(ViewMatchers.isDisplayed())
-
-    fun isEmpty(): Matcher<View> = hasText("")
+    fun isEmpty(): Matcher<View> =
+        hasText("")
 
     fun isEmpty(shouldBeEmpty: Boolean): Matcher<View> =
         if (shouldBeEmpty) hasText("")
         else not(hasText(""))
 
-    fun isEnabled(enabled: Boolean): Matcher<View> =
-        if (enabled) isEnabled()
-        else ViewMatchers.isNotEnabled()
+    fun isInvisible(): Matcher<View> =
+        isVisible(false)
 
-    fun isHidden(): Matcher<View> = isDisplayed(false)
+    fun isVisible(): Matcher<View> =
+        isVisible(true)
+
+    fun isVisible(shouldDisplay: Boolean): Matcher<View> =
+        if (shouldDisplay) ViewMatchers.isDisplayed()
+        else not(ViewMatchers.isDisplayed())
+
+    fun isEnabled(shouldBeEnabled: Boolean): Matcher<View> =
+        if (shouldBeEnabled) isEnabled()
+        else isDisabled()
 
     fun longClick(id: Int) {
         element(id)?.perform(longClick())
@@ -175,13 +190,18 @@ object StepsUtils {
 
     fun selectListViewItem(id: Int, value: String) {
         poll {
-            onData(hasToString(startsWith(value))).inAdapterView(withId(id)).atPosition(0).perform(click())
+            onData(hasToString(startsWith(value)))
+                .inAdapterView(withId(id))
+                .atPosition(0)
+                .perform(click())
         }
     }
 
-    fun selectListViewItem(id: Int, fieldName: String, value: Any) {
+    fun selectListViewItem(id: Int, fieldName: String, value: String) {
         poll {
-            onData(hasEntry(equalTo(fieldName), `is`(value))).inAdapterView(withId(id)).perform(click())
+            onData(hasEntry(equalTo(fieldName), startsWith(value)))
+                .inAdapterView(withId(id))
+                .perform(click())
         }
     }
 
@@ -198,12 +218,30 @@ object StepsUtils {
     }
 
     fun setText(id: Int, newText: String) {
-        element(id)?.perform(replaceText(newText))
+        element(id)?.perform(closeSoftKeyboard(), replaceText(newText))
     }
+
+    fun string(id: Int): String =
+        InstrumentationRegistry
+            .getInstrumentation()
+            .targetContext
+            .getString(id)
 
     fun strip(value: String, stripValue: String): String =
         if (value.endsWith(stripValue)) value.dropLast(stripValue.length).trim()
         else value.trim()
+
+    fun tableHeader(table: DataTable): List<String> =
+        table
+            .cells()
+            .get(0)
+
+    fun tableRows(table: DataTable): List<List<String>> =
+        table
+            .cells()
+            .stream()
+            .skip(1)
+            .toList()
 
     fun <T> throwAssert(message: String): T {
         throw AssertionError(message)
@@ -222,13 +260,20 @@ object StepsUtils {
     }
 
     private fun element(id: Int): ViewInteraction? {
-        val onView = onView(withId(id))
-
         return try {
-            onView?.perform(nestedScrollViewExtension)
+            onView(withId(id))
 
-        } catch (_: Exception) {
-            onView
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    private fun elementWith(text: String): ViewInteraction? {
+        return try {
+            onView(withText(text))
+
+        } catch (e: Exception) {
+            throw RuntimeException(e)
         }
     }
 
@@ -275,7 +320,7 @@ object StepsUtils {
 
         throw when {
             !isBlank(message) -> AssertionError(message, exception)
-            else -> exception!!
+            else -> exception
         }
     }
 }

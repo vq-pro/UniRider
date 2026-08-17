@@ -18,4 +18,6 @@ class WheelRow(id: Long, name: String, mileage: Int) : HashMap<String, Any>() {
     fun name(): String {
         return get("name").toString()
     }
+
+    fun getName(): String = name()
 }

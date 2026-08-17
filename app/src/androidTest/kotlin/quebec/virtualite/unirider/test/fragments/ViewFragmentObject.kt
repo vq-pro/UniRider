@@ -1,20 +1,22 @@
 package quebec.virtualite.unirider.test.fragments
 
-import cucumber.api.DataTable
+import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThatField
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEnabled
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isHidden
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isInvisible
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableRows
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
@@ -35,7 +37,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
     fun connectAndAbort(deviceName: String, deviceAddr: String) {
         click(R.id.button_connect)
-        assertThat(R.id.devices, hasRow(BluetoothDevice(deviceName, deviceAddr)))
+        assertThatField(R.id.devices, hasRow(BluetoothDevice(deviceName, deviceAddr)))
 
         app.back()
         validateView()
@@ -74,7 +76,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun useTheseUpdateMileageValues(updatedMileages: DataTable) {
-        for (row in updatedMileages.cells(1)) {
+        for (row in tableRows(updatedMileages)) {
             val wheelName = row[0]
             val expectedMileage = row[1].toInt() + domain.getWheel(wheelName)!!.premileage
 
@@ -94,20 +96,20 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun validateBluetoothName() {
-        assertThat(R.id.view_bt_name, hasText(expectedDeviceName))
+        assertThatField(R.id.view_bt_name, hasText(expectedDeviceName))
     }
 
     fun validateCanCharge(strCanCharge: String) {
         val canCharge = canOrCannot(strCanCharge)
         val message = "Charge button should ${if (!canCharge) "not " else ""} be enabled"
-        assertThat(message, R.id.button_charge, isEnabled(canCharge))
+        assertThatField(message, R.id.button_charge, isEnabled(canCharge))
     }
 
     fun validateCanSeeBluetoothSettings(strShow: String) {
         val show = canOrCannot(strShow)
         val message = "Bluetooth settings ${if (show) "shouldn't" else "should"} be empty"
-        assertThat(message, R.id.view_bt_name, isEmpty(!show))
-        assertThat(message, R.id.view_bt_addr, isEmpty(!show))
+        assertThatField(message, R.id.view_bt_name, isEmpty(!show))
+        assertThatField(message, R.id.view_bt_addr, isEmpty(!show))
     }
 
     fun validateEstimates(expectedEstimates: DataTable) {
@@ -125,36 +127,36 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun validateKm(expectedKm: Float) {
-        assertThat(R.id.edit_km, hasText("$expectedKm"))
+        assertThatField(R.id.edit_km, hasText("$expectedKm"))
     }
 
     fun validateMileageUpdated(expectedMileage: String) {
-        assertThat(R.id.view_mileage, hasText(expectedMileage))
+        assertThatField(R.id.view_mileage, hasText(expectedMileage))
     }
 
     fun validateName(expectedName: String) {
-        assertThat(R.id.view_name, hasText(expectedName))
+        assertThatField(R.id.view_name, hasText(expectedName))
     }
 
     fun validatePercentage(expectedPercentage: String) {
-        assertThat(R.id.view_battery, hasText(expectedPercentage))
+        assertThatField(R.id.view_battery, hasText(expectedPercentage))
     }
 
     fun validateSold(name: String) {
-        assertThat("Wrong title", R.id.view_name, hasText("$name (Sold)"))
-        assertThat("Charge button should not appear", R.id.button_charge, isHidden())
-        assertThat("Connect button should not appear", R.id.button_connect, isHidden())
+        assertThatField("Wrong title", R.id.view_name, hasText("$name (Sold)"))
+        assertThatField("Charge button should not appear", R.id.button_charge, isInvisible())
+        assertThatField("Connect button should not appear", R.id.button_connect, isInvisible())
     }
 
     fun validateUnsold(selectedWheel: WheelEntity) {
-        assertThat(
+        assertThatField(
             "The wheel is gone", R.id.wheels,
             hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))
         )
     }
 
     fun validateUpToDateMileage(selectedWheel: WheelEntity) {
-        assertThat(R.id.view_mileage, hasText("${expectedLiveWheelMileage[selectedWheel.name]}"))
+        assertThatField(R.id.view_mileage, hasText("${expectedLiveWheelMileage[selectedWheel.name]}"))
     }
 
     fun validateView() {
@@ -163,12 +165,12 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
     fun validateViewing(wheel: WheelEntity) {
         assertThat(app.activeFragment(), equalTo(WheelViewFragment::class.java))
-        assertThat(R.id.view_name, hasText(wheel.name))
+        assertThatField(R.id.view_name, hasText(wheel.name))
     }
 
     fun validateVoltageAndBattery(expectedVoltage: Float, expectedBattery: Float) {
-        assertThat(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
-        assertThat(R.id.view_battery, hasText("$expectedBattery"))
+        assertThatField(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
+        assertThatField(R.id.view_battery, hasText("$expectedBattery"))
     }
 
     private fun canOrCannot(canOrCannot: String): Boolean = "can" == canOrCannot

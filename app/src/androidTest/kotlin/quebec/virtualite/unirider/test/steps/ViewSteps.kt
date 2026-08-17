@@ -1,11 +1,11 @@
 package quebec.virtualite.unirider.test.steps
 
-import cucumber.api.DataTable
 import cucumber.api.java.After
 import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import io.cucumber.datatable.DataTable
 import quebec.virtualite.unirider.test.fragments.ViewFragmentObject
 
 class ViewSteps : BaseSteps() {
@@ -115,7 +115,7 @@ class ViewSteps : BaseSteps() {
         viewFragment.validateEstimates(expectedEstimates)
     }
 
-    @Then("the details view shows the details for that wheel")
+    @Then("I can view the details for that wheel")
     fun validateInDetailsView() {
         viewFragment.validateViewing(selectedWheel)
     }

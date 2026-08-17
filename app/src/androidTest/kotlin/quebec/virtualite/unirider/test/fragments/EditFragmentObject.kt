@@ -1,7 +1,7 @@
 package quebec.virtualite.unirider.test.fragments
 
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import cucumber.api.DataTable
+import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.nullValue
@@ -9,12 +9,14 @@ import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThatField
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setChecked
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableRows
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.views.WheelConfirmationDeleteFragment
@@ -99,7 +101,7 @@ class EditFragmentObject(val app: TestApp) {
         )
 
         val mapEntity = mutableMapOf<String, String>()
-        newValues.cells(0).forEach { row ->
+        tableRows(newValues).forEach { row ->
             val field = row[0]
             val value = stripUnits(row[1])
             mapEntity[field] = value
@@ -158,11 +160,11 @@ class EditFragmentObject(val app: TestApp) {
     }
 
     fun validateCanSave() {
-        assertThat("Save button should be enabled", R.id.button_save, isEnabled())
+        assertThatField("Save button should be enabled", R.id.button_save, isEnabled())
     }
 
     fun validateCannotSave() {
-        assertThat("Save button should be disabled", R.id.button_save, isDisabled())
+        assertThatField("Save button should be disabled", R.id.button_save, isDisabled())
     }
 
     fun validateView() {

@@ -3,7 +3,6 @@ package quebec.virtualite.unirider.test
 import cucumber.api.CucumberOptions
 import cucumber.api.SnippetType.CAMELCASE
 import quebec.virtualite.commons.android.BaseCucumberInstrumentationRunner
-import quebec.virtualite.unirider.BuildConfig
 
 @CucumberOptions
     (
@@ -14,6 +13,6 @@ import quebec.virtualite.unirider.BuildConfig
     strict = true,
     tags = [
 //        "@WIP",
-        "~@Ignore", BuildConfig.SCENARIOS]
+        "~@Ignore"]
 )
 class CucumberInstrumentationRunner : BaseCucumberInstrumentationRunner()

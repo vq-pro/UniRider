@@ -1,14 +1,18 @@
 package quebec.virtualite.unirider.test.domain
 
 import android.content.Context
-import cucumber.api.DataTable
+import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils
 import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThatField
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableHeader
+import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableRows
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import java.lang.Integer.parseInt
@@ -79,9 +83,9 @@ class TestDomain(applicationContext: Context) {
             wheels[name]
 
     fun loadConnectedWheels(wheels: DataTable) {
-        assertThat(wheels.topCells(), equalTo(listOf("Name", "Bt Name", "Bt Address")))
+        assertThat(tableHeader(wheels), equalTo(listOf("Name", "Bt Name", "Bt Address")))
 
-        wheels.cells(1)
+        tableRows(wheels)
             .forEach { row ->
                 val name = row[0]
                 val btName = row[1]
@@ -106,7 +110,7 @@ class TestDomain(applicationContext: Context) {
 
     fun loadWheels(wheels: DataTable) {
         assertThat(
-            wheels.topCells(),
+            tableHeader(wheels),
             equalTo(
                 listOf(
                     "Name",
@@ -123,7 +127,7 @@ class TestDomain(applicationContext: Context) {
             )
         )
 
-        val wheelEntities = wheels.cells(1)
+        val wheelEntities = tableRows(wheels)
             .stream()
             .map { row ->
                 var col = 0
@@ -157,8 +161,8 @@ class TestDomain(applicationContext: Context) {
         db.findWheel(name)
 
     fun simulateDevice(device: DataTable) {
-        assertThat(device.topCells(), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltages")))
-        val deviceFields = device.cells(1)[0]
+        assertThat(tableHeader(device), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltages")))
+        val deviceFields = tableRows(device)[0]
 
         BluetoothServicesSim
             .setDevice(BluetoothDevice(deviceFields[0], deviceFields[1]))
