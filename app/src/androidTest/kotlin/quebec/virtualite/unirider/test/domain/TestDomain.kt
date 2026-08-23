@@ -8,11 +8,11 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThatField
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableHeader
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableRows
+import quebec.virtualite.unirider.commons.android.utils.StepUtils
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableHeader
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableRows
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.database.impl.WheelDbImpl
 import java.lang.Integer.parseInt

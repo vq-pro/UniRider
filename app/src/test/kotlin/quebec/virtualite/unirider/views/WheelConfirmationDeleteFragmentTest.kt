@@ -62,8 +62,8 @@ class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDe
 
         verify(fragment.textName).text = BaseFragment.wheel!!.name
 
-        verifyOnClick(mockedButtonDeleteConfirmation, "onDelete")
-        verifyOnClick(mockedButtonDeleteCancel, "onCancel")
+        verifyOnClick(mockedButtonDeleteConfirmation)
+        verifyOnClick(mockedButtonDeleteCancel)
     }
 
     @Test

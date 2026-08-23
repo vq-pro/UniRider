@@ -17,9 +17,9 @@ import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
@@ -31,28 +31,27 @@ import org.hamcrest.Description
 import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
 import org.hamcrest.Matchers.hasItem
-import org.hamcrest.Matchers.hasProperty
 import org.hamcrest.Matchers.hasToString
 import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.isA
 import org.hamcrest.Matchers.not
-import org.hamcrest.Matchers.startsWith
 import quebec.virtualite.commons.android.utils.StringUtils.isBlank
 import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
-import quebec.virtualite.unirider.views.WheelRow
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
-object StepsUtils {
+object StepUtils {
 
     private const val INTERVAL = 250L
     private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
+
+    data class ListViewField(val id: Int, val name: String)
 
     fun applicationContext(): Context = ApplicationProvider.getApplicationContext()!!
 
@@ -177,8 +176,8 @@ object StepsUtils {
         isVisible(true)
 
     fun isVisible(shouldDisplay: Boolean): Matcher<View> =
-        if (shouldDisplay) ViewMatchers.isDisplayed()
-        else not(ViewMatchers.isDisplayed())
+        if (shouldDisplay) isDisplayed()
+        else not(isDisplayed())
 
     fun isEnabled(shouldBeEnabled: Boolean): Matcher<View> =
         if (shouldBeEnabled) isEnabled()
@@ -190,18 +189,20 @@ object StepsUtils {
 
     fun selectListViewItem(id: Int, value: String) {
         poll {
-            onData(hasToString(startsWith(value)))
+            onData(hasToString(containsString(value)))
                 .inAdapterView(withId(id))
                 .atPosition(0)
                 .perform(click())
         }
     }
 
-    fun selectListViewItem(id: Int, fieldName: String, value: String) {
+    fun selectListViewItem(id: Int, field: ListViewField, value: String) {
         poll {
-            onData(hasEntry(equalTo(fieldName), startsWith(value)))
+            onData(hasEntry(equalTo(field.name), containsString(value)))
                 .inAdapterView(withId(id))
-                .perform(click())
+                .onChildView(withId(field.id))
+                // Instead of click(), because of a bug in Espresso picking the last item
+                .perform(clickAdapterRow())
         }
     }
 
@@ -257,6 +258,43 @@ object StepsUtils {
         }
 
         return actualItems
+    }
+
+    private fun clickAdapterRow(): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return isA(View::class.java)
+            }
+
+            override fun getDescription(): String = "Trigger performItemClick on adapter item"
+
+            override fun perform(uiController: UiController, view: View) {
+                uiController.loopMainThreadUntilIdle()
+
+                // Find the parent ListView/AdapterView
+                var parent = view.parent
+                while (parent != null && parent !is AdapterView<*>) {
+                    parent = parent.parent
+                }
+
+                if (parent is AdapterView<*>) {
+                    val adapterView = parent as AdapterView<*>
+                    val position = adapterView.getPositionForView(view)
+
+                    if (position != AdapterView.INVALID_POSITION) {
+                        adapterView.setSelection(position)
+                        uiController.loopMainThreadUntilIdle()
+
+                        val id = adapterView.adapter.getItemId(position)
+                        adapterView.performItemClick(view, position, id)
+                        return
+                    }
+                }
+
+                // Fallback if not inside an AdapterView
+                view.performClick()
+            }
+        }
     }
 
     private fun element(id: Int): ViewInteraction? {

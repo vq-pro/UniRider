@@ -4,24 +4,26 @@ import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThatField
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.click
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.getText
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEmpty
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isEnabled
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.isInvisible
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.longClick
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.setText
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableRows
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.click
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.getText
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRow
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasText
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.isEmpty
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.isEnabled
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.isInvisible
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.longClick
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.selectListViewItem
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.setText
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableRows
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKm
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
+import quebec.virtualite.unirider.views.WheelChargeFragment
 import quebec.virtualite.unirider.views.WheelConfirmationDisconnectFragment
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
@@ -160,11 +162,11 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun validateView() {
-        assertThat(app.activeFragment(), equalTo(WheelViewFragment::class.java))
+        assertThatPolling({ app.activeFragment() }, equalTo(WheelViewFragment::class.java))
     }
 
     fun validateViewing(wheel: WheelEntity) {
-        assertThat(app.activeFragment(), equalTo(WheelViewFragment::class.java))
+        assertThatPolling({ app.activeFragment() }, equalTo(WheelViewFragment::class.java))
         assertThatField(R.id.view_name, hasText(wheel.name))
     }
 

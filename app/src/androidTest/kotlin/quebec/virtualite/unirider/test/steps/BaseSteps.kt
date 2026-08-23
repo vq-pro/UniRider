@@ -1,6 +1,6 @@
 package quebec.virtualite.unirider.test.steps
 
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.applicationContext
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.applicationContext
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain

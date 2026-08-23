@@ -4,15 +4,16 @@ import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThatField
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRow
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasRows
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.hasText
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.selectListViewItem
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableHeader
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.tableRows
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.throwAssert
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRow
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRows
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasText
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.selectListViewItem
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableHeader
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableRows
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.throwAssert
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.ListViewField
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
@@ -24,14 +25,12 @@ import java.util.stream.Collectors.toList
 
 class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
+    val FIELD_NAME = ListViewField(R.id.row_name, "name")
     val NEW_WHEEL_ENTRY = "<New>"
     val SOLD_WHEEL_ENTRY = "<Sold>"
 
-    fun addWheel(): WheelEntity {
-        val newWheel = WheelEntity(0L, "", "", "", 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
-        selectListViewItem(R.id.wheels, "name", NEW_WHEEL_ENTRY)
-
-        return newWheel
+    fun addWheel() {
+        selectListViewItem(R.id.wheels, FIELD_NAME, NEW_WHEEL_ENTRY)
     }
 
     fun selectWheel(wheelName: String): WheelEntity {
@@ -39,17 +38,17 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
             ?: throwAssert("$wheelName is not defined")
 
         if (selectedWheel.isSold) {
-            selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
-            selectListViewItem(R.id.wheels, "name", "- $wheelName")
+            selectListViewItem(R.id.wheels, FIELD_NAME, SOLD_WHEEL_ENTRY)
+            selectListViewItem(R.id.wheels, FIELD_NAME, "- $wheelName")
         } else {
-            selectListViewItem(R.id.wheels, "name", wheelName)
+            selectListViewItem(R.id.wheels, FIELD_NAME, wheelName)
         }
 
         return selectedWheel
     }
 
     fun toggleSoldWheels() {
-        selectListViewItem(R.id.wheels, "name", SOLD_WHEEL_ENTRY)
+        selectListViewItem(R.id.wheels, FIELD_NAME, SOLD_WHEEL_ENTRY)
     }
 
     fun validateBluetoothDeviceUndefined(selectedWheel: WheelEntity) {
@@ -97,7 +96,13 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
                     SOLD_WHEEL_ENTRY -> WheelRow(0, name, parseKmNumeric(mileageWithUnits))
 
-                    else -> WheelRow(domain.getWheel(name)!!.id, name, parseKmNumeric(mileageWithUnits))
+                    else -> {
+                        val wheel = domain.getWheel(name)
+                        when (wheel) {
+                            null -> WheelRow(0, name, 0)
+                            else -> WheelRow(wheel!!.id, name, parseKmNumeric(mileageWithUnits))
+                        }
+                    }
                 }
             }
             .collect(toList())

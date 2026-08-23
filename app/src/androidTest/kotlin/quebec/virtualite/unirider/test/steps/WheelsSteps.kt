@@ -6,7 +6,7 @@ import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.equalTo
-import quebec.virtualite.unirider.commons.android.utils.StepsUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
 
 class WheelsSteps : BaseSteps() {
 

@@ -23,7 +23,7 @@ class MainScreenSteps : BaseSteps() {
 
     @When("I add a new wheel")
     fun addNewWheel() {
-        selectedWheel = mainFragment.addWheel()
+        mainFragment.addWheel()
     }
 
     @When("I collapse the sold wheels")

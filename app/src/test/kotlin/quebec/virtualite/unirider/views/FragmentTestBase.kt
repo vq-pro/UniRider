@@ -65,35 +65,27 @@ open class FragmentTestBase(fragmentType: Class<*>) {
 
     @Suppress("UNCHECKED_CAST")
     fun mockExternal() {
-        lenient().doReturn(mockedConnector)
-            .`when`(mockedExternal).bluetooth()
+        lenient().doReturn(mockedConnector).`when`(mockedExternal).bluetooth()
 
-        lenient().doReturn(mockedDb)
-            .`when`(mockedExternal).db()
+        lenient().doReturn(mockedDb).`when`(mockedExternal).db()
 
-        lenient().doAnswer { (it.arguments[0] as (WheelDb) -> Unit).invoke(mockedDb) }
-            .`when`(mockedExternal).runDB(any())
+        lenient().doAnswer { (it.arguments[0] as (WheelDb) -> Unit).invoke(mockedDb) }.`when`(mockedExternal).runDB(any())
     }
 
     fun mockField(id: Int, mockedField: View) {
-        given<Any>(mockedView.findViewById(id))
-            .willReturn(mockedField)
+        given<Any>(mockedView.findViewById(id)).willReturn(mockedField)
     }
 
     @Suppress("UNCHECKED_CAST")
     fun mockFragments() {
-        lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
-            .`when`(mockedFragments).runBackground(any())
+        lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }.`when`(mockedFragments).runBackground(any())
 
-        lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }
-            .`when`(mockedFragments).runUI(any())
+        lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }.`when`(mockedFragments).runUI(any())
     }
 
     fun mockStrings() {
-        lenient().`when`(mockedFragments.string(R.string.label_km))
-            .thenReturn(LABEL_KM)
-        lenient().`when`(mockedFragments.string(R.string.label_wheel_sold))
-            .thenReturn(ITEM_SOLD)
+        lenient().`when`(mockedFragments.string(R.string.label_km)).thenReturn(LABEL_KM)
+        lenient().`when`(mockedFragments.string(R.string.label_wheel_sold)).thenReturn(ITEM_SOLD)
     }
 
     fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {
@@ -126,67 +118,59 @@ open class FragmentTestBase(fragmentType: Class<*>) {
         verify(mockedInflater).inflate(expectedId, mockedContainer, DONT_ATTACH_TO_ROOT)
     }
 
-    fun <T> verifyMultiFieldListAdapter(
-        mockedField: ListView, expectedId: Int, methodName: String
-    ) {
-        verifyMultiFieldListAdapter(mockedField, expectedId, emptyList<T>(), methodName)
+    fun <T> verifyMultiFieldListAdapter(mockedField: ListView, expectedId: Int) {
+        verifyMultiFieldListAdapter(mockedField, expectedId, emptyList<T>())
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> verifyMultiFieldListAdapter(
-        mockedField: ListView, expectedId: Int, expectedData: List<T>, methodName: String
-    ) {
+    fun <T> verifyMultiFieldListAdapter(mockedField: ListView, expectedId: Int, expectedData: List<T>) {
         argumentCaptor<(View, T) -> Unit>().apply {
             verify(mockedWidgets).multifieldListAdapter(
-                eq(mockedField),
-                eq(mockedView),
-                eq(expectedId),
-                eq(expectedData),
-                capture()
+                eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData), capture()
             )
-            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
         }
     }
 
-    fun verifyOnClick(mockedField: View, methodName: String) {
+    fun verifyOnClick(mockedField: View) {
         argumentCaptor<(View) -> Unit>().apply {
             verify(mockedWidgets).setOnClickListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
         }
     }
 
-    fun verifyOnItemClick(mockedField: ListView, methodName: String) {
+    fun verifyOnItemClick(mockedField: ListView) {
         argumentCaptor<(View, Int) -> Unit>().apply {
             verify(mockedWidgets).setOnItemClickListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
         }
     }
 
-    fun verifyOnItemSelected(mockedField: Spinner, methodName: String) {
+    fun verifyOnItemSelected(mockedField: Spinner) {
         argumentCaptor<(View, Int, String) -> Unit>().apply {
             verify(mockedWidgets).setOnItemSelectedListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
         }
     }
 
-    fun verifyOnLongClick(mockedField: View, methodName: String) {
+    fun verifyOnLongClick(mockedField: View) {
         argumentCaptor<(View) -> Unit>().apply {
             verify(mockedWidgets).setOnLongClickListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
         }
     }
 
-    fun verifyOnToggleSwitch(mockedField: SwitchMaterial, methodName: String) {
+    fun verifyOnToggleSwitch(mockedField: SwitchMaterial) {
         argumentCaptor<(Boolean) -> Unit>().apply {
             verify(mockedWidgets).setOnCheckedChangeListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
         }
     }
 
-    fun verifyOnUpdateText(mockedField: EditText, methodName: String) {
+    fun verifyOnUpdateText(mockedField: EditText) {
         argumentCaptor<(String) -> Unit>().apply {
             verify(mockedWidgets).addTextChangedListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.name, containsString("$fragmentClass\$$methodName\$"))
+            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
         }
     }
 

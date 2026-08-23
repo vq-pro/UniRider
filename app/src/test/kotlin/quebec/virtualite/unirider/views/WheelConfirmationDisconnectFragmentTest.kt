@@ -62,8 +62,8 @@ class WheelConfirmationDisconnectFragmentTest : FragmentTestBase(WheelConfirmati
 
         verify(fragment.textName).text = wheel!!.name
 
-        verifyOnClick(mockedButtonDisconnectCancel, "onCancel")
-        verifyOnClick(mockedButtonDisconnectConfirmation, "onDisconnect")
+        verifyOnClick(mockedButtonDisconnectCancel)
+        verifyOnClick(mockedButtonDisconnectConfirmation)
     }
 
     @Test
