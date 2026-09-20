@@ -1,3 +1,4 @@
+#@WIP
 Feature: Wheel Editing & Adding
 
   Background:
@@ -11,6 +12,7 @@ Feature: Wheel Editing & Adding
       | Sherman | LK1000  | AB:CD:EF:GH:IJ:KL |
     And I start the app
 
+  @WIP
   Scenario: Adding a wheel in full
     When I add a new wheel
     And I set these new values:

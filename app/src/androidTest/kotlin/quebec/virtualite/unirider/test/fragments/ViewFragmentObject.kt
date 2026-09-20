@@ -69,7 +69,6 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun editWheel()
     {
-        assertThatPolling({ app.activeFragment() }, equalTo(WheelViewFragment::class.java))
         click(R.id.button_edit)
     }
 

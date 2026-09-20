@@ -13,7 +13,6 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
@@ -211,7 +210,7 @@ object StepUtils
             onData(hasEntry(equalTo(field.name), equalTo(value))).inAdapterView(withId(id))
                 .onChildView(withId(field.id))
                 // Instead of click(), because of a bug in Espresso picking the last item
-                .perform(clickAdapterRow())
+                .perform(forceClickAdapterRow())
         }
     }
 
@@ -265,7 +264,46 @@ object StepUtils
         return actualItems
     }
 
-    private fun clickAdapterRow(): ViewAction
+    private fun element(id: Int): ViewInteraction?
+    {
+        return try
+        {
+            onView(withId(id))
+
+        } catch (e: Exception)
+        {
+            fail(e.message)
+            throw RuntimeException(e)
+        }
+    }
+
+    private fun elementWith(text: String): ViewInteraction?
+    {
+        return try
+        {
+            onView(withText(text))
+
+        } catch (e: Exception)
+        {
+            throw RuntimeException(e)
+        }
+    }
+
+    private fun forceClick(): ViewAction
+    {
+        return object : ViewAction
+        {
+            override fun getConstraints(): Matcher<View> = isDisplayed()
+            override fun getDescription(): String = "Force le clic direct sur la vue"
+
+            override fun perform(uiController: UiController, view: View)
+            {
+                view.performClick()
+            }
+        }
+    }
+
+    private fun forceClickAdapterRow(): ViewAction
     {
         return object : ViewAction
         {
@@ -304,45 +342,6 @@ object StepUtils
                 }
 
                 // Fallback if not inside an AdapterView
-                view.performClick()
-            }
-        }
-    }
-
-    private fun element(id: Int): ViewInteraction?
-    {
-        return try
-        {
-            onView(withId(id))
-
-        } catch (e: Exception)
-        {
-            fail(e.message)
-            throw RuntimeException(e)
-        }
-    }
-
-    private fun elementWith(text: String): ViewInteraction?
-    {
-        return try
-        {
-            onView(withText(text))
-
-        } catch (e: Exception)
-        {
-            throw RuntimeException(e)
-        }
-    }
-
-    private fun forceClick(): ViewAction
-    {
-        return object : ViewAction
-        {
-            override fun getConstraints(): Matcher<View> = isDisplayed()
-            override fun getDescription(): String = "Force le clic direct sur la vue"
-
-            override fun perform(uiController: UiController, view: View)
-            {
                 view.performClick()
             }
         }
