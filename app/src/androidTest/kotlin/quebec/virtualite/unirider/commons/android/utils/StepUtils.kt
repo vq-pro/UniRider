@@ -93,7 +93,9 @@ object StepUtils
 
     fun click(id: Int)
     {
-        element(id)?.check(matches(isDisplayed()))?.perform(forceClick())
+        poll {
+            element(id)?.check(matches(isDisplayed()))?.perform(forceClick())
+        }
     }
 
 
@@ -244,6 +246,8 @@ object StepUtils
     fun tableHeader(table: DataTable): List<String> = table.cells().get(0)
 
     fun tableRows(table: DataTable): List<List<String>> = table.cells().stream().skip(1).toList()
+
+    fun tableRowsWithoutHeader(table: DataTable): List<List<String>> = table.cells().stream().toList()
 
     fun <T> throwAssert(message: String): T
     {

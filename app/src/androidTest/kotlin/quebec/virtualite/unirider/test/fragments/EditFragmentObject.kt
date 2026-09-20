@@ -17,7 +17,7 @@ import quebec.virtualite.unirider.commons.android.utils.StepUtils.isDisabled
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.longClick
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.setChecked
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.setText
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableRows
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableRowsWithoutHeader
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.views.WheelConfirmationDeleteFragment
@@ -96,7 +96,6 @@ class EditFragmentObject(val app: TestApp)
 
     fun enterNewWheel(newValues: DataTable, selectedWheel: WheelEntity): WheelEntity
     {
-
         val mapDetailToId = mapOf(
             Pair("Charge Amperage", R.id.edit_charge_amperage),
             Pair("Charge Rate", R.id.edit_charge_rate),
@@ -112,7 +111,7 @@ class EditFragmentObject(val app: TestApp)
         )
 
         val mapEntity = mutableMapOf<String, String>()
-        tableRows(newValues).forEach { row ->
+        tableRowsWithoutHeader(newValues).forEach { row ->
             val field = row[0]
             val value = stripUnits(row[1])
             mapEntity[field] = value
