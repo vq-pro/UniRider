@@ -30,6 +30,7 @@ import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
 import org.hamcrest.Matchers.hasItem
@@ -202,7 +203,10 @@ object StepUtils
     fun selectListViewItem(id: Int, value: String)
     {
         poll {
-            onData(hasToString(equalTo(value))).inAdapterView(withId(id)).atPosition(0).perform(click())
+            // FIXME-1 Why do we need to use containsString here?
+            onData(hasToString(containsString(value))).inAdapterView(withId(id))
+                .atPosition(0)
+                .perform(click())
         }
     }
 

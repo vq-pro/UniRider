@@ -24,6 +24,7 @@ import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKm
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
 import quebec.virtualite.unirider.views.WheelConfirmationDisconnectFragment
 import quebec.virtualite.unirider.views.WheelRow
+import quebec.virtualite.unirider.views.WheelScanFragment
 import quebec.virtualite.unirider.views.WheelViewFragment
 
 class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
@@ -51,6 +52,8 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
     fun connectTo(deviceName: String)
     {
         click(R.id.button_connect)
+        assertThatPolling({ app.activeFragment() }, equalTo(WheelScanFragment::class.java))
+
         selectListViewItem(R.id.devices, deviceName)
 
         expectedDeviceName = deviceName
@@ -142,9 +145,9 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
         )
     }
 
-    fun validateKm(expectedKm: Float)
+    fun validateKm(expectedKm: String)
     {
-        assertThatField(R.id.edit_km, hasText("$expectedKm"))
+        assertThatField(R.id.edit_km, hasText(expectedKm))
     }
 
     fun validateMileageUpdated(expectedMileage: String)
@@ -194,10 +197,10 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
         assertThatField(R.id.view_name, hasText(wheel.name))
     }
 
-    fun validateVoltageAndBattery(expectedVoltage: Float, expectedBattery: Float)
+    fun validateVoltageAndBattery(expectedVoltage: String, expectedBattery: String)
     {
-        assertThatField(R.id.edit_voltage_actual, hasText("$expectedVoltage"))
-        assertThatField(R.id.view_battery, hasText("$expectedBattery"))
+        assertThatField(R.id.edit_voltage_actual, hasText(expectedVoltage))
+        assertThatField(R.id.view_battery, hasText(expectedBattery))
     }
 
     private fun canOrCannot(canOrCannot: String): Boolean = "can" == canOrCannot

@@ -5,9 +5,10 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
 
-abstract class BaseSteps {
-
-    companion object {
+abstract class BaseSteps
+{
+    companion object
+    {
         @JvmStatic
         internal val app = TestApp()
 
@@ -18,11 +19,13 @@ abstract class BaseSteps {
         internal lateinit var updatedWheel: WheelEntity
     }
 
-    open fun beforeScenario() {
+    open fun beforeScenario()
+    {
         domain.clear()
     }
 
-    open fun afterScenario() {
+    open fun afterScenario()
+    {
         app.stop()
     }
 }

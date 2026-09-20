@@ -143,7 +143,7 @@ class ViewSteps : BaseSteps()
     }
 
     @Then("^the km is updated to (.*?)$")
-    fun validateKmUpdatedTo(expectedKm: Float)
+    fun validateKmUpdatedTo(expectedKm: String)
     {
         viewFragment.validateKm(expectedKm)
     }
@@ -173,8 +173,8 @@ class ViewSteps : BaseSteps()
         viewFragment.setDistanceTo("40")
     }
 
-    @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
-    fun validateVoltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float)
+    @Then("^the voltage is updated to (.*)V and the battery (.*)%$")
+    fun validateVoltageAndBatteryUpdatedTo(expectedVoltage: String, expectedBattery: String)
     {
         viewFragment.validateVoltageAndBattery(expectedVoltage, expectedBattery)
     }
