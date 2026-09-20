@@ -10,6 +10,7 @@ import quebec.virtualite.unirider.test.fragments.ViewFragmentObject
 
 class ViewSteps : BaseSteps() {
 
+    private val chargeSteps = ChargeSteps()
     private val viewFragment = ViewFragmentObject(app, domain)
 
     @Before
@@ -25,7 +26,7 @@ class ViewSteps : BaseSteps() {
     @When("I charge the wheel")
     fun chargeWheel() {
         viewFragment.charge()
-        ChargeSteps().validateOnChargeScreen()
+        chargeSteps.validateOnChargeScreen()
     }
 
     @When("^I connect to the (.*?)$")

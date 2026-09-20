@@ -4,26 +4,11 @@ import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.click
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.getText
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRow
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasText
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.isEmpty
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.isEnabled
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.isInvisible
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.longClick
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.selectListViewItem
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.setText
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableRows
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKm
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
-import quebec.virtualite.unirider.views.WheelChargeFragment
 import quebec.virtualite.unirider.views.WheelConfirmationDisconnectFragment
 import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelViewFragment
@@ -35,6 +20,9 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
     fun charge() {
         click(R.id.button_charge)
+        // FIXME-1 Fix charge button that you have to click twice
+//        assertThatPolling({ app.activeFragment() }, equalTo(WheelChargeFragment::class.java))
+//        click(R.id.button_connect_charge)
     }
 
     fun connectAndAbort(deviceName: String, deviceAddr: String) {
@@ -53,7 +41,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
     }
 
     fun disconnectConfirmation() {
-        assertThat(app.activeFragment(), equalTo(WheelConfirmationDisconnectFragment::class.java))
+        assertThatPolling({ app.activeFragment() }, equalTo(WheelConfirmationDisconnectFragment::class.java))
         click(R.id.button_disconnect_confirmation)
     }
 
@@ -90,8 +78,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         validateEstimates(
             DataTable.create(
                 listOf(
-                    listOf("remaining", "total range"),
-                    listOf("", "")
+                    listOf("remaining", "total range"), listOf("", "")
                 )
             )
         )
@@ -118,10 +105,8 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
         expectedEstimates.diff(
             DataTable.create(
                 listOf(
-                    listOf("remaining", "total range"),
-                    listOf(
-                        getText(R.id.view_remaining_range),
-                        getText(R.id.view_total_range)
+                    listOf("remaining", "total range"), listOf(
+                        getText(R.id.view_remaining_range), getText(R.id.view_total_range)
                     )
                 )
             )
@@ -152,8 +137,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain) {
 
     fun validateUnsold(selectedWheel: WheelEntity) {
         assertThatField(
-            "The wheel is gone", R.id.wheels,
-            hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))
+            "The wheel is gone", R.id.wheels, hasRow(WheelRow(selectedWheel.id, selectedWheel.name, selectedWheel.mileage))
         )
     }
 

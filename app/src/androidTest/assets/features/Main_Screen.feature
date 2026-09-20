@@ -1,4 +1,3 @@
-@WIP
 Feature: Main Screen
 
   Background:

@@ -13,7 +13,6 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -32,7 +31,6 @@ import org.hamcrest.FeatureMatcher
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
 import org.hamcrest.Matchers.hasItem
@@ -189,7 +187,7 @@ object StepUtils {
 
     fun selectListViewItem(id: Int, value: String) {
         poll {
-            onData(hasToString(containsString(value)))
+            onData(hasToString(equalTo(value)))
                 .inAdapterView(withId(id))
                 .atPosition(0)
                 .perform(click())
@@ -198,7 +196,7 @@ object StepUtils {
 
     fun selectListViewItem(id: Int, field: ListViewField, value: String) {
         poll {
-            onData(hasEntry(equalTo(field.name), containsString(value)))
+            onData(hasEntry(equalTo(field.name), equalTo(value)))
                 .inAdapterView(withId(id))
                 .onChildView(withId(field.id))
                 // Instead of click(), because of a bug in Espresso picking the last item
@@ -219,7 +217,8 @@ object StepUtils {
     }
 
     fun setText(id: Int, newText: String) {
-        element(id)?.perform(closeSoftKeyboard(), replaceText(newText))
+//        element(id)?.perform(closeSoftKeyboard(), replaceText(newText))
+        element(id)?.perform(replaceText(newText))
     }
 
     fun string(id: Int): String =

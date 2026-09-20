@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+//    FIXME-2 Convert from kapt to ksp
     id 'kotlin-kapt'
 //    id("com.google.devtools.ksp")
 }
