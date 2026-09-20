@@ -8,161 +8,191 @@ import cucumber.api.java.en.When
 import io.cucumber.datatable.DataTable
 import quebec.virtualite.unirider.test.fragments.ViewFragmentObject
 
-class ViewSteps : BaseSteps() {
-
+class ViewSteps : BaseSteps()
+{
     private val chargeSteps = ChargeSteps()
     private val viewFragment = ViewFragmentObject(app, domain)
 
     @Before
-    override fun beforeScenario() {
+    override fun beforeScenario()
+    {
         super.beforeScenario()
     }
 
     @After
-    override fun afterScenario() {
+    override fun afterScenario()
+    {
         super.afterScenario()
     }
 
     @When("I charge the wheel")
-    fun chargeWheel() {
+    fun chargeWheel()
+    {
         viewFragment.charge()
         chargeSteps.validateOnChargeScreen()
     }
 
     @When("^I connect to the (.*?)$")
-    fun connectTo(deviceName: String) {
+    fun connectTo(deviceName: String)
+    {
         viewFragment.connectTo(deviceName)
     }
 
     @When("I confirm the disconnect")
-    fun disconnectConfirm() {
+    fun disconnectConfirm()
+    {
         viewFragment.disconnectConfirmation()
     }
 
     @When("I delete the bluetooth settings")
-    fun disconnectWheel() {
+    fun disconnectWheel()
+    {
         viewFragment.disconnectWheel()
     }
 
     @When("I edit the wheel")
-    fun editWheel() {
+    fun editWheel()
+    {
         viewFragment.editWheel()
     }
 
     @When("I go back to view the wheel")
-    fun goBackToViewWheel() {
+    fun goBackToViewWheel()
+    {
         app.back()
         validateOnViewScreen()
     }
 
     @When("I reconnect to the wheel")
-    fun reconnectToWheel() {
+    fun reconnectToWheel()
+    {
         viewFragment.reconnect()
     }
 
     @When("I cancel the scan and go back")
-    fun scanCancel() {
+    fun scanCancel()
+    {
         app.back(2)
     }
 
     @When("^I do a scan and see the (.*?) \\((.*?)\\) but go back without connecting$")
-    fun scanToConnectTo(deviceName: String, deviceAddr: String) {
+    fun scanToConnectTo(deviceName: String, deviceAddr: String)
+    {
         viewFragment.connectAndAbort(deviceName, deviceAddr)
     }
 
     @When("the updated mileage for some of these wheels should be:")
-    fun updateMileageForSomeOfTheseWheels(table: DataTable) {
+    fun updateMileageForSomeOfTheseWheels(table: DataTable)
+    {
         viewFragment.useTheseUpdateMileageValues(table)
     }
 
     @Given("^I set the actual voltage to (.*?)$")
-    fun givenActualVoltageTo(voltage: String) {
+    fun givenActualVoltageTo(voltage: String)
+    {
         viewFragment.setActualVoltageTo(voltage)
     }
 
     @Given("^I set the distance to (.*?)$")
-    fun givenDistanceTo(km: String) {
+    fun givenDistanceTo(km: String)
+    {
         viewFragment.setDistanceTo(km)
     }
 
     @Then("it displays blank estimated values")
-    fun validateBlankEstimatedValues() {
+    fun validateBlankEstimatedValues()
+    {
         viewFragment.validateBlankEstimates()
     }
 
     @Then("the wheel's Bluetooth name is updated")
-    fun validateBluetoothNameUpdated() {
+    fun validateBluetoothNameUpdated()
+    {
         viewFragment.validateBluetoothName()
     }
 
     @Then("^I (can|cannot) charge the wheel$")
-    fun validateCanChargeWheel(canOrCannot: String) {
+    fun validateCanChargeWheel(canOrCannot: String)
+    {
         viewFragment.validateCanCharge(canOrCannot)
     }
 
     @Then("^I (can|cannot) see the bluetooth settings$")
-    fun validateCanSeeBluetoothSettings(canOrCannot: String) {
+    fun validateCanSeeBluetoothSettings(canOrCannot: String)
+    {
         viewFragment.validateCanSeeBluetoothSettings(canOrCannot)
     }
 
     @Then("^the details view shows the (.*) with a mileage of (.*) km$")
-    fun validateDetailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String) {
+    fun validateDetailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String)
+    {
         viewFragment.validateMileageUpdated(expectedMileage)
         viewFragment.validateName(expectedName)
     }
 
     @Then("it displays these estimates:")
-    fun validateEstimates(expectedEstimates: DataTable) {
+    fun validateEstimates(expectedEstimates: DataTable)
+    {
         viewFragment.validateEstimates(expectedEstimates)
     }
 
     @Then("I can view the details for that wheel")
-    fun validateInDetailsView() {
+    fun validateInDetailsView()
+    {
         viewFragment.validateViewing(selectedWheel)
     }
 
     @Then("^the km is updated to (.*?)$")
-    fun validateKmUpdatedTo(expectedKm: Float) {
+    fun validateKmUpdatedTo(expectedKm: Float)
+    {
         viewFragment.validateKm(expectedKm)
     }
 
     @Then("^the mileage is updated to (.*?) km$")
-    fun validateMileageUpdatedTo(expectedMileage: String) {
+    fun validateMileageUpdatedTo(expectedMileage: String)
+    {
         viewFragment.validateMileageUpdated(expectedMileage)
     }
 
     @Then("the mileage is updated to its up-to-date value")
-    fun validateMileageUpdatedToUpToDateValue() {
+    fun validateMileageUpdatedToUpToDateValue()
+    {
         viewFragment.validateUpToDateMileage(selectedWheel)
     }
 
     @Then("^it displays a percentage of (.*?)%$")
-    fun validatePercentage(expectedPercentage: String) {
+    fun validatePercentage(expectedPercentage: String)
+    {
         viewFragment.validatePercentage(expectedPercentage)
     }
 
     @When("the wh/km is available")
-    fun whPerKmIsAvailable() {
+    fun whPerKmIsAvailable()
+    {
         viewFragment.setActualVoltageTo("90")
         viewFragment.setDistanceTo("40")
     }
 
     @Then("^the voltage is updated to (.*?)V and the battery (.*?)%$")
-    fun validateVoltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float) {
+    fun validateVoltageAndBatteryUpdatedTo(expectedVoltage: Float, expectedBattery: Float)
+    {
         viewFragment.validateVoltageAndBattery(expectedVoltage, expectedBattery)
     }
 
     @Then("the wheel appears as sold")
-    fun validateWheelAppearsAsSold() {
+    fun validateWheelAppearsAsSold()
+    {
         viewFragment.validateSold(selectedWheel.name)
     }
 
     @Then("the wheel is shown as unsold")
-    fun validateWheelShownAsUnsold() {
+    fun validateWheelShownAsUnsold()
+    {
         viewFragment.validateUnsold(selectedWheel)
     }
 
-    fun validateOnViewScreen() {
+    fun validateOnViewScreen()
+    {
         viewFragment.validateView()
     }
 }

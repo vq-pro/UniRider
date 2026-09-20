@@ -39,68 +39,82 @@ import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.isA
 import org.hamcrest.Matchers.not
+import org.junit.Assert.fail
 import quebec.virtualite.commons.android.utils.StringUtils.isBlank
 import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
-object StepUtils {
-
+object StepUtils
+{
     private const val INTERVAL = 250L
-    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
+    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 3000L
 
     data class ListViewField(val id: Int, val name: String)
 
     fun applicationContext(): Context = ApplicationProvider.getApplicationContext()!!
 
-    fun <T> assertThat(actual: T, matcher: Matcher<T>) {
+    fun <T> assertThat(actual: T, matcher: Matcher<T>)
+    {
         MatcherAssert.assertThat(actual, matcher)
     }
 
-    fun <T> assertThat(message: String, actual: T, matcher: Matcher<T>) {
+    fun <T> assertThat(message: String, actual: T, matcher: Matcher<T>)
+    {
         MatcherAssert.assertThat(message, actual, matcher)
     }
 
-    fun assertThatField(id: Int, assertion: Matcher<View>) {
+    fun assertThatField(id: Int, assertion: Matcher<View>)
+    {
         poll {
             element(id)?.check(matches(assertion))
         }
     }
 
-    fun assertThatField(message: String, id: Int, assertion: Matcher<View>) {
+    fun assertThatField(message: String, id: Int, assertion: Matcher<View>)
+    {
         poll(message) {
             element(id)?.check(matches(assertion))
         }
     }
 
-    fun <T> assertThatPolling(getActual: () -> T, matcher: Matcher<T>) {
+    fun <T> assertThatPolling(getActual: () -> T, matcher: Matcher<T>)
+    {
         poll {
             MatcherAssert.assertThat(getActual.invoke(), matcher)
         }
     }
 
-    fun <T> assertThatPolling(message: String, getActual: () -> T, matcher: Matcher<T>) {
+    fun <T> assertThatPolling(message: String, getActual: () -> T, matcher: Matcher<T>)
+    {
         poll(message) {
             MatcherAssert.assertThat(getActual.invoke(), matcher)
         }
     }
 
-    fun click(id: Int) {
-        element(id)?.perform(click())
+    fun click(id: Int)
+    {
+        element(id)?.check(matches(isDisplayed()))?.perform(forceClick())
     }
 
-    fun getSpinnerText(id: Int): String {
+
+    fun getSpinnerText(id: Int): String
+    {
         var text = ""
-        element(id)?.perform(object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
+        element(id)?.perform(object : ViewAction
+        {
+            override fun getConstraints(): Matcher<View>
+            {
                 return isAssignableFrom(Spinner::class.java)
             }
 
-            override fun getDescription(): String {
+            override fun getDescription(): String
+            {
                 return "Text of the view"
             }
 
-            override fun perform(uiController: UiController?, view: View?) {
+            override fun perform(uiController: UiController?, view: View?)
+            {
                 val spinner = view as Spinner
                 text = if (spinner.selectedItemPosition == -1) ""
                 else "${spinner.selectedItem}"
@@ -110,18 +124,23 @@ object StepUtils {
         return text
     }
 
-    fun getText(id: Int): String {
+    fun getText(id: Int): String
+    {
         var text = ""
-        element(id)?.perform(object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
+        element(id)?.perform(object : ViewAction
+        {
+            override fun getConstraints(): Matcher<View>
+            {
                 return isAssignableFrom(TextView::class.java)
             }
 
-            override fun getDescription(): String {
+            override fun getDescription(): String
+            {
                 return "Text of the view"
             }
 
-            override fun perform(uiController: UiController?, view: View?) {
+            override fun perform(uiController: UiController?, view: View?)
+            {
                 text = (view as TextView).text.toString()
             }
         })
@@ -130,81 +149,74 @@ object StepUtils {
 
     fun hasMinimumRows(expected: Int) = hasMinimumChildCount(expected)
 
-    fun <T> hasRow(expectedRow: T) =
-        object : FeatureMatcher<View, List<T>?>(
-            hasItem(expectedRow), "list", "list"
-        ) {
-            override fun featureValueOf(view: View?): List<T> {
-                return actualListViewItemsFor(view)
-            }
+    fun <T> hasRow(expectedRow: T) = object : FeatureMatcher<View, List<T>?>(
+        hasItem(expectedRow), "list", "list"
+    )
+    {
+        override fun featureValueOf(view: View?): List<T>
+        {
+            return actualListViewItemsFor(view)
         }
+    }
 
-    fun <T> hasRows(expectedRows: List<T>) =
-        object : FeatureMatcher<View, List<T>?>(
-            equalTo(expectedRows), "list", "list"
-        ) {
-            override fun featureValueOf(view: View?): List<T> {
-                return actualListViewItemsFor(view)
-            }
+    fun <T> hasRows(expectedRows: List<T>) = object : FeatureMatcher<View, List<T>?>(
+        equalTo(expectedRows), "list", "list"
+    )
+    {
+        override fun featureValueOf(view: View?): List<T>
+        {
+            return actualListViewItemsFor(view)
         }
+    }
 
-    fun hasSelectedText(expected: String): Matcher<View> =
-        allOf(isVisible(), isEnabled(), withText(equalTo(expected)))
+    fun hasSelectedText(expected: String): Matcher<View> = allOf(isVisible(), isEnabled(), withText(equalTo(expected)))
 
     fun hasSpinnerText(expected: String): Matcher<View> =
         allOf(isVisible(), isEnabled(), withSpinnerText(equalTo(expected)))
 
-    fun hasText(expected: String): Matcher<View> =
-        withText(equalTo(expected))
+    fun hasText(expected: String): Matcher<View> = withText(equalTo(expected))
 
-    fun isDisabled(): Matcher<View> =
-        not(isEnabled())
+    fun isDisabled(): Matcher<View> = not(isEnabled())
 
-    fun isEmpty(): Matcher<View> =
-        hasText("")
+    fun isEmpty(): Matcher<View> = hasText("")
 
-    fun isEmpty(shouldBeEmpty: Boolean): Matcher<View> =
-        if (shouldBeEmpty) hasText("")
-        else not(hasText(""))
+    fun isEmpty(shouldBeEmpty: Boolean): Matcher<View> = if (shouldBeEmpty) hasText("")
+    else not(hasText(""))
 
-    fun isInvisible(): Matcher<View> =
-        isVisible(false)
+    fun isInvisible(): Matcher<View> = isVisible(false)
 
-    fun isVisible(): Matcher<View> =
-        isVisible(true)
+    fun isVisible(): Matcher<View> = isVisible(true)
 
-    fun isVisible(shouldDisplay: Boolean): Matcher<View> =
-        if (shouldDisplay) isDisplayed()
-        else not(isDisplayed())
+    fun isVisible(shouldDisplay: Boolean): Matcher<View> = if (shouldDisplay) isDisplayed()
+    else not(isDisplayed())
 
-    fun isEnabled(shouldBeEnabled: Boolean): Matcher<View> =
-        if (shouldBeEnabled) isEnabled()
-        else isDisabled()
+    fun isEnabled(shouldBeEnabled: Boolean): Matcher<View> = if (shouldBeEnabled) isEnabled()
+    else isDisabled()
 
-    fun longClick(id: Int) {
-        element(id)?.perform(longClick())
+    fun longClick(id: Int)
+    {
+        element(id)?.check(matches(isDisplayed()))?.perform(forceLongClick())
     }
 
-    fun selectListViewItem(id: Int, value: String) {
+    fun selectListViewItem(id: Int, value: String)
+    {
         poll {
-            onData(hasToString(equalTo(value)))
-                .inAdapterView(withId(id))
-                .atPosition(0)
-                .perform(click())
+            onData(hasToString(equalTo(value))).inAdapterView(withId(id)).atPosition(0).perform(click())
         }
     }
 
-    fun selectListViewItem(id: Int, field: ListViewField, value: String) {
+    fun selectListViewItem(id: Int, field: ListViewField, value: String)
+    {
         poll {
-            onData(hasEntry(equalTo(field.name), equalTo(value)))
-                .inAdapterView(withId(id))
+            onData(hasEntry(equalTo(field.name), equalTo(value))).inAdapterView(withId(id))
                 .onChildView(withId(field.id))
                 // Instead of click(), because of a bug in Espresso picking the last item
                 .perform(clickAdapterRow())
         }
     }
 
-    fun selectSpinnerItem(id: Int, value: String) {
+    fun selectSpinnerItem(id: Int, value: String)
+    {
         click(id)
 
         poll {
@@ -212,75 +224,76 @@ object StepUtils {
         }
     }
 
-    fun setChecked(id: Int, checked: Boolean) {
+    fun setChecked(id: Int, checked: Boolean)
+    {
         element(id)?.perform(internalSetChecked(checked))
     }
 
-    fun setText(id: Int, newText: String) {
-//        element(id)?.perform(closeSoftKeyboard(), replaceText(newText))
-        element(id)?.perform(replaceText(newText))
+    fun setText(id: Int, newText: String)
+    {
+        poll {
+            element(id)?.perform(replaceText(newText))
+        }
     }
 
-    fun string(id: Int): String =
-        InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getString(id)
+    fun string(id: Int): String = InstrumentationRegistry.getInstrumentation().targetContext.getString(id)
 
     fun strip(value: String, stripValue: String): String =
         if (value.endsWith(stripValue)) value.dropLast(stripValue.length).trim()
         else value.trim()
 
-    fun tableHeader(table: DataTable): List<String> =
-        table
-            .cells()
-            .get(0)
+    fun tableHeader(table: DataTable): List<String> = table.cells().get(0)
 
-    fun tableRows(table: DataTable): List<List<String>> =
-        table
-            .cells()
-            .stream()
-            .skip(1)
-            .toList()
+    fun tableRows(table: DataTable): List<List<String>> = table.cells().stream().skip(1).toList()
 
-    fun <T> throwAssert(message: String): T {
+    fun <T> throwAssert(message: String): T
+    {
         throw AssertionError(message)
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T> actualListViewItemsFor(view: View?): ArrayList<T> {
+    private fun <T> actualListViewItemsFor(view: View?): ArrayList<T>
+    {
         val adapter = (view as AdapterView<*>).adapter
 
         val actualItems = ArrayList<T>()
-        for (i in 0 until adapter.count) {
+        for (i in 0 until adapter.count)
+        {
             actualItems.add(adapter.getItem(i) as T)
         }
 
         return actualItems
     }
 
-    private fun clickAdapterRow(): ViewAction {
-        return object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
+    private fun clickAdapterRow(): ViewAction
+    {
+        return object : ViewAction
+        {
+            override fun getConstraints(): Matcher<View>
+            {
                 return isA(View::class.java)
             }
 
             override fun getDescription(): String = "Trigger performItemClick on adapter item"
 
-            override fun perform(uiController: UiController, view: View) {
+            override fun perform(uiController: UiController, view: View)
+            {
                 uiController.loopMainThreadUntilIdle()
 
                 // Find the parent ListView/AdapterView
                 var parent = view.parent
-                while (parent != null && parent !is AdapterView<*>) {
+                while (parent != null && parent !is AdapterView<*>)
+                {
                     parent = parent.parent
                 }
 
-                if (parent is AdapterView<*>) {
+                if (parent is AdapterView<*>)
+                {
                     val adapterView = parent as AdapterView<*>
                     val position = adapterView.getPositionForView(view)
 
-                    if (position != AdapterView.INVALID_POSITION) {
+                    if (position != AdapterView.INVALID_POSITION)
+                    {
                         adapterView.setSelection(position)
                         uiController.loopMainThreadUntilIdle()
 
@@ -296,57 +309,102 @@ object StepUtils {
         }
     }
 
-    private fun element(id: Int): ViewInteraction? {
-        return try {
+    private fun element(id: Int): ViewInteraction?
+    {
+        return try
+        {
             onView(withId(id))
 
-        } catch (e: Exception) {
+        } catch (e: Exception)
+        {
+            fail(e.message)
             throw RuntimeException(e)
         }
     }
 
-    private fun elementWith(text: String): ViewInteraction? {
-        return try {
+    private fun elementWith(text: String): ViewInteraction?
+    {
+        return try
+        {
             onView(withText(text))
 
-        } catch (e: Exception) {
+        } catch (e: Exception)
+        {
             throw RuntimeException(e)
         }
     }
 
-    private fun internalSetChecked(checked: Boolean): ViewAction =
-        object : ViewAction {
-            override fun getConstraints() =
-                object : BaseMatcher<View>() {
-                    override fun matches(item: Any) = isA(Checkable::class.java).matches(item)
+    private fun forceClick(): ViewAction
+    {
+        return object : ViewAction
+        {
+            override fun getConstraints(): Matcher<View> = isDisplayed()
+            override fun getDescription(): String = "Force le clic direct sur la vue"
 
-                    override fun describeMismatch(item: Any, mismatchDescription: Description) {}
+            override fun perform(uiController: UiController, view: View)
+            {
+                view.performClick()
+            }
+        }
+    }
 
-                    override fun describeTo(description: Description) {}
-                }
+    private fun forceLongClick(): ViewAction
+    {
+        return object : ViewAction
+        {
+            override fun getConstraints(): Matcher<View> = isDisplayed()
+            override fun getDescription(): String = "Force le clic long direct sur la vue"
 
-            override fun getDescription() = ""
+            override fun perform(uiController: UiController, view: View)
+            {
+                view.performLongClick()
+            }
+        }
+    }
 
-            override fun perform(uiController: UiController, view: View) {
-                val checkableView = view as Checkable
-                checkableView.isChecked = checked
+    private fun internalSetChecked(checked: Boolean): ViewAction = object : ViewAction
+    {
+        override fun getConstraints() = object : BaseMatcher<View>()
+        {
+            override fun matches(item: Any) = isA(Checkable::class.java).matches(item)
+
+            override fun describeMismatch(item: Any, mismatchDescription: Description)
+            {
+            }
+
+            override fun describeTo(description: Description)
+            {
             }
         }
 
-    private fun poll(callback: () -> Unit) {
+        override fun getDescription() = ""
+
+        override fun perform(uiController: UiController, view: View)
+        {
+            val checkableView = view as Checkable
+            checkableView.isChecked = checked
+        }
+    }
+
+    private fun poll(callback: () -> Unit)
+    {
         poll("", callback)
     }
 
-    private fun poll(message: String, callback: () -> Unit) {
+    private fun poll(message: String, callback: () -> Unit)
+    {
         var exception: Throwable?
         val start = currentTimeMillis()
 
-        do {
-            try {
+        do
+        {
+            try
+            {
                 callback()
                 return
 
-            } catch (e: Throwable) {
+            } catch (e: Throwable)
+            {
                 exception = e
                 sleep(INTERVAL)
             }
@@ -355,7 +413,8 @@ object StepUtils {
 
         } while (elapsed < TIMEOUT)
 
-        throw when {
+        throw when
+        {
             !isBlank(message) -> AssertionError(message, exception)
             else -> exception
         }

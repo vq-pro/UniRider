@@ -10,6 +10,7 @@ import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.isDisabled
@@ -23,68 +24,78 @@ import quebec.virtualite.unirider.views.WheelConfirmationDeleteFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 
 val UNITS = arrayOf(
-    " km",
-    " Wh",
-    "V",
-    "A",
-    "V/h"
+    " km", " Wh", "V", "A", "V/h"
 );
 
-class EditFragmentObject(val app: TestApp) {
+class EditFragmentObject(val app: TestApp)
+{
 
     private val IS_NOT_SOLD = false
     private val IS_SOLD = true
 
-    fun changeChargeAmperage(value: String) {
+    fun changeChargeAmperage(value: String)
+    {
         setText(R.id.edit_charge_amperage, value)
     }
 
-    fun changeChargeRate(value: String) {
+    fun changeChargeRate(value: String)
+    {
         setText(R.id.edit_charge_rate, value)
     }
 
-    fun changeDistanceOffset(value: String) {
+    fun changeDistanceOffset(value: String)
+    {
         setText(R.id.edit_distance_offset, value)
     }
 
-    fun changeFullVoltage(value: String) {
+    fun changeFullVoltage(value: String)
+    {
         setText(R.id.edit_voltage_full, value)
     }
 
-    fun changeMileage(value: String) {
+    fun changeMileage(value: String)
+    {
         setText(R.id.edit_mileage, value)
     }
 
-    fun changeName(value: String) {
+    fun changeName(value: String)
+    {
         setText(R.id.edit_name, value)
     }
 
-    fun changePremileage(value: String) {
+    fun changePremileage(value: String)
+    {
         setText(R.id.edit_premileage, value)
     }
 
-    fun changeVoltageMax(value: String) {
+    fun changeVoltageMax(value: String)
+    {
         setText(R.id.edit_voltage_max, value)
     }
 
-    fun changeVoltageMin(value: String) {
+    fun changeVoltageMin(value: String)
+    {
         setText(R.id.edit_voltage_min, value)
     }
 
-    fun changeWh(value: String) {
+    fun changeWh(value: String)
+    {
         setText(R.id.edit_wh, value)
     }
 
-    fun confirmDeletion() {
+    fun confirmDeletion()
+    {
         assertThat(app.activeFragment(), equalTo(WheelConfirmationDeleteFragment::class.java))
         click(R.id.button_delete_confirmation)
     }
 
-    fun deleteWheel() {
+    fun deleteWheel()
+    {
         longClick(R.id.button_delete)
     }
 
-    fun enterNewWheel(newValues: DataTable, selectedWheel: WheelEntity): WheelEntity {
+    fun enterNewWheel(newValues: DataTable, selectedWheel: WheelEntity): WheelEntity
+    {
 
         val mapDetailToId = mapOf(
             Pair("Charge Amperage", R.id.edit_charge_amperage),
@@ -110,10 +121,8 @@ class EditFragmentObject(val app: TestApp) {
             assertThat("Field '$field' is not defined", rawField, not(nullValue()))
 
             val key = rawField!!
-            if ("Sold" == field)
-                setChecked(key, "Yes" == value)
-            else
-                setText(key, value)
+            if ("Sold" == field) setChecked(key, "Yes" == value)
+            else setText(key, value)
         }
 
         val updatedWheel = selectedWheel.copy(
@@ -135,46 +144,56 @@ class EditFragmentObject(val app: TestApp) {
         return updatedWheel
     }
 
-    fun getVoltageFull(): Float {
+    fun getVoltageFull(): Float
+    {
         return floatOf(getText(R.id.edit_voltage_full))
     }
 
-    fun getVoltageMax(): Float {
+    fun getVoltageMax(): Float
+    {
         return floatOf(getText(R.id.edit_voltage_max))
     }
 
-    fun getVoltageMin(): Float {
+    fun getVoltageMin(): Float
+    {
         return floatOf(getText(R.id.edit_voltage_min))
     }
 
-    fun markAsSold() {
+    fun markAsSold()
+    {
         setChecked(R.id.check_sold, IS_SOLD)
     }
 
-    fun markAsUnsold() {
+    fun markAsUnsold()
+    {
         setChecked(R.id.check_sold, IS_NOT_SOLD)
     }
 
-    fun save() {
+    fun save()
+    {
         click(R.id.button_save)
     }
 
-    fun validateCanSave() {
+    fun validateCanSave()
+    {
         assertThatField("Save button should be enabled", R.id.button_save, isEnabled())
     }
 
-    fun validateCannotSave() {
+    fun validateCannotSave()
+    {
         assertThatField("Save button should be disabled", R.id.button_save, isDisabled())
     }
 
-    fun validateView() {
-        assertThat(app.activeFragment(), equalTo(WheelEditFragment::class.java))
+    fun validateView()
+    {
+        assertThatPolling({ app.activeFragment() }, equalTo(WheelEditFragment::class.java))
     }
 
-    private fun stripUnits(value: String): String {
-        for (unit in UNITS) {
-            if (value.endsWith(unit))
-                return value.substringBefore(unit)
+    private fun stripUnits(value: String): String
+    {
+        for (unit in UNITS)
+        {
+            if (value.endsWith(unit)) return value.substringBefore(unit)
         }
 
         return value

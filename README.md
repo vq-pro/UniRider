@@ -28,6 +28,7 @@
 * Gradle
 * Name = Unit Tests
 * Run = :app:testIntegrationDebugUnitTest --tests "quebec.virtualite.unirider.*"
+* Gradle Project = UniRider:app
 * Force test tasks execution
 
 ## Cucumber
@@ -36,7 +37,7 @@
 * Android Instrumented Tests
 * Name = Cucumber Tests
 * Test = All in Module
-* Instrumentation class = CucumberInstrumentationRunner
+* Instrumentation class = CucumberInstrumentationRunner (will appear on the reload of the configuration)
 * Before launch =
   * Run Gradle task "app:cleanBuildCache"
   * Gradle-aware Make

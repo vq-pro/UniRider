@@ -78,6 +78,7 @@ android {
         }
 
         main {
+            assets.srcDirs = ['src/main/res']
             java.srcDirs = ['src/main/kotlin']
         }
 

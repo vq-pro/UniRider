@@ -1,3 +1,4 @@
+@WIP
 Feature: Wheel Viewing
 
   Background:
@@ -26,7 +27,6 @@ Feature: Wheel Viewing
       | Sherman L | can    |
       | Sherman   | cannot |
 
-  @WIP
   Scenario: Bluetooth - disconnect wheel
     Given I select the Sherman L
     And I can see the bluetooth settings
