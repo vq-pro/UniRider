@@ -7,6 +7,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.ListViewField
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasText
@@ -73,7 +74,7 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun validateView()
     {
-        assertThat(app.activeFragment(), equalTo(MainFragment::class.java))
+        assertThatPolling({ app.activeFragment() }, equalTo(MainFragment::class.java))
     }
 
     fun validateUpdatedNameAndMileage(expectedId: Long, expectedName: String, expectedMileage: Int)

@@ -24,12 +24,8 @@
 
 ## Unit
 
-* Run Configuration
-* Gradle
-* Name = Unit Tests
-* Run = :app:testIntegrationDebugUnitTest --tests "quebec.virtualite.unirider.*"
-* Gradle Project = UniRider:app
-* Force test tasks execution
+* Right-click on src/test/kotlin
+* Rename configuration "Unit Tests"
 
 ## Cucumber
 
