@@ -13,7 +13,7 @@ import androidx.core.view.WindowCompat
 open class CommonActivity(
     private val idMainLayout: Int,
     private val idToolbar: Int,
-    private val idMenu: Int,
+    private val idMenu: Int?,
     private val idActionSettings: Int,
     private vararg val requiredPermissions: String
 
@@ -36,9 +36,13 @@ open class CommonActivity(
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean
     {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(idMenu, menu)
-        return true
+        return if (idMenu != null)
+        {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            menuInflater.inflate(idMenu, menu)
+            true
+
+        } else super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
@@ -62,5 +66,10 @@ open class CommonActivity(
                 requestPermissions(this, arrayOf(permission), 1)
             }
         }
+    }
+
+    companion object
+    {
+        val NO_MENU: Int? = null
     }
 }
