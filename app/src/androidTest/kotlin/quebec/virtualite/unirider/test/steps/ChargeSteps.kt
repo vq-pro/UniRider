@@ -8,98 +8,116 @@ import io.cucumber.datatable.DataTable
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
 import quebec.virtualite.unirider.test.fragments.ChargeFragmentObject
 
-class ChargeSteps : BaseSteps() {
-
+class ChargeSteps : BaseSteps()
+{
     private val chargeFragment = ChargeFragmentObject(app)
 
     @Before
-    override fun beforeScenario() {
+    override fun beforeScenario()
+    {
         super.beforeScenario()
     }
 
     @After
-    override fun afterScenario() {
+    override fun afterScenario()
+    {
         super.afterScenario()
 
         BluetoothServicesSim.reset()
     }
 
-    @When("^I change the amperage to (.*)$")
-    fun changeAmperage(newAmperage: String) {
+    @When("^I change the amperage to (.*?)$")
+    fun changeAmperage(newAmperage: String)
+    {
         chargeFragment.changeAmperageTo(newAmperage)
     }
 
-    @When("^I change the actual voltage to (.*)$")
-    fun changeVoltageActual(newVoltage: String) {
+    @When("^I change the actual voltage to (.*?)$")
+    fun changeVoltageActual(newVoltage: String)
+    {
         chargeFragment.changeVoltageActualTo(newVoltage)
     }
 
     @When("I reconnect to update the voltage$")
-    fun reconnectToUpdateVoltage() {
+    fun reconnectToUpdateVoltage()
+    {
         chargeFragment.reconnect()
     }
 
     @When("^I request to charge for (.*?)$")
-    fun requestChargeFor(km: String) {
+    fun requestChargeFor(km: String)
+    {
         chargeFragment.chargeFor(km)
     }
 
     @When("^I request to charge to (.*?)$")
-    fun requestChargeTo(voltage: String) {
+    fun requestChargeTo(voltage: String)
+    {
         chargeFragment.changeVoltageRequired(voltage)
     }
 
     @Then("^it displays an actual voltage of (.*?)$")
-    fun validateActualVoltage(expectedVoltage: String) {
+    fun validateActualVoltage(expectedVoltage: String)
+    {
         chargeFragment.validateActualVoltage(expectedVoltage)
     }
 
     @Then("^it displays an amperage of (.*?)$")
-    fun validateAmperage(expectedAmperage: String) {
+    fun validateAmperage(expectedAmperage: String)
+    {
         chargeFragment.validateAmperage(expectedAmperage)
     }
 
     @Then("it displays no actual voltage")
-    fun validateActualVoltageNot() {
+    fun validateActualVoltageNot()
+    {
         chargeFragment.validateActualVoltage("")
     }
 
     @Then("I cannot connect to the wheel on the charge screen")
-    fun validateCannotConnectToWheelOnChargeScreen() {
+    fun validateCannotConnectToWheelOnChargeScreen()
+    {
         chargeFragment.validateCannotConnect()
     }
 
     @Then("I see the charge warning")
-    fun validateChargeWarningMessage() {
+    fun validateChargeWarningMessage()
+    {
         chargeFragment.chargeWarningMessage(true)
     }
 
     @Then("I don't see the charge warning")
-    fun validateChargeWarningMessageNot() {
+    fun validateChargeWarningMessageNot()
+    {
         chargeFragment.chargeWarningMessage(false)
     }
 
     @Then("it displays these charging estimates:")
-    fun validateChargingEstimates(expectedEstimates: DataTable) {
+    fun validateChargingEstimates(expectedEstimates: DataTable)
+    {
         chargeFragment.validateEstimates(expectedEstimates)
     }
 
     @Then("it displays empty charging estimates")
-    fun validateChargingEstimatesEmpty() {
+    fun validateChargingEstimatesEmpty()
+    {
         chargeFragment.validateEmptyEstimates()
     }
 
     @Then("the full charge indicator is on")
-    fun validateFullChargeIndicatorOn() {
+    fun validateFullChargeIndicatorOn()
+    {
         chargeFragment.validateFullChargeIndicatorOn();
     }
 
     @Then("the full charge indicator is off")
-    fun validateFullChargeIndicatorOff() {
+    fun validateFullChargeIndicatorOff()
+    {
         chargeFragment.validateFullChargeIndicatorOff();
     }
 
-    fun validateOnChargeScreen() {
+    fun validateOnChargeScreen()
+    {
         chargeFragment.validateView()
     }
 }

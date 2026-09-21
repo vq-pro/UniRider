@@ -21,6 +21,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.test.domain.TestDomain
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseKm
+import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parsePercentage
 import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
 import quebec.virtualite.unirider.views.WheelConfirmationDisconnectFragment
 import quebec.virtualite.unirider.views.WheelRow
@@ -35,9 +36,6 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
     fun charge()
     {
         click(R.id.button_charge)
-        // FIXME-1 Fix charge button that you have to click twice
-//        assertThatPolling({ app.activeFragment() }, equalTo(WheelChargeFragment::class.java))
-//        click(R.id.button_connect_charge)
     }
 
     fun connectAndAbort(deviceName: String, deviceAddr: String)
@@ -152,7 +150,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun validateMileageUpdated(expectedMileage: String)
     {
-        assertThatField(R.id.view_mileage, hasText(expectedMileage))
+        assertThatField(R.id.view_mileage, hasText(parseKm(expectedMileage)))
     }
 
     fun validateName(expectedName: String)
@@ -162,7 +160,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun validatePercentage(expectedPercentage: String)
     {
-        assertThatField(R.id.view_battery, hasText(expectedPercentage))
+        assertThatField(R.id.view_battery, hasText(parsePercentage(expectedPercentage)))
     }
 
     fun validateSold(name: String)
@@ -193,14 +191,15 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun validateViewing(wheel: WheelEntity)
     {
-        assertThatPolling({ app.activeFragment() }, equalTo(WheelViewFragment::class.java))
+        validateView()
+
         assertThatField(R.id.view_name, hasText(wheel.name))
     }
 
     fun validateVoltageAndBattery(expectedVoltage: String, expectedBattery: String)
     {
-        assertThatField(R.id.edit_voltage_actual, hasText(expectedVoltage))
-        assertThatField(R.id.view_battery, hasText(expectedBattery))
+        assertThatField(R.id.edit_voltage_actual, hasText(parseVoltage(expectedVoltage)))
+        assertThatField(R.id.view_battery, hasText(parsePercentage(expectedBattery)))
     }
 
     private fun canOrCannot(canOrCannot: String): Boolean = "can" == canOrCannot

@@ -23,7 +23,7 @@ class AppSteps : BaseSteps() {
         app.start()
     }
 
-    @Given("^the current time is (.*)$")
+    @Given("^the current time is (.*?)$")
     fun givenCurrentTimeIs(currentTime: String) {
         simulateNow(currentTime)
     }

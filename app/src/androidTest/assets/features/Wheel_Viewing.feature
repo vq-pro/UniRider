@@ -1,4 +1,3 @@
-@WIP
 Feature: Wheel Viewing
 
   Background:

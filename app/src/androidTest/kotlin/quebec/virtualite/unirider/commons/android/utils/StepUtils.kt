@@ -45,6 +45,7 @@ import quebec.virtualite.unirider.BuildConfig.BLUETOOTH_ACTUAL
 import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
+@Suppress("unused")
 object StepUtils
 {
     private const val INTERVAL = 250L
@@ -67,14 +68,14 @@ object StepUtils
     fun assertThatField(id: Int, assertion: Matcher<View>)
     {
         poll {
-            element(id)?.check(matches(assertion))
+            element(id).check(matches(assertion))
         }
     }
 
     fun assertThatField(message: String, id: Int, assertion: Matcher<View>)
     {
         poll(message) {
-            element(id)?.check(matches(assertion))
+            element(id).check(matches(assertion))
         }
     }
 
@@ -95,7 +96,7 @@ object StepUtils
     fun click(id: Int)
     {
         poll {
-            element(id)?.check(matches(isDisplayed()))?.perform(forceClick())
+            element(id).check(matches(isDisplayed()))?.perform(forceClick())
         }
     }
 
@@ -103,7 +104,7 @@ object StepUtils
     fun getSpinnerText(id: Int): String
     {
         var text = ""
-        element(id)?.perform(object : ViewAction
+        element(id).perform(object : ViewAction
         {
             override fun getConstraints(): Matcher<View>
             {
@@ -129,7 +130,7 @@ object StepUtils
     fun getText(id: Int): String
     {
         var text = ""
-        element(id)?.perform(object : ViewAction
+        element(id).perform(object : ViewAction
         {
             override fun getConstraints(): Matcher<View>
             {
@@ -149,7 +150,7 @@ object StepUtils
         return text
     }
 
-    fun hasMinimumRows(expected: Int) = hasMinimumChildCount(expected)
+    fun hasMinimumRows(expected: Int): Matcher<View?>? = hasMinimumChildCount(expected)
 
     fun <T> hasRow(expectedRow: T) = object : FeatureMatcher<View, List<T>?>(
         hasItem(expectedRow), "list", "list"
@@ -197,7 +198,7 @@ object StepUtils
 
     fun longClick(id: Int)
     {
-        element(id)?.check(matches(isDisplayed()))?.perform(forceLongClick())
+        element(id).check(matches(isDisplayed()))?.perform(forceLongClick())
     }
 
     fun selectListViewItem(id: Int, value: String)
@@ -231,13 +232,13 @@ object StepUtils
 
     fun setChecked(id: Int, checked: Boolean)
     {
-        element(id)?.perform(internalSetChecked(checked))
+        element(id).perform(internalSetChecked(checked))
     }
 
     fun setText(id: Int, newText: String)
     {
         poll {
-            element(id)?.perform(replaceText(newText))
+            element(id).perform(replaceText(newText))
         }
     }
 
@@ -247,7 +248,7 @@ object StepUtils
         if (value.endsWith(stripValue)) value.dropLast(stripValue.length).trim()
         else value.trim()
 
-    fun tableHeader(table: DataTable): List<String> = table.cells().get(0)
+    fun tableHeader(table: DataTable): List<String> = table.cells()[0]
 
     fun tableRows(table: DataTable): List<List<String>> = table.cells().stream().skip(1).toList()
 
@@ -272,7 +273,7 @@ object StepUtils
         return actualItems
     }
 
-    private fun element(id: Int): ViewInteraction?
+    private fun element(id: Int): ViewInteraction
     {
         return try
         {
@@ -285,7 +286,7 @@ object StepUtils
         }
     }
 
-    private fun elementWith(text: String): ViewInteraction?
+    private fun elementWith(text: String): ViewInteraction
     {
         return try
         {
@@ -302,7 +303,7 @@ object StepUtils
         return object : ViewAction
         {
             override fun getConstraints(): Matcher<View> = isDisplayed()
-            override fun getDescription(): String = "Force le clic direct sur la vue"
+            override fun getDescription(): String = "Force click"
 
             override fun perform(uiController: UiController, view: View)
             {
@@ -335,7 +336,7 @@ object StepUtils
 
                 if (parent is AdapterView<*>)
                 {
-                    val adapterView = parent as AdapterView<*>
+                    val adapterView = parent
                     val position = adapterView.getPositionForView(view)
 
                     if (position != AdapterView.INVALID_POSITION)
@@ -360,7 +361,7 @@ object StepUtils
         return object : ViewAction
         {
             override fun getConstraints(): Matcher<View> = isDisplayed()
-            override fun getDescription(): String = "Force le clic long direct sur la vue"
+            override fun getDescription(): String = "Force long click"
 
             override fun perform(uiController: UiController, view: View)
             {

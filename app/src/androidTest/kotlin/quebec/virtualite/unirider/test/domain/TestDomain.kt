@@ -8,9 +8,7 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
-import quebec.virtualite.unirider.commons.android.utils.StepUtils
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableHeader
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableRows
 import quebec.virtualite.unirider.database.WheelEntity
@@ -21,11 +19,14 @@ import java.util.stream.Collectors.toList
 private const val SOLD_PREFIX = "- "
 private const val SUFFIX_AMPS = "A"
 private const val SUFFIX_KM = " km"
+private const val SUFFIX_PERCENT = "%"
 private const val SUFFIX_VOLTAGE = "V"
 
-class TestDomain(applicationContext: Context) {
+class TestDomain(applicationContext: Context)
+{
 
-    companion object {
+    companion object
+    {
 
         fun formatKm(km: Int): String =
             "$km$SUFFIX_KM"
@@ -39,22 +40,29 @@ class TestDomain(applicationContext: Context) {
             else
                 ""
 
+        fun parseAmps(amperage: String): String =
+            if (amperage.contains(SUFFIX_AMPS))
+                amperage.substringBefore(SUFFIX_AMPS)
+            else
+                amperage
+
         fun parseKm(km: String): String =
             km.substringBefore(SUFFIX_KM)
 
         fun parseKmNumeric(km: String): Int =
             if (km.endsWith(SUFFIX_KM))
                 intOf(km.substringBefore(SUFFIX_KM))
-            else {
+            else
+            {
                 assertThat(km, equalTo(""))
                 0
             }
 
-        fun parseAmps(amperage: String): String =
-            if (amperage.contains(SUFFIX_AMPS))
-                amperage.substringBefore(SUFFIX_AMPS)
+        fun parsePercentage(percentage: String): String =
+            if (percentage.contains(SUFFIX_PERCENT))
+                percentage.substringBefore(SUFFIX_PERCENT)
             else
-                amperage
+                percentage
 
         fun parseVoltage(voltage: String): String =
             if (voltage.contains(SUFFIX_VOLTAGE))
@@ -66,13 +74,15 @@ class TestDomain(applicationContext: Context) {
     private val db = WheelDbImpl(applicationContext)
     private val wheels = HashMap<String, WheelEntity>()
 
-    fun clear() {
+    fun clear()
+    {
         db.deleteAll()
     }
 
     private fun commaSeparatedList(itemsInAString: String) = itemsInAString.split(',').map { item -> item.trim() }
 
-    fun forEachWheel(lambda: (Map.Entry<String, WheelEntity>) -> Unit) {
+    fun forEachWheel(lambda: (Map.Entry<String, WheelEntity>) -> Unit)
+    {
         wheels.forEach(lambda)
     }
 
@@ -82,7 +92,8 @@ class TestDomain(applicationContext: Context) {
         else
             wheels[name]
 
-    fun loadConnectedWheels(wheels: DataTable) {
+    fun loadConnectedWheels(wheels: DataTable)
+    {
         assertThat(tableHeader(wheels), equalTo(listOf("Name", "Bt Name", "Bt Address")))
 
         tableRows(wheels)
@@ -108,7 +119,8 @@ class TestDomain(applicationContext: Context) {
     fun loadWheel(id: Long): WheelEntity? =
         db.getWheel(id)
 
-    fun loadWheels(wheels: DataTable) {
+    fun loadWheels(wheels: DataTable)
+    {
         assertThat(
             tableHeader(wheels),
             equalTo(
@@ -157,10 +169,10 @@ class TestDomain(applicationContext: Context) {
         updateMapWheels()
     }
 
-    fun locateWheel(name: String): WheelEntity? =
-        db.findWheel(name)
+    fun locateWheel(name: String): WheelEntity? = db.findWheel(name)
 
-    fun simulateDevice(device: DataTable) {
+    fun simulateDevice(device: DataTable)
+    {
         assertThat(tableHeader(device), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltages")))
         val deviceFields = tableRows(device)[0]
 
@@ -171,9 +183,10 @@ class TestDomain(applicationContext: Context) {
             .setVoltages(voltagesOf(deviceFields[4]))
     }
 
-    fun updateWheelPreviousMileage(name: String, premileage: Int) {
+    fun updateWheelPreviousMileage(name: String, premileage: String)
+    {
         db.findWheel(name)?.let {
-            db.saveWheel(it.copy(premileage = premileage))
+            db.saveWheel(it.copy(premileage = parseKmNumeric(premileage)))
             updateMapWheels()
         }
     }
@@ -181,7 +194,8 @@ class TestDomain(applicationContext: Context) {
     private fun amps(value: String): Float =
         floatOfWithSuffix(value, "A")
 
-    private fun floatOfWithSuffix(value: String, suffix: String): Float {
+    private fun floatOfWithSuffix(value: String, suffix: String): Float
+    {
         assertThat(value, endsWith(suffix))
         return floatOf(value.dropLast(suffix.length))
     }
@@ -199,7 +213,8 @@ class TestDomain(applicationContext: Context) {
     private fun parseYesNo(value: String): Boolean =
         "yes".equals(value, ignoreCase = true)
 
-    private fun updateMapWheels() {
+    private fun updateMapWheels()
+    {
         db.getWheels().forEach { wheel ->
             wheels[wheel.name] = wheel
         }

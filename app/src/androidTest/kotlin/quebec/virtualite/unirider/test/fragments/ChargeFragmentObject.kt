@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.test.fragments
 
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import io.cucumber.datatable.DataTable
 import org.hamcrest.Matchers.equalTo
@@ -22,62 +21,74 @@ import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
 import quebec.virtualite.unirider.views.WheelChargeFragment
 import java.lang.Thread.sleep
 
-class ChargeFragmentObject(val app: TestApp) {
+class ChargeFragmentObject(val app: TestApp)
+{
 
-    fun changeAmperageTo(amperage: String) {
+    fun changeAmperageTo(amperage: String)
+    {
         setText(R.id.edit_charge_amperage, parseAmps(amperage))
     }
 
-    fun changeVoltageActualTo(voltage: String) {
+    fun changeVoltageActualTo(voltage: String)
+    {
         setText(R.id.edit_voltage_actual, parseVoltage(voltage))
     }
 
-    fun changeVoltageRequired(voltage: String) {
+    fun changeVoltageRequired(voltage: String)
+    {
         setText(R.id.edit_voltage_required, parseVoltage(voltage))
     }
 
-    fun chargeFor(km: String) {
+    fun chargeFor(km: String)
+    {
         assertThatField("Full button is not enabled by default", R.id.check_full_charge, isChecked())
 
-        if ("full" == km) {
+        if ("full".equals(km))
+        {
             click(R.id.check_full_charge)   // Disable
             sleep(250)
             click(R.id.check_full_charge)   // Enable again
 
-        } else {
+        } else
             setText(R.id.edit_km, parseKm(km))
-        }
     }
 
-    fun chargeWarningMessage(showing: Boolean) {
+    fun chargeWarningMessage(showing: Boolean)
+    {
         val message = "Charge warning should be " + if (showing) " showing" else " hidden"
         assertThatField(message, R.id.view_charge_warning, isVisible(showing))
     }
 
-    fun reconnect() {
+    fun reconnect()
+    {
         click(R.id.button_connect_charge)
     }
 
-    fun validateActualVoltage(expectedVoltage: String) {
+    fun validateActualVoltage(expectedVoltage: String)
+    {
         assertThatField(R.id.edit_voltage_actual, hasText(parseVoltage(expectedVoltage)))
     }
 
-    fun validateAmperage(expectedAmperage: String) {
+    fun validateAmperage(expectedAmperage: String)
+    {
         assertThatField(R.id.edit_charge_amperage, hasText(parseAmps(expectedAmperage)))
     }
 
-    fun validateCannotConnect() {
+    fun validateCannotConnect()
+    {
         assertThatField("Connect button is not disabled", R.id.button_connect_charge, isDisabled())
     }
 
-    fun validateEmptyEstimates() {
+    fun validateEmptyEstimates()
+    {
         assertThat(getText(R.id.view_voltage_required), equalTo(""))
         assertThat(getText(R.id.view_voltage_target), equalTo(""))
         assertThat(getText(R.id.view_voltage_target_diff), equalTo(""))
         assertThat(getEstimatedTime(), equalTo(""))
     }
 
-    fun validateEstimates(expectedEstimates: DataTable) {
+    fun validateEstimates(expectedEstimates: DataTable)
+    {
         expectedEstimates.diff(
             DataTable.create(
                 listOf(
@@ -92,15 +103,18 @@ class ChargeFragmentObject(val app: TestApp) {
         )
     }
 
-    fun validateFullChargeIndicatorOn() {
+    fun validateFullChargeIndicatorOn()
+    {
         assertThatField("Full Charge should be on", R.id.check_full_charge, isChecked())
     }
 
-    fun validateFullChargeIndicatorOff() {
+    fun validateFullChargeIndicatorOff()
+    {
         assertThatField("Full Charge should be off", R.id.check_full_charge, isNotChecked())
     }
 
-    fun validateView() {
+    fun validateView()
+    {
         assertThatPolling({ app.activeFragment() }, equalTo(WheelChargeFragment::class.java))
     }
 

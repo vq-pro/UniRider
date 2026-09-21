@@ -1,5 +1,6 @@
 package quebec.virtualite.unirider.test
 
+import android.os.Bundle
 import cucumber.api.CucumberOptions
 import cucumber.api.SnippetType.CAMELCASE
 import quebec.virtualite.commons.android.BaseCucumberInstrumentationRunner
@@ -15,4 +16,14 @@ import quebec.virtualite.commons.android.BaseCucumberInstrumentationRunner
 //        "@WIP",
         "~@Ignore"]
 )
-class CucumberInstrumentationRunner : BaseCucumberInstrumentationRunner()
+@Suppress("unused")
+class CucumberInstrumentationRunner : BaseCucumberInstrumentationRunner() {
+    override fun onCreate(arguments: Bundle)
+    {
+        if (!arguments.containsKey("tags")) {
+            arguments.putString("tags", BuildConfig.SCENARIOS)
+        }
+
+        super.onCreate(arguments)
+    }
+}

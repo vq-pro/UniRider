@@ -5,12 +5,15 @@ import cucumber.api.java.Before
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import io.cucumber.datatable.DataTable
+import quebec.virtualite.unirider.test.fragments.EditFragmentObject
 import quebec.virtualite.unirider.test.fragments.MainFragmentObject
+import quebec.virtualite.unirider.test.fragments.ViewFragmentObject
 
 class MainScreenSteps : BaseSteps()
 {
-
+    private val editFragment = EditFragmentObject(app)
     private val mainFragment = MainFragmentObject(app, domain)
+    private val viewFragment = ViewFragmentObject(app, domain)
 
     @Before
     override fun beforeScenario()
@@ -28,6 +31,7 @@ class MainScreenSteps : BaseSteps()
     fun addNewWheel()
     {
         selectedWheel = mainFragment.addWheel()
+        editFragment.validateView()
     }
 
     @When("I collapse the sold wheels")
@@ -52,10 +56,11 @@ class MainScreenSteps : BaseSteps()
         mainFragment.toggleSoldWheels()
     }
 
-    @When("^I select the (.*?)$")
+    @When("^I select the (.*)$")
     fun select(wheelName: String)
     {
         selectedWheel = mainFragment.selectWheel(wheelName)
+        viewFragment.validateView()
     }
 
     @Then("I am back at the main screen")

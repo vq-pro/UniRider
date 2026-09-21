@@ -123,7 +123,7 @@ class ViewSteps : BaseSteps()
         viewFragment.validateCanSeeBluetoothSettings(canOrCannot)
     }
 
-    @Then("^the details view shows the (.*) with a mileage of (.*) km$")
+    @Then("^the details view shows the (.*?) with a mileage of (.*?)$")
     fun validateDetailsViewShowsNameAndMileage(expectedName: String, expectedMileage: String)
     {
         viewFragment.validateMileageUpdated(expectedMileage)
@@ -148,19 +148,16 @@ class ViewSteps : BaseSteps()
         viewFragment.validateKm(expectedKm)
     }
 
-    @Then("^the mileage is updated to (.*?) km$")
+    @Then("^the mileage is updated to (.*?)$")
     fun validateMileageUpdatedTo(expectedMileage: String)
     {
-        viewFragment.validateMileageUpdated(expectedMileage)
+        if ("its up-to-date-value".equals(expectedMileage))
+            viewFragment.validateUpToDateMileage(selectedWheel)
+        else
+            viewFragment.validateMileageUpdated(expectedMileage)
     }
 
-    @Then("the mileage is updated to its up-to-date value")
-    fun validateMileageUpdatedToUpToDateValue()
-    {
-        viewFragment.validateUpToDateMileage(selectedWheel)
-    }
-
-    @Then("^it displays a percentage of (.*?)%$")
+    @Then("^it displays a percentage of (.*?)$")
     fun validatePercentage(expectedPercentage: String)
     {
         viewFragment.validatePercentage(expectedPercentage)
@@ -173,7 +170,7 @@ class ViewSteps : BaseSteps()
         viewFragment.setDistanceTo("40")
     }
 
-    @Then("^the voltage is updated to (.*)V and the battery (.*)%$")
+    @Then("^the voltage is updated to (.*?) and the battery (.*?)$")
     fun validateVoltageAndBatteryUpdatedTo(expectedVoltage: String, expectedBattery: String)
     {
         viewFragment.validateVoltageAndBattery(expectedVoltage, expectedBattery)
