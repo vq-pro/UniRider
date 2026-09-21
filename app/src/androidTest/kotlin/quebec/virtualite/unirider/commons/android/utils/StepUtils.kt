@@ -201,10 +201,67 @@ object StepUtils
         element(id).check(matches(isDisplayed()))?.perform(forceLongClick())
     }
 
+    fun poll(callback: () -> Unit)
+    {
+        poll("", callback)
+    }
+
+    fun poll(message: String, callback: () -> Unit)
+    {
+        var exception: Throwable?
+        val start = currentTimeMillis()
+
+        do
+        {
+            try
+            {
+                callback()
+                return
+
+            } catch (e: Throwable)
+            {
+                exception = e
+                sleep(INTERVAL)
+            }
+
+            val elapsed = currentTimeMillis() - start
+
+        } while (elapsed < TIMEOUT)
+
+        throw when
+        {
+            !isBlank(message) -> AssertionError(message, exception)
+            else -> exception
+        }
+    }
+
+    fun <T> pollValue(callback: () -> T?): T
+    {
+        var exception: Throwable?
+        val start = currentTimeMillis()
+
+        do
+        {
+            try
+            {
+                return callback()!!
+
+            } catch (e: Throwable)
+            {
+                exception = e
+                sleep(INTERVAL)
+            }
+
+            val elapsed = currentTimeMillis() - start
+
+        } while (elapsed < TIMEOUT)
+
+        throw exception
+    }
+
     fun selectListViewItem(id: Int, value: String)
     {
         poll {
-            // FIXME-1 Why do we need to use containsString here?
             onData(hasToString(containsString(value))).inAdapterView(withId(id))
                 .atPosition(0)
                 .perform(click())
@@ -391,40 +448,6 @@ object StepUtils
         {
             val checkableView = view as Checkable
             checkableView.isChecked = checked
-        }
-    }
-
-    private fun poll(callback: () -> Unit)
-    {
-        poll("", callback)
-    }
-
-    private fun poll(message: String, callback: () -> Unit)
-    {
-        var exception: Throwable?
-        val start = currentTimeMillis()
-
-        do
-        {
-            try
-            {
-                callback()
-                return
-
-            } catch (e: Throwable)
-            {
-                exception = e
-                sleep(INTERVAL)
-            }
-
-            val elapsed = currentTimeMillis() - start
-
-        } while (elapsed < TIMEOUT)
-
-        throw when
-        {
-            !isBlank(message) -> AssertionError(message, exception)
-            else -> exception
         }
     }
 }

@@ -5,200 +5,266 @@ import cucumber.api.java.Before
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import io.cucumber.datatable.DataTable
+import org.hamcrest.Matchers.equalTo
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
+import quebec.virtualite.unirider.commons.android.utils.StepUtils.pollValue
 import quebec.virtualite.unirider.test.fragments.EditFragmentObject
+import quebec.virtualite.unirider.test.fragments.MainFragmentObject
 
-class EditSteps : BaseSteps() {
-
+class EditSteps : BaseSteps()
+{
     private val editFragment = EditFragmentObject(app)
+    private val mainFragment = MainFragmentObject(app, domain)
 
     @Before
-    override fun beforeScenario() {
+    override fun beforeScenario()
+    {
         super.beforeScenario()
     }
 
     @After
-    override fun afterScenario() {
+    override fun afterScenario()
+    {
         super.afterScenario()
     }
 
     @When("I blank the charge amperage")
-    fun blankChargeAmperage() {
+    fun blankChargeAmperage()
+    {
         editFragment.changeChargeAmperage(" ")
     }
 
     @When("I blank the charge rate")
-    fun blankChargeRate() {
+    fun blankChargeRate()
+    {
         editFragment.changeChargeRate(" ")
     }
 
     @When("I blank the distance offset")
-    fun blankDistanceOffset() {
+    fun blankDistanceOffset()
+    {
         editFragment.changeDistanceOffset(" ")
     }
 
     @When("I blank the full voltage")
-    fun blankFullVoltage() {
+    fun blankFullVoltage()
+    {
         editFragment.changeFullVoltage(" ")
     }
 
     @When("I blank the maximum voltage")
-    fun blankMaximumVoltage() {
+    fun blankMaximumVoltage()
+    {
         editFragment.changeVoltageMax(" ")
     }
 
     @When("I blank the mileage")
-    fun blankMileage() {
+    fun blankMileage()
+    {
         editFragment.changeMileage(" ")
     }
 
     @When("I blank the minimum voltage")
-    fun blankMinimumVoltage() {
+    fun blankMinimumVoltage()
+    {
         editFragment.changeVoltageMin(" ")
     }
 
     @When("I blank the name")
-    fun blankName() {
+    fun blankName()
+    {
         editFragment.changeName(" ")
     }
 
     @When("I blank the previous mileage")
-    fun blankPreMileage() {
+    fun blankPreMileage()
+    {
         editFragment.changePremileage(" ")
     }
 
     @When("I blank the wh")
-    fun blankWh() {
+    fun blankWh()
+    {
         editFragment.changeWh(" ")
     }
 
     @When("I change the charge amperage")
-    fun changeChargeAmperage() {
+    fun changeChargeAmperage()
+    {
         editFragment.changeChargeAmperage("2")
     }
 
     @When("I change the charge rate")
-    fun changeChargeRate() {
+    fun changeChargeRate()
+    {
         editFragment.changeChargeRate("3")
     }
 
     @When("I change the distance offset")
-    fun changeDistanceOffset() {
+    fun changeDistanceOffset()
+    {
         editFragment.changeDistanceOffset("3")
     }
 
     @When("I change the mileage")
-    fun changeMileage() {
+    fun changeMileage()
+    {
         editFragment.changeMileage("123")
     }
 
     @When("I change the name")
-    fun changeName() {
+    fun changeName()
+    {
         editFragment.changeName("Toto")
     }
 
     @When("I change nothing")
-    fun changeNothing() {
+    fun changeNothing()
+    {
     }
 
     @When("I change the previous mileage")
-    fun changePreMileage() {
+    fun changePreMileage()
+    {
         editFragment.changePremileage("123")
     }
 
     @When("I change the full voltage")
-    fun changeVoltageFull() {
+    fun changeVoltageFull()
+    {
         editFragment.changeFullVoltage("${editFragment.getVoltageFull() + 0.1f}")
     }
 
     @When("I change the maximum voltage")
-    fun changeVoltageMax() {
+    fun changeVoltageMax()
+    {
         editFragment.changeVoltageMax("${editFragment.getVoltageMax() + 0.1f}")
     }
 
     @When("I change the minimum voltage")
-    fun changeVoltageMin() {
+    fun changeVoltageMin()
+    {
         editFragment.changeVoltageMin("${editFragment.getVoltageMin() + 0.1f}")
     }
 
     @When("I change the wh")
-    fun changeWh() {
+    fun changeWh()
+    {
         editFragment.changeWh("123")
     }
 
     @When("I confirm the deletion")
-    fun deleteConfirm() {
+    fun deleteConfirm()
+    {
         editFragment.confirmDeletion()
     }
 
     @When("I delete the wheel")
-    fun deleteWheel() {
+    fun deleteWheel()
+    {
         editFragment.deleteWheel()
     }
 
     @When("I save and go back to the main view")
-    fun goSaveAndGoBackToMainView() {
+    fun goSaveAndGoBackToMainView()
+    {
         saveAndView()
         MainScreenSteps().goBackToMainView()
     }
 
     @When("I mark the wheel as sold")
-    fun markWheelAsSold() {
+    fun markWheelAsSold()
+    {
         editFragment.markAsSold()
     }
 
     @When("I mark the wheel as unsold")
-    fun markWheelAsUnsold() {
+    fun markWheelAsUnsold()
+    {
         editFragment.markAsUnsold()
     }
 
     @When("^I reuse the name (.*?)$")
-    fun reuseWheelName(newName: String) {
+    fun reuseWheelName(newName: String)
+    {
         editFragment.changeName(newName)
     }
 
     @When("I save and view the wheel")
-    fun saveAndView() {
+    fun saveAndView()
+    {
         editFragment.save()
         ViewSteps().validateOnViewScreen()
     }
 
     @When("I set the full voltage lower than the minimum")
-    fun setFullVoltageLowerThanMinimum() {
+    fun setFullVoltageLowerThanMinimum()
+    {
         editFragment.changeFullVoltage("${editFragment.getVoltageMin() - 0.1f}")
     }
 
     @When("I set the full voltage higher than the maximum")
-    fun setFullVoltageHigherThanMaximum() {
+    fun setFullVoltageHigherThanMaximum()
+    {
         editFragment.changeFullVoltage("${editFragment.getVoltageMax() + 0.1f}")
     }
 
     @When("I set the maximum voltage lower than the minimum")
-    fun setMaximumVoltageLowerThanMinimum() {
+    fun setMaximumVoltageLowerThanMinimum()
+    {
         editFragment.changeVoltageMax("${editFragment.getVoltageMin() - 0.1f}")
     }
 
     @When("I set these new values:")
-    fun setNewWheelValues(newWheelValues: DataTable) {
+    fun setNewWheelValues(newWheelValues: DataTable)
+    {
         updatedWheel = editFragment.enterNewWheel(newWheelValues, selectedWheel)
     }
 
     @Then("the wheel can be saved")
-    fun validateCanBeSaved() {
+    fun validateCanBeSaved()
+    {
         editFragment.validateCanSave()
     }
 
     @Then("I can enter the details for that wheel")
-    fun validateCanEnterDetailsForNewWheel() {
+    fun validateCanEnterDetailsForNewWheel()
+    {
         editFragment.validateView()
     }
 
     @Then("the wheel cannot be saved")
-    fun validateCannotBeSaved() {
+    fun validateCannotBeSaved()
+    {
         editFragment.validateCannotSave()
     }
 
     @Then("it shows that every field is editable")
-    fun validateEveryFieldIsEditable() {
+    fun validateEveryFieldIsEditable()
+    {
         editFragment.validateView()
+    }
+
+    @Then("the wheel was added")
+    fun validateWheelWasAdded()
+    {
+        mainFragment.validateView()
+        selectedWheel = pollValue { domain.locateWheel(updatedWheel.name) }
+
+        assertThat(selectedWheel.chargeAmperage, equalTo(updatedWheel.chargeAmperage))
+        assertThat(selectedWheel.chargeRate, equalTo(updatedWheel.chargeRate))
+        assertThat(selectedWheel.name, equalTo(updatedWheel.name))
+        assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))
+        assertThat(selectedWheel.voltageMax, equalTo(updatedWheel.voltageMax))
+        assertThat(selectedWheel.voltageMin, equalTo(updatedWheel.voltageMin))
+        assertThat(selectedWheel.voltageFull, equalTo(updatedWheel.voltageFull))
+        assertThat(selectedWheel.wh, equalTo(updatedWheel.wh))
+    }
+
+    @Then("the wheel was updated")
+    fun validateWheelWasUpdated()
+    {
+        assertThatPolling({ domain.loadWheel(selectedWheel.id) }, equalTo(updatedWheel))
     }
 }
