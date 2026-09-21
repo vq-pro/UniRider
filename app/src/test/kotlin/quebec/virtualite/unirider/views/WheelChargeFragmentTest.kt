@@ -418,12 +418,12 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verifyFieldAssignment(R.id.view_voltage_target, fragment.textVoltageTarget, mockedTextVoltageTarget)
         verifyFieldAssignment(R.id.view_voltage_target_diff, fragment.textVoltageTargetDiff, mockedTextVoltageTargetDiff)
 
-        verifyOnClick(mockedButtonConnect, "onConnect")
-        verifyOnUpdateText(mockedEditAmperage, "onUpdateAmperage")
-        verifyOnUpdateText(mockedEditKm, "onUpdateKm")
-        verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
-        verifyOnUpdateText(mockedEditVoltageRequired, "onUpdateVoltageRequired")
-        verifyOnToggleSwitch(mockedSwitchFullCharge, "onToggleFullCharge")
+        verifyOnClick(mockedButtonConnect)
+        verifyOnUpdateText(mockedEditAmperage)
+        verifyOnUpdateText(mockedEditKm)
+        verifyOnUpdateText(mockedEditVoltageActual)
+        verifyOnUpdateText(mockedEditVoltageRequired)
+        verifyOnToggleSwitch(mockedSwitchFullCharge)
 
         verify(mockedTextName).text = WHEEL.name
         verify(mockedSwitchFullCharge).isChecked = true

@@ -203,12 +203,12 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java) {
         verifyFieldAssignment(R.id.view_remaining_range, fragment.textRemainingRange, mockedTextRemainingRange)
         verifyFieldAssignment(R.id.view_total_range, fragment.textTotalRange, mockedTextTotalRange)
 
-        verifyOnClick(mockedButtonCharge, "onCharge")
-        verifyOnClick(mockedButtonConnect, "onConnect")
-        verifyOnClick(mockedButtonEdit, "onEdit")
-        verifyOnUpdateText(mockedEditKm, "onUpdateKm")
-        verifyOnUpdateText(mockedEditVoltageActual, "onUpdateVoltageActual")
-        verifyOnLongClick(mockedTextBtName, "onDisconnect")
+        verifyOnClick(mockedButtonCharge)
+        verifyOnClick(mockedButtonConnect)
+        verifyOnClick(mockedButtonEdit)
+        verifyOnUpdateText(mockedEditKm)
+        verifyOnUpdateText(mockedEditVoltageActual)
+        verifyOnLongClick(mockedTextBtName)
 
         verify(fragment).initialDisplayWheel()
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"

@@ -7,7 +7,7 @@ import quebec.virtualite.unirider.R
 class MainActivity : CommonActivity(
     R.layout.activity_main,
     R.id.toolbar,
-    R.menu.menu_main,
+    NO_MENU,
     R.id.action_settings,
     ACCESS_COARSE_LOCATION
 )

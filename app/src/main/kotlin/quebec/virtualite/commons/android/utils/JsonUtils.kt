@@ -1,13 +1,11 @@
-package quebec.virtualite.commons.android.rest
+package quebec.virtualite.commons.android.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
-object JsonUtils
-{
+object JsonUtils {
     private val objectMapper = ObjectMapper()
 
-    fun serialize(responseBody: Any): String
-    {
+    fun serialize(responseBody: Any): String {
         return objectMapper.writeValueAsString(responseBody)
     }
 }

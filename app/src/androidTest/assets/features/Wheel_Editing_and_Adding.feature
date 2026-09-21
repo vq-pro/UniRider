@@ -14,7 +14,7 @@ Feature: Wheel Editing & Adding
   Scenario: Adding a wheel in full
     When I add a new wheel
     And I set these new values:
-      | Previous Mileage | 0           |
+      | Previous Mileage | 0 km        |
       | Name             | Sherman Max |
       | Mileage          | 150 km      |
       | Wh               | 3600 Wh     |

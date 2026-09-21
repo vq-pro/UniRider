@@ -1,6 +1,6 @@
 package quebec.virtualite.commons.android.utils
 
-import org.apache.http.util.TextUtils.isBlank
+import quebec.virtualite.commons.android.utils.StringUtils.isBlank
 import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 import kotlin.math.pow

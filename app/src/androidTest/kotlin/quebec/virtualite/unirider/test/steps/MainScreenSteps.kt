@@ -1,38 +1,48 @@
 package quebec.virtualite.unirider.test.steps
 
-import cucumber.api.DataTable
 import cucumber.api.java.After
 import cucumber.api.java.Before
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import io.cucumber.datatable.DataTable
+import quebec.virtualite.unirider.test.fragments.EditFragmentObject
 import quebec.virtualite.unirider.test.fragments.MainFragmentObject
+import quebec.virtualite.unirider.test.fragments.ViewFragmentObject
 
-class MainScreenSteps : BaseSteps() {
-
+class MainScreenSteps : BaseSteps()
+{
+    private val editFragment = EditFragmentObject(app)
     private val mainFragment = MainFragmentObject(app, domain)
+    private val viewFragment = ViewFragmentObject(app, domain)
 
     @Before
-    override fun beforeScenario() {
+    override fun beforeScenario()
+    {
         super.beforeScenario()
     }
 
     @After
-    override fun afterScenario() {
+    override fun afterScenario()
+    {
         super.afterScenario()
     }
 
     @When("I add a new wheel")
-    fun addNewWheel() {
+    fun addNewWheel()
+    {
         selectedWheel = mainFragment.addWheel()
+        editFragment.validateView()
     }
 
     @When("I collapse the sold wheels")
-    fun collapseSoldWheels() {
+    fun collapseSoldWheels()
+    {
         mainFragment.toggleSoldWheels()
     }
 
     @When("I go back to the main view")
-    fun goBackToMainView() {
+    fun goBackToMainView()
+    {
         app.back()
         mainFragment.validateView()
     }
@@ -41,42 +51,51 @@ class MainScreenSteps : BaseSteps() {
      * Code: [quebec.virtualite.unirider.views.MainFragment.onSelectWheel]
      */
     @When("I open up the sold wheels")
-    fun openSoldWheels() {
+    fun openSoldWheels()
+    {
         mainFragment.toggleSoldWheels()
     }
 
-    @When("^I select the (.*?)$")
-    fun select(wheelName: String) {
+    @When("^I select the (.*)$")
+    fun select(wheelName: String)
+    {
         selectedWheel = mainFragment.selectWheel(wheelName)
+        viewFragment.validateView()
     }
 
     @Then("I am back at the main screen")
-    fun validateBackOnMainScreen() {
+    fun validateBackOnMainScreen()
+    {
         mainFragment.validateView()
     }
 
     @Then("the wheel's Bluetooth name is undefined")
-    fun validateBluetoothNameUndefined() {
+    fun validateBluetoothNameUndefined()
+    {
         mainFragment.validateBluetoothDeviceUndefined(selectedWheel)
     }
 
     @Then("^it shows the updated name and a mileage of (.*?) on the main view$")
-    fun validateShowsTheUpdatedNameAndMileageOnTheMainView(expectedMileage: Int) {
-        mainFragment.validateUpdatedNameAndMileage(selectedWheel.id, updatedWheel.name, expectedMileage)
+    fun validateShowsTheUpdatedNameAndMileageOnTheMainView(expectedMileage: String)
+    {
+        mainFragment.validateUpdatedNameAndMileage(selectedWheel.id, updatedWheel.name, expectedMileage.toInt())
     }
 
     @Then("I see the total mileage")
-    fun validateTotalMileage() {
+    fun validateTotalMileage()
+    {
         mainFragment.validateTotalMileage()
     }
 
     @Then("the wheel is gone")
-    fun validateWheelIsGone() {
+    fun validateWheelIsGone()
+    {
         mainFragment.validateWheelIsGone(selectedWheel)
     }
 
     @Then("I see my wheels and their mileage:")
-    fun validateWheelsAndTheirMileage(expectedWheels: DataTable) {
+    fun validateWheelsAndTheirMileage(expectedWheels: DataTable)
+    {
         mainFragment.validateWheels(expectedWheels)
     }
 }

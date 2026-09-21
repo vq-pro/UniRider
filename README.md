@@ -24,11 +24,8 @@
 
 ## Unit
 
-* Run Configuration
-* Gradle
-* Name = Unit Tests
-* Run = :app:testIntegrationDebugUnitTest --tests "quebec.virtualite.unirider.*"
-* Force test tasks execution
+* Right-click on src/test/kotlin
+* Rename configuration "Unit Tests"
 
 ## Cucumber
 
@@ -36,7 +33,7 @@
 * Android Instrumented Tests
 * Name = Cucumber Tests
 * Test = All in Module
-* Instrumentation class = CucumberInstrumentationRunner
+* Instrumentation class = CucumberInstrumentationRunner (will appear on the reload of the configuration)
 * Before launch =
   * Run Gradle task "app:cleanBuildCache"
   * Gradle-aware Make

@@ -69,8 +69,8 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
 
         verifyFieldAssignment(R.id.devices, fragment.lvDevices, mockedLvDevices)
 
-        verifyMultiFieldListAdapter<BluetoothDevice>(mockedLvDevices, android.R.layout.simple_list_item_1, "onDisplayDevice")
-        verifyOnItemClick(mockedLvDevices, "onSelectDevice")
+        verifyMultiFieldListAdapter<BluetoothDevice>(mockedLvDevices, android.R.layout.simple_list_item_1)
+        verifyOnItemClick(mockedLvDevices)
 
         val connectionPayload = DEVICE
         verifyRunWithWaitDialogAndBack()
