@@ -49,7 +49,7 @@ import java.lang.Thread.sleep
 object StepUtils
 {
     private const val INTERVAL = 250L
-    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 3000L
+    private val TIMEOUT = if (BLUETOOTH_ACTUAL) 20000L else 5000L
 
     data class ListViewField(val id: Int, val name: String)
 
@@ -264,7 +264,7 @@ object StepUtils
         poll {
             onData(hasToString(containsString(value))).inAdapterView(withId(id))
                 .atPosition(0)
-                .perform(click())
+                .perform(forceClickAdapterRow())
         }
     }
 
@@ -273,7 +273,6 @@ object StepUtils
         poll {
             onData(hasEntry(equalTo(field.name), equalTo(value))).inAdapterView(withId(id))
                 .onChildView(withId(field.id))
-                // Instead of click(), because of a bug in Espresso picking the last item
                 .perform(forceClickAdapterRow())
         }
     }

@@ -53,6 +53,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
         assertThatPolling({ app.activeFragment() }, equalTo(WheelScanFragment::class.java))
 
         selectListViewItem(R.id.devices, deviceName)
+        assertThatPolling({ app.activeFragment() }, equalTo(WheelViewFragment::class.java))
 
         expectedDeviceName = deviceName
     }
