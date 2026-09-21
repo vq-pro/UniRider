@@ -14,13 +14,13 @@ android {
     }
 
     //noinspection GradleDependency
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     defaultConfig {
         applicationId "quebec.virtualite.unirider"
         minSdkVersion 28
         //noinspection EditedTargetSdkVersion,OldTargetApi
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
 
