@@ -17,10 +17,12 @@ import quebec.virtualite.commons.android.BaseCucumberInstrumentationRunner
         "~@Ignore"]
 )
 @Suppress("unused")
-class CucumberInstrumentationRunner : BaseCucumberInstrumentationRunner() {
+class CucumberInstrumentationRunner : BaseCucumberInstrumentationRunner()
+{
     override fun onCreate(arguments: Bundle)
     {
-        if (!arguments.containsKey("tags")) {
+        if (!arguments.containsKey("tags"))
+        {
             arguments.putString("tags", BuildConfig.SCENARIOS)
         }
 

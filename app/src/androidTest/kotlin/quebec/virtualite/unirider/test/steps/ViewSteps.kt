@@ -151,7 +151,7 @@ class ViewSteps : BaseSteps()
     @Then("^the mileage is updated to (.*?)$")
     fun validateMileageUpdatedTo(expectedMileage: String)
     {
-        if ("its up-to-date-value".equals(expectedMileage))
+        if ("its up-to-date value".equals(expectedMileage))
             viewFragment.validateUpToDateMileage(selectedWheel)
         else
             viewFragment.validateMileageUpdated(expectedMileage)
