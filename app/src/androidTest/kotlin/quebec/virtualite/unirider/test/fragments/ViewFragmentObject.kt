@@ -182,8 +182,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun validateUpToDateMileage(selectedWheel: WheelEntity)
     {
-        val mileage = expectedLiveWheelMileage[selectedWheel.name]
-        assertThatField(R.id.view_mileage, hasText("$mileage"))
+        assertThatField(R.id.view_mileage, hasText("${expectedLiveWheelMileage[selectedWheel.name]}"))
     }
 
     fun validateView()
