@@ -3,24 +3,27 @@ package quebec.virtualite.unirider.services
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.database.WheelEntity
 
-class CalculatorService {
-
+class CalculatorService
+{
     data class EstimatedValues(
         val remainingRange: Float,
         val totalRange: Float
     )
 
     private val calculator: Calculator = SoRperCells()
+//    private val calculator: Calculator = CalculatorTable()
 
-    fun estimatedValues(wheel: WheelEntity, voltage: Float, km: Float): EstimatedValues {
-        val sor = calculator.soE(wheel, voltage)
-        if (sor == -1f)
+    fun estimatedValues(wheel: WheelEntity, voltage: Float, km: Float): EstimatedValues
+    {
+        val soE = calculator.soE(cellVoltage(wheel, voltage))
+        if (soE == -1f)
             return EstimatedValues(-1f, -1f)
 
-        var totalRange = 100 * km / (100 - sor)
+        var totalRange = 100 * km / (100 - soE)
         var remainingRange = totalRange - km
 
-        if (remainingRange < 1.0f) {
+        if (remainingRange < 1.0f)
+        {
             totalRange = km
             remainingRange = 0f
         }
@@ -31,9 +34,11 @@ class CalculatorService {
         )
     }
 
-    fun percentage(wheel: WheelEntity, voltage: Float): Float {
-        val soR = calculator.soE(wheel, voltage)
-        return when {
+    fun percentage(wheel: WheelEntity, voltage: Float): Float
+    {
+        val soR = calculator.soE(cellVoltage(wheel, voltage))
+        return when
+        {
             soR == -1f -> 100f
             else -> round(soR)
         }
@@ -41,15 +46,30 @@ class CalculatorService {
 
     fun requiredVoltageFull(wheel: WheelEntity) = wheel.voltageFull
 
-    fun requiredVoltageOffCharger(wheel: WheelEntity, voltage: Float, km: Float, kmRequested: Float): Float {
+    fun requiredVoltageOffCharger(wheel: WheelEntity, voltage: Float, km: Float, kmRequested: Float): Float
+    {
         val estimatedTotalRange = estimatedValues(wheel, voltage, km).totalRange
-        return when {
+        return when
+        {
             kmRequested >= estimatedTotalRange -> wheel.voltageFull
             kmRequested <= 0.01f -> voltage
-            else -> {
-                val soRRequested = kmRequested / estimatedTotalRange * 100
-                round(calculator.voltage(wheel, soRRequested))
+            else ->
+            {
+                val soE = kmRequested / estimatedTotalRange * 100
+                round(wheelVoltage(wheel, calculator.voltage(soE)))
             }
         }
+    }
+
+    private fun cellVoltage(wheel: WheelEntity, wheelVoltage: Float): Float
+    {
+        val cellsPerPack = wheel.voltageMax / 4.2f
+        return wheelVoltage / cellsPerPack
+    }
+
+    private fun wheelVoltage(wheel: WheelEntity, cellVoltage: Float): Float
+    {
+        val cellsPerPack = wheel.voltageMax / 4.2f
+        return cellVoltage * cellsPerPack
     }
 }

@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.services
 
 import quebec.virtualite.commons.android.utils.NumberUtils.round
-import quebec.virtualite.unirider.database.WheelEntity
 
 class SoRperCells : Calculator
 {
@@ -52,21 +51,16 @@ class SoRperCells : Calculator
         SoRPerCell(3310, -0.1070f)
     )
 
-    override fun soE(wheel: WheelEntity, voltage: Float): Float
+    override fun soE(voltage: Float): Float
     {
-        if (voltage > wheel.voltageMax)
-            return -1f
-
-        val numberOfCellsPerPack = getNbCellsPerPack(wheel)
-        val averageCellFloat = voltage / numberOfCellsPerPack
-        val averageCellInt = round(averageCellFloat * 1000, 0).toInt()
+        val averageCellInt = round(voltage * 1000, 0).toInt()
 
         var upperRow = SOR_PER_CELL[0]
         for (row in SOR_PER_CELL)
         {
             if (averageCellInt > row.averageCell)
             {
-                return prorateSoR(averageCellInt, upperRow, row)
+                return prorateSoE(averageCellInt, upperRow, row)
             }
 
             upperRow = row
@@ -75,25 +69,19 @@ class SoRperCells : Calculator
         return 0f
     }
 
-    override fun voltage(wheel: WheelEntity, soRRequested: Float): Float
+    override fun voltage(soE: Float): Float
     {
         var upperRow = SOR_PER_CELL[0]
         for (row in SOR_PER_CELL)
         {
-            if (soRRequested > row.soR)
-            {
-                val averageCellRequested = prorateAverageCell(soRRequested, upperRow, row)
-                val requiredVoltage = averageCellRequested * getNbCellsPerPack(wheel) / 1000f
-                return requiredVoltage
-            }
+            if (soE > row.soR)
+                return prorateAverageCell(soE, upperRow, row) / 1000f
 
             upperRow = row
         }
 
         return round(0f)
     }
-
-    private fun getNbCellsPerPack(wheel: WheelEntity) = wheel.voltageMax / 4.2f
 
     private fun prorateAverageCell(soR: Float, upperRow: SoRPerCell, lowerRow: SoRPerCell): Float
     {
@@ -107,7 +95,7 @@ class SoRperCells : Calculator
         return lowerRow.averageCell + diffCell
     }
 
-    private fun prorateSoR(averageCell: Int, upperRow: SoRPerCell, lowerRow: SoRPerCell): Float
+    private fun prorateSoE(averageCell: Int, upperRow: SoRPerCell, lowerRow: SoRPerCell): Float
     {
         if (upperRow == lowerRow) return -1f
 

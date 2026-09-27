@@ -1,12 +1,11 @@
 package quebec.virtualite.unirider.services
 
 import quebec.virtualite.commons.android.utils.NumberUtils.round
-import quebec.virtualite.unirider.database.WheelEntity
 
 private const val DECIMALS_KM = 2
 private const val DECIMALS_VOLTAGE = 3
 
-class CalculatorTable: Calculator
+class CalculatorTable : Calculator
 {
     data class SoeVoltage(
         val soe: Float, val voltage: Float
@@ -118,8 +117,8 @@ class CalculatorTable: Calculator
 
     fun distanceRemaining(initialVoltage: Float, actualVoltage: Float, distance: Float): Float
     {
-        val initialSoe = soe(initialVoltage)
-        val actualSoe = soe(actualVoltage)
+        val initialSoe = soE(initialVoltage)
+        val actualSoe = soE(actualVoltage)
 
         val usedSoe = initialSoe - actualSoe
         val remainingUsableSoe = actualSoe
@@ -127,46 +126,34 @@ class CalculatorTable: Calculator
         return round(distance * remainingUsableSoe / usedSoe, DECIMALS_KM)
     }
 
-    fun soe(voltage: Float): Float
+    override fun soE(voltage: Float): Float
     {
-        if (voltage <= 4.2f)
-            SOE_VOLTAGE.forEachIndexed { index, soe ->
-                when
+        if (voltage <= 4.2f) SOE_VOLTAGE.forEachIndexed { index, soe ->
+            when
+            {
+                soe.voltage == voltage -> return soe.soe
+                soe.voltage < voltage ->
                 {
-                    soe.voltage == voltage -> return soe.soe
-                    soe.voltage < voltage ->
-                    {
-                        val higherVoltage = SOE_VOLTAGE[index - 1].voltage
-                        val lowerVoltage = SOE_VOLTAGE[index].voltage
-                        val voltageSpan = higherVoltage - lowerVoltage
-                        val proportion = voltage - lowerVoltage
-                        val percentage = proportion / voltageSpan
+                    val higherVoltage = SOE_VOLTAGE[index - 1].voltage
+                    val lowerVoltage = SOE_VOLTAGE[index].voltage
+                    val voltageSpan = higherVoltage - lowerVoltage
+                    val proportion = voltage - lowerVoltage
+                    val percentage = proportion / voltageSpan
 
-                        val higherSoe = SOE_VOLTAGE[index - 1].soe
-                        val lowerSoe = SOE_VOLTAGE[index].soe
-                        val soeSpan = higherSoe - lowerSoe
-                        val resultingSoe = lowerSoe + (percentage * soeSpan)
+                    val higherSoe = SOE_VOLTAGE[index - 1].soe
+                    val lowerSoe = SOE_VOLTAGE[index].soe
+                    val soeSpan = higherSoe - lowerSoe
+                    val resultingSoe = lowerSoe + (percentage * soeSpan)
 
-                        return round(resultingSoe, DECIMALS_VOLTAGE)
-                    }
+                    return round(resultingSoe, DECIMALS_VOLTAGE)
                 }
             }
+        }
 
         return 0.0f
     }
 
-    override fun soE(
-        wheel: WheelEntity,
-        voltage: Float
-    ): Float
-    {
-        return soe(voltage)
-    }
-
-    override fun voltage(
-        wheel: WheelEntity,
-        soRRequested: Float
-    ): Float
+    override fun voltage(soE: Float): Float
     {
         TODO("Not yet implemented")
     }

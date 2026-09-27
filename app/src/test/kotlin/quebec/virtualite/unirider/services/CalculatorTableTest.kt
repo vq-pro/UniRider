@@ -44,20 +44,20 @@ class CalculatorTableTest
     }
 
     @Test
-    fun soe()
+    fun soE()
     {
-        soe(4.201f, 0.0f)
-        soe(4.200f, 100.0f)
-        soe(4.102f, 91.2f)
-        soe(3.710f, 31.25f)
-        soe(3.335f, 0.346f)
-        soe(3.200f, 0.0f)
+        soE(4.201f, 0.0f)
+        soE(4.200f, 100.0f)
+        soE(4.102f, 91.2f)
+        soE(3.710f, 31.25f)
+        soE(3.335f, 0.346f)
+        soE(3.200f, 0.0f)
     }
 
-    fun soe(voltage: Float, expectedSoe: Float)
+    fun soE(voltage: Float, expectedSoe: Float)
     {
         // When
-        val result = table.soe(voltage)
+        val result = table.soE(voltage)
 
         // Then
         assertThat(result, equalTo(expectedSoe))
