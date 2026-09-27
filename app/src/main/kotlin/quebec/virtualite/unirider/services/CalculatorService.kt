@@ -36,11 +36,11 @@ class CalculatorService
 
     fun percentage(wheel: WheelEntity, voltage: Float): Float
     {
-        val soR = calculator.soE(cellVoltage(wheel, voltage))
+        val soE = calculator.soE(cellVoltage(wheel, voltage))
         return when
         {
-            soR == -1f -> 100f
-            else -> round(soR)
+            soE == -1f -> 100f
+            else -> round(soE)
         }
     }
 
@@ -61,15 +61,9 @@ class CalculatorService
         }
     }
 
-    private fun cellVoltage(wheel: WheelEntity, wheelVoltage: Float): Float
-    {
-        val cellsPerPack = wheel.voltageMax / 4.2f
-        return wheelVoltage / cellsPerPack
-    }
+    private fun cellVoltage(wheel: WheelEntity, wheelVoltage: Float): Float = wheelVoltage / cellsPerPack(wheel)
 
-    private fun wheelVoltage(wheel: WheelEntity, cellVoltage: Float): Float
-    {
-        val cellsPerPack = wheel.voltageMax / 4.2f
-        return cellVoltage * cellsPerPack
-    }
+    private fun cellsPerPack(wheel: WheelEntity): Float = wheel.voltageMax / 4.2f
+
+    private fun wheelVoltage(wheel: WheelEntity, cellVoltage: Float): Float = cellVoltage * cellsPerPack(wheel)
 }
