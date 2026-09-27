@@ -17,8 +17,8 @@ import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
 import kotlin.math.roundToInt
 
-class WheelViewFragment : BaseFragment() {
-
+class WheelViewFragment : BaseFragment()
+{
     internal lateinit var buttonCharge: Button
     internal lateinit var buttonConnect: Button
     internal lateinit var buttonEdit: Button
@@ -35,17 +35,20 @@ class WheelViewFragment : BaseFragment() {
     internal lateinit var textName: TextView
     internal lateinit var textRemainingRange: TextView
     internal lateinit var textTotalRange: TextView
+    internal lateinit var textVoltageInitial: TextView
 
     internal lateinit var estimates: EstimatedValues
 
     private var calculatorService = CalculatorService()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
         return inflater.inflate(R.layout.wheel_view_fragment, container, false)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
 
         buttonCharge = view.findViewById(R.id.button_charge)
@@ -64,6 +67,7 @@ class WheelViewFragment : BaseFragment() {
         textName = view.findViewById(R.id.view_name)
         textRemainingRange = view.findViewById(R.id.view_remaining_range)
         textTotalRange = view.findViewById(R.id.view_total_range)
+        textVoltageInitial = view.findViewById(R.id.view_voltage_initial)
 
         widgets.addTextChangedListener(editKm, onUpdateKm())
         widgets.addTextChangedListener(editVoltageActual, onUpdateVoltageActual())
@@ -78,6 +82,7 @@ class WheelViewFragment : BaseFragment() {
                 else initialDisplaySoldWheel()
 
                 textMileage.text = textKm(wheel!!.totalMileage())
+                textVoltageInitial.text = textVoltage(wheel!!.voltageInitial)
             }
         }
     }
@@ -108,12 +113,14 @@ class WheelViewFragment : BaseFragment() {
         refreshDisplay(parseVoltage(voltageActual), readKm())
     }
 
-    internal fun clearDisplay() {
+    internal fun clearDisplay()
+    {
         clearPercentage()
         clearEstimates()
     }
 
-    internal fun clearEstimates() {
+    internal fun clearEstimates()
+    {
         fragments.runUI {
             hide(textRemainingRange)
             hide(textTotalRange)
@@ -121,24 +128,28 @@ class WheelViewFragment : BaseFragment() {
         }
     }
 
-    internal fun clearPercentage() {
+    internal fun clearPercentage()
+    {
         hide(textBattery)
     }
 
-    internal fun initialDisplayBluetoothSettings() {
+    internal fun initialDisplayBluetoothSettings()
+    {
         show(textBtName, wheel!!.btName!!)
         show(textBtAddr, wheel!!.btAddr!!)
     }
 
     @SuppressLint("SetTextI18n")
-    internal fun initialDisplaySoldWheel() {
+    internal fun initialDisplaySoldWheel()
+    {
         textName.text = "${wheel!!.name} (${fragments.string(R.string.label_wheel_sold)})"
 
         buttonCharge.isVisible = false
         buttonConnect.isVisible = false
     }
 
-    internal fun initialDisplayWheel() {
+    internal fun initialDisplayWheel()
+    {
         textName.text = wheel!!.name
 
         if (wheel!!.isConnected())
@@ -153,7 +164,8 @@ class WheelViewFragment : BaseFragment() {
         else floatOf(value)
 
     internal fun parseVoltage(value: String): Float? =
-        when {
+        when
+        {
             !isNumeric(value) -> null
             floatOf(value) < wheel!!.voltageMin -> null
             else -> round(floatOf(value))
@@ -165,7 +177,8 @@ class WheelViewFragment : BaseFragment() {
     internal fun readVoltageActual() =
         parseVoltage(widgets.getText(editVoltageActual))
 
-    internal fun reconnect(execution: () -> Unit = {}) {
+    internal fun reconnect(execution: () -> Unit = {})
+    {
         fragments.runWithWait {
             external.bluetooth().getDeviceInfo(wheel!!.btAddr!!) {
                 fragments.doneWaiting(it) {
@@ -181,9 +194,11 @@ class WheelViewFragment : BaseFragment() {
         }
     }
 
-    internal fun refreshDisplay(voltageActual: Float?, km: Float?) {
+    internal fun refreshDisplay(voltageActual: Float?, km: Float?)
+    {
         if (voltageActual == null) clearDisplay()
-        else {
+        else
+        {
             updatePercentageFor(voltageActual)
 
             if (km == null) clearEstimates()
@@ -191,7 +206,8 @@ class WheelViewFragment : BaseFragment() {
         }
     }
 
-    internal fun refreshEstimates(voltage: Float, km: Float) {
+    internal fun refreshEstimates(voltage: Float, km: Float)
+    {
         fragments.runUI {
             estimates = calculatorService.estimatedValues(wheel!!, voltage, km)
 
@@ -201,32 +217,38 @@ class WheelViewFragment : BaseFragment() {
         }
     }
 
-    internal fun scan() {
+    internal fun scan()
+    {
         fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelScanFragment)
     }
 
-    internal fun startCharging() {
+    internal fun startCharging()
+    {
         chargeContext.km = readKm()!!
         chargeContext.voltage = readVoltageActual()!!
 
         fragments.navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
     }
 
-    internal fun updatePercentageFor(voltageActual: Float) {
+    internal fun updatePercentageFor(voltageActual: Float)
+    {
         fragments.runUI {
             val percentage = calculatorService.percentage(wheel!!, voltageActual)
             show(textBattery, textPercentageWithDecimal(percentage))
         }
     }
 
-    private fun hide(field: TextView) {
+    private fun hide(field: TextView)
+    {
         show(field, false)
     }
 
-    private fun show(field: TextView, display: Boolean) {
+    private fun show(field: TextView, display: Boolean)
+    {
         field.isVisible = display
 
-        when (field) {
+        when (field)
+        {
             textBtName,
             textBtAddr -> labelBtName.isVisible = display
 
@@ -236,20 +258,31 @@ class WheelViewFragment : BaseFragment() {
         }
     }
 
-    private fun show(field: TextView, value: String) {
+    private fun show(field: TextView, value: String)
+    {
         field.text = value
         show(field, true)
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float) {
-        wheel = wheel!!.copy(mileage = newMileage)
-        external.runDB { db -> db.saveWheel(wheel!!) }
+    private fun updateWheel(newKm: Float, newMileage: Int, newVoltage: Float)
+    {
+        val resetVoltageInitial = newKm < 0.05f
+
+        wheel = if (resetVoltageInitial) wheel!!.copy(mileage = newMileage, voltageInitial = newVoltage)
+        else wheel!!.copy(mileage = newMileage)
+
+        external.runDB { db ->
+            db.saveWheel(wheel!!)
+        }
 
         fragments.runUI {
             textMileage.text = textKm(wheel!!.totalMileage())
             editKm.setText("$newKm")
-            editVoltageActual.setText("$newVoltage")
+            editVoltageActual.setText(textVoltage(newVoltage))
+
+            if (resetVoltageInitial)
+                textVoltageInitial.text = textVoltage(wheel!!.voltageInitial)
         }
     }
 }

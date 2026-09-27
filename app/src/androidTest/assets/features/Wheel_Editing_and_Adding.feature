@@ -11,6 +11,7 @@ Feature: Wheel Editing & Adding
       | Sherman | LK1000  | AB:CD:EF:GH:IJ:KL |
     And I start the app
 
+#    FIXME-1 Adding sets the initial voltage
   Scenario: Adding a wheel in full
     When I add a new wheel
     And I set these new values:

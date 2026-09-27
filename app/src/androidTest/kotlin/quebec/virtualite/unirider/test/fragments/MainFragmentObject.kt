@@ -34,7 +34,7 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain)
     {
         selectListViewItem(R.id.wheels, FIELD_NAME, NEW_WHEEL_ENTRY)
 
-        return WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+        return WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
     }
 
     fun selectWheel(wheelName: String): WheelEntity
@@ -114,11 +114,10 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain)
 
                     else ->
                     {
-                        val wheel = domain.getWheel(name)
-                        when (wheel)
+                        when (val wheel = domain.getWheel(name))
                         {
                             null -> WheelRow(0, name, 0)
-                            else -> WheelRow(wheel!!.id, name, parseKmNumeric(mileageWithUnits))
+                            else -> WheelRow(wheel.id, name, parseKmNumeric(mileageWithUnits))
                         }
                     }
                 }

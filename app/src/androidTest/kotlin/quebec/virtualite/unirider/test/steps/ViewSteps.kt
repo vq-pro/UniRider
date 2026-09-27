@@ -170,6 +170,12 @@ class ViewSteps : BaseSteps()
         viewFragment.setDistanceTo("40")
     }
 
+    @Then("^the initial voltage is showing (.*?)$")
+    fun validateInitialVoltageShowing(expectedVoltage: String)
+    {
+        viewFragment.validateInitialVoltage(expectedVoltage)
+    }
+
     @Then("^the voltage is updated to (.*?) and the battery (.*?)$")
     fun validateVoltageAndBatteryUpdatedTo(expectedVoltage: String, expectedBattery: String)
     {

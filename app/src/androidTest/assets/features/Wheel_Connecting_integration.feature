@@ -29,3 +29,25 @@ Feature: Wheel Connecting
     And the voltage is updated to 141.0V and the battery 66.3%
     And the km is updated to 20.5
     And I can charge the wheel
+
+  Scenario: Connecting to set the initial voltage after charging
+    Given this wheel is connected:
+      | Name      | Bt Name | Bt Address        |
+      | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |
+    And this simulated device:
+      | Bt Name | Bt Address        | Km | Mileage   | Voltages |
+      | LK13447 | AB:CD:EF:GH:IJ:KL | 0  | 20020.518 | 146.4V   |
+    And I select the Sherman L
+    When I reconnect to the wheel
+    Then the initial voltage is showing 146.4V
+
+  Scenario: Connecting after some distance does not reset the initial voltage
+    Given this wheel is connected:
+      | Name      | Bt Name | Bt Address        |
+      | Sherman L | LK13447 | AB:CD:EF:GH:IJ:KL |
+    And this simulated device:
+      | Bt Name | Bt Address        | Km  | Mileage   | Voltages |
+      | LK13447 | AB:CD:EF:GH:IJ:KL | 0.2 | 20020.518 | 146.4V   |
+    And I select the Sherman L
+    When I reconnect to the wheel
+    Then the initial voltage is showing 150.1V

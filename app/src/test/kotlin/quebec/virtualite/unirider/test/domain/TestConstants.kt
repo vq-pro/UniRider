@@ -4,7 +4,8 @@ import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.views.WheelRow
 
-object TestConstants {
+object TestConstants
+{
     const val CHARGE_AMPERAGE = 2f
     const val CHARGE_AMPERAGE2 = 1.5f
     const val CHARGE_AMPERAGE3 = 2.5f
@@ -43,6 +44,7 @@ object TestConstants {
     const val KM = 4444f
     const val KM_NEW = 3704.2f
     const val KM_NEW_RAW = 4445.012f
+    const val KM_NONE = 0.049f
     const val KM_REQUESTED = 10f
     const val LABEL_KM = "km"
     const val MILEAGE = 2222
@@ -78,6 +80,11 @@ object TestConstants {
     const val VOLTAGE_FULL4 = 99.5f
     const val VOLTAGE_FULL5 = 149.3f
     const val VOLTAGE_FULL_NEW = 80.7f
+    const val VOLTAGE_INITIAL = 81.0f
+    const val VOLTAGE_INITIAL2 = 122.4f
+    const val VOLTAGE_INITIAL3 = 98.0f
+    const val VOLTAGE_INITIAL4 = 98.1f
+    const val VOLTAGE_INITIAL5 = 147.3f
     const val VOLTAGE_MAX = 84.0f
     const val VOLTAGE_MAX2 = 126.0f
     const val VOLTAGE_MAX3 = 100.8f
@@ -111,43 +118,43 @@ object TestConstants {
     val S18_1_CONNECTED = WheelEntity(
         ID, NAME, DEVICE_NAME, DEVICE_ADDR,
         PREMILEAGE, MILEAGE, WH,
-        VOLTAGE_MAX, VOLTAGE_MIN,
-        VOLTAGE_FULL, CHARGE_AMPERAGE, CHARGE_RATE,
+        VOLTAGE_INITIAL, VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_FULL,
+        CHARGE_AMPERAGE, CHARGE_RATE,
         DISTANCE_OFFSET, NOT_SOLD
     )
     val S18_1_DISCONNECTED = WheelEntity(
         ID, NAME, null, null,
         PREMILEAGE, MILEAGE, WH,
-        VOLTAGE_MAX, VOLTAGE_MIN,
-        VOLTAGE_FULL, CHARGE_AMPERAGE, CHARGE_RATE,
+        VOLTAGE_INITIAL, VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_FULL,
+        CHARGE_AMPERAGE, CHARGE_RATE,
         DISTANCE_OFFSET, NOT_SOLD
     )
     val S20_2 = WheelEntity(
         ID2, NAME2, DEVICE_NAME2, DEVICE_ADDR2,
         PREMILEAGE2, MILEAGE2, WH2,
-        VOLTAGE_MAX2, VOLTAGE_MIN2,
-        VOLTAGE_FULL2, CHARGE_AMPERAGE2, CHARGE_RATE2,
+        VOLTAGE_INITIAL2, VOLTAGE_MAX2, VOLTAGE_MIN2, VOLTAGE_FULL2,
+        CHARGE_AMPERAGE2, CHARGE_RATE2,
         DISTANCE_OFFSET2, NOT_SOLD
     )
     val SHERMAN_MAX_3_SOLD = WheelEntity(
         ID3, NAME3, DEVICE_NAME3, DEVICE_ADDR3,
         PREMILEAGE3, MILEAGE3, WH3,
-        VOLTAGE_MAX3, VOLTAGE_MIN3,
-        VOLTAGE_FULL3, CHARGE_AMPERAGE3, CHARGE_RATE3, DISTANCE_OFFSET3, SOLD
+        VOLTAGE_INITIAL3, VOLTAGE_MAX3, VOLTAGE_MIN3, VOLTAGE_FULL3,
+        CHARGE_AMPERAGE3, CHARGE_RATE3, DISTANCE_OFFSET3, SOLD
     )
     val ABRAMS_4 = WheelEntity(
         ID4, NAME4, DEVICE_NAME4, DEVICE_ADDR4,
         PREMILEAGE4, MILEAGE4, WH4,
-        VOLTAGE_MAX4, VOLTAGE_MIN4,
-        VOLTAGE_FULL4, CHARGE_AMPERAGE4, CHARGE_RATE4, DISTANCE_OFFSET4, SOLD
+        VOLTAGE_INITIAL4, VOLTAGE_MAX4, VOLTAGE_MIN4, VOLTAGE_FULL4,
+        CHARGE_AMPERAGE4, CHARGE_RATE4, DISTANCE_OFFSET4, SOLD
     )
 
     val SHERMAN_L_5 = WheelEntity(
         ID5, NAME5, DEVICE_NAME5, DEVICE_ADDR5,
         PREMILEAGE5, MILEAGE5, WH5,
-        VOLTAGE_MAX5, VOLTAGE_MIN5,
-        VOLTAGE_FULL5, CHARGE_AMPERAGE5, CHARGE_RATE5, DISTANCE_OFFSET5, NOT_SOLD
+        VOLTAGE_INITIAL5, VOLTAGE_MAX5, VOLTAGE_MIN5, VOLTAGE_FULL5,
+        CHARGE_AMPERAGE5, CHARGE_RATE5, DISTANCE_OFFSET5, NOT_SOLD
     )
 
-    val EMPTY_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+    val EMPTY_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
 }

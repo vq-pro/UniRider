@@ -24,10 +24,8 @@ private const val SUFFIX_VOLTAGE = "V"
 
 class TestDomain(applicationContext: Context)
 {
-
     companion object
     {
-
         fun formatKm(km: Int): String =
             "$km$SUFFIX_KM"
 
@@ -157,8 +155,8 @@ class TestDomain(applicationContext: Context)
                 WheelEntity(
                     0, name, null, null,
                     0, mileage, wh,
-                    voltageMax, voltageMin,
-                    voltageFull, chargeAmperage, chargeRate,
+                    voltageFull, voltageMax, voltageMin, voltageFull,
+                    chargeAmperage, chargeRate,
                     distanceOffset, isSold
                 )
             }
