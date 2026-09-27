@@ -36,6 +36,7 @@ import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_DISCONNECTED
 import quebec.virtualite.unirider.test.domain.TestConstants.SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_FULL_NEW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_INITIAL
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MAX
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MAX_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MIN
@@ -44,7 +45,8 @@ import quebec.virtualite.unirider.test.domain.TestConstants.WH
 import quebec.virtualite.unirider.test.domain.TestConstants.WH_NEW
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
+class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java)
+{
 
     @InjectMocks
     @Spy
@@ -93,7 +95,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     private lateinit var mockedWheelValidator: WheelValidator
 
     @Before
-    fun before() {
+    fun before()
+    {
         BaseFragment.wheel = S18_1_DISCONNECTED
 
         mockExternal()
@@ -102,7 +105,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onCreateView() {
+    fun onCreateView()
+    {
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
@@ -111,7 +115,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated() {
+    fun onViewCreated()
+    {
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
@@ -162,7 +167,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated_whenAdding() {
+    fun onViewCreated_whenAdding()
+    {
         // Given
         BaseFragment.wheel = null
 
@@ -184,7 +190,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated_withZeroPreMileageAndMileage_emptyFields() {
+    fun onViewCreated_withZeroPreMileageAndMileage_emptyFields()
+    {
         // Given
         BaseFragment.wheel = S18_1_CONNECTED.copy(premileage = 0, mileage = 0)
 
@@ -197,7 +204,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun enableSaveIfChanged_whenChanged_enabled() {
+    fun enableSaveIfChanged_whenChanged_enabled()
+    {
         // Given
         changeCanBeSaved(true)
         injectMocks()
@@ -211,7 +219,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun enableSaveIfChanged_whenChangedAndDuplicate_disabled() {
+    fun enableSaveIfChanged_whenChangedAndDuplicate_disabled()
+    {
         // Given
         changeCanBeSaved(true)
         injectMocks()
@@ -227,7 +236,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun enableSaveIfChanged_whenNotChanged_disabled() {
+    fun enableSaveIfChanged_whenNotChanged_disabled()
+    {
         // Given
         changeCanBeSaved(false)
         injectMocks()
@@ -241,7 +251,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onDelete() {
+    fun onDelete()
+    {
         // When
         fragment.onDelete().invoke(mockedView)
 
@@ -250,7 +261,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onSave() {
+    fun onSave()
+    {
         // Given
         BaseFragment.wheel = definedWheel()
         fragment.updatedWheel = BaseFragment.wheel!!.copy(premileage = 2)
@@ -266,7 +278,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onToggleSold() {
+    fun onToggleSold()
+    {
         // Given
         initUpdate()
 
@@ -280,7 +293,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateChargeAmperage() {
+    fun onUpdateChargeAmperage()
+    {
         // Given
         initUpdate()
 
@@ -294,7 +308,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateChargeAmperage_whenEmpty_zero() {
+    fun onUpdateChargeAmperage_whenEmpty_zero()
+    {
         // Given
         initUpdate()
 
@@ -306,7 +321,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateChargeAmperage_whenInvalid_zero() {
+    fun onUpdateChargeAmperage_whenInvalid_zero()
+    {
         // Given
         initUpdate()
 
@@ -318,7 +334,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateChargeAmperage_withTooManyDecimals() {
+    fun onUpdateChargeAmperage_withTooManyDecimals()
+    {
         // Given
         initUpdate()
 
@@ -330,7 +347,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateChargeRate() {
+    fun onUpdateChargeRate()
+    {
         // Given
         initUpdate()
 
@@ -344,7 +362,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateChargeRate_whenEmpty_zero() {
+    fun onUpdateChargeRate_whenEmpty_zero()
+    {
         // Given
         initUpdate()
 
@@ -356,7 +375,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateChargeRate_whenInvalid_zero() {
+    fun onUpdateChargeRate_whenInvalid_zero()
+    {
         // Given
         initUpdate()
 
@@ -368,7 +388,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateChargeRate_withTooManyDecimals() {
+    fun onUpdateChargeRate_withTooManyDecimals()
+    {
         // Given
         initUpdate()
 
@@ -380,7 +401,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateDistanceOffset() {
+    fun onUpdateDistanceOffset()
+    {
         // Given
         initUpdate()
 
@@ -394,7 +416,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateDistanceOffset_whenEmpty_zero() {
+    fun onUpdateDistanceOffset_whenEmpty_zero()
+    {
         // Given
         initUpdate()
 
@@ -406,7 +429,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateDistanceOffset_whenInvalid_zero() {
+    fun onUpdateDistanceOffset_whenInvalid_zero()
+    {
         // Given
         initUpdate()
 
@@ -418,7 +442,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateDistanceOffset_withTooManyDecimals() {
+    fun onUpdateDistanceOffset_withTooManyDecimals()
+    {
         // Given
         initUpdate()
 
@@ -430,7 +455,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateMileage() {
+    fun onUpdateMileage()
+    {
         // Given
         initUpdate()
 
@@ -444,7 +470,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateMileage_whenEmpty_zero() {
+    fun onUpdateMileage_whenEmpty_zero()
+    {
         // Given
         initUpdate()
 
@@ -456,7 +483,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateMileage_whenInvalid_zero() {
+    fun onUpdateMileage_whenInvalid_zero()
+    {
         // Given
         initUpdate()
 
@@ -468,7 +496,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateName() {
+    fun onUpdateName()
+    {
         // Given
         initUpdate()
 
@@ -482,7 +511,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdatePreMileage() {
+    fun onUpdatePreMileage()
+    {
         // Given
         initUpdate()
 
@@ -496,7 +526,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdatePreMileage_whenEmpty_zero() {
+    fun onUpdatePreMileage_whenEmpty_zero()
+    {
         // Given
         initUpdate()
 
@@ -508,7 +539,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdatePreMileage_whenInvalid_zero() {
+    fun onUpdatePreMileage_whenInvalid_zero()
+    {
         // Given
         initUpdate()
 
@@ -520,9 +552,12 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageFull() {
+    fun onUpdateVoltageFull()
+    {
         // Given
         initUpdate()
+
+        fragment.initialWheel = definedWheel().copy(voltageInitial = VOLTAGE_INITIAL)
 
         // When
         fragment.onUpdateVoltageFull().invoke("$VOLTAGE_FULL_NEW ")
@@ -534,10 +569,32 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageFull_whenEmpty_setToMaximum() {
+    fun onUpdateVoltageFull_whenAddingNewWheel_copyToVoltageInitial()
+    {
         // Given
         initUpdate()
         mockVoltageMax()
+
+        fragment.initialWheel = definedWheel().copy(voltageInitial = 0f)
+
+        // When
+        fragment.onUpdateVoltageFull().invoke("$VOLTAGE_FULL_NEW ")
+
+        // Then
+        assertThat(
+            fragment.updatedWheel,
+            equalTo(S18_1_CONNECTED.copy(voltageFull = VOLTAGE_FULL_NEW, voltageInitial = VOLTAGE_FULL_NEW))
+        )
+    }
+
+    @Test
+    fun onUpdateVoltageFull_whenEmpty_setToMaximum()
+    {
+        // Given
+        initUpdate()
+        mockVoltageMax()
+
+        fragment.initialWheel = definedWheel()
 
         // When
         fragment.onUpdateVoltageFull().invoke(" ")
@@ -547,10 +604,13 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageFull_whenInvalid_setToMaximum() {
+    fun onUpdateVoltageFull_whenInvalid_setToMaximum()
+    {
         // Given
         initUpdate()
         mockVoltageMax()
+
+        fragment.initialWheel = definedWheel()
 
         // When
         fragment.onUpdateVoltageFull().invoke("ab ")
@@ -560,10 +620,13 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageFull_withTooManyDecimals() {
+    fun onUpdateVoltageFull_withTooManyDecimals()
+    {
         // Given
         initUpdate()
         mockVoltageMax()
+
+        fragment.initialWheel = definedWheel()
 
         // When
         fragment.onUpdateVoltageFull().invoke("${VOLTAGE_FULL_NEW + 0.001f} ")
@@ -573,7 +636,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageMax() {
+    fun onUpdateVoltageMax()
+    {
         // Given
         initUpdate()
 
@@ -589,7 +653,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageMax_whenEmpty_zero() {
+    fun onUpdateVoltageMax_whenEmpty_zero()
+    {
         // Given
         initUpdate()
 
@@ -601,7 +666,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageMax_whenInvalid_zero() {
+    fun onUpdateVoltageMax_whenInvalid_zero()
+    {
         // Given
         initUpdate()
 
@@ -613,7 +679,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageMax_withTooManyDecimals() {
+    fun onUpdateVoltageMax_withTooManyDecimals()
+    {
         // Given
         initUpdate()
 
@@ -625,7 +692,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageMin() {
+    fun onUpdateVoltageMin()
+    {
         // Given
         initUpdate()
 
@@ -639,7 +707,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageMin_whenEmpty_zero() {
+    fun onUpdateVoltageMin_whenEmpty_zero()
+    {
         // Given
         initUpdate()
 
@@ -651,7 +720,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageMin_whenInvalid_zero() {
+    fun onUpdateVoltageMin_whenInvalid_zero()
+    {
         // Given
         initUpdate()
 
@@ -663,7 +733,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateVoltageMin_withTooManyDecimals() {
+    fun onUpdateVoltageMin_withTooManyDecimals()
+    {
         // Given
         initUpdate()
 
@@ -675,7 +746,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateWh() {
+    fun onUpdateWh()
+    {
         // Given
         initUpdate()
 
@@ -689,7 +761,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateWh_whenEmpty_zero() {
+    fun onUpdateWh_whenEmpty_zero()
+    {
         // Given
         initUpdate()
 
@@ -701,7 +774,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
     }
 
     @Test
-    fun onUpdateWh_whenInvalid_zero() {
+    fun onUpdateWh_whenInvalid_zero()
+    {
         // Given
         initUpdate()
 
@@ -712,7 +786,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         assertThat(fragment.updatedWheel, equalTo(S18_1_CONNECTED.copy(wh = 0)))
     }
 
-    private fun changeCanBeSaved(canSave: Boolean) {
+    private fun changeCanBeSaved(canSave: Boolean)
+    {
         fragment.initialWheel = definedWheel()
         fragment.updatedWheel = fragment.initialWheel
 
@@ -721,18 +796,21 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
 
     private fun definedWheel() = S18_1_CONNECTED
 
-    private fun initUpdate() {
+    private fun initUpdate()
+    {
         injectMocks()
 
         doNothing().`when`(fragment).enableSaveIfChanged()
         fragment.updatedWheel = definedWheel()
     }
 
-    private fun injectMocks() {
+    private fun injectMocks()
+    {
         fragment.buttonSave = mockedButtonSave
     }
 
-    private fun mockFields() {
+    private fun mockFields()
+    {
         mockField(R.id.button_delete, mockedButtonDelete)
         mockField(R.id.button_save, mockedButtonSave)
         mockField(R.id.check_sold, mockedSwitchSold)
@@ -748,7 +826,8 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java) {
         mockField(R.id.edit_wh, mockedEditWh)
     }
 
-    private fun mockVoltageMax() {
+    private fun mockVoltageMax()
+    {
         fragment.editVoltageMax = mockedEditVoltageMax
         given(mockedWidgets.getText(mockedEditVoltageMax)).willReturn("$VOLTAGE_MAX")
     }

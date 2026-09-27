@@ -17,7 +17,6 @@ import quebec.virtualite.unirider.database.WheelEntity
 
 class WheelEditFragment : BaseFragment()
 {
-
     private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
     internal lateinit var buttonDelete: Button
@@ -169,7 +168,12 @@ class WheelEditFragment : BaseFragment()
         var newVoltageFull = round(safeFloatOf(newVoltage))
         if (newVoltageFull == 0f) newVoltageFull = floatOf(widgets.getText(editVoltageMax))
 
-        updatedWheel = updatedWheel.copy(voltageFull = newVoltageFull)
+        val addingNewWheel = initialWheel.voltageInitial == 0f
+
+        updatedWheel =
+            if (addingNewWheel) updatedWheel.copy(voltageFull = newVoltageFull, voltageInitial = newVoltageFull)
+            else updatedWheel.copy(voltageFull = newVoltageFull)
+
         enableSaveIfChanged()
     }
 
