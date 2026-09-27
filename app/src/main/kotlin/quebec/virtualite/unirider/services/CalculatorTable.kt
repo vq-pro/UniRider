@@ -7,9 +7,7 @@ private const val DECIMALS_VOLTAGE = 3
 
 class CalculatorTable : Calculator
 {
-    data class SoeVoltage(
-        val soe: Float, val voltage: Float
-    )
+    data class SoeVoltage(val soe: Float, val voltage: Float)
 
     private val SOE_VOLTAGE = arrayOf(
         SoeVoltage(100.0f, 4.2f),
@@ -128,33 +126,53 @@ class CalculatorTable : Calculator
 
     override fun soE(voltage: Float): Float
     {
-        if (voltage <= 4.2f) SOE_VOLTAGE.forEachIndexed { index, soe ->
-            when
-            {
-                soe.voltage == voltage -> return soe.soe
-                soe.voltage < voltage ->
+        if (voltage <= 4.2f)
+            SOE_VOLTAGE.forEachIndexed { index, soe ->
+                when
                 {
-                    val higherVoltage = SOE_VOLTAGE[index - 1].voltage
-                    val lowerVoltage = SOE_VOLTAGE[index].voltage
-                    val voltageSpan = higherVoltage - lowerVoltage
-                    val proportion = voltage - lowerVoltage
-                    val percentage = proportion / voltageSpan
+                    soe.voltage == voltage -> return soe.soe
+                    soe.voltage < voltage ->
+                    {
+                        val higher = SOE_VOLTAGE[index - 1]
+                        val lower = SOE_VOLTAGE[index]
+                        val voltageSpan = higher.voltage - lower.voltage
+                        val proportion = voltage - lower.voltage
+                        val percentage = proportion / voltageSpan
 
-                    val higherSoe = SOE_VOLTAGE[index - 1].soe
-                    val lowerSoe = SOE_VOLTAGE[index].soe
-                    val soeSpan = higherSoe - lowerSoe
-                    val resultingSoe = lowerSoe + (percentage * soeSpan)
+                        val soeSpan = higher.soe - lower.soe
+                        val resultingSoe = lower.soe + (percentage * soeSpan)
 
-                    return round(resultingSoe, DECIMALS_VOLTAGE)
+                        return round(resultingSoe, DECIMALS_VOLTAGE)
+                    }
                 }
             }
-        }
 
         return 0.0f
     }
 
     override fun voltage(soE: Float): Float
     {
-        TODO("Not yet implemented")
+        if (soE <= 100f)
+            SOE_VOLTAGE.forEachIndexed { index, soe ->
+                when
+                {
+                    soe.soe == soE -> return soe.voltage
+                    soe.soe < soE ->
+                    {
+                        val higher = SOE_VOLTAGE[index - 1]
+                        val lower = SOE_VOLTAGE[index]
+                        val soeSpan = higher.soe - lower.soe
+                        val proportion = soE - lower.soe
+                        val percentage = proportion / soeSpan
+
+                        val voltageSpan = higher.voltage - lower.voltage
+                        val resultingVoltage = lower.voltage + (percentage * voltageSpan)
+
+                        return round(resultingVoltage, DECIMALS_VOLTAGE)
+                    }
+                }
+            }
+
+        return 0f
     }
 }

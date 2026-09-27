@@ -13,6 +13,7 @@ class CalculatorTableTest
     @InjectMocks
     lateinit var table: CalculatorTable
 
+    // FIXME-1 Transfer into CalculatorService
     @Test
     fun distanceRemaining()
     {
@@ -61,5 +62,27 @@ class CalculatorTableTest
 
         // Then
         assertThat(result, equalTo(expectedSoe))
+    }
+
+    @Test
+    fun voltage()
+    {
+        voltage(98.9f, 4.187f)
+        voltage(95.6f, 4.150f)
+        voltage(0f, 3.330f)
+        voltage(-1f, 0f)
+        voltage(100f, 4.2f)
+        voltage(100.1f, 0f)
+        voltage(39f, 3.769f)
+        voltage(70.6f, 3.926f)
+    }
+
+    fun voltage(soE: Float, expectedVoltage: Float)
+    {
+        // When
+        val result = table.voltage(soE)
+
+        // Then
+        assertThat(result, equalTo(expectedVoltage))
     }
 }
