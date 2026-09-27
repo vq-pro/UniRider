@@ -10,10 +10,10 @@ class CalculatorService {
         val totalRange: Float
     )
 
-    private val soRperCells = SoRperCells()
+    private val calculator: Calculator = SoRperCells()
 
     fun estimatedValues(wheel: WheelEntity, voltage: Float, km: Float): EstimatedValues {
-        val sor = soRperCells.voltageToSoR(wheel, voltage)
+        val sor = calculator.soE(wheel, voltage)
         if (sor == -1f)
             return EstimatedValues(-1f, -1f)
 
@@ -32,7 +32,7 @@ class CalculatorService {
     }
 
     fun percentage(wheel: WheelEntity, voltage: Float): Float {
-        val soR = soRperCells.voltageToSoR(wheel, voltage)
+        val soR = calculator.soE(wheel, voltage)
         return when {
             soR == -1f -> 100f
             else -> round(soR)
@@ -48,7 +48,7 @@ class CalculatorService {
             kmRequested <= 0.01f -> voltage
             else -> {
                 val soRRequested = kmRequested / estimatedTotalRange * 100
-                return round(soRperCells.soRtoVoltage(wheel, soRRequested))
+                round(calculator.voltage(wheel, soRRequested))
             }
         }
     }
