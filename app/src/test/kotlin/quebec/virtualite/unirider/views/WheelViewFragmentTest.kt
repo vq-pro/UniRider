@@ -689,10 +689,10 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         verify(mockedCalculatorService).estimatedValues(wheel!!, VOLTAGE, KM)
 
         verify(mockedTextRemainingRange).isVisible = true
-        verify(mockedTextRemainingRange).text = "$REMAINING_RANGE"
+        verify(mockedTextRemainingRange).text = "${REMAINING_RANGE.toInt()}"
         verify(mockedLabelRemainingRange).isVisible = true
         verify(mockedTextTotalRange).isVisible = true
-        verify(mockedTextTotalRange).text = "$TOTAL_RANGE"
+        verify(mockedTextTotalRange).text = "${TOTAL_RANGE.toInt()}"
         verify(mockedLabelTotalRange).isVisible = true
         verify(mockedWidgets).enable(mockedButtonCharge)
 

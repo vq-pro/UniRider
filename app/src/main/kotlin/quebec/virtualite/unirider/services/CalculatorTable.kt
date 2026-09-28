@@ -2,10 +2,10 @@ package quebec.virtualite.unirider.services
 
 import quebec.virtualite.commons.android.utils.NumberUtils.round
 
-private const val DECIMALS_KM = 2
 private const val DECIMALS_VOLTAGE = 3
+private const val VOLTAGE_MAXIMUM = 4.2f
 
-class CalculatorTable : Calculator
+class CalculatorTable
 {
     data class SoeVoltage(val soe: Float, val voltage: Float)
 
@@ -113,65 +113,58 @@ class CalculatorTable : Calculator
         SoeVoltage(0.0f, 3.330f)
     )
 
-    fun distanceRemaining(initialVoltage: Float, actualVoltage: Float, distance: Float): Float
+    fun soE(voltage: Float): Float
     {
-        val initialSoe = soE(initialVoltage)
-        val actualSoe = soE(actualVoltage)
+        if (voltage >= VOLTAGE_MAXIMUM)
+            return 100f
 
-        val usedSoe = initialSoe - actualSoe
-        val remainingUsableSoe = actualSoe
-
-        return round(distance * remainingUsableSoe / usedSoe, DECIMALS_KM)
-    }
-
-    override fun soE(voltage: Float): Float
-    {
-        if (voltage <= 4.2f)
-            SOE_VOLTAGE.forEachIndexed { index, soe ->
-                when
+        SOE_VOLTAGE.forEachIndexed { index, soe ->
+            when
+            {
+                soe.voltage == voltage -> return soe.soe
+                soe.voltage < voltage ->
                 {
-                    soe.voltage == voltage -> return soe.soe
-                    soe.voltage < voltage ->
-                    {
-                        val higher = SOE_VOLTAGE[index - 1]
-                        val lower = SOE_VOLTAGE[index]
-                        val voltageSpan = higher.voltage - lower.voltage
-                        val proportion = voltage - lower.voltage
-                        val percentage = proportion / voltageSpan
+                    val higher = SOE_VOLTAGE[index - 1]
+                    val lower = SOE_VOLTAGE[index]
+                    val voltageSpan = higher.voltage - lower.voltage
+                    val proportion = voltage - lower.voltage
+                    val percentage = proportion / voltageSpan
 
-                        val soeSpan = higher.soe - lower.soe
-                        val resultingSoe = lower.soe + (percentage * soeSpan)
+                    val soeSpan = higher.soe - lower.soe
+                    val resultingSoe = lower.soe + (percentage * soeSpan)
 
-                        return round(resultingSoe, DECIMALS_VOLTAGE)
-                    }
+                    return round(resultingSoe, DECIMALS_VOLTAGE)
                 }
             }
+        }
 
         return 0.0f
     }
 
-    override fun voltage(soE: Float): Float
+    fun voltage(soE: Float): Float
     {
-        if (soE <= 100f)
-            SOE_VOLTAGE.forEachIndexed { index, soe ->
-                when
+        if (soE >= 100f)
+            return VOLTAGE_MAXIMUM
+
+        SOE_VOLTAGE.forEachIndexed { index, soe ->
+            when
+            {
+                soe.soe == soE -> return soe.voltage
+                soe.soe < soE ->
                 {
-                    soe.soe == soE -> return soe.voltage
-                    soe.soe < soE ->
-                    {
-                        val higher = SOE_VOLTAGE[index - 1]
-                        val lower = SOE_VOLTAGE[index]
-                        val soeSpan = higher.soe - lower.soe
-                        val proportion = soE - lower.soe
-                        val percentage = proportion / soeSpan
+                    val higher = SOE_VOLTAGE[index - 1]
+                    val lower = SOE_VOLTAGE[index]
+                    val soeSpan = higher.soe - lower.soe
+                    val proportion = soE - lower.soe
+                    val percentage = proportion / soeSpan
 
-                        val voltageSpan = higher.voltage - lower.voltage
-                        val resultingVoltage = lower.voltage + (percentage * voltageSpan)
+                    val voltageSpan = higher.voltage - lower.voltage
+                    val resultingVoltage = lower.voltage + (percentage * voltageSpan)
 
-                        return round(resultingVoltage, DECIMALS_VOLTAGE)
-                    }
+                    return round(resultingVoltage, DECIMALS_VOLTAGE)
                 }
             }
+        }
 
         return 0f
     }

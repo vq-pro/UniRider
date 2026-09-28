@@ -26,7 +26,7 @@ Feature: Wheel Connecting
     And I select the Sherman L
     When I reconnect to the wheel
     Then the mileage is updated to 22021 km
-    And the voltage is updated to 141.0V and the battery 66.3%
+    And the voltage is updated to 141.0V and the battery 69.2%
     And the km is updated to 20.5
     And I can charge the wheel
 

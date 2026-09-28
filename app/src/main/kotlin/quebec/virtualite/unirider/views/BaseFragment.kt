@@ -22,7 +22,7 @@ open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
 
     internal fun textKm(value: Int) = "$value"
 
-    internal fun textKmWithDecimal(value: Float) = "$value".replace("0.0", "0")
+    internal fun textKmWithDecimal(value: Float) = "$value".replace(".0", "")
 
     internal fun textPercentageWithDecimal(percentage: Float) = when
     {

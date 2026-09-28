@@ -20,7 +20,7 @@ Feature: Wheel Charging
     And I set the distance to 30 km
     And it displays these estimates:
       | remaining | total range |
-      | 31.2      | 61.2        |
+      | 25.8      | 55.8        |
     And I charge the wheel
 
   Scenario: Changing the actual voltage
@@ -29,11 +29,11 @@ Feature: Wheel Charging
     And it displays an actual voltage of 138.0V
     And it displays these charging estimates:
       | target        | required      | time        |
-      | 143.5V (+5.5) | 142.0V (-1.5) | 12:01 (16m) |
+      | 146.0V (+8.0) | 144.5V (-1.5) | 12:08 (23m) |
     When I change the actual voltage to 140.0V
     Then it displays these charging estimates:
       | target        | required      | time        |
-      | 143.5V (+3.5) | 142.0V (-1.5) | 11:55 (10m) |
+      | 146.0V (+6.0) | 144.5V (-1.5) | 12:02 (17m) |
 
   Scenario: Changing the amperage
     Given I reconnect to update the voltage
@@ -42,11 +42,11 @@ Feature: Wheel Charging
     And it displays an amperage of 20A
     And it displays these charging estimates:
       | target        | required      | time        |
-      | 143.5V (+5.5) | 142.0V (-1.5) | 12:01 (16m) |
+      | 146.0V (+8.0) | 144.5V (-1.5) | 12:08 (23m) |
     When I change the amperage to 9.5A
     Then it displays these charging estimates:
       | target        | required      | time        |
-      | 143.5V (+5.5) | 142.0V (-1.5) | 12:18 (33m) |
+      | 146.0V (+8.0) | 144.5V (-1.5) | 12:33 (48m) |
 
   Scenario Outline: Charging a wheel by distance [<distance>]
     Given I reconnect to update the voltage
@@ -59,9 +59,9 @@ Feature: Wheel Charging
     Examples:
       | distance | fc_indicator | target         | required      | time        |
       | 0 km     | off          | 138.0V         | 136.5V (-1.5) | Go!         |
-      | 10 km    | off          | 132.0V         | 130.5V (-1.5) | Go!         |
-      | 20 km    | off          | 138.4V (+0.4)  | 136.9V (-1.5) | 11:46 (1m)  |
-      | 30 km    | off          | 143.5V (+5.5)  | 142.0V (-1.5) | 12:01 (16m) |
+      | 10 km    | off          | 133.9V         | 132.4V (-1.5) | Go!         |
+      | 20 km    | off          | 140.1V (+2.1)  | 138.6V (-1.5) | 11:51 (6m)  |
+      | 30 km    | off          | 146.0V (+8.0)  | 144.5V (-1.5) | 12:08 (23m) |
       | 40 km    | off          | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
       | 50 km    | off          | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
       | full     | on           | 150.1V (+12.1) | 148.6V (-1.5) | 12:20 (35m) |
@@ -94,8 +94,8 @@ Feature: Wheel Charging
     And I request to charge for 40 km
     Then it displays an actual voltage of 91.0V
     And it displays these charging estimates:
-      | target       | required     | time        |
-      | 97.5V (+6.5) | 95.5V (-2.0) | 12:37 (52m) |
+      | target       | required     | time         |
+      | 99.5V (+8.5) | 97.5V (-2.0) | 12:53 (1h8m) |
 
   Scenario: Start charging
     Given I see the charge warning
@@ -115,5 +115,5 @@ Feature: Wheel Charging
     When I reconnect to update the voltage
     Then it displays an actual voltage of 136.5V
     And it displays these charging estimates:
-      | target        | required      | time       |
-      | 138.4V (+1.9) | 136.9V (-1.5) | 11:50 (5m) |
+      | target        | required      | time        |
+      | 140.1V (+3.6) | 138.6V (-1.5) | 11:55 (10m) |
