@@ -8,23 +8,26 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.MonitoringInstrumentation
 import cucumber.api.android.CucumberInstrumentationCore
 
-open class BaseCucumberInstrumentationRunner : MonitoringInstrumentation() {
+open class BaseCucumberInstrumentationRunner : MonitoringInstrumentation()
+{
     private val instrumentationCore = CucumberInstrumentationCore(this)
 
-    override fun onCreate(arguments: Bundle) {
+    override fun onCreate(arguments: Bundle)
+    {
         super.onCreate(arguments)
 
         instrumentationCore.create(arguments)
         start()
+
+        grantPermissions()
     }
 
-    override fun onStart() {
+    override fun onStart()
+    {
         super.onStart()
 
         waitForIdleSync()
         instrumentationCore.start()
-
-        grantPermissions()
     }
 
     private fun grantPermissions()
