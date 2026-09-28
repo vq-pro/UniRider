@@ -15,9 +15,9 @@ import quebec.virtualite.commons.android.utils.NumberUtils.safeIntOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.database.WheelEntity
 
-class WheelEditFragment : BaseFragment() {
-
-    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, false)
+class WheelEditFragment : BaseFragment()
+{
+    private val NEW_WHEEL = WheelEntity(0L, "", null, null, 0, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f, 0f, false)
 
     internal lateinit var buttonDelete: Button
     internal lateinit var buttonSave: Button
@@ -38,12 +38,14 @@ class WheelEditFragment : BaseFragment() {
 
     internal var wheelValidator = WheelValidator()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
         return inflater.inflate(R.layout.wheel_edit_fragment, container, false)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
 
         buttonDelete = view.findViewById(R.id.button_delete)
@@ -74,7 +76,8 @@ class WheelEditFragment : BaseFragment() {
         widgets.addTextChangedListener(editWh, onUpdateWh())
         widgets.setOnCheckedChangeListener(switchSold, onToggleSold())
 
-        if (wheel != null) {
+        if (wheel != null)
+        {
             initialWheel = wheel!!
             updatedWheel = initialWheel
 
@@ -89,15 +92,18 @@ class WheelEditFragment : BaseFragment() {
                 editWh.setText("${initialWheel.wh}")
                 switchSold.setChecked(initialWheel.isSold)
 
-                if (initialWheel.premileage != 0) {
+                if (initialWheel.premileage != 0)
+                {
                     editPreMileage.setText("${initialWheel.premileage}")
                 }
 
-                if (initialWheel.mileage != 0) {
+                if (initialWheel.mileage != 0)
+                {
                     editMileage.setText("${initialWheel.mileage}")
                 }
             }
-        } else {
+        } else
+        {
             initialWheel = NEW_WHEEL
             updatedWheel = initialWheel
         }
@@ -162,7 +168,12 @@ class WheelEditFragment : BaseFragment() {
         var newVoltageFull = round(safeFloatOf(newVoltage))
         if (newVoltageFull == 0f) newVoltageFull = floatOf(widgets.getText(editVoltageMax))
 
-        updatedWheel = updatedWheel.copy(voltageFull = newVoltageFull)
+        val addingNewWheel = initialWheel.voltageInitial == 0f
+
+        updatedWheel =
+            if (addingNewWheel) updatedWheel.copy(voltageFull = newVoltageFull, voltageInitial = newVoltageFull)
+            else updatedWheel.copy(voltageFull = newVoltageFull)
+
         enableSaveIfChanged()
     }
 
@@ -185,7 +196,8 @@ class WheelEditFragment : BaseFragment() {
         enableSaveIfChanged()
     }
 
-    internal fun enableSaveIfChanged() {
+    internal fun enableSaveIfChanged()
+    {
         if (wheelValidator.canSave(updatedWheel, initialWheel))
             external.runDB { db ->
                 if (db.findDuplicate(updatedWheel)) widgets.disable(buttonSave)

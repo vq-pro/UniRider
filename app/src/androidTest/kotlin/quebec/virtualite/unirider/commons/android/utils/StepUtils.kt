@@ -264,7 +264,7 @@ object StepUtils
         poll {
             onData(hasToString(containsString(value))).inAdapterView(withId(id))
                 .atPosition(0)
-                .perform(forceClickAdapterRow())
+                .perform(forceClickListViewRow())
         }
     }
 
@@ -273,7 +273,7 @@ object StepUtils
         poll {
             onData(hasEntry(equalTo(field.name), equalTo(value))).inAdapterView(withId(id))
                 .onChildView(withId(field.id))
-                .perform(forceClickAdapterRow())
+                .perform(forceClickListViewRow())
         }
     }
 
@@ -368,7 +368,7 @@ object StepUtils
         }
     }
 
-    private fun forceClickAdapterRow(): ViewAction
+    private fun forceClickListViewRow(): ViewAction
     {
         return object : ViewAction
         {

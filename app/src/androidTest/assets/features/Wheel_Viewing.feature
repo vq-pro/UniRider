@@ -33,7 +33,7 @@ Feature: Wheel Viewing
     And I confirm the disconnect
     Then I cannot see the bluetooth settings
 
-  Scenario Outline: Calculating estimated values based on km [<wheel> / <km> / <voltage>]
+  Scenario Outline: Calculating estimated values based on km [<wheel> / <distance> / <voltage>]
     Given I select the <wheel>
     And I set the distance to <distance>
     When I set the actual voltage to <voltage>
@@ -42,15 +42,15 @@ Feature: Wheel Viewing
       | <remaining> | <total>     |
     Examples:
       | wheel       | distance | voltage | remaining | total |
-      | Sherman L   | 10.5 km  | 142.8V  | 50.1      | 60.6  |
-      | Sherman L   | 20 km    | 141.1V  | 40.5      | 60.5  |
-      | Sherman L   | 30 km    | 136.9V  | 30.5      | 60.5  |
-      | Sherman Max | 42 km    | 91V     | 39.3      | 81.3  |
-      | Sherman Max | 81 km    | 83.5V   | 9.5       | 90.5  |
-      | Sherman Max | 60 km    | 83.5V   | 7.0       | 67.0  |
-      | Sherman Max | 40 km    | 83.5V   | 4.7       | 44.7  |
+      | Sherman L   | 10.5 km  | 142.8V  | 39        | 49.5  |
+      | Sherman L   | 20 km    | 141.1V  | 50.3      | 70.3  |
+      | Sherman L   | 30 km    | 136.9V  | 25.3      | 55.3  |
+      | Sherman Max | 42 km    | 91V     | 33.9      | 75.9  |
+      | Sherman Max | 81 km    | 83.5V   | 9.9       | 90.9  |
+      | Sherman Max | 60 km    | 83.5V   | 7.4       | 67.4  |
+      | Sherman Max | 40 km    | 83.5V   | 4.9       | 44.9  |
       | S18         | 21 km    | 72V     | 6.1       | 27.1  |
-      | S18         | 42 km    | 67V     | 0         | 42.0  |
+      | S18         | 42 km    | 67V     | 0.6       | 42.6  |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
@@ -72,10 +72,10 @@ Feature: Wheel Viewing
     Then it displays a percentage of <battery>
     Examples:
       | wheel       | voltage | battery |
-      | 14S         | 63.5V   | 83.2%   |
-      | S18         | 71.4V   | 19.5%   |
-      | Sherman     | 96.5V   | 95.3%   |
-      | Sherman Max | 91.9V   | 53.6%   |
+      | 14S         | 63.5V   | 77.0%   |
+      | S18         | 71.4V   | 17.4%   |
+      | Sherman     | 96.5V   | 83.1%   |
+      | Sherman Max | 91.9V   | 50.0%   |
 
   Scenario Outline: Viewing a wheel's details in full - [<previous mileage>]
     Given the Sherman has a previous mileage of <previous mileage>
@@ -105,10 +105,10 @@ Feature: Wheel Viewing
     And I set the actual voltage to 91.9V
     And it displays these estimates:
       | remaining | total range |
-      | 44.0      | 82.0        |
+      | 42        | 80          |
     When I edit the wheel
     And I go back to view the wheel
-    Then it displays a percentage of 53.6%
+    Then it displays a percentage of 50.0%
     And it displays these estimates:
       | remaining | total range |
-      | 44.0      | 82.0        |
+      | 42        | 80          |

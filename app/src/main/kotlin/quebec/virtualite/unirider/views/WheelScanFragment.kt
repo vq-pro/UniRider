@@ -7,20 +7,23 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
+import quebec.virtualite.commons.android.utils.NumberUtils.round
 import quebec.virtualite.unirider.R
 import kotlin.math.roundToInt
 
-class WheelScanFragment : BaseFragment() {
-
+class WheelScanFragment : BaseFragment()
+{
     internal lateinit var lvDevices: ListView
 
     internal val devices = ArrayList<BluetoothDevice>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
         return inflater.inflate(R.layout.wheel_scan_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
 
         lvDevices = view.findViewById(R.id.devices)
@@ -40,20 +43,23 @@ class WheelScanFragment : BaseFragment() {
         fragments.runWithWaitAndBack { connectWithWheel(devices[pos]) }
     }
 
-    override fun onDestroyView() {
+    override fun onDestroyView()
+    {
         super.onDestroyView()
 
         external.bluetooth().stopScanning()
     }
 
-    private fun connectWithWheel(device: BluetoothDevice) {
+    private fun connectWithWheel(device: BluetoothDevice)
+    {
         external.bluetooth().getDeviceInfo(device.address) { info ->
             fragments.doneWaiting(info) {
                 external.runDB { db ->
                     wheel = wheel!!.copy(
                         btName = device.name,
                         btAddr = device.address,
-                        mileage = info.mileage.roundToInt()
+                        mileage = info.mileage.roundToInt(),
+                        voltageInitial = round(info.voltage)
                     )
                     db.saveWheel(wheel!!)
                 }
@@ -63,10 +69,11 @@ class WheelScanFragment : BaseFragment() {
         }
     }
 
-    private fun scanForDevices() {
-        external.bluetooth().scan {
-            fragments.doneWaiting(it) {
-                fragments.runUI { widgets.addListViewEntry(lvDevices, devices, it) }
+    private fun scanForDevices()
+    {
+        external.bluetooth().scan { device ->
+            fragments.doneWaiting(device) {
+                fragments.runUI { widgets.addListViewEntry(lvDevices, devices, device) }
             }
         }
     }

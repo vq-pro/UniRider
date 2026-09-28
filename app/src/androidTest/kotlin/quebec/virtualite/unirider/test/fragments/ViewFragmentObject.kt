@@ -144,6 +144,11 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
         )
     }
 
+    fun validateInitialVoltage(expectedVoltage: String)
+    {
+        assertThatField(R.id.view_voltage_initial, hasText(parseVoltage(expectedVoltage)))
+    }
+
     fun validateKm(expectedKm: String)
     {
         assertThatField(R.id.edit_km, hasText(expectedKm))

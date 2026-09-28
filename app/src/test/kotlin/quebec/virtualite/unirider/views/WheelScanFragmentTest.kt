@@ -26,10 +26,12 @@ import quebec.virtualite.unirider.test.domain.TestConstants.MILEAGE_NEW_RAW
 import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_CONNECTED
 import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3_SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.TEMPERATURE_NEW_RAW
+import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW_RAW
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
+class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java)
+{
 
     private val DEVICE = BluetoothDevice(DEVICE_NAME, DEVICE_ADDR)
     private val DEVICE2 = BluetoothDevice(DEVICE_NAME2, DEVICE_ADDR2)
@@ -41,7 +43,8 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
     private lateinit var mockedLvDevices: ListView
 
     @Before
-    fun before() {
+    fun before()
+    {
         BaseFragment.wheel = S18_1_CONNECTED
 
         mockField(R.id.devices, mockedLvDevices)
@@ -51,7 +54,8 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
     }
 
     @Test
-    fun onCreateView() {
+    fun onCreateView()
+    {
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
@@ -60,7 +64,8 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated() {
+    fun onViewCreated()
+    {
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
@@ -81,7 +86,8 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated_whenDiscovering2ndDevice_addItToTheDeviceList() {
+    fun onViewCreated_whenDiscovering2ndDevice_addItToTheDeviceList()
+    {
         // When
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
@@ -96,7 +102,8 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
     }
 
     @Test
-    fun onDestroyView() {
+    fun onDestroyView()
+    {
         // When
         fragment.onDestroyView()
 
@@ -105,7 +112,8 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
     }
 
     @Test
-    fun onSelectDevice() {
+    fun onSelectDevice()
+    {
         // Given
         setList(fragment.devices, listOf(DEVICE, DEVICE2, DEVICE3))
         val selectedDevice = 2
@@ -123,7 +131,8 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java) {
         verifyDoneWaiting(connectionPayload)
 
         assertThat(
-            BaseFragment.wheel, equalTo(SHERMAN_MAX_3_SOLD.copy(mileage = MILEAGE_NEW))
+            BaseFragment.wheel,
+            equalTo(SHERMAN_MAX_3_SOLD.copy(mileage = MILEAGE_NEW, voltageInitial = VOLTAGE_NEW))
         )
 
         verify(mockedDb).saveWheel(BaseFragment.wheel!!)

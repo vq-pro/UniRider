@@ -14,6 +14,21 @@ class BaseFragmentTest {
     private lateinit var baseFragment: BaseFragment
 
     @Test
+    fun textKmWithDecimal() {
+        textKmWithDecimal(55.6f, "55.6")
+        textKmWithDecimal(55f, "55")
+        textKmWithDecimal(50f, "50")
+    }
+
+    private fun textKmWithDecimal(km: Float, expectedDisplay: String) {
+        // When
+        val result = baseFragment.textKmWithDecimal(km)
+
+        // Then
+        assertThat(result, equalTo(expectedDisplay))
+    }
+
+    @Test
     fun textPercentageWithDecimal() {
         textPercentageWithDecimal(55.6f, "55.6")
         textPercentageWithDecimal(102.3f, "102.3")

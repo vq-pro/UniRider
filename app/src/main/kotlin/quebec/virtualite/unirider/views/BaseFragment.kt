@@ -6,25 +6,31 @@ import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.services.ExternalServices
 import java.util.Locale.ENGLISH
 
-open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait) {
+open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
+{
 
-    companion object {
+    companion object
+    {
         val chargeContext = WheelChargeContext()
         var wheel: WheelEntity? = null
     }
 
-    override fun getExternalServices(): ExternalServices {
+    override fun getExternalServices(): ExternalServices
+    {
         return ExternalServices(this)
     }
 
     internal fun textKm(value: Int) = "$value"
 
-    internal fun textKmWithDecimal(value: Float) = "$value".replace("0.0", "0")
+    internal fun textKmWithDecimal(value: Float) = "$value".replace(".0", "")
 
-    internal fun textPercentageWithDecimal(percentage: Float) = when {
+    internal fun textPercentageWithDecimal(percentage: Float) = when
+    {
         percentage in 0f..110f -> "%.1f".format(ENGLISH, percentage)
         else -> ""
     }
+
+    internal fun textVoltage(value: Float) = "$value"
 
     internal fun textWhPerKm(value: Float) = "$value"
 }

@@ -5,49 +5,61 @@ import androidx.room.Room
 import quebec.virtualite.unirider.database.WheelDb
 import quebec.virtualite.unirider.database.WheelEntity
 
-class WheelDbImpl(applicationContext: Context) : WheelDb {
+class WheelDbImpl(applicationContext: Context) : WheelDb
+{
     internal var db: WheelDatabase =
         Room.databaseBuilder(
             applicationContext,
             WheelDatabase::class.java,
             "wheel_database"
-        ).build()
+        )
+            .addMigrations(*WheelDatabase.MIGRATIONS)
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     internal var dao: WheelDao =
         db.wheelDao()
 
-    override fun deleteAll() {
+    override fun deleteAll()
+    {
         db.clearAllTables()
     }
 
-    override fun deleteWheel(id: Long) {
+    override fun deleteWheel(id: Long)
+    {
         dao.deleteWheel(id)
     }
 
-    override fun findDuplicate(wheel: WheelEntity): Boolean {
+    override fun findDuplicate(wheel: WheelEntity): Boolean
+    {
         val existing = dao.findWheel(wheel.name)
         return (existing != null) && (existing.id != wheel.id)
     }
 
-    override fun findWheel(name: String): WheelEntity? {
+    override fun findWheel(name: String): WheelEntity?
+    {
         return dao.findWheel(name)
     }
 
-    override fun getWheel(id: Long): WheelEntity? {
+    override fun getWheel(id: Long): WheelEntity?
+    {
         return dao.getWheel(id)
     }
 
-    override fun getWheels(): List<WheelEntity> {
+    override fun getWheels(): List<WheelEntity>
+    {
         return dao.getAllWheels()
     }
 
-    override fun saveWheel(wheel: WheelEntity) {
+    override fun saveWheel(wheel: WheelEntity)
+    {
         if (wheel.id == 0L)
             dao.insertWheel(wheel)
         else
             dao.updateWheel(wheel)
     }
 
-    override fun saveWheels(wheels: List<WheelEntity>) {
+    override fun saveWheels(wheels: List<WheelEntity>)
+    {
         wheels.forEach { wheel ->
             saveWheel(wheel)
         }

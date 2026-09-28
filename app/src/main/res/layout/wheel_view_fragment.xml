@@ -102,6 +102,39 @@
                 />
             </TableRow>
 
+            <!-- Initial Voltage (after charging) -->
+            <TableRow android:layout_marginTop="15dp">
+                <TextView
+                        android:labelFor="@+id/view_voltage_initial"
+                        android:layout_weight="1"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_initial"
+                />
+
+                <TextView
+                        android:id="@+id/view_voltage_initial"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+                <TextView
+                        android:id="@+id/label_voltage_initial"
+                        android:labelFor="@+id/view_battery"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="@string/label_voltage_abbr"
+                />
+            </TableRow>
+
             <!-- Remaining Range -->
             <TableRow android:layout_marginTop="10dp">
                 <TextView

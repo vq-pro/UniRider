@@ -39,6 +39,7 @@
     <string name="label_voltage">Voltage</string>
     <string name="label_voltage_abbr">V</string>
     <string name="label_voltage_full">Full Charge</string>
+    <string name="label_voltage_initial">Initial</string>
     <string name="label_voltage_required">Required</string>
     <string name="label_voltage_start">Start</string>
     <string name="label_voltage_target">Target</string>

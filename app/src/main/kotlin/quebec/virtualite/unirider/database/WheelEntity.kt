@@ -12,6 +12,7 @@ data class WheelEntity(
     val premileage: Int,
     val mileage: Int,
     val wh: Int,
+    val voltageInitial: Float,
     val voltageMax: Float,
     val voltageMin: Float,
     val voltageFull: Float,
