@@ -37,7 +37,7 @@ class WheelViewFragment : BaseFragment()
     internal lateinit var textTotalRange: TextView
     internal lateinit var textVoltageInitial: TextView
 
-    internal lateinit var estimates: EstimatedValues
+    internal var estimates: EstimatedValues? = null
 
     private var calculatorService = CalculatorService()
 
@@ -210,10 +210,14 @@ class WheelViewFragment : BaseFragment()
     {
         fragments.runUI {
             estimates = calculatorService.estimatedValues(wheel!!, voltage, km)
-
-            show(textRemainingRange, textKmWithDecimal(estimates.remainingRange))
-            show(textTotalRange, textKmWithDecimal(estimates.totalRange))
-            widgets.enable(buttonCharge)
+            if (estimates == null)
+                clearEstimates()
+            else
+            {
+                show(textRemainingRange, textKmWithDecimal(estimates!!.remainingRange))
+                show(textTotalRange, textKmWithDecimal(estimates!!.totalRange))
+                widgets.enable(buttonCharge)
+            }
         }
     }
 

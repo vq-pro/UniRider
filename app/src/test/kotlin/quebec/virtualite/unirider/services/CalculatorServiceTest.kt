@@ -41,10 +41,17 @@ class CalculatorServiceTest
 
         // Voltage lower than reserve
         estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 119.5f, 60f, 0f, 60f)
-        estimatedValues(S18_1_CONNECTED, VOLTAGE_INITIAL, 67.5f, 20f, 0.7f, 20.7f)
+        estimatedValues(S18_1_CONNECTED, VOLTAGE_INITIAL, 66.5f, 20f, 0f, 20f)
+    }
+
+    @Test
+    fun estimatedValues_invalid()
+    {
+        // Same voltage, little distance (should not be possible)
+        estimatedValuesInvalid(SHERMAN_L_5, VOLTAGE_INITIAL5, VOLTAGE_INITIAL5, 2.5f)
 
         // Voltage higher than max
-        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 151.3f, 3f, 0f, 3f)
+        estimatedValuesInvalid(SHERMAN_L_5, VOLTAGE_INITIAL5, 151.3f, 3f)
     }
 
     private fun estimatedValues(
@@ -60,8 +67,22 @@ class CalculatorServiceTest
         val values = service.estimatedValues(wheel.copy(voltageInitial = voltageInitial), voltageActual, km)
 
         // Then
-        assertThat(values.remainingRange, equalTo(expectedRemainingRange))
-        assertThat(values.totalRange, equalTo(expectedTotalRange))
+        assertThat(values?.remainingRange, equalTo(expectedRemainingRange))
+        assertThat(values?.totalRange, equalTo(expectedTotalRange))
+    }
+
+    private fun estimatedValuesInvalid(
+        wheel: WheelEntity,
+        voltageInitial: Float,
+        voltageActual: Float,
+        km: Float
+    )
+    {
+        // When
+        val values = service.estimatedValues(wheel.copy(voltageInitial = voltageInitial), voltageActual, km)
+
+        // Then
+        assertThat(values, equalTo(null))
     }
 
     @Test
@@ -96,6 +117,7 @@ class CalculatorServiceTest
         requiredVoltageOffCharger(136.9f, 30f, 50f, 145.2f)
         requiredVoltageOffCharger(129f, 40f, 25f, 137.8f)
         requiredVoltageOffCharger(131f, 30f, 200f, WHEEL.voltageFull)
+        requiredVoltageOffCharger(VOLTAGE_INITIAL5, 3f, 0f, WHEEL.voltageFull)
     }
 
     private fun requiredVoltageOffCharger(voltage: Float, km: Float, kmRequested: Float, expectedRequiredVoltage: Float)

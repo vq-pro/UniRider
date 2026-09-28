@@ -12,10 +12,10 @@ class CalculatorService
 
     private val calculator = CalculatorTable()
 
-    fun estimatedValues(wheel: WheelEntity, voltage: Float, km: Float): EstimatedValues
+    fun estimatedValues(wheel: WheelEntity, voltage: Float, km: Float): EstimatedValues?
     {
         if (voltage > wheel.voltageInitial)
-            return EstimatedValues(0f, km)
+            return null
 
         val cellVoltageInitial = cellVoltage(wheel, wheel.voltageInitial)
         val cellVoltageActual = cellVoltage(wheel, voltage)
@@ -23,6 +23,9 @@ class CalculatorService
         val initialSoe = calculator.soE(cellVoltageInitial)
         val actualSoe = calculator.soE(cellVoltageActual)
         val usedSoe = initialSoe - actualSoe
+        if (usedSoe < 2)
+            return null
+
         val remainingRange = round(km * actualSoe / usedSoe)
 
         return EstimatedValues(remainingRange, km + remainingRange)
@@ -42,7 +45,10 @@ class CalculatorService
 
     fun requiredVoltageOffCharger(wheel: WheelEntity, voltage: Float, km: Float, kmRequested: Float): Float
     {
-        val estimatedTotalRange = estimatedValues(wheel, voltage, km).totalRange
+        val estimatedValues = estimatedValues(wheel, voltage, km)
+            ?: return wheel.voltageFull
+
+        val estimatedTotalRange = estimatedValues.totalRange
         return when
         {
             kmRequested >= estimatedTotalRange -> wheel.voltageFull

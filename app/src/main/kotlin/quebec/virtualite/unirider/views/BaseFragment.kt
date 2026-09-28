@@ -8,7 +8,6 @@ import java.util.Locale.ENGLISH
 
 open class BaseFragment : CommonFragment<ExternalServices>(R.string.dialog_wait)
 {
-
     companion object
     {
         val chargeContext = WheelChargeContext()

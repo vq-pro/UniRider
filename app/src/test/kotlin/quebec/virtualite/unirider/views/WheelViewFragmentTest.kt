@@ -700,22 +700,26 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
     }
 
     @Test
-    fun refreshPercentageFor()
+    fun refreshEstimates_whenEstimatesAreNull()
     {
         // Given
         injectMocks()
 
-        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(wheel!!, VOLTAGE)
+        doReturn(null).`when`(mockedCalculatorService).estimatedValues(wheel!!, VOLTAGE, KM)
 
         // When
-        fragment.updatePercentageFor(VOLTAGE)
+        fragment.refreshEstimates(VOLTAGE, KM)
 
         // Then
-        verify(mockedCalculatorService).percentage(wheel!!, VOLTAGE)
+        verify(mockedCalculatorService).estimatedValues(wheel!!, VOLTAGE, KM)
 
-        verify(mockedTextBattery).text = "$PERCENTAGE"
-        verify(mockedTextBattery).isVisible = true
-        verify(mockedLabelBattery).isVisible = true
+        verify(mockedTextRemainingRange).isVisible = false
+        verify(mockedLabelRemainingRange).isVisible = false
+        verify(mockedTextTotalRange).isVisible = false
+        verify(mockedLabelTotalRange).isVisible = false
+        verify(mockedWidgets).disable(mockedButtonCharge)
+
+        assertThat(fragment.estimates, equalTo(null))
     }
 
     @Test
@@ -748,6 +752,25 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
 
         assertThat(BaseFragment.chargeContext.km, equalTo(KM_NEW))
         assertThat(BaseFragment.chargeContext.voltage, equalTo(VOLTAGE_NEW5))
+    }
+
+    @Test
+    fun updatePercentageFor()
+    {
+        // Given
+        injectMocks()
+
+        doReturn(PERCENTAGE).`when`(mockedCalculatorService).percentage(wheel!!, VOLTAGE)
+
+        // When
+        fragment.updatePercentageFor(VOLTAGE)
+
+        // Then
+        verify(mockedCalculatorService).percentage(wheel!!, VOLTAGE)
+
+        verify(mockedTextBattery).text = "$PERCENTAGE"
+        verify(mockedTextBattery).isVisible = true
+        verify(mockedLabelBattery).isVisible = true
     }
 
     private fun injectMocks()
