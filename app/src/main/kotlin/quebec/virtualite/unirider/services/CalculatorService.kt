@@ -6,6 +6,7 @@ import quebec.virtualite.unirider.database.WheelEntity
 class CalculatorService
 {
     data class EstimatedValues(
+        val charge: Float,
         val remainingRange: Float,
         val totalRange: Float
     )
@@ -27,8 +28,10 @@ class CalculatorService
             return null
 
         val remainingRange = round(km * actualSoe / usedSoe)
+        val totalRange = km + remainingRange
+        val charge = round(remainingRange * 100 / totalRange)
 
-        return EstimatedValues(remainingRange, km + remainingRange)
+        return EstimatedValues(charge, remainingRange, totalRange)
     }
 
     fun percentage(wheel: WheelEntity, voltage: Float): Float

@@ -26,11 +26,13 @@ class WheelViewFragment : BaseFragment()
     internal lateinit var editVoltageActual: EditText
     internal lateinit var labelBattery: TextView
     internal lateinit var labelBtName: TextView
+    internal lateinit var labelCharge: TextView
     internal lateinit var labelRemainingRange: TextView
     internal lateinit var labelTotalRange: TextView
     internal lateinit var textBattery: TextView
     internal lateinit var textBtAddr: TextView
     internal lateinit var textBtName: TextView
+    internal lateinit var textCharge: TextView
     internal lateinit var textMileage: TextView
     internal lateinit var textName: TextView
     internal lateinit var textRemainingRange: TextView
@@ -58,11 +60,13 @@ class WheelViewFragment : BaseFragment()
         editVoltageActual = view.findViewById(R.id.edit_voltage_actual)
         labelBattery = view.findViewById(R.id.label_battery)
         labelBtName = view.findViewById(R.id.label_bt_name)
+        labelCharge = view.findViewById(R.id.label_charge)
         labelRemainingRange = view.findViewById(R.id.label_remaining_range)
         labelTotalRange = view.findViewById(R.id.label_total_range)
         textBattery = view.findViewById(R.id.view_battery)
         textBtAddr = view.findViewById(R.id.view_bt_addr)
         textBtName = view.findViewById(R.id.view_bt_name)
+        textCharge = view.findViewById(R.id.view_charge)
         textMileage = view.findViewById(R.id.view_mileage)
         textName = view.findViewById(R.id.view_name)
         textRemainingRange = view.findViewById(R.id.view_remaining_range)
@@ -122,6 +126,7 @@ class WheelViewFragment : BaseFragment()
     internal fun clearEstimates()
     {
         fragments.runUI {
+            hide(textCharge)
             hide(textRemainingRange)
             hide(textTotalRange)
             widgets.disable(buttonCharge)
@@ -214,6 +219,7 @@ class WheelViewFragment : BaseFragment()
                 clearEstimates()
             else
             {
+                show(textCharge, textPercentageWithDecimal(estimates!!.charge))
                 show(textRemainingRange, textKmWithDecimal(estimates!!.remainingRange))
                 show(textTotalRange, textKmWithDecimal(estimates!!.totalRange))
                 widgets.enable(buttonCharge)
@@ -257,6 +263,7 @@ class WheelViewFragment : BaseFragment()
             textBtAddr -> labelBtName.isVisible = display
 
             textBattery -> labelBattery.isVisible = display
+            textCharge -> labelCharge.isVisible = display
             textRemainingRange -> labelRemainingRange.isVisible = display
             textTotalRange -> labelTotalRange.isVisible = display
         }

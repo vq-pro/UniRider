@@ -38,19 +38,19 @@ Feature: Wheel Viewing
     And I set the distance to <distance>
     When I set the actual voltage to <voltage>
     Then it displays these estimates:
-      | remaining   | total range |
-      | <remaining> | <total>     |
+      | charge   | remaining   | total range |
+      | <charge> | <remaining> | <total>     |
     Examples:
-      | wheel       | distance | voltage | remaining | total |
-      | Sherman L   | 10.5 km  | 142.8V  | 39        | 49.5  |
-      | Sherman L   | 20 km    | 141.1V  | 50.3      | 70.3  |
-      | Sherman L   | 30 km    | 136.9V  | 25.3      | 55.3  |
-      | Sherman Max | 42 km    | 91V     | 33.9      | 75.9  |
-      | Sherman Max | 81 km    | 83.5V   | 9.9       | 90.9  |
-      | Sherman Max | 60 km    | 83.5V   | 7.4       | 67.4  |
-      | Sherman Max | 40 km    | 83.5V   | 4.9       | 44.9  |
-      | S18         | 21 km    | 72V     | 6.1       | 27.1  |
-      | S18         | 42 km    | 67V     | 0.6       | 42.6  |
+      | wheel       | distance | voltage | charge | remaining | total |
+      | Sherman L   | 10.5 km  | 142.8V  | 78.8   | 39        | 49.5  |
+      | Sherman L   | 20 km    | 141.1V  | 71.6   | 50.3      | 70.3  |
+      | Sherman L   | 30 km    | 136.9V  | 45.8   | 25.3      | 55.3  |
+      | Sherman Max | 42 km    | 91V     | 44.7   | 33.9      | 75.9  |
+      | Sherman Max | 81 km    | 83.5V   | 10.9   | 9.9       | 90.9  |
+      | Sherman Max | 60 km    | 83.5V   | 11.0   | 7.4       | 67.4  |
+      | Sherman Max | 40 km    | 83.5V   | 10.9   | 4.9       | 44.9  |
+      | S18         | 21 km    | 72V     | 22.5   | 6.1       | 27.1  |
+      | S18         | 42 km    | 67V     | 1.4    | 0.6       | 42.6  |
 
   Scenario Outline: Calculating estimated values based on km - ERROR [<wheel> / <km> / <voltage>]
     Given I select the <wheel>
@@ -104,11 +104,11 @@ Feature: Wheel Viewing
     And I set the distance to 38 km
     And I set the actual voltage to 91.9V
     And it displays these estimates:
-      | remaining | total range |
-      | 42        | 80          |
+      | charge | remaining | total range |
+      | 52.5   | 42        | 80          |
     When I edit the wheel
     And I go back to view the wheel
     Then it displays a percentage of 50.0%
     And it displays these estimates:
-      | remaining | total range |
-      | 42        | 80          |
+      | charge | remaining | total range |
+      | 52.5   | 42        | 80          |

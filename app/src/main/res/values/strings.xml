@@ -20,6 +20,7 @@
     <string name="label_amperage_suffix">A</string>
     <string name="label_battery">Battery</string>
     <string name="label_bt_name">Bluetooth</string>
+    <string name="label_charge">Charge</string>
     <string name="label_charge_amperage">Charge Amperage</string>
     <string name="label_charge_rate">Charge Rate</string>
     <string name="label_charge_warning">Charging will start as soon as you connect…</string>

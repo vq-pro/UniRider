@@ -23,25 +23,25 @@ class CalculatorServiceTest
     @Test
     fun estimatedValues()
     {
-        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 145.9f, 2.5f, 55.6f, 58.1f)
-        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 141.1f, 20.0f, 67.7f, 87.7f)
-        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 140.0f, 20.0f, 49.0f, 69.0f)
-        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 137.1f, 30.0f, 30.6f, 60.6f)
-        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 133.0f, 39.9f, 19.3f, 59.2f)
-        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 132.0f, 39.9f, 16.5f, 56.4f)
-        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 125.6f, 65.0f, 9.1f, 74.1f)
-        estimatedValues(S18_1_CONNECTED, VOLTAGE_INITIAL, 76.2f, 15.0f, 17.1f, 32.1f)
+        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 145.9f, 2.5f, 95.7f, 55.6f, 58.1f)
+        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 141.1f, 20.0f, 77.2f, 67.7f, 87.7f)
+        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 140.0f, 20.0f, 71f, 49.0f, 69.0f)
+        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 137.1f, 30.0f, 50.5f, 30.6f, 60.6f)
+        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 133.0f, 39.9f, 32.6f, 19.3f, 59.2f)
+        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 132.0f, 39.9f, 29.3f, 16.5f, 56.4f)
+        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 125.6f, 65.0f, 12.3f, 9.1f, 74.1f)
+        estimatedValues(S18_1_CONNECTED, VOLTAGE_INITIAL, 76.2f, 15.0f, 53.3f, 17.1f, 32.1f)
 
         // Voltage initial lower after high-speed charging
         val lowerVoltageInitial = 146.4f
-        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 140.0f, 20.0f, 54.2f, 74.2f)
-        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 140.0f, 18.6f, 50.4f, 69.0f)
-        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 138.0f, 20.0f, 27.8f, 47.8f)
-        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 132.0f, 43.0f, 18.5f, 61.5f)
+        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 140.0f, 20.0f, 73f, 54.2f, 74.2f)
+        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 140.0f, 18.6f, 73f, 50.4f, 69.0f)
+        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 138.0f, 20.0f, 58.2f, 27.8f, 47.8f)
+        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 132.0f, 43.0f, 30.1f, 18.5f, 61.5f)
 
         // Voltage lower than reserve
-        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 119.5f, 60f, 0f, 60f)
-        estimatedValues(S18_1_CONNECTED, VOLTAGE_INITIAL, 66.5f, 20f, 0f, 20f)
+        estimatedValues(SHERMAN_L_5, VOLTAGE_INITIAL5, 119.5f, 60f, 0f, 0f, 60f)
+        estimatedValues(S18_1_CONNECTED, VOLTAGE_INITIAL, 66.5f, 20f, 0f, 0f, 20f)
     }
 
     @Test
@@ -59,6 +59,7 @@ class CalculatorServiceTest
         voltageInitial: Float,
         voltageActual: Float,
         km: Float,
+        expectedCharge: Float,
         expectedRemainingRange: Float,
         expectedTotalRange: Float
     )
@@ -67,6 +68,7 @@ class CalculatorServiceTest
         val values = service.estimatedValues(wheel.copy(voltageInitial = voltageInitial), voltageActual, km)
 
         // Then
+        assertThat(values?.charge, equalTo(expectedCharge))
         assertThat(values?.remainingRange, equalTo(expectedRemainingRange))
         assertThat(values?.totalRange, equalTo(expectedTotalRange))
     }

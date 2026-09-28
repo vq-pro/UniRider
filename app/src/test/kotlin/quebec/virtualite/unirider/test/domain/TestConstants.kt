@@ -6,6 +6,7 @@ import quebec.virtualite.unirider.views.WheelRow
 
 object TestConstants
 {
+    const val CHARGE = 3f
     const val CHARGE_AMPERAGE = 2f
     const val CHARGE_AMPERAGE2 = 1.5f
     const val CHARGE_AMPERAGE3 = 2.5f

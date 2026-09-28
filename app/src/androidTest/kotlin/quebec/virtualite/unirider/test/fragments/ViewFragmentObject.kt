@@ -105,7 +105,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
         validateEstimates(
             DataTable.create(
                 listOf(
-                    listOf("remaining", "total range"), listOf("", "")
+                    listOf("charge", "remaining", "total range"), listOf("", "", "")
                 )
             )
         )
@@ -136,8 +136,11 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
         expectedEstimates.diff(
             DataTable.create(
                 listOf(
-                    listOf("remaining", "total range"), listOf(
-                        getText(R.id.view_remaining_range), getText(R.id.view_total_range)
+                    listOf("charge", "remaining", "total range"),
+                    listOf(
+                        getText(R.id.view_charge),
+                        getText(R.id.view_remaining_range),
+                        getText(R.id.view_total_range)
                     )
                 )
             )

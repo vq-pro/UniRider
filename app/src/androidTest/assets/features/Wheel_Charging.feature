@@ -19,8 +19,8 @@ Feature: Wheel Charging
     And I set the actual voltage to 137.0V
     And I set the distance to 30 km
     And it displays these estimates:
-      | remaining | total range |
-      | 25.8      | 55.8        |
+      | charge | remaining | total range |
+      | 46.2   | 25.8      | 55.8        |
     And I charge the wheel
 
   Scenario: Changing the actual voltage

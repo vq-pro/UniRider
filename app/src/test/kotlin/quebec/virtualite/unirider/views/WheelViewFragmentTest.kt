@@ -27,6 +27,7 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.bluetooth.WheelInfo
 import quebec.virtualite.unirider.services.CalculatorService
 import quebec.virtualite.unirider.services.CalculatorService.EstimatedValues
+import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE
 import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_ADDR
 import quebec.virtualite.unirider.test.domain.TestConstants.DEVICE_NAME
 import quebec.virtualite.unirider.test.domain.TestConstants.ITEM_SOLD
@@ -90,6 +91,9 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
     private lateinit var mockedLabelBtName: TextView
 
     @Mock
+    private lateinit var mockedLabelCharge: TextView
+
+    @Mock
     private lateinit var mockedLabelRemainingRange: TextView
 
     @Mock
@@ -103,6 +107,9 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
 
     @Mock
     private lateinit var mockedTextBtName: TextView
+
+    @Mock
+    private lateinit var mockedTextCharge: TextView
 
     @Mock
     private lateinit var mockedTextMileage: TextView
@@ -157,6 +164,8 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         fragment.clearEstimates()
 
         // Then
+        verify(mockedTextCharge).isVisible = false
+        verify(mockedLabelCharge).isVisible = false
         verify(mockedTextRemainingRange).isVisible = false
         verify(mockedLabelRemainingRange).isVisible = false
         verify(mockedTextTotalRange).isVisible = false
@@ -205,11 +214,13 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         verifyFieldAssignment(R.id.edit_voltage_actual, fragment.editVoltageActual, mockedEditVoltageActual)
         verifyFieldAssignment(R.id.label_battery, fragment.labelBattery, mockedLabelBattery)
         verifyFieldAssignment(R.id.label_bt_name, fragment.labelBtName, mockedLabelBtName)
+        verifyFieldAssignment(R.id.label_charge, fragment.labelCharge, mockedLabelCharge)
         verifyFieldAssignment(R.id.label_remaining_range, fragment.labelRemainingRange, mockedLabelRemainingRange)
         verifyFieldAssignment(R.id.label_total_range, fragment.labelTotalRange, mockedLabelTotalRange)
         verifyFieldAssignment(R.id.view_battery, fragment.textBattery, mockedTextBattery)
         verifyFieldAssignment(R.id.view_bt_addr, fragment.textBtAddr, mockedTextBtAddr)
         verifyFieldAssignment(R.id.view_bt_name, fragment.textBtName, mockedTextBtName)
+        verifyFieldAssignment(R.id.view_charge, fragment.textCharge, mockedTextCharge)
         verifyFieldAssignment(R.id.view_mileage, fragment.textMileage, mockedTextMileage)
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
         verifyFieldAssignment(R.id.view_remaining_range, fragment.textRemainingRange, mockedTextRemainingRange)
@@ -229,6 +240,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
 
         assertThat(fragment.buttonCharge, equalTo(mockedButtonCharge))
         assertThat(fragment.textBtName, equalTo(mockedTextBtName))
+        assertThat(fragment.textCharge, equalTo(mockedTextCharge))
         assertThat(fragment.textMileage, equalTo(mockedTextMileage))
         assertThat(fragment.textName, equalTo(mockedTextName))
         assertThat(fragment.textRemainingRange, equalTo(mockedTextRemainingRange))
@@ -679,7 +691,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         // Given
         injectMocks()
 
-        val estimates = EstimatedValues(REMAINING_RANGE, TOTAL_RANGE)
+        val estimates = EstimatedValues(CHARGE, REMAINING_RANGE, TOTAL_RANGE)
         doReturn(estimates).`when`(mockedCalculatorService).estimatedValues(wheel!!, VOLTAGE, KM)
 
         // When
@@ -688,6 +700,9 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         // Then
         verify(mockedCalculatorService).estimatedValues(wheel!!, VOLTAGE, KM)
 
+        verify(mockedTextCharge).isVisible = true
+        verify(mockedTextCharge).text = "$CHARGE"
+        verify(mockedLabelCharge).isVisible = true
         verify(mockedTextRemainingRange).isVisible = true
         verify(mockedTextRemainingRange).text = "${REMAINING_RANGE.toInt()}"
         verify(mockedLabelRemainingRange).isVisible = true
@@ -713,6 +728,8 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         // Then
         verify(mockedCalculatorService).estimatedValues(wheel!!, VOLTAGE, KM)
 
+        verify(mockedTextCharge).isVisible = false
+        verify(mockedLabelCharge).isVisible = false
         verify(mockedTextRemainingRange).isVisible = false
         verify(mockedLabelRemainingRange).isVisible = false
         verify(mockedTextTotalRange).isVisible = false
@@ -781,11 +798,13 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         fragment.editVoltageActual = mockedEditVoltageActual
         fragment.labelBattery = mockedLabelBattery
         fragment.labelBtName = mockedLabelBtName
+        fragment.labelCharge = mockedLabelCharge
         fragment.labelRemainingRange = mockedLabelRemainingRange
         fragment.labelTotalRange = mockedLabelTotalRange
         fragment.textBattery = mockedTextBattery
         fragment.textBtAddr = mockedTextBtAddr
         fragment.textBtName = mockedTextBtName
+        fragment.textCharge = mockedTextCharge
         fragment.textMileage = mockedTextMileage
         fragment.textName = mockedTextName
         fragment.textRemainingRange = mockedTextRemainingRange
@@ -802,11 +821,13 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         mockField(R.id.edit_voltage_actual, mockedEditVoltageActual)
         mockField(R.id.label_battery, mockedLabelBattery)
         mockField(R.id.label_bt_name, mockedLabelBtName)
+        mockField(R.id.label_charge, mockedLabelCharge)
         mockField(R.id.label_remaining_range, mockedLabelRemainingRange)
         mockField(R.id.label_total_range, mockedLabelTotalRange)
         mockField(R.id.view_battery, mockedTextBattery)
         mockField(R.id.view_bt_addr, mockedTextBtAddr)
         mockField(R.id.view_bt_name, mockedTextBtName)
+        mockField(R.id.view_charge, mockedTextCharge)
         mockField(R.id.view_mileage, mockedTextMileage)
         mockField(R.id.view_name, mockedTextName)
         mockField(R.id.view_remaining_range, mockedTextRemainingRange)
