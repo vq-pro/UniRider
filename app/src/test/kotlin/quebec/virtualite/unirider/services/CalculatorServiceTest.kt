@@ -36,7 +36,7 @@ class CalculatorServiceTest
         val lowerVoltageInitial = 146.4f
         estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 140.0f, 20.0f, 73f, 54.2f, 74.2f)
         estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 140.0f, 18.6f, 73f, 50.4f, 69.0f)
-        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 138.0f, 20.0f, 58.2f, 27.8f, 47.8f)
+        estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 138.0f, 20.0f, 58.1f, 27.8f, 47.8f)
         estimatedValues(SHERMAN_L_5, lowerVoltageInitial, 132.0f, 43.0f, 30.1f, 18.5f, 61.5f)
 
         // Voltage lower than reserve

@@ -27,11 +27,11 @@ class CalculatorService
         if (usedSoe < 2)
             return null
 
-        val remainingRange = round(km * actualSoe / usedSoe)
+        val remainingRange = km * actualSoe / usedSoe
         val totalRange = km + remainingRange
-        val charge = round(remainingRange * 100 / totalRange)
+        val charge = remainingRange * 100 / totalRange
 
-        return EstimatedValues(charge, remainingRange, totalRange)
+        return EstimatedValues(round(charge), round(remainingRange), round(totalRange))
     }
 
     fun percentage(wheel: WheelEntity, voltage: Float): Float
