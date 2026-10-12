@@ -4,8 +4,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.view.isVisible
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -238,13 +237,13 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE}"
         verify(mockedTextVoltageInitial).text = "$VOLTAGE_INITIAL"
 
-        assertThat(fragment.buttonCharge, equalTo(mockedButtonCharge))
-        assertThat(fragment.textBtName, equalTo(mockedTextBtName))
-        assertThat(fragment.textCharge, equalTo(mockedTextCharge))
-        assertThat(fragment.textMileage, equalTo(mockedTextMileage))
-        assertThat(fragment.textName, equalTo(mockedTextName))
-        assertThat(fragment.textRemainingRange, equalTo(mockedTextRemainingRange))
-        assertThat(fragment.textTotalRange, equalTo(mockedTextTotalRange))
+        assertThat(fragment.buttonCharge).isEqualTo(mockedButtonCharge)
+        assertThat(fragment.textBtName).isEqualTo(mockedTextBtName)
+        assertThat(fragment.textCharge).isEqualTo(mockedTextCharge)
+        assertThat(fragment.textMileage).isEqualTo(mockedTextMileage)
+        assertThat(fragment.textName).isEqualTo(mockedTextName)
+        assertThat(fragment.textRemainingRange).isEqualTo(mockedTextRemainingRange)
+        assertThat(fragment.textTotalRange).isEqualTo(mockedTextTotalRange)
     }
 
     @Test
@@ -464,7 +463,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         val result = fragment.parseKm("$KM ")
 
         // Then
-        assertThat(result, equalTo(KM))
+        assertThat(result).isEqualTo(KM)
     }
 
     @Test
@@ -474,7 +473,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         val result = fragment.parseKm(" ")
 
         // Then
-        assertThat(result, equalTo(null))
+        assertThat(result).isEqualTo(null)
     }
 
     @Test
@@ -484,7 +483,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         val result = fragment.parseKm("ab ")
 
         // Then
-        assertThat(result, equalTo(null))
+        assertThat(result).isEqualTo(null)
     }
 
     @Test
@@ -494,7 +493,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         val result = fragment.parseKm("0.0 ")
 
         // Then
-        assertThat(result, equalTo(null))
+        assertThat(result).isEqualTo(null)
     }
 
     @Test
@@ -504,7 +503,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         val result = fragment.parseVoltage("$VOLTAGE ")
 
         // Then
-        assertThat(result, equalTo(VOLTAGE))
+        assertThat(result).isEqualTo(VOLTAGE)
     }
 
     @Test
@@ -514,7 +513,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         val result = fragment.parseVoltage("ab ")
 
         // Then
-        assertThat(result, equalTo(null))
+        assertThat(result).isEqualTo(null)
     }
 
     @Test
@@ -527,7 +526,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         val result = fragment.parseVoltage("${INITIAL_WHEEL.voltageMin - 0.1f} ")
 
         // Then
-        assertThat(result, equalTo(null))
+        assertThat(result).isEqualTo(null)
     }
 
     @Test
@@ -540,7 +539,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         val result = fragment.parseVoltage("${VOLTAGE + 0.0001f} ")
 
         // Then
-        assertThat(result, equalTo(VOLTAGE))
+        assertThat(result).isEqualTo(VOLTAGE)
     }
 
     @Test
@@ -559,7 +558,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         verify(mockedWidgets).getText(mockedEditKm)
         verify(fragment).parseKm("$KM")
 
-        assertThat(result, equalTo(KM))
+        assertThat(result).isEqualTo(KM)
     }
 
     @Test
@@ -578,7 +577,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         verify(mockedWidgets).getText(mockedEditVoltageActual)
         verify(fragment).parseVoltage("$VOLTAGE")
 
-        assertThat(result, equalTo(VOLTAGE))
+        assertThat(result).isEqualTo(VOLTAGE)
     }
 
     @Test
@@ -606,7 +605,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verify(mockedTextVoltageInitial).setText("$VOLTAGE_NEW")
 
-        assertThat(executed, equalTo(true))
+        assertThat(executed).isEqualTo(true)
     }
 
     @Test
@@ -634,7 +633,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         verify(mockedTextMileage).text = "${PREMILEAGE + MILEAGE_NEW}"
         verifyNoInteractions(mockedTextVoltageInitial)
 
-        assertThat(executed, equalTo(true))
+        assertThat(executed).isEqualTo(true)
     }
 
     @Test
@@ -711,7 +710,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         verify(mockedLabelTotalRange).isVisible = true
         verify(mockedWidgets).enable(mockedButtonCharge)
 
-        assertThat(fragment.estimates, equalTo(estimates))
+        assertThat(fragment.estimates).isEqualTo(estimates)
     }
 
     @Test
@@ -736,7 +735,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         verify(mockedLabelTotalRange).isVisible = false
         verify(mockedWidgets).disable(mockedButtonCharge)
 
-        assertThat(fragment.estimates, equalTo(null))
+        assertThat(fragment.estimates).isEqualTo(null)
     }
 
     @Test
@@ -767,8 +766,8 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
         // Then
         verify(mockedFragments).navigateTo(R.id.action_WheelViewFragment_to_WheelChargeFragment)
 
-        assertThat(BaseFragment.chargeContext.km, equalTo(KM_NEW))
-        assertThat(BaseFragment.chargeContext.voltage, equalTo(VOLTAGE_NEW5))
+        assertThat(BaseFragment.chargeContext.km).isEqualTo(KM_NEW)
+        assertThat(BaseFragment.chargeContext.voltage).isEqualTo(VOLTAGE_NEW5)
     }
 
     @Test

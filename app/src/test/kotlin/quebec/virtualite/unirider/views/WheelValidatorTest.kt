@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.views
 
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -21,15 +20,16 @@ import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MIN_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.WH_NEW
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelValidatorTest {
-
+class WheelValidatorTest
+{
     @InjectMocks
     private lateinit var comparator: WheelValidator
 
     private val WHEEL = S18_1_CONNECTED
 
     @Test
-    fun canSave() {
+    fun canSave()
+    {
         // No change
         cannotSave(WHEEL)
 
@@ -83,11 +83,12 @@ class WheelValidatorTest {
     private fun canSave(updatedWheel: WheelEntity) = canSaveOrNot(updatedWheel, true)
     private fun cannotSave(updatedWheel: WheelEntity) = canSaveOrNot(updatedWheel, false)
 
-    private fun canSaveOrNot(updatedWheel: WheelEntity, expectedCanSave: Boolean) {
+    private fun canSaveOrNot(updatedWheel: WheelEntity, expectedCanSave: Boolean)
+    {
         // When
         val result = comparator.canSave(updatedWheel, WHEEL)
 
         // Then
-        assertThat(result, equalTo(expectedCanSave))
+        assertThat(result).isEqualTo(expectedCanSave)
     }
 }

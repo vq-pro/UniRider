@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.views
 
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -25,7 +24,7 @@ class BaseFragmentTest {
         val result = baseFragment.textKmWithDecimal(km)
 
         // Then
-        assertThat(result, equalTo(expectedDisplay))
+        assertThat(result).isEqualTo(expectedDisplay)
     }
 
     @Test
@@ -39,7 +38,7 @@ class BaseFragmentTest {
         val result = baseFragment.textPercentageWithDecimal(percentage)
 
         // Then
-        assertThat(result, equalTo(expectedDisplay))
+        assertThat(result).isEqualTo(expectedDisplay)
     }
 
     @Test
@@ -54,6 +53,6 @@ class BaseFragmentTest {
         val result = baseFragment.textWhPerKm(whPerKm)
 
         // Then
-        assertThat(result, equalTo(expectedDisplay))
+        assertThat(result).isEqualTo(expectedDisplay)
     }
 }

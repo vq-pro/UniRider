@@ -5,9 +5,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.google.android.material.switchmaterial.SwitchMaterial
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.nullValue
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -241,8 +239,8 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         val estimatedTimeDiff = fragment.estimatedDiff(rawHours)
 
         // Then
-        assertThat(estimatedTime, equalTo(expectedEstimatedTime))
-        assertThat(estimatedTimeDiff, equalTo(expectedEstimatedTimeDiff))
+        assertThat(estimatedTime).isEqualTo(expectedEstimatedTime)
+        assertThat(estimatedTimeDiff).isEqualTo(expectedEstimatedTimeDiff)
     }
 
     @Test
@@ -257,7 +255,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         // Then
         verify(mockedWidgets).getText(mockedEditAmperage)
 
-        assertThat(result, equalTo(WHEEL.chargeAmperage))
+        assertThat(result).isEqualTo(WHEEL.chargeAmperage)
     }
 
     @Test
@@ -273,7 +271,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verify(mockedWidgets).getText(mockedEditAmperage)
         verify(mockedEditAmperage).setText(formatAmperage(WHEEL.chargeAmperage))
 
-        assertThat(result, equalTo(WHEEL.chargeAmperage))
+        assertThat(result).isEqualTo(WHEEL.chargeAmperage)
     }
 
     @Test
@@ -295,7 +293,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         // Then
         verifyVoltage(expectedVoltageRequired)
 
-        assertThat(result, equalTo(expectedVoltageRequired))
+        assertThat(result).isEqualTo(expectedVoltageRequired)
     }
 
     @Test
@@ -317,7 +315,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         // Then
         verifyVoltage(expectedVoltageRequired)
 
-        assertThat(result, equalTo(expectedVoltageRequired))
+        assertThat(result).isEqualTo(expectedVoltageRequired)
     }
 
     @Test
@@ -339,7 +337,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         // Then
         verifyVoltage(voltageRequired)
 
-        assertThat(result, equalTo(voltageRequired))
+        assertThat(result).isEqualTo(voltageRequired)
     }
 
     @Test
@@ -362,7 +360,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         // Then
         verifyVoltage(expectedVoltageRequired)
 
-        assertThat(result, equalTo(expectedVoltageRequired))
+        assertThat(result).isEqualTo(expectedVoltageRequired)
     }
 
     @Test
@@ -382,7 +380,7 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verifyNoInteractions(mockedCalculatorService)
         verifyVoltage(expectedVoltageRequired)
 
-        assertThat(result, equalTo(expectedVoltageRequired))
+        assertThat(result).isEqualTo(expectedVoltageRequired)
     }
 
     @Test
@@ -431,8 +429,8 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         verify(mockedEditVoltageActual, never()).setText(any<String>())
         verify(mockedEditVoltageRequired, never()).setText(any<String>())
 
-        assertThat(fragment.cacheVoltageActual, equalTo(VOLTAGE))
-        assertThat(fragment.chargerOffset, nullValue())
+        assertThat(fragment.cacheVoltageActual).isEqualTo(VOLTAGE)
+        assertThat(fragment.chargerOffset).isNull()
     }
 
     @Test
@@ -698,8 +696,8 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         // Then
         verify(mockedTextChargeWarning).isVisible = false
 
-        assertThat(fragment.cacheVoltageActual, equalTo(VOLTAGE_NEW))
-        assertThat(fragment.chargerOffset, equalTo(round(VOLTAGE_NEW - VOLTAGE)))
+        assertThat(fragment.cacheVoltageActual).isEqualTo(VOLTAGE_NEW)
+        assertThat(fragment.chargerOffset).isEqualTo(round(VOLTAGE_NEW - VOLTAGE))
     }
 
     @Test
@@ -714,8 +712,8 @@ class WheelChargeFragmentTest : FragmentTestBase(WheelChargeFragment::class.java
         fragment.updateVoltageActual(VOLTAGE_NEW)
 
         // Then
-        assertThat(fragment.cacheVoltageActual, equalTo(VOLTAGE_NEW))
-        assertThat(fragment.chargerOffset, equalTo(value))
+        assertThat(fragment.cacheVoltageActual).isEqualTo(VOLTAGE_NEW)
+        assertThat(fragment.chargerOffset).isEqualTo(value)
     }
 
     private fun formatAmperage(amperage: Float): String {

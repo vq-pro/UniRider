@@ -8,9 +8,7 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.Spinner
 import com.google.android.material.switchmaterial.SwitchMaterial
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.core.StringContains.containsString
+import org.assertj.core.api.Assertions.assertThat
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.lenient
 import org.mockito.Mock
@@ -111,7 +109,7 @@ open class FragmentTestBase(fragmentType: Class<*>) {
 
     fun <T : View?> verifyFieldAssignment(id: Int, field: T, mock: T) {
         verify(mockedView).findViewById<T>(id)
-        assertThat(mock, equalTo(field))
+        assertThat(mock).isEqualTo(field)
     }
 
     fun verifyInflate(expectedId: Int) {
@@ -128,49 +126,49 @@ open class FragmentTestBase(fragmentType: Class<*>) {
             verify(mockedWidgets).multifieldListAdapter(
                 eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData), capture()
             )
-            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
+            assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
     fun verifyOnClick(mockedField: View) {
         argumentCaptor<(View) -> Unit>().apply {
             verify(mockedWidgets).setOnClickListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
+            assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
     fun verifyOnItemClick(mockedField: ListView) {
         argumentCaptor<(View, Int) -> Unit>().apply {
             verify(mockedWidgets).setOnItemClickListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
+            assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
     fun verifyOnItemSelected(mockedField: Spinner) {
         argumentCaptor<(View, Int, String) -> Unit>().apply {
             verify(mockedWidgets).setOnItemSelectedListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
+            assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
     fun verifyOnLongClick(mockedField: View) {
         argumentCaptor<(View) -> Unit>().apply {
             verify(mockedWidgets).setOnLongClickListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
+            assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
     fun verifyOnToggleSwitch(mockedField: SwitchMaterial) {
         argumentCaptor<(Boolean) -> Unit>().apply {
             verify(mockedWidgets).setOnCheckedChangeListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
+            assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
     fun verifyOnUpdateText(mockedField: EditText) {
         argumentCaptor<(String) -> Unit>().apply {
             verify(mockedWidgets).addTextChangedListener(eq(mockedField), capture())
-            assertThat(firstValue.javaClass.simpleName, containsString(fragmentClass))
+            assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 

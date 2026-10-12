@@ -61,6 +61,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
     fun disconnectConfirmation()
     {
         assertThatPolling({ app.activeFragment() }, equalTo(WheelConfirmationDisconnectFragment::class.java))
+
         click(R.id.button_disconnect_confirmation)
     }
 
@@ -136,11 +137,8 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
         expectedEstimates.diff(
             DataTable.create(
                 listOf(
-                    listOf("charge", "remaining", "total range"),
-                    listOf(
-                        getText(R.id.view_charge),
-                        getText(R.id.view_remaining_range),
-                        getText(R.id.view_total_range)
+                    listOf("charge", "remaining", "total range"), listOf(
+                        getText(R.id.view_charge), getText(R.id.view_remaining_range), getText(R.id.view_total_range)
                     )
                 )
             )

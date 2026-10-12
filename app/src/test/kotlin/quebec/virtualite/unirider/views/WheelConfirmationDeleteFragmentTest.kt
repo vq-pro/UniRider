@@ -2,8 +2,7 @@ package quebec.virtualite.unirider.views
 
 import android.widget.Button
 import android.widget.TextView
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,8 +14,8 @@ import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.test.domain.TestConstants.SHERMAN_MAX_3_SOLD
 
 @RunWith(MockitoJUnitRunner::class)
-class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDeleteFragment::class.java) {
-
+class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDeleteFragment::class.java)
+{
     @InjectMocks
     private lateinit var fragment: WheelConfirmationDeleteFragment
 
@@ -30,7 +29,8 @@ class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDe
     private lateinit var mockedTextName: TextView
 
     @Before
-    fun before() {
+    fun before()
+    {
         BaseFragment.wheel = SHERMAN_MAX_3_SOLD
 
         mockField(R.id.button_delete_confirmation, mockedButtonDeleteConfirmation)
@@ -42,7 +42,8 @@ class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDe
     }
 
     @Test
-    fun onCreateView() {
+    fun onCreateView()
+    {
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
@@ -51,13 +52,18 @@ class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDe
     }
 
     @Test
-    fun onViewCreated() {
+    fun onViewCreated()
+    {
         // When
         fragment.onViewCreated(mockedView, mockedBundle)
 
         // Then
         verifyFieldAssignment(R.id.button_delete_cancel, fragment.buttonDeleteCancel, mockedButtonDeleteCancel)
-        verifyFieldAssignment(R.id.button_delete_confirmation, fragment.buttonDeleteConfirmation, mockedButtonDeleteConfirmation)
+        verifyFieldAssignment(
+            R.id.button_delete_confirmation,
+            fragment.buttonDeleteConfirmation,
+            mockedButtonDeleteConfirmation
+        )
         verifyFieldAssignment(R.id.view_name, fragment.textName, mockedTextName)
 
         verify(fragment.textName).text = BaseFragment.wheel!!.name
@@ -67,7 +73,8 @@ class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDe
     }
 
     @Test
-    fun onCancel() {
+    fun onCancel()
+    {
         // When
         fragment.onCancel().invoke(mockedView)
 
@@ -76,7 +83,8 @@ class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDe
     }
 
     @Test
-    fun onDelete() {
+    fun onDelete()
+    {
         // Given
         val expectedIdToDelete = BaseFragment.wheel!!.id
 
@@ -87,6 +95,6 @@ class WheelConfirmationDeleteFragmentTest : FragmentTestBase(WheelConfirmationDe
         verify(mockedDb).deleteWheel(expectedIdToDelete)
         verify(mockedFragments).navigateBack(3)
 
-        assertThat(BaseFragment.wheel, equalTo(null))
+        assertThat(BaseFragment.wheel).isEqualTo(null)
     }
 }

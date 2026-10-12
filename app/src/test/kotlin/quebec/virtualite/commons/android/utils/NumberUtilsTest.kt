@@ -1,7 +1,6 @@
 package quebec.virtualite.commons.android.utils
 
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.core.IsEqual.equalTo
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -34,7 +33,7 @@ class NumberUtilsTest {
         val result = NumberUtils.round(value)
 
         // Then
-        assertThat(result, equalTo(NumberUtils.round(value, NB_DECIMALS)))
+        assertThat(result).isEqualTo(NumberUtils.round(value, NB_DECIMALS))
     }
 
     @Test
@@ -68,7 +67,7 @@ class NumberUtilsTest {
         val result = NumberUtils.floatOf(value)
 
         // Then
-        assertThat(result, equalTo(expectedResult))
+        assertThat(result).isEqualTo(expectedResult)
     }
 
     private fun intOf(value: String, expectedResult: Int) {
@@ -76,7 +75,7 @@ class NumberUtilsTest {
         val result = NumberUtils.intOf(value)
 
         // Then
-        assertThat(result, equalTo(expectedResult))
+        assertThat(result).isEqualTo(expectedResult)
     }
 
     private fun round(value: Float, expectedResult: Float) {
@@ -84,7 +83,7 @@ class NumberUtilsTest {
         val result = NumberUtils.round(value, 1)
 
         // Then
-        assertThat(result, equalTo(expectedResult))
+        assertThat(result).isEqualTo(expectedResult)
     }
 
     private fun safeFloatOf(string: String, expectedValue: Float) {
@@ -92,7 +91,7 @@ class NumberUtilsTest {
         val result = NumberUtils.safeFloatOf(string)
 
         // Then
-        assertThat(result, equalTo(expectedValue))
+        assertThat(result).isEqualTo(expectedValue)
     }
 
     private fun safeIntOf(string: String, expectedValue: Int) {
@@ -100,6 +99,6 @@ class NumberUtilsTest {
         val result = NumberUtils.safeIntOf(string)
 
         // Then
-        assertThat(result, equalTo(expectedValue))
+        assertThat(result).isEqualTo(expectedValue)
     }
 }

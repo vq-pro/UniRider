@@ -2,13 +2,11 @@ package quebec.virtualite.unirider.test.fragments
 
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import io.cucumber.datatable.DataTable
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.not
-import org.hamcrest.Matchers.nullValue
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.click
@@ -23,9 +21,7 @@ import quebec.virtualite.unirider.test.app.TestApp
 import quebec.virtualite.unirider.views.WheelConfirmationDeleteFragment
 import quebec.virtualite.unirider.views.WheelEditFragment
 
-val UNITS = arrayOf(
-    " km", " Wh", "V", "A", "V/h"
-);
+val UNITS = arrayOf(" km", " Wh", "V", "A", "V/h")
 
 class EditFragmentObject(val app: TestApp)
 {
@@ -85,7 +81,7 @@ class EditFragmentObject(val app: TestApp)
 
     fun confirmDeletion()
     {
-        assertThat(app.activeFragment(), equalTo(WheelConfirmationDeleteFragment::class.java))
+        assertThat(app.activeFragment()).isEqualTo(WheelConfirmationDeleteFragment::class.java)
         click(R.id.button_delete_confirmation)
     }
 
@@ -117,7 +113,7 @@ class EditFragmentObject(val app: TestApp)
             mapEntity[field] = value
 
             val rawField = mapDetailToId[field]
-            assertThat("Field '$field' is not defined", rawField, not(nullValue()))
+            assertThat(rawField).isNotNull().`as` { "Field '$field' is not defined" }
 
             val key = rawField!!
             if ("Sold" == field) setChecked(key, "Yes" == value)

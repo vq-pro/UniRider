@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.services
 
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.core.IsEqual.equalTo
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -68,9 +67,9 @@ class CalculatorServiceTest
         val values = service.estimatedValues(wheel.copy(voltageInitial = voltageInitial), voltageActual, km)
 
         // Then
-        assertThat(values?.charge, equalTo(expectedCharge))
-        assertThat(values?.remainingRange, equalTo(expectedRemainingRange))
-        assertThat(values?.totalRange, equalTo(expectedTotalRange))
+        assertThat(values?.charge).isEqualTo(expectedCharge)
+        assertThat(values?.remainingRange).isEqualTo(expectedRemainingRange)
+        assertThat(values?.totalRange).isEqualTo(expectedTotalRange)
     }
 
     private fun estimatedValuesInvalid(
@@ -84,7 +83,7 @@ class CalculatorServiceTest
         val values = service.estimatedValues(wheel.copy(voltageInitial = voltageInitial), voltageActual, km)
 
         // Then
-        assertThat(values, equalTo(null))
+        assertThat(values).isEqualTo(null)
     }
 
     @Test
@@ -109,7 +108,7 @@ class CalculatorServiceTest
         val percentage = service.percentage(wheel, voltage)
 
         // Then
-        assertThat(percentage, equalTo(expectedPercentage))
+        assertThat(percentage).isEqualTo(expectedPercentage)
     }
 
     @Test
@@ -128,7 +127,7 @@ class CalculatorServiceTest
         val result = service.requiredVoltageOffCharger(WHEEL, voltage, km, kmRequested)
 
         // Then
-        assertThat(result, equalTo(expectedRequiredVoltage))
+        assertThat(result).isEqualTo(expectedRequiredVoltage)
     }
 
     @Test
@@ -138,6 +137,6 @@ class CalculatorServiceTest
         val result = service.requiredVoltageFull(WHEEL)
 
         // Then
-        assertThat(result, equalTo(WHEEL.voltageFull))
+        assertThat(result).isEqualTo(WHEEL.voltageFull)
     }
 }

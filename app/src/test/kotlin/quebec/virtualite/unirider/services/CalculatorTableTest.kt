@@ -1,7 +1,6 @@
 package quebec.virtualite.unirider.services
 
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -30,7 +29,7 @@ class CalculatorTableTest
         val result = table.soE(voltage)
 
         // Then
-        assertThat(result, equalTo(expectedSoe))
+        assertThat(result).isEqualTo(expectedSoe)
     }
 
     @Test
@@ -52,6 +51,6 @@ class CalculatorTableTest
         val result = table.voltage(soE)
 
         // Then
-        assertThat(result, equalTo(expectedVoltage))
+        assertThat(result).isEqualTo(expectedVoltage)
     }
 }

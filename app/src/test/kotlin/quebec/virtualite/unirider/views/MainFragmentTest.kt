@@ -2,8 +2,7 @@ package quebec.virtualite.unirider.views
 
 import android.widget.ListView
 import android.widget.TextView
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,8 +42,8 @@ private const val LIST_ENTRY3 = 2
 private const val LIST_ENTRY4 = 3
 
 @RunWith(MockitoJUnitRunner::class)
-class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
-
+class MainFragmentTest : FragmentTestBase(MainFragment::class.java)
+{
     @InjectMocks
     @Spy
     private lateinit var fragment: MainFragment
@@ -62,7 +61,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
     private lateinit var mockedTextTotalMileage: TextView
 
     @Before
-    fun before() {
+    fun before()
+    {
         mockExternal()
         mockFragments()
         mockStrings()
@@ -71,7 +71,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
     }
 
     @Test
-    fun onCreateView() {
+    fun onCreateView()
+    {
         // When
         fragment.onCreateView(mockedInflater, mockedContainer, SAVED_INSTANCE_STATE)
 
@@ -80,7 +81,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
     }
 
     @Test
-    fun onViewCreated() {
+    fun onViewCreated()
+    {
         // Given
         fragment.labelKm = ""
 
@@ -102,11 +104,12 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
 
         verify(fragment).showWheels()
 
-        assertThat(fragment.labelKm, equalTo(LABEL_KM))
+        assertThat(fragment.labelKm).isEqualTo(LABEL_KM)
     }
 
     @Test
-    fun onDisplayWheel() {
+    fun onDisplayWheel()
+    {
         // Given
         mockField(R.id.row_name, mockedTextName)
         mockField(R.id.row_mileage, mockedTextMileage)
@@ -120,7 +123,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
     }
 
     @Test
-    fun onDisplayWheel_newItem_hideMileageZero() {
+    fun onDisplayWheel_newItem_hideMileageZero()
+    {
         // Given
         mockField(R.id.row_name, mockedTextName)
         mockField(R.id.row_mileage, mockedTextMileage)
@@ -134,7 +138,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
     }
 
     @Test
-    fun onDisplayWheel_soldItemWhenCollapsed_showMileage() {
+    fun onDisplayWheel_soldItemWhenCollapsed_showMileage()
+    {
         // Given
         mockField(R.id.row_name, mockedTextName)
         mockField(R.id.row_mileage, mockedTextMileage)
@@ -148,7 +153,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
     }
 
     @Test
-    fun onDisplayWheel_soldItemWhenOpened_hideMileageZero() {
+    fun onDisplayWheel_soldItemWhenOpened_hideMileageZero()
+    {
         // Given
         mockField(R.id.row_name, mockedTextName)
         mockField(R.id.row_mileage, mockedTextMileage)
@@ -162,7 +168,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
     }
 
     @Test
-    fun onSelectWheel() {
+    fun onSelectWheel()
+    {
         // Given
         fragment.wheelList += listOf(WHEEL_ROW_S18_1_123, WHEEL_ROW_S20_2_123, WHEEL_ROW_NEW)
 
@@ -175,11 +182,12 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         verify(mockedDb).getWheel(ID2)
         verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelViewFragment)
 
-        assertThat(BaseFragment.wheel, equalTo(S20_2))
+        assertThat(BaseFragment.wheel).isEqualTo(S20_2)
     }
 
     @Test
-    fun onSelectWheel_withNewEntry_straightToEditInAddMode() {
+    fun onSelectWheel_withNewEntry_straightToEditInAddMode()
+    {
         // Given
         fragment.wheelList += listOf(
             WHEEL_ROW_S18_1_123, WHEEL_ROW_S20_2_123, WheelRow(0, NAME_SOLD, 1), WHEEL_ROW_NEW
@@ -191,11 +199,12 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         // Then
         verify(mockedFragments).navigateTo(R.id.action_MainFragment_to_WheelEditFragment)
 
-        assertThat(BaseFragment.wheel, equalTo(null))
+        assertThat(BaseFragment.wheel).isEqualTo(null)
     }
 
     @Test
-    fun onSelectWheel_withSoldEntry_withShowSoldWheelsCollapsed_open() {
+    fun onSelectWheel_withSoldEntry_withShowSoldWheelsCollapsed_open()
+    {
         // Given
         fragment.showSoldWheels = false
         fragment.textTotalMileage = mockedTextTotalMileage
@@ -208,12 +217,13 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         fragment.onSelectWheel().invoke(mockedView, LIST_ENTRY3)
 
         // Then
-        assertThat(fragment.showSoldWheels, equalTo(true))
-        assertThat(BaseFragment.wheel, equalTo(null))
+        assertThat(fragment.showSoldWheels).isEqualTo(true)
+        assertThat(BaseFragment.wheel).isEqualTo(null)
     }
 
     @Test
-    fun onSelectWheel_withSoldEntry_withShowSoldWheelsExpanded_close() {
+    fun onSelectWheel_withSoldEntry_withShowSoldWheelsExpanded_close()
+    {
         // Given
         fragment.showSoldWheels = true
         fragment.textTotalMileage = mockedTextTotalMileage
@@ -226,12 +236,13 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         fragment.onSelectWheel().invoke(mockedView, LIST_ENTRY3)
 
         // Then
-        assertThat(fragment.showSoldWheels, equalTo(false))
-        assertThat(BaseFragment.wheel, equalTo(null))
+        assertThat(fragment.showSoldWheels).isEqualTo(false)
+        assertThat(BaseFragment.wheel).isEqualTo(null)
     }
 
     @Test
-    fun onSoldWheelClose() {
+    fun onSoldWheelClose()
+    {
         // Given
         fragment.showSoldWheels = true
         doNothing().`when`(fragment).showWheels()
@@ -250,11 +261,12 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         // Then
         verify(fragment).showWheels()
 
-        assertThat(fragment.showSoldWheels, equalTo(false))
+        assertThat(fragment.showSoldWheels).isEqualTo(false)
     }
 
     @Test
-    fun onSoldWheelOpen() {
+    fun onSoldWheelOpen()
+    {
         // Given
         fragment.showSoldWheels = false
         doNothing().`when`(fragment).showWheels()
@@ -272,11 +284,12 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
         // Then
         verify(fragment).showWheels()
 
-        assertThat(fragment.showSoldWheels, equalTo(true))
+        assertThat(fragment.showSoldWheels).isEqualTo(true)
     }
 
     @Test
-    fun showWheels_whenSoldWheelsCollapsed() {
+    fun showWheels_whenSoldWheelsCollapsed()
+    {
         // Given
         fragment.showSoldWheels = false
         fragment.textTotalMileage = mockedTextTotalMileage
@@ -311,7 +324,8 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java) {
     }
 
     @Test
-    fun showWheels_whenSoldWheelsExpanded() {
+    fun showWheels_whenSoldWheelsExpanded()
+    {
         // Given
         fragment.showSoldWheels = true
         fragment.textTotalMileage = mockedTextTotalMileage

@@ -1,8 +1,7 @@
 package quebec.virtualite.unirider.views
 
 import android.widget.ListView
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -70,7 +69,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java)
         fragment.onViewCreated(mockedView, SAVED_INSTANCE_STATE)
 
         // Then
-        assertThat(fragment.devices, equalTo(emptyList()))
+        assertThat(fragment.devices).isEmpty()
 
         verifyFieldAssignment(R.id.devices, fragment.lvDevices, mockedLvDevices)
 
@@ -130,10 +129,8 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java)
         verifyConnectorGetDeviceInfo(DEVICE_ADDR3, connectionPayload)
         verifyDoneWaiting(connectionPayload)
 
-        assertThat(
-            BaseFragment.wheel,
-            equalTo(SHERMAN_MAX_3_SOLD.copy(mileage = MILEAGE_NEW, voltageInitial = VOLTAGE_NEW))
-        )
+        assertThat(BaseFragment.wheel)
+            .isEqualTo(SHERMAN_MAX_3_SOLD.copy(mileage = MILEAGE_NEW, voltageInitial = VOLTAGE_NEW))
 
         verify(mockedDb).saveWheel(BaseFragment.wheel!!)
         verify(mockedFragments).navigateBack()

@@ -55,16 +55,6 @@ object StepUtils
 
     fun applicationContext(): Context = ApplicationProvider.getApplicationContext()!!
 
-    fun <T> assertThat(actual: T, matcher: Matcher<T>)
-    {
-        MatcherAssert.assertThat(actual, matcher)
-    }
-
-    fun <T> assertThat(message: String, actual: T, matcher: Matcher<T>)
-    {
-        MatcherAssert.assertThat(message, actual, matcher)
-    }
-
     fun assertThatField(id: Int, assertion: Matcher<View>)
     {
         poll {
@@ -190,11 +180,9 @@ object StepUtils
 
     fun isVisible(): Matcher<View> = isVisible(true)
 
-    fun isVisible(shouldDisplay: Boolean): Matcher<View> = if (shouldDisplay) isDisplayed()
-    else not(isDisplayed())
+    fun isVisible(shouldDisplay: Boolean): Matcher<View> = if (shouldDisplay) isDisplayed() else not(isDisplayed())
 
-    fun isEnabled(shouldBeEnabled: Boolean): Matcher<View> = if (shouldBeEnabled) isEnabled()
-    else isDisabled()
+    fun isEnabled(shouldBeEnabled: Boolean): Matcher<View> = if (shouldBeEnabled) isEnabled() else isDisabled()
 
     fun longClick(id: Int)
     {

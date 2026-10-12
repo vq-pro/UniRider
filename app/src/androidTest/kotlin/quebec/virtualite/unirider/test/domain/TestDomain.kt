@@ -2,13 +2,11 @@ package quebec.virtualite.unirider.test.domain
 
 import android.content.Context
 import io.cucumber.datatable.DataTable
-import org.hamcrest.Matchers.endsWith
-import org.hamcrest.Matchers.equalTo
+import org.assertj.core.api.Assertions.assertThat
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.bluetooth.sim.BluetoothServicesSim
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableHeader
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.tableRows
 import quebec.virtualite.unirider.database.WheelEntity
@@ -52,7 +50,7 @@ class TestDomain(applicationContext: Context)
                 intOf(km.substringBefore(SUFFIX_KM))
             else
             {
-                assertThat(km, equalTo(""))
+                assertThat(km).isEqualTo("")
                 0
             }
 
@@ -92,7 +90,7 @@ class TestDomain(applicationContext: Context)
 
     fun loadConnectedWheels(wheels: DataTable)
     {
-        assertThat(tableHeader(wheels), equalTo(listOf("Name", "Bt Name", "Bt Address")))
+        assertThat(tableHeader(wheels)).isEqualTo(listOf("Name", "Bt Name", "Bt Address"))
 
         tableRows(wheels)
             .forEach { row ->
@@ -119,21 +117,18 @@ class TestDomain(applicationContext: Context)
 
     fun loadWheels(wheels: DataTable)
     {
-        assertThat(
-            tableHeader(wheels),
-            equalTo(
-                listOf(
-                    "Name",
-                    "Mileage",
-                    "Wh",
-                    "Voltage Min",
-                    "Voltage Max",
-                    "Full Charge",
-                    "Charge Amperage",
-                    "Charge Rate",
-                    "Distance Offset",
-                    "Sold"
-                )
+        assertThat(tableHeader(wheels)).isEqualTo(
+            listOf(
+                "Name",
+                "Mileage",
+                "Wh",
+                "Voltage Min",
+                "Voltage Max",
+                "Full Charge",
+                "Charge Amperage",
+                "Charge Rate",
+                "Distance Offset",
+                "Sold"
             )
         )
 
@@ -171,7 +166,7 @@ class TestDomain(applicationContext: Context)
 
     fun simulateDevice(device: DataTable)
     {
-        assertThat(tableHeader(device), equalTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltages")))
+        assertThat(tableHeader(device)).isEqualTo(listOf("Bt Name", "Bt Address", "Km", "Mileage", "Voltages"))
         val deviceFields = tableRows(device)[0]
 
         BluetoothServicesSim
@@ -194,7 +189,7 @@ class TestDomain(applicationContext: Context)
 
     private fun floatOfWithSuffix(value: String, suffix: String): Float
     {
-        assertThat(value, endsWith(suffix))
+        assertThat(value).endsWith(suffix)
         return floatOf(value.dropLast(suffix.length))
     }
 

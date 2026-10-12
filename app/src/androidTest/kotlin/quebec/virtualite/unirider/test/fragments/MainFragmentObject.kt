@@ -1,11 +1,11 @@
 package quebec.virtualite.unirider.test.fragments
 
 import io.cucumber.datatable.DataTable
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.ListViewField
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRow
@@ -61,7 +61,7 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun validateBluetoothDeviceUndefined(selectedWheel: WheelEntity)
     {
-        assertThat(selectedWheel.isConnected(), equalTo(false))
+        assertThat(selectedWheel.isConnected()).isEqualTo(false)
     }
 
     fun validateTotalMileage()
@@ -94,7 +94,7 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun validateWheels(expectedWheels: DataTable)
     {
-        assertThat(tableHeader(expectedWheels), equalTo(listOf("Name", "Mileage")))
+        assertThat(tableHeader(expectedWheels)).isEqualTo(listOf("Name", "Mileage"))
 
         val expectedRows = tableRows(expectedWheels)
             .stream()
@@ -106,7 +106,7 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain)
                 {
                     NEW_WHEEL_ENTRY ->
                     {
-                        assertThat(mileageWithUnits, equalTo(""))
+                        assertThat(mileageWithUnits).isEqualTo("")
                         WheelRow(0, name, 0)
                     }
 

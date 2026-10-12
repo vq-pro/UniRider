@@ -122,10 +122,20 @@ dependencies {
 
     // Unit Tests
     testImplementation "junit:junit:$junitVersion"
+//    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+//    testImplementation("org.junit.jupiter:junit-jupiter")
+
+    testImplementation("org.assertj:assertj-core:$assertJVersion")
+
     testImplementation "org.mockito:mockito-inline:$mockitoInlineVersion"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
 
     // Integration Tests
+//    androidTestImplementation(platform("org.junit:junit-bom:$junitVersion"))
+//    androidTestImplementation("org.junit.jupiter:junit-jupiter")
+
+    androidTestImplementation("org.assertj:assertj-core:$assertJVersion")
+
     androidTestImplementation "androidx.test:core:$coreVersion"
     androidTestImplementation "androidx.test:core-ktx:$coreVersion"
     androidTestImplementation "androidx.test.ext:junit:$extJUnitVersion"

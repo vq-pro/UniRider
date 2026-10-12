@@ -3,9 +3,9 @@ package quebec.virtualite.unirider.test.fragments
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import io.cucumber.datatable.DataTable
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.unirider.R
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.click
@@ -81,10 +81,10 @@ class ChargeFragmentObject(val app: TestApp)
 
     fun validateEmptyEstimates()
     {
-        assertThat(getText(R.id.view_voltage_required), equalTo(""))
-        assertThat(getText(R.id.view_voltage_target), equalTo(""))
-        assertThat(getText(R.id.view_voltage_target_diff), equalTo(""))
-        assertThat(getEstimatedTime(), equalTo(""))
+        assertThat(getText(R.id.view_voltage_required)).isEqualTo("")
+        assertThat(getText(R.id.view_voltage_target)).isEqualTo("")
+        assertThat(getText(R.id.view_voltage_target_diff)).isEqualTo("")
+        assertThat(getEstimatedTime()).isEqualTo("")
     }
 
     fun validateEstimates(expectedEstimates: DataTable)
@@ -115,7 +115,8 @@ class ChargeFragmentObject(val app: TestApp)
 
     fun validateView()
     {
-        assertThatPolling({ app.activeFragment() }, equalTo(WheelChargeFragment::class.java))
+        // FIXME-1 Utility method for checking the active fragment
+        assertThatPolling({ app.activeFragment() }, equalTo(WheelChargeFragment::class.java) )
     }
 
     private fun getEstimatedTime(): String =

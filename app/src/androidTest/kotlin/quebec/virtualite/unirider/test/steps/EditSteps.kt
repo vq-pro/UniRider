@@ -5,8 +5,8 @@ import cucumber.api.java.Before
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import io.cucumber.datatable.DataTable
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThat
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.pollValue
 import quebec.virtualite.unirider.test.fragments.EditFragmentObject
@@ -252,14 +252,14 @@ class EditSteps : BaseSteps()
         mainFragment.validateView()
         selectedWheel = pollValue { domain.locateWheel(updatedWheel.name) }
 
-        assertThat(selectedWheel.chargeAmperage, equalTo(updatedWheel.chargeAmperage))
-        assertThat(selectedWheel.chargeRate, equalTo(updatedWheel.chargeRate))
-        assertThat(selectedWheel.name, equalTo(updatedWheel.name))
-        assertThat(selectedWheel.mileage, equalTo(updatedWheel.mileage))
-        assertThat(selectedWheel.voltageMax, equalTo(updatedWheel.voltageMax))
-        assertThat(selectedWheel.voltageMin, equalTo(updatedWheel.voltageMin))
-        assertThat(selectedWheel.voltageFull, equalTo(updatedWheel.voltageFull))
-        assertThat(selectedWheel.wh, equalTo(updatedWheel.wh))
+        assertThat(selectedWheel.chargeAmperage).isEqualTo(updatedWheel.chargeAmperage)
+        assertThat(selectedWheel.chargeRate).isEqualTo(updatedWheel.chargeRate)
+        assertThat(selectedWheel.name).isEqualTo(updatedWheel.name)
+        assertThat(selectedWheel.mileage).isEqualTo(updatedWheel.mileage)
+        assertThat(selectedWheel.voltageMax).isEqualTo(updatedWheel.voltageMax)
+        assertThat(selectedWheel.voltageMin).isEqualTo(updatedWheel.voltageMin)
+        assertThat(selectedWheel.voltageFull).isEqualTo(updatedWheel.voltageFull)
+        assertThat(selectedWheel.wh).isEqualTo(updatedWheel.wh)
     }
 
     @Then("the wheel was updated")

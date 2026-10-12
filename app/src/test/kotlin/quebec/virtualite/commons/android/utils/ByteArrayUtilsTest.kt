@@ -1,7 +1,6 @@
 package quebec.virtualite.commons.android.utils
 
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -20,7 +19,7 @@ class ByteArrayUtilsTest
         val result = utils.byteArrayInt2(0xAB.toByte(), 0xCD.toByte())
 
         // Then
-        assertThat(result.toUInt(), equalTo(0xABCDu))
+        assertThat(result.toUInt()).isEqualTo(0xABCDu)
     }
 
     @Test
@@ -30,7 +29,7 @@ class ByteArrayUtilsTest
         val result = utils.byteArrayInt4(0xAB.toByte(), 0xCD.toByte(), 0xEF.toByte(), 0x00.toByte())
 
         // Then
-        assertThat(result.toULong(), equalTo(0xABCDEF00u))
+        assertThat(result.toULong()).isEqualTo(0xABCDEF00u.toULong())
     }
 
     @Test
@@ -43,6 +42,6 @@ class ByteArrayUtilsTest
         val result = utils.byteArrayToString(input)
 
         // Then
-        assertThat(result, equalTo("AB-CD-0A-00"))
+        assertThat(result).isEqualTo("AB-CD-0A-00")
     }
 }

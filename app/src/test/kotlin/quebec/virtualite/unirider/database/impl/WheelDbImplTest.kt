@@ -1,8 +1,7 @@
 package quebec.virtualite.unirider.database.impl
 
 import android.content.Context
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.core.IsEqual.equalTo
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -121,7 +120,7 @@ class WheelDbImplTest
         // Then
         verify(mockedDao).findWheel(NAME)
 
-        assertThat(result, equalTo(true))
+        assertThat(result).isEqualTo(true)
     }
 
     @Test
@@ -162,7 +161,7 @@ class WheelDbImplTest
         // Then
         verify(mockedDao).findWheel(NAME)
 
-        assertThat(result, equalTo(false))
+        assertThat(result).isEqualTo(false)
     }
 
     @Test
@@ -194,7 +193,7 @@ class WheelDbImplTest
         )
 
         // Then
-        assertThat(result, equalTo(false))
+        assertThat(result).isEqualTo(false)
     }
 
     @Test
@@ -211,7 +210,7 @@ class WheelDbImplTest
         // Then
         verify(mockedDao).findWheel(NAME)
 
-        assertThat(result, equalTo(wheel))
+        assertThat(result).isEqualTo(wheel)
     }
 
     @Test
@@ -228,7 +227,7 @@ class WheelDbImplTest
         // Then
         verify(mockedDao).getWheel(ID)
 
-        assertThat(result, equalTo(wheel))
+        assertThat(result).isEqualTo(wheel)
     }
 
     @Test
@@ -246,7 +245,7 @@ class WheelDbImplTest
         // Then
         verify(mockedDao).getAllWheels()
 
-        assertThat(results, equalTo(wheels))
+        assertThat(results).isEqualTo(wheels)
     }
 
     @Test
