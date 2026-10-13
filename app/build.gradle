@@ -1,9 +1,7 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-//    FIXME-2 Convert from kapt to ksp
-    id 'kotlin-kapt'
-//    id("com.google.devtools.ksp")
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -24,17 +22,18 @@ android {
     }
 
     defaultConfig {
-        applicationId "quebec.virtualite.unirider"
         minSdkVersion 28
         //noinspection EditedTargetSdkVersion,OldTargetApi
         targetSdkVersion 35
-        versionCode 1
-        versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        applicationId = "quebec.virtualite.unirider"
+        versionCode = 1
+        versionName = "1.0"
 
-        testApplicationId "quebec.virtualite.unirider.test"
-        testInstrumentationRunner "quebec.virtualite.unirider.test.CucumberInstrumentationRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        testApplicationId = "quebec.virtualite.unirider.test"
+        testInstrumentationRunner = "quebec.virtualite.unirider.test.CucumberInstrumentationRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -127,10 +126,8 @@ dependencies {
 
     // Database
     implementation "androidx.room:room-runtime:$roomVersion"
-    //noinspection KaptUsageInsteadOfKsp
-    kapt "androidx.room:room-compiler:$roomVersion"
-//    ksp("androidx.room:room-compiler:$roomVersion")
     implementation "androidx.room:room-ktx:$roomVersion"
+    ksp("androidx.room:room-compiler:$roomVersion")
 
     // Unit Tests
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))

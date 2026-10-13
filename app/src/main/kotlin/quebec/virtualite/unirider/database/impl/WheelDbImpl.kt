@@ -16,8 +16,8 @@ class WheelDbImpl(applicationContext: Context) : WheelDb
             .addMigrations(*WheelDatabase.MIGRATIONS)
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
-    internal var dao: WheelDao =
-        db.wheelDao()
+
+    internal var dao: WheelDao = db.wheelDao()
 
     override fun deleteAll()
     {

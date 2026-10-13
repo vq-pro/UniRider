@@ -2,10 +2,12 @@
 buildscript {
     ext.kotlinVersion = "2.1.0"
     ext.agpVersion = "8.6.0"
+
     repositories {
         google()
         mavenCentral()
     }
+
     dependencies {
         classpath "com.android.tools.build:gradle:$agpVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
@@ -15,10 +17,10 @@ buildscript {
     }
 }
 
-// FIXME-2 Passer à KSP au lieu de KAPT
-//plugins {
-//    id("com.google.devtools.ksp") version "2.3.4" apply false
-//}
+plugins {
+    // noinspection GradleDependency
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29" apply false
+}
 
 allprojects {
     repositories {
