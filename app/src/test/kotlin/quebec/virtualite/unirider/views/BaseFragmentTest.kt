@@ -1,25 +1,30 @@
 package quebec.virtualite.unirider.views
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.mockito.InjectMocks
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 
-@RunWith(MockitoJUnitRunner::class)
-class BaseFragmentTest {
+@ExtendWith(MockitoExtension::class)
+class BaseFragmentTest
+{
 
     @InjectMocks
     private lateinit var baseFragment: BaseFragment
 
-    @Test
-    fun textKmWithDecimal() {
-        textKmWithDecimal(55.6f, "55.6")
-        textKmWithDecimal(55f, "55")
-        textKmWithDecimal(50f, "50")
-    }
-
-    private fun textKmWithDecimal(km: Float, expectedDisplay: String) {
+    @ParameterizedTest
+    @CsvSource(
+        delimiter = '-',
+        value = [
+            "55.6f - 55.6",
+            "55f   - 55",
+            "50f   - 50"
+        ]
+    )
+    fun textKmWithDecimal(km: Float, expectedDisplay: String)
+    {
         // When
         val result = baseFragment.textKmWithDecimal(km)
 
@@ -27,13 +32,16 @@ class BaseFragmentTest {
         assertThat(result).isEqualTo(expectedDisplay)
     }
 
-    @Test
-    fun textPercentageWithDecimal() {
-        textPercentageWithDecimal(55.6f, "55.6")
-        textPercentageWithDecimal(102.3f, "102.3")
-    }
-
-    private fun textPercentageWithDecimal(percentage: Float, expectedDisplay: String) {
+    @ParameterizedTest
+    @CsvSource(
+        delimiter = '-',
+        value = [
+            "55.6f  - 55.6",
+            "102.3f - 102.3"
+        ]
+    )
+    fun textPercentageWithDecimal(percentage: Float, expectedDisplay: String)
+    {
         // When
         val result = baseFragment.textPercentageWithDecimal(percentage)
 
@@ -41,14 +49,17 @@ class BaseFragmentTest {
         assertThat(result).isEqualTo(expectedDisplay)
     }
 
-    @Test
-    fun textWhPerKm() {
-        textWhPerKm(32.5f, "32.5")
-        textWhPerKm(30.0f, "30.0")
-        textWhPerKm(29.9f, "29.9")
-    }
-
-    private fun textWhPerKm(whPerKm: Float, expectedDisplay: String) {
+    @ParameterizedTest
+    @CsvSource(
+        delimiter = '-',
+        value = [
+            "32.5f - 32.5",
+            "30.0f - 30.0",
+            "29.9f - 29.9"
+        ]
+    )
+    fun textWhPerKm(whPerKm: Float, expectedDisplay: String)
+    {
         // When
         val result = baseFragment.textWhPerKm(whPerKm)
 

@@ -1,11 +1,9 @@
 package quebec.virtualite.unirider.test.fragments
 
 import io.cucumber.datatable.DataTable
-import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRow
@@ -28,7 +26,7 @@ import quebec.virtualite.unirider.views.WheelRow
 import quebec.virtualite.unirider.views.WheelScanFragment
 import quebec.virtualite.unirider.views.WheelViewFragment
 
-class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
+class ViewFragmentObject(val app: TestApp, private val domain: TestDomain): BaseFragmentObject()
 {
     private var expectedDeviceName: String = ""
     private val expectedLiveWheelMileage = HashMap<String, Int>()
@@ -50,17 +48,17 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
     fun connectTo(deviceName: String)
     {
         click(R.id.button_connect)
-        assertThatPolling({ app.activeFragment() }, equalTo(WheelScanFragment::class.java))
+        validateView(WheelScanFragment::class)
 
         selectListViewItem(R.id.devices, deviceName)
-        assertThatPolling({ app.activeFragment() }, equalTo(WheelViewFragment::class.java))
+        validateView(WheelViewFragment::class)
 
         expectedDeviceName = deviceName
     }
 
     fun disconnectConfirmation()
     {
-        assertThatPolling({ app.activeFragment() }, equalTo(WheelConfirmationDisconnectFragment::class.java))
+        validateView(WheelConfirmationDisconnectFragment::class)
 
         click(R.id.button_disconnect_confirmation)
     }
@@ -193,7 +191,7 @@ class ViewFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun validateView()
     {
-        assertThatPolling({ app.activeFragment() }, equalTo(WheelViewFragment::class.java))
+        validateView(WheelViewFragment::class)
     }
 
     fun validateViewing(wheel: WheelEntity)

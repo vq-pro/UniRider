@@ -2,15 +2,15 @@ package quebec.virtualite.unirider.database.impl
 
 import android.content.Context
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 import quebec.virtualite.unirider.database.WheelEntity
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_AMPERAGE
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_AMPERAGE2
@@ -43,7 +43,7 @@ import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MIN2
 import quebec.virtualite.unirider.test.domain.TestConstants.WH
 import quebec.virtualite.unirider.test.domain.TestConstants.WH2
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class WheelDbImplTest
 {
     @Mock
@@ -55,7 +55,7 @@ class WheelDbImplTest
     @InjectMocks
     var dbImpl = WheelDbImpl(mock(Context::class.java))
 
-    @Before
+    @BeforeEach
     fun init()
     {
         dbImpl.db = mockedDb
@@ -99,21 +99,11 @@ class WheelDbImplTest
         // When
         val result = dbImpl.findDuplicate(
             WheelEntity(
-                ID,
-                NAME,
-                DEVICE_NAME,
-                DEVICE_ADDR,
-                0,
-                0,
-                0,
-                0f,
-                0f,
-                0f,
-                0f,
-                0f,
-                0f,
-                0f,
-                false
+                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+                0, 0, 0,
+                0f, 0f, 0f, 0f,
+                0f, 0f,
+                0f, false
             )
         )
 
@@ -140,21 +130,11 @@ class WheelDbImplTest
         // When
         val result = dbImpl.findDuplicate(
             WheelEntity(
-                ID,
-                NAME,
-                DEVICE_NAME,
-                DEVICE_ADDR,
-                0,
-                0,
-                0,
-                0f,
-                0f,
-                0f,
-                0f,
-                0f,
-                0f,
-                0f,
-                false
+                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+                0, 0, 0,
+                0f, 0f, 0f, 0f,
+                0f, 0f,
+                0f, false
             )
         )
 
@@ -174,21 +154,11 @@ class WheelDbImplTest
         // When
         val result = dbImpl.findDuplicate(
             WheelEntity(
-                ID,
-                NAME,
-                DEVICE_NAME,
-                DEVICE_ADDR,
-                0,
-                0,
-                0,
-                0f,
-                0f,
-                0f,
-                0f,
-                0f,
-                0f,
-                0f,
-                false
+                ID, NAME, DEVICE_NAME, DEVICE_ADDR,
+                0, 0, 0,
+                0f, 0f, 0f, 0f,
+                0f, 0f,
+                0f, false
             )
         )
 

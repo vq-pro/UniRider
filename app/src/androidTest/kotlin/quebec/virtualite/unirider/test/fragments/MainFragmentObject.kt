@@ -2,12 +2,10 @@ package quebec.virtualite.unirider.test.fragments
 
 import io.cucumber.datatable.DataTable
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.ListViewField
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRow
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasRows
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasText
@@ -24,7 +22,7 @@ import quebec.virtualite.unirider.views.MainFragment
 import quebec.virtualite.unirider.views.WheelRow
 import java.util.stream.Collectors.toList
 
-class MainFragmentObject(val app: TestApp, private val domain: TestDomain)
+class MainFragmentObject(val app: TestApp, private val domain: TestDomain): BaseFragmentObject()
 {
     val FIELD_NAME = ListViewField(R.id.row_name, "name")
     val NEW_WHEEL_ENTRY = "<New>"
@@ -74,7 +72,7 @@ class MainFragmentObject(val app: TestApp, private val domain: TestDomain)
 
     fun validateView()
     {
-        assertThatPolling({ app.activeFragment() }, equalTo(MainFragment::class.java))
+        validateView(MainFragment::class)
     }
 
     fun validateUpdatedNameAndMileage(expectedId: Long, expectedName: String, expectedMileage: Int)

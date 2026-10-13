@@ -94,16 +94,28 @@ android {
         }
     }
 
+    lint {
+        abortOnError = false
+    }
+
+    packaging {
+        resources.excludes.add("META-INF/*.md")
+        resources.excludes.add("META-INF/*.txt")
+        resources.merges.add("META-INF/services/*")
+    }
+
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
+
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
     }
+
     namespace "quebec.virtualite.unirider"
     testNamespace "quebec.virtualite.unirider.test"
-    lint {
-        abortOnError false
-    }
 }
 
 dependencies {
@@ -121,18 +133,20 @@ dependencies {
     implementation "androidx.room:room-ktx:$roomVersion"
 
     // Unit Tests
-    testImplementation "junit:junit:$junitVersion"
-//    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
-//    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.platform:junit-platform-engine:$junitVersion")
+    testImplementation("org.junit.platform:junit-platform-launcher:$junitVersion")
 
     testImplementation("org.assertj:assertj-core:$assertJVersion")
 
     testImplementation "org.mockito:mockito-inline:$mockitoInlineVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoInlineVersion"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
 
     // Integration Tests
-//    androidTestImplementation(platform("org.junit:junit-bom:$junitVersion"))
-//    androidTestImplementation("org.junit.jupiter:junit-jupiter")
+    androidTestImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    androidTestImplementation("org.junit.jupiter:junit-jupiter")
 
     androidTestImplementation("org.assertj:assertj-core:$assertJVersion")
 

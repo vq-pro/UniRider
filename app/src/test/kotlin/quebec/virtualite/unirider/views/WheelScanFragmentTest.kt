@@ -2,13 +2,13 @@ package quebec.virtualite.unirider.views
 
 import android.widget.ListView
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 import quebec.virtualite.commons.android.bluetooth.BluetoothDevice
 import quebec.virtualite.commons.android.utils.CollectionUtils.setList
 import quebec.virtualite.unirider.R
@@ -28,7 +28,7 @@ import quebec.virtualite.unirider.test.domain.TestConstants.TEMPERATURE_NEW_RAW
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW_RAW
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java)
 {
 
@@ -41,7 +41,7 @@ class WheelScanFragmentTest : FragmentTestBase(WheelScanFragment::class.java)
     @Mock
     private lateinit var mockedLvDevices: ListView
 
-    @Before
+    @BeforeEach
     fun before()
     {
         BaseFragment.wheel = S18_1_CONNECTED

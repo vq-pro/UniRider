@@ -3,12 +3,10 @@ package quebec.virtualite.unirider.test.fragments
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import io.cucumber.datatable.DataTable
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.commons.android.utils.NumberUtils.floatOf
 import quebec.virtualite.commons.android.utils.NumberUtils.intOf
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.isDisabled
@@ -23,9 +21,8 @@ import quebec.virtualite.unirider.views.WheelEditFragment
 
 val UNITS = arrayOf(" km", " Wh", "V", "A", "V/h")
 
-class EditFragmentObject(val app: TestApp)
+class EditFragmentObject(val app: TestApp): BaseFragmentObject()
 {
-
     private val IS_NOT_SOLD = false
     private val IS_SOLD = true
 
@@ -81,7 +78,7 @@ class EditFragmentObject(val app: TestApp)
 
     fun confirmDeletion()
     {
-        assertThat(app.activeFragment()).isEqualTo(WheelConfirmationDeleteFragment::class.java)
+        validateView(WheelConfirmationDeleteFragment::class)
         click(R.id.button_delete_confirmation)
     }
 
@@ -181,7 +178,7 @@ class EditFragmentObject(val app: TestApp)
 
     fun validateView()
     {
-        assertThatPolling({ app.activeFragment() }, equalTo(WheelEditFragment::class.java))
+        validateView(WheelEditFragment::class)
     }
 
     private fun stripUnits(value: String): String

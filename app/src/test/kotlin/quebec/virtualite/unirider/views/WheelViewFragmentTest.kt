@@ -5,9 +5,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.view.isVisible
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.doNothing
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
@@ -17,7 +17,7 @@ import org.mockito.Mockito.lenient
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Spy
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
@@ -53,7 +53,7 @@ import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW5
 import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_NEW_RAW
 import quebec.virtualite.unirider.views.BaseFragment.Companion.wheel
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
 {
     private val INVALID_KM = null
@@ -125,7 +125,7 @@ class WheelViewFragmentTest : FragmentTestBase(WheelViewFragment::class.java)
     @Mock
     private lateinit var mockedTextVoltageInitial: TextView
 
-    @Before
+    @BeforeEach
     fun before()
     {
         wheel = INITIAL_WHEEL

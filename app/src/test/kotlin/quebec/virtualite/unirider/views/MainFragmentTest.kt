@@ -3,16 +3,16 @@ package quebec.virtualite.unirider.views
 import android.widget.ListView
 import android.widget.TextView
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.doNothing
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.Spy
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.test.domain.TestConstants.ABRAMS_4
 import quebec.virtualite.unirider.test.domain.TestConstants.ID2
@@ -41,7 +41,7 @@ private const val LIST_ENTRY2 = 1
 private const val LIST_ENTRY3 = 2
 private const val LIST_ENTRY4 = 3
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class MainFragmentTest : FragmentTestBase(MainFragment::class.java)
 {
     @InjectMocks
@@ -60,7 +60,7 @@ class MainFragmentTest : FragmentTestBase(MainFragment::class.java)
     @Mock
     private lateinit var mockedTextTotalMileage: TextView
 
-    @Before
+    @BeforeEach
     fun before()
     {
         mockExternal()

@@ -9,7 +9,6 @@ import android.widget.ListView
 import android.widget.Spinner
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.assertj.core.api.Assertions.assertThat
-import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.lenient
 import org.mockito.Mock
 import org.mockito.Mockito.verify
@@ -27,7 +26,8 @@ import quebec.virtualite.unirider.services.ExternalServices
 import quebec.virtualite.unirider.test.domain.TestConstants.ITEM_SOLD
 import quebec.virtualite.unirider.test.domain.TestConstants.LABEL_KM
 
-open class FragmentTestBase(fragmentType: Class<*>) {
+open class FragmentTestBase(fragmentType: Class<*>)
+{
 
     internal val fragmentClass: String = fragmentType.simpleName
 
@@ -62,66 +62,78 @@ open class FragmentTestBase(fragmentType: Class<*>) {
     lateinit var mockedWidgets: CommonWidgetServices
 
     @Suppress("UNCHECKED_CAST")
-    fun mockExternal() {
+    fun mockExternal()
+    {
         lenient().doReturn(mockedConnector).`when`(mockedExternal).bluetooth()
 
         lenient().doReturn(mockedDb).`when`(mockedExternal).db()
 
-        lenient().doAnswer { (it.arguments[0] as (WheelDb) -> Unit).invoke(mockedDb) }.`when`(mockedExternal).runDB(any())
+        lenient().doAnswer { (it.arguments[0] as (WheelDb) -> Unit).invoke(mockedDb) }.`when`(mockedExternal)
+            .runDB(any())
     }
 
-    fun mockField(id: Int, mockedField: View) {
-        given<Any>(mockedView.findViewById(id)).willReturn(mockedField)
+    fun mockField(id: Int, mockedField: View)
+    {
+        lenient().`when`<Any>(mockedView.findViewById(id)).thenReturn(mockedField)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun mockFragments() {
+    fun mockFragments()
+    {
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }.`when`(mockedFragments).runBackground(any())
 
         lenient().doAnswer { (it.arguments[0] as (() -> Unit)).invoke() }.`when`(mockedFragments).runUI(any())
     }
 
-    fun mockStrings() {
+    fun mockStrings()
+    {
         lenient().`when`(mockedFragments.string(R.string.label_km)).thenReturn(LABEL_KM)
         lenient().`when`(mockedFragments.string(R.string.label_wheel_sold)).thenReturn(ITEM_SOLD)
     }
 
-    fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo) {
+    fun verifyConnectorGetDeviceInfo(expectedDeviceAddress: String, wheelInfo: WheelInfo)
+    {
         argumentCaptor<(WheelInfo) -> Unit>().apply {
             verify(mockedConnector).getDeviceInfo(eq(expectedDeviceAddress), capture())
             firstValue.invoke(wheelInfo)
         }
     }
 
-    fun verifyConnectorScanWith(device: BluetoothDevice) {
+    fun verifyConnectorScanWith(device: BluetoothDevice)
+    {
         argumentCaptor<(BluetoothDevice) -> Unit>().apply {
             verify(mockedConnector).scan(capture())
             firstValue.invoke(device)
         }
     }
 
-    fun verifyDoneWaiting(connectionPayload: Any) {
+    fun verifyDoneWaiting(connectionPayload: Any)
+    {
         argumentCaptor<() -> Unit>().apply {
             verify(mockedFragments).doneWaiting(eq(connectionPayload), capture())
             firstValue.invoke()
         }
     }
 
-    fun <T : View?> verifyFieldAssignment(id: Int, field: T, mock: T) {
+    fun <T : View?> verifyFieldAssignment(id: Int, field: T, mock: T)
+    {
         verify(mockedView).findViewById<T>(id)
         assertThat(mock).isEqualTo(field)
     }
 
-    fun verifyInflate(expectedId: Int) {
+    fun verifyInflate(expectedId: Int)
+    {
         verify(mockedInflater).inflate(expectedId, mockedContainer, DONT_ATTACH_TO_ROOT)
     }
 
-    fun <T> verifyMultiFieldListAdapter(mockedField: ListView, expectedId: Int) {
+    fun <T> verifyMultiFieldListAdapter(mockedField: ListView, expectedId: Int)
+    {
         verifyMultiFieldListAdapter(mockedField, expectedId, emptyList<T>())
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> verifyMultiFieldListAdapter(mockedField: ListView, expectedId: Int, expectedData: List<T>) {
+    fun <T> verifyMultiFieldListAdapter(mockedField: ListView, expectedId: Int, expectedData: List<T>)
+    {
         argumentCaptor<(View, T) -> Unit>().apply {
             verify(mockedWidgets).multifieldListAdapter(
                 eq(mockedField), eq(mockedView), eq(expectedId), eq(expectedData), capture()
@@ -130,67 +142,77 @@ open class FragmentTestBase(fragmentType: Class<*>) {
         }
     }
 
-    fun verifyOnClick(mockedField: View) {
+    fun verifyOnClick(mockedField: View)
+    {
         argumentCaptor<(View) -> Unit>().apply {
             verify(mockedWidgets).setOnClickListener(eq(mockedField), capture())
             assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
-    fun verifyOnItemClick(mockedField: ListView) {
+    fun verifyOnItemClick(mockedField: ListView)
+    {
         argumentCaptor<(View, Int) -> Unit>().apply {
             verify(mockedWidgets).setOnItemClickListener(eq(mockedField), capture())
             assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
-    fun verifyOnItemSelected(mockedField: Spinner) {
+    fun verifyOnItemSelected(mockedField: Spinner)
+    {
         argumentCaptor<(View, Int, String) -> Unit>().apply {
             verify(mockedWidgets).setOnItemSelectedListener(eq(mockedField), capture())
             assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
-    fun verifyOnLongClick(mockedField: View) {
+    fun verifyOnLongClick(mockedField: View)
+    {
         argumentCaptor<(View) -> Unit>().apply {
             verify(mockedWidgets).setOnLongClickListener(eq(mockedField), capture())
             assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
-    fun verifyOnToggleSwitch(mockedField: SwitchMaterial) {
+    fun verifyOnToggleSwitch(mockedField: SwitchMaterial)
+    {
         argumentCaptor<(Boolean) -> Unit>().apply {
             verify(mockedWidgets).setOnCheckedChangeListener(eq(mockedField), capture())
             assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
-    fun verifyOnUpdateText(mockedField: EditText) {
+    fun verifyOnUpdateText(mockedField: EditText)
+    {
         argumentCaptor<(String) -> Unit>().apply {
             verify(mockedWidgets).addTextChangedListener(eq(mockedField), capture())
             assertThat(firstValue.javaClass.simpleName).contains(fragmentClass)
         }
     }
 
-    fun verifyRunWithWaitDialog() {
+    fun verifyRunWithWaitDialog()
+    {
         argumentCaptor<() -> Unit>().apply {
             verify(mockedFragments).runWithWait(capture())
             firstValue.invoke()
         }
     }
 
-    fun verifyRunWithWaitDialogAndBack() {
+    fun verifyRunWithWaitDialogAndBack()
+    {
         argumentCaptor<() -> Unit>().apply {
             verify(mockedFragments).runWithWaitAndBack(capture())
             firstValue.invoke()
         }
     }
 
-    fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>) {
+    fun verifyStringListAdapter(mockedField: ListView, expectedData: List<String>)
+    {
         verify(mockedWidgets).stringListAdapter(mockedField, mockedView, expectedData)
     }
 
-    fun verifyStringListAdapter(mockedField: Spinner, expectedData: List<String>) {
+    fun verifyStringListAdapter(mockedField: Spinner, expectedData: List<String>)
+    {
         verify(mockedWidgets).stringListAdapter(mockedField, mockedView, expectedData)
     }
 }

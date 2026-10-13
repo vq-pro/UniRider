@@ -4,17 +4,18 @@ import android.widget.Button
 import android.widget.EditText
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.doNothing
+import org.mockito.Mockito.lenient
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Spy
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.test.domain.TestConstants.CHARGE_AMPERAGE
@@ -43,10 +44,9 @@ import quebec.virtualite.unirider.test.domain.TestConstants.VOLTAGE_MIN_NEW
 import quebec.virtualite.unirider.test.domain.TestConstants.WH
 import quebec.virtualite.unirider.test.domain.TestConstants.WH_NEW
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java)
 {
-
     @InjectMocks
     @Spy
     private lateinit var fragment: WheelEditFragment
@@ -93,7 +93,7 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java)
     @Mock
     private lateinit var mockedWheelValidator: WheelValidator
 
-    @Before
+    @BeforeEach
     fun before()
     {
         BaseFragment.wheel = S18_1_DISCONNECTED
@@ -825,6 +825,6 @@ class WheelEditFragmentTest : FragmentTestBase(WheelEditFragment::class.java)
     private fun mockVoltageMax()
     {
         fragment.editVoltageMax = mockedEditVoltageMax
-        given(mockedWidgets.getText(mockedEditVoltageMax)).willReturn("$VOLTAGE_MAX")
+        lenient().`when`(mockedWidgets.getText(mockedEditVoltageMax)).thenReturn("$VOLTAGE_MAX")
     }
 }

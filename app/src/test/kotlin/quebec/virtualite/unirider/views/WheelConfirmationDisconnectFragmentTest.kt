@@ -2,19 +2,19 @@ package quebec.virtualite.unirider.views
 
 import android.widget.Button
 import android.widget.TextView
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_CONNECTED
 import quebec.virtualite.unirider.test.domain.TestConstants.S18_1_DISCONNECTED
 import quebec.virtualite.unirider.views.BaseFragment.Companion.wheel
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class WheelConfirmationDisconnectFragmentTest : FragmentTestBase(WheelConfirmationDisconnectFragment::class.java) {
 
     @InjectMocks
@@ -29,7 +29,7 @@ class WheelConfirmationDisconnectFragmentTest : FragmentTestBase(WheelConfirmati
     @Mock
     private lateinit var mockedTextName: TextView
 
-    @Before
+    @BeforeEach
     fun before() {
         wheel = S18_1_CONNECTED
 

@@ -4,10 +4,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import io.cucumber.datatable.DataTable
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.equalTo
 import quebec.virtualite.unirider.R
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatField
-import quebec.virtualite.unirider.commons.android.utils.StepUtils.assertThatPolling
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.click
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.getText
 import quebec.virtualite.unirider.commons.android.utils.StepUtils.hasText
@@ -21,9 +19,8 @@ import quebec.virtualite.unirider.test.domain.TestDomain.Companion.parseVoltage
 import quebec.virtualite.unirider.views.WheelChargeFragment
 import java.lang.Thread.sleep
 
-class ChargeFragmentObject(val app: TestApp)
+class ChargeFragmentObject(val app: TestApp): BaseFragmentObject()
 {
-
     fun changeAmperageTo(amperage: String)
     {
         setText(R.id.edit_charge_amperage, parseAmps(amperage))
@@ -115,8 +112,7 @@ class ChargeFragmentObject(val app: TestApp)
 
     fun validateView()
     {
-        // FIXME-1 Utility method for checking the active fragment
-        assertThatPolling({ app.activeFragment() }, equalTo(WheelChargeFragment::class.java) )
+        validateView(WheelChargeFragment::class)
     }
 
     private fun getEstimatedTime(): String =
